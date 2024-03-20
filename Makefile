@@ -1,5 +1,5 @@
 STUID = ysyx_22040000
-STUNAME =  崔骏彦
+STUNAME =Cui Jun Yan
 
 # DO NOT modify the following code!!!
 
