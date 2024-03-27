@@ -1,7 +1,7 @@
 TOPNAME = switch
 VERILATOR_FLAGS=--cc --exe --build --trace
-VERILATOR_CSOURCES=$(PWD)/*.cpp
-VERILATOR_VSOURCES=$(PWD)/*.v
+VERILATOR_CSOURCES=$(PWD)/csrc/*.cpp
+VERILATOR_VSOURCES=$(PWD)/vsrc/*.v
 all:
 	@echo "Write this Makefile by your self."
 
