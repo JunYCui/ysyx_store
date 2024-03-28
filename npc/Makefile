@@ -14,7 +14,8 @@ BIN = $(BUILD_DIR)/$(TOPNAME)
 INC_PATH ?=
 
 #传递给verilator的参数：以c++形式输出调试信息，并自动依据makefile进行构建
-VERIARG = -Wall --cc -MMD --build 
+VERIARG = -Wall --cc -MMD --build \
+			-O3 --x-assign fast --x-initial fast --noassert
 
 #传递给preproject连接器的信息，添加SDL2库信息
 LDFLAGS += -lSDL2 -lSDL2_image
