@@ -34,8 +34,9 @@ all:
 sim:  $(CSOURCES) $(VSOURCES) $(NVBOARD_ARCHIVE) 
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self."
+	@rm -rf $(OBJ_DIR)
 	verilator $(VERIARG) \
-		-top $(TOPNAME) \
+		--top-module $(TOPNAME) \
 		$^ \
 		$(addprefix -LDFLAGS , $(LDFLAGS)) \
 		$(addprefix -CFLAGS , $(CFLAGS)) \
