@@ -8,7 +8,7 @@ SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 CSOURCES += $(SRC_AUTO_BIND)
 CONSTR = ./constrain/$(TOPNAME).nxdc
 
-BUILD_DIR = /build
+BUILD_DIR = ./build
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
 
@@ -31,7 +31,7 @@ all:
 	@echo "Write this Makefile by your self."
 
 .PHONY:sim
-sim:  $(CSRC) $(VSRC) $(NVBOARD_ARCHIVE) 
+sim:  $(CSOURCES) $(VSOURCES) $(NVBOARD_ARCHIVE) 
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self."
 	verilator $(VERIARG) \
