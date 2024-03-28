@@ -12,13 +12,14 @@ BUILD_DIR = ./build
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
 
-include $(NVBOARD_HOME)/scripts/nvboard.mk
+
 #传递给verilator的参数：以c++形式输出调试信息，并自动依据makefile进行构建
 VERIARG = -Wall --cc -MMD --build 
 
 #传递给preproject连接器的信息，添加SDL2库信息
 LDFLAGS += -lSDL2 -lSDL2_image
 
+include $(NVBOARD_HOME)/scripts/nvboard.mk
 #包含文件路径，加前缀-I传递给g++，INC_PATH在nvbroad.mk中定义
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 
