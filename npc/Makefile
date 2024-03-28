@@ -6,7 +6,7 @@ VSOURCES=$(PWD)/vsrc/*.v
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 CSOURCES += $(SRC_AUTO_BIND)
-CONSTR = ./constrain/$(TOPNAME).nxdc
+CONSTR = constrain/$(TOPNAME).nxdc
 
 BUILD_DIR = ./build
 OBJ_DIR = $(BUILD_DIR)/obj_dir
