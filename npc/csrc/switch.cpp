@@ -9,7 +9,8 @@
 
 #include "nvboard.h"
 
-static Vswitch dut;
+static SWITCH_NAME dut;
+void nvboard_bind_all_pins(Vswitch* top);
 
 int main(int argc,char** argv )
 {
@@ -20,29 +21,12 @@ int main(int argc,char** argv )
     // bind all pins
     nvboard_bind_all_pins(&dut);
     nvboard_init();
-    
-    //wave trace
-    VerilatedVcdC *tfp = new VerilatedVcdC;
-    contextp->traceEverOn(true);
-    top->trace(tfp,0);
-    tfp->open("wave.vcd");
 
-    while(!contextp->gotFinish()){    
-     int a = rand() & 1;
-     int b = rand() & 1;
-     top->a = a;
-     top->b = b;
-     top->eval();
+    while(1){    
     nvboard_update();
-    single_cycle();
-    tfp->dump(contextp->time());
-    contextp->timeInc(1);
-    printf("a = %d, b = %d, f= %d \n ",a,b,top->f);
-    assert(top->f == (a^b));
     }
     nvboard_quit();
     delete top;
-    tfp->close();
     delete contextp;
     return 0;
 }
