@@ -9,7 +9,7 @@
 
 #include "nvboard.h"
 
-static SWITCH_NAME dut;
+static TOP_NAME dut;
 void nvboard_bind_all_pins(Vswitch* top);
 
 int main(int argc,char** argv )
