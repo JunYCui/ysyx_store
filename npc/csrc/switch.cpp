@@ -9,8 +9,8 @@
 
 #include "nvboard.h"
 
-static switch dut;
-void nvboard_bind_all_pins(switch* top);
+static Vswitch dut;
+void nvboard_bind_all_pins(Vswitch* top);
 
 int main(int argc,char** argv )
 {
