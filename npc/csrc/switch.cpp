@@ -27,7 +27,4 @@ int main(int argc,char** argv )
     dut.eval();
     nvboard_update();
     }
-    delete top;
-    delete contextp;
-    return 0;
 }
