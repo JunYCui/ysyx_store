@@ -14,10 +14,6 @@ void nvboard_bind_all_pins(TOP_NAME* top);
 
 int main(int argc,char** argv )
 {
-    VerilatedContext *contextp = new VerilatedContext;
-    contextp->commandArgs(argc, argv);
-    Vswitch* top = new Vswitch{contextp};
-    
     // bind all pins
     nvboard_bind_all_pins(&dut);
     nvboard_init();
