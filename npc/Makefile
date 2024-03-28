@@ -28,6 +28,7 @@ CFLAGS += $(INCFLAGS)  -DTOP_NAME="\"V$(TOPNAME)\""
 #新建构建目录，防止出现无法新建autobind.cpp的错误
 $(shell mkdir -p $(BUILD_DIR))
 
+.PHONY:all
 all:
 	@echo "Write this Makefile by your self."
 
