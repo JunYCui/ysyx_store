@@ -1,21 +1,56 @@
 TOPNAME = switch
-VERILATOR_FLAGS=--cc --exe --build --trace
-VERILATOR_CSOURCES=$(PWD)/csrc/*.cpp
-VERILATOR_VSOURCES=$(PWD)/vsrc/*.v
+#VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
+CSOURCES=$(PWD)/csrc/*.cpp
+VSOURCES=$(PWD)/vsrc/*.v
+
+SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
+CSOURCES += $(SRC_AUTO_BIND)
+CONSTR = ./constrain/$(TOPNAME).nxdc
+
+BUILD_DIR = /build
+OBJ_DIR = $(BUILD_DIR)/obj_dir
+BIN = $(BUILD_DIR)/$(TOPNAME)
+
+include $(NVBOARD_HOME)/scripts/nvboard.mk
+#传递给verilator的参数：以c++形式输出调试信息，并自动依据makefile进行构建
+VERIARG = -Wall --cc -MMD --build 
+
+#传递给preproject连接器的信息，添加SDL2库信息
+LDFLAGS += -lSDL2 -lSDL2_image
+
+#包含文件路径，加前缀-I传递给g++，INC_PATH在nvbroad.mk中定义
+INCFLAGS = $(addprefix -I, $(INC_PATH))
+
+#传递给g++的编译参数，包括包含路径和TOP_NAME的定义
+CFLAGS += $(INCFLAGS)  -DTOP_NAME="\"V$(TOPNAME)\""
+#新建构建目录，防止出现无法新建autobind.cpp的错误
+$(shell mkdir -p $(BUILD_DIR))
 
 all:
 	@echo "Write this Makefile by your self."
+
 .PHONY:sim
-sim:   
+sim:  $(CSRC) $(VSRC) $(NVBOARD_ARCHIVE) 
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self."
-	verilator $(VERILATOR_FLAGS) $(VERILATOR_CSOURCES) $(VERILATOR_VSOURCES)
-	obj_dir/V$(TOPNAME)
-waves:*.vcd
-	gtkwave *.vcd
-.PHONY:clean
-clean:
-	@rm -rf ./obj_dir *.vcd
+	verilator $(VERIARG) \
+		-top $(TOPNAME) \
+		$^ \
+		$(addprefix -LDFLAGS , $(LDFLAGS)) \
+		$(addprefix -CFLAGS , $(CFLAGS)) \
+		--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))
+
+
+#waves:*.vcd
+#	gtkwave *.vcd
+
+#.PHONY:clean
+#clean:
+#	@rm -rf ./obj_dir *.vcd
+
+$(SRC_AUTO_BIND): $(CONSTR) 
+	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py  $^ $@
+
 
 include ../Makefile
