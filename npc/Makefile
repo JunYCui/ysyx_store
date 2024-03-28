@@ -1,8 +1,8 @@
 TOPNAME = switch
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
-CSOURCES=csrc/*.cpp
-VSOURCES=vsrc/*.v
+CSOURCES=$(PWD)/csrc/*.cpp
+VSOURCES=$(PWD)/vsrc/*.v
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 CSOURCES += $(SRC_AUTO_BIND)
