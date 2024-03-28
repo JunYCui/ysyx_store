@@ -11,7 +11,7 @@ CONSTR = constrain/$(TOPNAME).nxdc
 BUILD_DIR = ./build
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
-
+INC_PATH ?=
 
 #传递给verilator的参数：以c++形式输出调试信息，并自动依据makefile进行构建
 VERIARG = -Wall --cc -MMD --build 
