@@ -23,6 +23,7 @@ int main(int argc,char** argv )
     nvboard_init();
 
     while(1){    
+    dut.eval();
     nvboard_update();
     }
     nvboard_quit();
