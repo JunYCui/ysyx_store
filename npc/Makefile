@@ -16,6 +16,6 @@ waves:*.vcd
 	gtkwave *.vcd
 .PHONY:clean
 clean:
-	rm -rf ./obj_dir *.vcd
+	@rm -rf ./obj_dir *.vcd
 
 include ../Makefile
