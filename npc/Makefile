@@ -14,7 +14,7 @@ BIN = $(BUILD_DIR)/$(TOPNAME)
 INC_PATH ?=
 
 #传递给verilator的参数：以c++形式输出调试信息，并自动依据makefile进行构建
-VERIARG = -Wall --cc -MMD --build \
+VERILATOR_CFLAGS += -Wall --cc -MMD --build \
 			-O3 --x-assign fast --x-initial fast --noassert
 
 #传递给preproject连接器的信息，添加SDL2库信息
@@ -25,7 +25,7 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 
 #传递给g++的编译参数，包括包含路径和TOP_NAME的定义
-CFLAGS += $(INCFLAGS)  -DTOP_NAME="\"V$(TOPNAME)\""
+CFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
 #新建构建目录，防止出现无法新建autobind.cpp的错误
 $(shell mkdir -p $(BUILD_DIR))
 
@@ -38,7 +38,7 @@ sim:  $(CSOURCES) $(VSOURCES) $(NVBOARD_ARCHIVE)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self."
 	@rm -rf $(OBJ_DIR)
-	verilator $(VERIARG) \
+	verilator $(VERILATOR_CFLAGS) \
 		--top-module $(TOPNAME) \
 		$^ \
 		$(addprefix -LDFLAGS , $(LDFLAGS)) \
