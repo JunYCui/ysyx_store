@@ -29,10 +29,10 @@ int main(int argc,char** argv )
     // bind all pins
     nvboard_bind_all_pins(&dut);
     nvboard_init();
-
+    reset(10);
     while(1)
     {
-    dut.eval();
+    single_cycle();
     nvboard_update();
     }
 }
