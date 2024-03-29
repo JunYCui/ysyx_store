@@ -17,7 +17,7 @@ module light
     end
     always@(posedge clk)
     begin
-        if(rst) begin led <= 16'd1 end
+        if(rst) begin led <= 16'd1; end
         else if(count == 32'd5000000)
             led <= {led[14:0],led[15]};
         else 
