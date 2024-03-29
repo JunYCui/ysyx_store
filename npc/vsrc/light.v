@@ -7,12 +7,12 @@ module light
     reg [31:0] count;
     always @(posedge clk) 
     begin
-        if(rst) begin count <=1'b0; end    
+        if(rst) begin count <=32'b0; end    
         else if(count == 32'd5000000)
-                count <= 1'b0;
+                count <= 32'b0;
         else 
             begin
-                count <= count + 1'b1;
+                count <= count + 32'b1;
             end
     end
     always@(posedge clk)
