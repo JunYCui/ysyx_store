@@ -1,4 +1,4 @@
-TOPNAME = light
+TOPNAME = mux2_1
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 CSOURCES=$(shell find $(abspath ./vsrc) -name "$(TOPNAME).v")
