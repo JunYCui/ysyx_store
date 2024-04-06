@@ -17,9 +17,10 @@ MuxKey #(4,2,2) inst(
 );
 
 endmodule
-/* verilator lint_off MuxKeyInternal */
+
 module MuxKeyInternal #(NR_KEY = 2, KEY_LEN = 1, DATA_LEN = 1, HAS_DEFAULT = 0) (
-  output reg [DATA_LEN-1:0] out,
+ /* verilator lint_off MuxKeyInternal */ 
+ output reg [DATA_LEN-1:0] out,
   input [KEY_LEN-1:0] key,
   input [DATA_LEN-1:0] default_out,
   input [NR_KEY*(KEY_LEN + DATA_LEN)-1:0] lut
@@ -53,8 +54,9 @@ module MuxKeyInternal #(NR_KEY = 2, KEY_LEN = 1, DATA_LEN = 1, HAS_DEFAULT = 0) 
   end
 
 endmodule
-/* verilator lint_off MuxKey */
+
 module MuxKey #(NR_KEY = 2, KEY_LEN = 1, DATA_LEN = 1) (
+/* verilator lint_off MuxKey */
   output [DATA_LEN-1:0] out,
   input [KEY_LEN-1:0] key,
   input [NR_KEY*(KEY_LEN + DATA_LEN)-1:0] lut
