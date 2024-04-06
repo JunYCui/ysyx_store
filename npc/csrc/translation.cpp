@@ -2,7 +2,7 @@
 #include "stdlib.h"
 #include "assert.h"
 
-#include "Vmux4_1.h"
+#include "Vtranslation.h"
 #include <verilated.h>
 
 #include "nvboard.h"
