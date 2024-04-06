@@ -5,7 +5,7 @@ input en;
 output [2:0]led;
 always @(x or en) 
 begin
-    casex (x)   
+    case (x)   
     {
     8'b1xxxxxxx : led = 3'b111; 
     8'bx1xxxxxx : led = 3'b110;    
