@@ -4,6 +4,7 @@ input [7:0]x;
 input en;
 output reg [2:0]led;
 always @(x or en) 
+/* verilator lint_off CASEX */
 begin
     casex (x)   
     8'b1xxxxxxx :led = 3'b111; 
@@ -18,7 +19,7 @@ begin
     endcase 
 
 end
-
+/* verilator lint_on CASEX */
 
 
 endmodule
