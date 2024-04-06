@@ -15,7 +15,7 @@ always @(*) begin
     4'd7:seg_out = 8'h07;
     4'd8:seg_out = 8'h7f;
     4'd9:seg_out = 8'h6f;
-    default: seg_out = ~8'h00;
+    default: seg_out = 8'h00;
     endcase
 end
 /* verilator lint_on WIDTHEXPAND */
