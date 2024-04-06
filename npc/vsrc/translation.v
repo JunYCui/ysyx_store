@@ -15,7 +15,7 @@ begin
     8'bxxxxxx1x :led = 3'b001;
     8'bxxxxxxx1 :led = 3'b000;
     default: led =3'b000;
-    endcase
+    endcasex
 
 end
 
