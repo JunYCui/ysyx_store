@@ -1,8 +1,9 @@
-module translation(x,en,led);
+module translation(x,en,led,seg0);
 
 input [7:0]x;
 input en;
 output reg [2:0]led;
+output reg [6:0]seg0;
 always @(x or en) 
 /* verilator lint_off CASEX */
 begin
@@ -22,7 +23,10 @@ begin
    end
 end
 /* verilator lint_on CASEX */
-
+seg7 inst1(
+    .num(led),
+    .seg_out(seg0)
+);
 
 endmodule
 
