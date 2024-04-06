@@ -1,7 +1,8 @@
 TOPNAME = mux4_1
+SUBNAME = MuxKeyInternal
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
-CSOURCES=$(shell find $(abspath ./vsrc) -name "$(TOPNAME).v")
+CSOURCES=$(shell find $(abspath ./vsrc) -name "$(TOPNAME).v" -and -name "$(SUBNAME).v" )
 VSOURCES=$(shell find $(abspath ./csrc) -name "$(TOPNAME).c" -or -name "$(TOPNAME).cc" -or -name "$(TOPNAME).cpp")
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
