@@ -15,7 +15,7 @@ always @(*) begin
     4'd7:seg_out = 7'h07;
     4'd8:seg_out = 7'h7f;
     4'd9:seg_out = 7'h6f;
-    default: 
+    default: seg_out = 7'h00;
     endcase
 end
 
