@@ -2,7 +2,7 @@ module translation(x,en,led);
 
 input [7:0]x;
 input en;
-output [2:0]led;
+output reg [2:0]led;
 always @(x or en) 
 begin
     case (x)   
