@@ -3,7 +3,7 @@ module translation(x,en,led,seg0);
 input [7:0]x;
 input en;
 output reg [2:0]led;
-output reg [6:0]seg0;
+output reg [7:0]seg0;
 always @(x or en) 
 /* verilator lint_off CASEX */
 begin
