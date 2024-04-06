@@ -2,7 +2,7 @@ module seg7(num,seg_out);
 
 input [2:0]num;
 output reg [6:0]seg_out;
-
+/* verilator lint_off WIDTHEXPAND */
 always @(*) begin
     case (num)
     4'd0:seg_out = 7'h3f;
@@ -18,7 +18,7 @@ always @(*) begin
     default: seg_out = 7'h00;
     endcase
 end
-
+/* verilator lint_on WIDTHEXPAND */
 
 
 
