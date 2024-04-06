@@ -5,7 +5,7 @@ input [1:0]s;
 
 output [1:0]led;
 
-MuxKey(4,2,2) inst(
+MuxKey #(4,2,2) inst(
     led,
     s,
     {
