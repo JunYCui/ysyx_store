@@ -1,7 +1,7 @@
 module seg7(num,seg_out);
 
 input [2:0]num;
-output [6:0]seg_out;
+output reg [6:0]seg_out;
 
 always @(*) begin
     case (num)
