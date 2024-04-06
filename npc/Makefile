@@ -45,7 +45,7 @@ sim:  $(CSOURCES) $(VSOURCES) $(NVBOARD_ARCHIVE)
 		$(addprefix -LDFLAGS , $(LDFLAGS)) \
 		$(addprefix -CFLAGS , $(CFLAGS)) \
 		--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
-		-no-lint-only
+		
 
 #waves:*.vcd
 #	gtkwave *.vcd
