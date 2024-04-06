@@ -17,7 +17,7 @@ MuxKey #(4,2,2) inst(
 );
 
 endmodule
- /* verilator lint_off /home/cjy/ysyx-workbench/npc/vsrc/mux4_1.v:21:8: Filename 'mux4_1' does not match MODULE name: 'MuxKeyInternal' */ 
+
 module MuxKeyInternal #(NR_KEY = 2, KEY_LEN = 1, DATA_LEN = 1, HAS_DEFAULT = 0) (
 
  output reg [DATA_LEN-1:0] out,
@@ -56,7 +56,6 @@ module MuxKeyInternal #(NR_KEY = 2, KEY_LEN = 1, DATA_LEN = 1, HAS_DEFAULT = 0) 
 endmodule
 
 module MuxKey #(NR_KEY = 2, KEY_LEN = 1, DATA_LEN = 1) (
-/* verilator lint_off MuxKey */
   output [DATA_LEN-1:0] out,
   input [KEY_LEN-1:0] key,
   input [NR_KEY*(KEY_LEN + DATA_LEN)-1:0] lut
