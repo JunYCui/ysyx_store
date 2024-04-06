@@ -5,7 +5,7 @@ input en;
 output reg [2:0]led;
 always @(x or en) 
 begin
-    casex (x)   
+    casez (x)   
     8'b1xxxxxxx :led = 3'b111; 
     8'b01xxxxxx :led = 3'b110;    
     8'b001xxxxx :led = 3'b101;
