@@ -45,7 +45,7 @@ sim:  $(CSOURCES) $(VSOURCES) $(NVBOARD_ARCHIVE)
 		$(addprefix -LDFLAGS , $(LDFLAGS)) \
 		$(addprefix -CFLAGS , $(CFLAGS)) \
 		--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
-		--lint-off 'MuxKeyInternal'
+		--lint_off 'MuxKeyInternal'
 
 #waves:*.vcd
 #	gtkwave *.vcd
