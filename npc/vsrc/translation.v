@@ -6,6 +6,8 @@ output reg [2:0]led;
 always @(x or en) 
 /* verilator lint_off CASEX */
 begin
+    if(en)
+   begin
     casex (x)   
     8'b1xxxxxxx :led = 3'b111; 
     8'b01xxxxxx :led = 3'b110;    
@@ -17,7 +19,7 @@ begin
     8'b00000001 :led = 3'b000;
     default: led =3'b000;
     endcase 
-
+   end
 end
 /* verilator lint_on CASEX */
 
