@@ -5,7 +5,7 @@ output reg [7:0]seg_out;
 /* verilator lint_off WIDTHEXPAND */
 always @(*) begin
     case (num)
-    4'd0:seg_out = 8'b00000001;
+    4'd0:seg_out = 8'b00000011;
     4'd1:seg_out = 8'b00000000;
     4'd2:seg_out = 8'b00000000;
     4'd3:seg_out = 8'b00000000;
