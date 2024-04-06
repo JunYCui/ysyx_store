@@ -6,7 +6,7 @@ output reg [7:0]seg_out;
 always @(*) begin
     case (num)
     4'd0:seg_out = 8'b00000011;
-    4'd1:seg_out = 8'b00000000;
+    4'd1:seg_out = 8'b10011111;
     4'd2:seg_out = 8'b00000000;
     4'd3:seg_out = 8'b00000000;
     4'd4:seg_out = 8'b00000000;
