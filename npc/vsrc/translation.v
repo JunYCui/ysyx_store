@@ -7,15 +7,15 @@ always @(x or en)
 begin
     casex (x)   
     8'b1xxxxxxx :led = 3'b111; 
-    8'bx1xxxxxx :led = 3'b110;    
-    8'bxx1xxxxx :led = 3'b101;
-    8'bxxx1xxxx :led = 3'b100;
-    8'bxxxx1xxx :led = 3'b011;
-    8'bxxxxx1xx :led = 3'b010;
-    8'bxxxxxx1x :led = 3'b001;
-    8'bxxxxxxx1 :led = 3'b000;
+    8'b01xxxxxx :led = 3'b110;    
+    8'b001xxxxx :led = 3'b101;
+    8'b0001xxxx :led = 3'b100;
+    8'b00001xxx :led = 3'b011;
+    8'b000001xx :led = 3'b010;
+    8'b0000001x :led = 3'b001;
+    8'b00000001 :led = 3'b000;
     default: led =3'b000;
-    endcase
+    endcase 
 
 end
 
