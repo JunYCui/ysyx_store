@@ -15,7 +15,7 @@ BIN = $(BUILD_DIR)/$(TOPNAME)
 INC_PATH ?=
 
 #传递给verilator的参数：以c++形式输出调试信息，并自动依据makefile进行构建
-VERILATOR_CFLAGS += -Wall --cc -MMD --build --lint-only\
+VERILATOR_CFLAGS += -Wall --cc -MMD --build \
 			-O3 --x-assign fast --x-initial fast --noassert 
 
 #传递给preproject连接器的信息，添加SDL2库信息
@@ -44,8 +44,8 @@ sim:  $(CSOURCES) $(VSOURCES) $(NVBOARD_ARCHIVE)
 		$^ \
 		$(addprefix -LDFLAGS , $(LDFLAGS)) \
 		$(addprefix -CFLAGS , $(CFLAGS)) \
-		--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))
-
+		--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
+		--lint-off 'MuxKeyInternal'
 
 #waves:*.vcd
 #	gtkwave *.vcd
