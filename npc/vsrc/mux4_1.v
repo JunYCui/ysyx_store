@@ -1,11 +1,20 @@
-module mux4_1(a,b,c,d,s0,s1,led);
+module mux4_1(a,b,c,d,s,led);
 
-input [1:0] a,b,c,d; 
-input s0,s1;
+input [1:0]a,b,c,d; 
+input [1:0]s;
 
 output [1:0]led;
 
-assign led = (~s0&~s1&a)|(s0&~s1&b)|(~s0&s1&c)|(s0&s1&d);
+MuxKey(4,2,2) inst(
+    led,
+    s,
+    {
+    2'b00, a,
+    2'b01, b,
+    2'b10, c,
+    2,b11, d
+    }
+);
 
 
 endmodule
