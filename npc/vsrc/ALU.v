@@ -16,7 +16,7 @@ module ALU(
             overflow = ((d1[3] == d2[3])&(d1[3]!= res[3]));
             end
     3'b001: begin
-            {Carry,res} = d1 + ~d2 + 1'b1;
+            {Carry,res} = d1 + (~d2) + 1'b1;
             overflow = ((d1[3] == d2[3])&(d1[3]!= res[3]));
             end
     3'b010: res = ~d1;
