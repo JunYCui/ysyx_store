@@ -6,7 +6,7 @@ module ALU(
     output reg Carry,
     output reg overflow,
     output reg compare
-)
+);
     
     always@(*)
     begin
@@ -29,3 +29,4 @@ module ALU(
 
 
 endmodule
+
