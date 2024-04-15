@@ -7,29 +7,59 @@ module ALU(
     output reg overflow,
     output reg compare
 );
-    assign res = 1'b0; 
-    assign compare = 1'b0; 
-    assign overflow = 1'b0;
-    assign Carry = 1'b0;
     always@(*)
     begin
     case(choice)
     3'b000: begin 
             {Carry,res} = d1 + d2;
             overflow = ((d1[3] == d2[3])&(d1[3]!= res[3]));
+            compare  = 1'b0;
+            Carry = 1'b0;
             end
     3'b001: begin
             {Carry,res} = d1 + (~d2) + 1'b1;
             overflow = ((d1[3] == d2[3])&(d1[3]!= res[3]));
+            compare  = 1'b0;
+            Carry = 1'b0;
             end
-    3'b010: res = ~d1;
-
-    3'b011: res = d1 & d2;
-    3'b100: res = d1 | d2;
-    3'b101: res = d1 ^ d2;
-    
-    3'b110:if(d1>d2)compare  = 1'b1; else compare  = 1'b0; 
-    3'b111:if(d1==d2)compare = 1'b1; else compare  = 1'b0;
+    3'b010: begin 
+            res = ~d1;
+            overflow = 1'b0;
+            compare  = 1'b0;
+            Carry = 1'b0;           
+            end
+    3'b011: begin 
+            res = d1 & d2;
+            overflow = 1'b0;
+            compare  = 1'b0;
+            Carry = 1'b0;     
+            end
+    3'b100: begin 
+            res = d1 | d2;
+            overflow = 1'b0;
+            compare  = 1'b0;
+            Carry = 1'b0;                 
+            end
+    3'b101: begin
+            res = d1 ^ d2;
+            overflow = 1'b0;
+            compare  = 1'b0;
+            Carry = 1'b0;                 
+            end
+    3'b110:begin 
+            if(d1>d2)compare  = 1'b1; 
+            else compare  = 1'b0; 
+            res = 1'b0;
+            overflow = 1'b0;
+            Carry = 1'b0; 
+            end
+    3'b111:begin 
+            if(d1==d2)compare  = 1'b1; 
+            else compare  = 1'b0; 
+            res = 1'b0;
+            overflow = 1'b0;
+            Carry = 1'b0; 
+            end
     endcase
     
     end
