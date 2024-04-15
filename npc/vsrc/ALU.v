@@ -7,6 +7,7 @@ module ALU(
     output reg overflow,
     output reg compare
 );
+    assign res = 1'b0; 
     
     always@(*)
     begin
@@ -27,11 +28,6 @@ module ALU(
     
     3'b110:if(d1>d2)compare  = 1'b1; else compare  = 1'b0; 
     3'b111:if(d1==d2)compare = 1'b1; else compare  = 1'b0;
-    default:begin 
-    res <= 1'b0;
-    compare <= 1'b0;
-    overflow <= 1'b0;
-    end
     endcase
     
     end
