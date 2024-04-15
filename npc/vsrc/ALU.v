@@ -14,7 +14,6 @@ module ALU(
             {Carry,res} = d1 + d2;
             overflow = ((d1[3] == d2[3])&(d1[3]!= res[3]));
             compare  = 1'b0;
-            Carry = 1'b0;
             end
     3'b001: begin
          /* verilator lint_off WIDTHEXPAND */
