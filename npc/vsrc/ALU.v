@@ -49,14 +49,14 @@ module ALU(
     3'b110:begin 
             if(d1>d2)compare  = 1'b1; 
             else compare  = 1'b0; 
-            res = 1'b0;
+            res = 4'b0;
             overflow = 1'b0;
             Carry = 1'b0; 
             end
     3'b111:begin 
             if(d1==d2)compare  = 1'b1; 
             else compare  = 1'b0; 
-            res = 1'b0;
+            res = 4'b0;
             overflow = 1'b0;
             Carry = 1'b0; 
             end
