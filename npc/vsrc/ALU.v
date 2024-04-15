@@ -27,7 +27,7 @@ module ALU(
     
     3'b110:if(d1>d2)compare  = 1'b1; else compare  = 1'b0; 
     3'b111:if(d1==d2)compare = 1'b1; else compare  = 1'b0;
-    default:res = res;
+    default:res = 4'b0;
     endcase
     
     end
