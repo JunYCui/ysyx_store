@@ -1,5 +1,5 @@
-TOPNAME = translation
-SUBNAME = seg7
+TOPNAME = ALU
+SUBNAME =
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 CSOURCES=$(shell find $(abspath ./vsrc) -name "$(TOPNAME).v" -or -name "$(SUBNAME).v" )
