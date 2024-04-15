@@ -23,7 +23,9 @@ module ALU(
             Carry = 1'b0;
             end
     3'b010: begin 
+        /* verilator lint_off WIDTHEXPAND */
             res = ~d1;
+        /* verilator lint_on WIDTHEXPAND */
             overflow = 1'b0;
             compare  = 1'b0;
             Carry = 1'b0;           
