@@ -8,7 +8,9 @@ module ALU(
     output reg compare
 );
     assign res = 1'b0; 
-    
+    assign compare = 1'b0; 
+    assign overflow = 1'b0;
+    assign Carry = 1'b0;
     always@(*)
     begin
     case(choice)
