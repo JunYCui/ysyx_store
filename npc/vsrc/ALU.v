@@ -7,6 +7,7 @@ module ALU(
     output reg compare
 );
     reg [3:0]res_compare; 
+    reg [3:0]d2_n
     always@(*)
     begin
     case(choice)
@@ -18,9 +19,9 @@ module ALU(
             end
     3'b001: begin
                 /* verilator lint_off WIDTHEXPAND */
-                d2 = ~d2 + 4'b0001;
-                res  = d1 + d2 ;
-                overflow = ((d1[3] == d2[3])&(d1[3]!= res[3]));
+                d2_n = ~d2 + 4'b0001;
+                res  = d1 + d2_n ;
+                overflow = ((d1[3] == d2_n[3])&(d1[3]!= res[3]));
                  /* verilator lint_on WIDTHEXPAND */
                 compare  = 1'b0;
                 res_compare= 4'b0;
@@ -52,9 +53,9 @@ module ALU(
             res_compare= 4'b0;             
             end
     3'b110:begin 
-            d2 = ~d2 + 4'b0001;
-            res_compare = d1 + d2;
-            if((d1[3] == d2[3])&&(d1[3]!= res_compare[3]))
+            d2_n = ~d2 + 4'b0001;
+            res_compare = d1 + d2_n;
+            if((d1[3] == d2_n[3])&&(d1[3]!= res_compare[3]))
             begin
                 if(res_compare[3]==1'b1)
                   compare = 1'b0; 
