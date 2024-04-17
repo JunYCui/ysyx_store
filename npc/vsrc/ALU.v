@@ -58,11 +58,9 @@ module ALU(
             d2_n =4'b0;             
             end
     3'b110:begin 
-            d2_n = ~d2 + 4'b0001;
-            if(d2_n == 4'b1000)
-                d2_n = 4'b0000;
+            d2_n = ~d2 + 4'b0001;            
             res_compare = d1 + d2_n;
-            if((d1[3] == d2_n[3])&&(d1[3]!= res_compare[3]))
+            if((d1[3] == d2_n[3])&&(d1[3]!= res_compare[3])&&d1!=4'b1000&&d2!=4'b1000)
             begin
                 if(res_compare[3]==1'b1)
                   compare = 1'b0; 
