@@ -32,20 +32,17 @@ module ALU(
     3'b011: begin 
             res = d1 & d2;
             overflow = 1'b0;
-            compare  = 1'b0;
-            Carry = 1'b0;     
+            compare  = 1'b0; 
             end
     3'b100: begin 
             res = d1 | d2;
             overflow = 1'b0;
-            compare  = 1'b0;
-            Carry = 1'b0;                 
+            compare  = 1'b0;              
             end
     3'b101: begin
             res = d1 ^ d2;
             overflow = 1'b0;
-            compare  = 1'b0;
-            Carry = 1'b0;                 
+            compare  = 1'b0;               
             end
     3'b110:begin 
             res_compare = d1 + (~d2) + 1'b1;
