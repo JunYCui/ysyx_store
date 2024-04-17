@@ -74,7 +74,7 @@ module ALU(
             if(res_compare[2:0] == 3'b000)
                 compare  = 1'b1;
             else 
-                compare = 1'b1;
+                compare = 1'b0;
             res = 4'b0;
             overflow = 1'b0;
             end
