@@ -26,7 +26,7 @@ module ALU(
             end
     3'b010: begin 
         /* verilator lint_off WIDTHEXPAND */
-            res = ~d1+1'b1;
+            res = ~d1;
         /* verilator lint_on WIDTHEXPAND */
             overflow = 1'b0;
             compare  = 1'b0;
