@@ -52,7 +52,7 @@ module ALU(
             end
     3'b110:begin 
             res_compare = d1 + (~d2) + 1'b1;
-            if((d1[3] == d2[3])&&(d1[3]!= res_compare[3]))
+            if((d1[3] == d2[3])&(d1[3]!= res_compare[3]))
             begin
                 if(res_compare[3]==1'b1)
                   compare = 1'b0; 
@@ -60,12 +60,12 @@ module ALU(
                   compare = 1'b1; 
             end
             else 
-                begin
+            begin
                 if(res_compare[3]==1'b0)
                  compare = 1'b0; 
                 else 
                  compare = 1'b1;
-                end
+            end
             res = 4'b0;
             overflow = 1'b0;
             end
