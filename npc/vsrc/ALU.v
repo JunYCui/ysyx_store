@@ -51,7 +51,7 @@ module ALU(
             res_compare = d1 + (~d2) + 1'b1;
             if((d1[3] == d2[3])&&(d1[3]!= res_compare[3]))
             {
-                if(res_compare[3]==1)
+                if(res_compare[3]==1'b1)
                 {
                   compare = 1'b0; 
                 }
@@ -62,7 +62,7 @@ module ALU(
             }
             else 
             {
-                if(res_compare[4]==0)
+                if(res_compare[4]==1'b0)
                 {
                  compare = 1'b0; 
                 }
