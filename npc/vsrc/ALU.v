@@ -62,7 +62,7 @@ module ALU(
             }
             else 
             {
-                if(res_compare[4]==1'b0)
+                if(res_compare[3]==1'b0)
                 {
                  compare = 1'b0; 
                 }
