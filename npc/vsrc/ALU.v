@@ -7,7 +7,7 @@ module ALU(
     output reg compare
 );
     reg [3:0]res_compare; 
-    reg [3:0]d2_n
+    reg [3:0]d2_n;
     always@(*)
     begin
     case(choice)
