@@ -59,13 +59,9 @@ module ALU(
             else 
                 begin
                 if(res_compare[3]==1'b0)
-                {
                  compare = 1'b0; 
-                }
                 else 
-                {
                  compare = 1'b1;
-                }
                 end
             res = 4'b0;
             overflow = 1'b0;
