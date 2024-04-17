@@ -14,6 +14,7 @@ module ALU(
             res = d1 + d2;
             overflow = ((d1[3] == d2[3])&(d1[3]!= res[3]));
             compare  = 1'b0;
+            res_compare= 4'b0;
             end
     3'b001: begin
                 /* verilator lint_off WIDTHEXPAND */
@@ -21,28 +22,33 @@ module ALU(
                 overflow = ((d1[3] == d2[3])&(d1[3]!= res[3]));
                  /* verilator lint_on WIDTHEXPAND */
                 compare  = 1'b0;
+                res_compare= 4'b0;
             end
     3'b010: begin 
         /* verilator lint_off WIDTHEXPAND */
             res = ~d1+1'b1;
         /* verilator lint_on WIDTHEXPAND */
             overflow = 1'b0;
-            compare  = 1'b0;      
+            compare  = 1'b0;
+            res_compare= 4'b0;      
             end
     3'b011: begin 
             res = d1 & d2;
             overflow = 1'b0;
             compare  = 1'b0; 
+            res_compare= 4'b0;
             end
     3'b100: begin 
             res = d1 | d2;
             overflow = 1'b0;
-            compare  = 1'b0;              
+            compare  = 1'b0;    
+            res_compare= 4'b0;          
             end
     3'b101: begin
             res = d1 ^ d2;
             overflow = 1'b0;
-            compare  = 1'b0;               
+            compare  = 1'b0;  
+            res_compare= 4'b0;             
             end
     3'b110:begin 
             res_compare = d1 + (~d2) + 1'b1;
