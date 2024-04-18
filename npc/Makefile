@@ -1,4 +1,4 @@
-TOPNAME = ALU
+TOPNAME = move_register
 SUBNAME =
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
