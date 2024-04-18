@@ -6,11 +6,25 @@ module move_register(
     output reg [7:0]par_out
 );
     reg [3:0]count;
+    reg [31:0]clk_count;
+    reg clk_fen;
+    always @(posedge clk) begin
+        if(clk_count == 31'd50000)
+        begin
+            clk_count <= 31'd0;
+            clk_fen <= ~clk_fen;
+        end
+        else
+        begin
+            clk_count <= clk_count + 1'd1;
+            clk_fen <= clk_fen;
+        end
+    end
     initial
     begin
         out = 8'b0000_0000;
     end
-    always @(posedge clk) 
+    always @(posedge clk_fen) 
     begin
         case(ctrl)
         3'b000: out <= 8'b0000_0000;
@@ -23,7 +37,7 @@ module move_register(
         3'b111: out <= {out[6:0],out[7]};
         endcase 
     end
-    always @(posedge clk) 
+    always @(posedge clk_fen) 
     begin
         if(ctrl == 3'b101)
         begin
@@ -35,7 +49,7 @@ module move_register(
         else 
             count <= 4'd0;
     end
-    always @(posedge clk) begin
+    always @(posedge clk_fen) begin
         if (ctrl == 3'b101)
         begin
             if(count == 4'd8)
