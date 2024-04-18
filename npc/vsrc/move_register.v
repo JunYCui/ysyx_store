@@ -9,9 +9,9 @@ module move_register(
     reg [31:0]clk_count;
     reg clk_fen;
     always @(posedge clk) begin
-        if(clk_count == 31'd50000)
+        if(clk_count == 32'd50000)
         begin
-            clk_count <= 31'd0;
+            clk_count <= 32'd0;
             clk_fen <= ~clk_fen;
         end
         else
