@@ -8,7 +8,7 @@ module move_register(
     reg [3:0]count;
     initial
     begin
-        out <= 8'b0000_0000;
+        out = 8'b0000_0000;
     end
     always @(posedge clk) 
     begin
