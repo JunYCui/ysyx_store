@@ -33,7 +33,7 @@ module move_register(
                 count <= count + 1'b1;
         end
         else 
-            count <= 1'b0;
+            count <= 4'd0;
     end
     always @(posedge clk) begin
         if (ctrl == 3'b101)
@@ -44,7 +44,7 @@ module move_register(
                 par_out <= par_out;
         end
         else 
-            par_out <= 8'b0;
+            par_out <= 8'd0;
     end
 
 
