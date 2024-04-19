@@ -42,19 +42,19 @@ module LSFR (
     assign hundred = dat/100;
 
 
-seg7 seg1
+seg7 seg1_inst
 (
     .num (unit),
     .seg_out (seg0)
 );
 
-seg7 seg2
+seg7 seg2_inst
 (
     .num (ten),
     .seg_out (seg1)
 );
 
-seg7 seg3
+seg7 seg3_inst
 (
     .num (hundred),
     .seg_out (seg2)
