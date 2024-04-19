@@ -7,6 +7,7 @@ module LSFR (
 );
 
 /* verilator lint_off WIDTHTRUNC */
+/* verilator lint_off BLKSEQ */
     reg [7:0]dat;
     reg [31:0]clk_count;
     reg data_move;
@@ -35,7 +36,7 @@ module LSFR (
         end
         else 
         begin
-            /* verilator lint_off BLKSEQ */
+            
             dat = {data_move,dat[6:0]};
             data_move = dat[4]^dat[3]^dat[2]^dat[0];
         end 
