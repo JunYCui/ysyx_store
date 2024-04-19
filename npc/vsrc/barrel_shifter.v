@@ -1,13 +1,14 @@
 module barrel_shifter
 (
-    input din[7:0],
-    input shamt[2:0],
+    input [7:0]din,
+    input [2:0]shamt,
     input dir,
     input ari,
 
     output dout[7:0]
 );
-    reg [7:0]din_1,din_2;
+    reg [7:0]din_1;
+    reg [7:0]din_2;
     always@(*)
     begin
         if(shamt[0] == 1'b1)
@@ -43,12 +44,12 @@ module barrel_shifter
                 din_2 = {din_1[7],din_2[7],din_1[7:2]};
        end
         else 
-            din_1 = din_2; 
+            din_2 = din_1; 
     end
 
         always@(*)
     begin
-        if(shamt[1] == 1'b1)
+        if(shamt[2] == 1'b1)
        begin
         if(ari == 1'b1)
             if(dir == 1'b1)
