@@ -9,7 +9,7 @@ module mux4_1
 
     output out
 );
-    always(*)
+    always@(*)
     begin
         case({s1,s0})
 
