@@ -1,4 +1,4 @@
-TOPNAME = mux4_1
+TOPNAME = barrel_shifter
 SUBNAME =
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
