@@ -10,6 +10,8 @@ module LSFR (
     reg data_move;
     reg clk_fen;
     wire [3:0] unit,ten,hundred;
+
+/* verilator lint_off WIDTHTRUNC */
     always @(posedge clk) begin
         if(clk_count == 32'd5000000)
         begin
