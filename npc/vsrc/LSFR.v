@@ -26,6 +26,7 @@ module LSFR (
             clk_fen <= clk_fen;
         end
     end
+    /* verilator lint_off BLKSEQ */
     always @(posedge clk_fen)
     begin
         if(load)
