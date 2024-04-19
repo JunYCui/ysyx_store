@@ -36,7 +36,7 @@ module LSFR (
         end
         else 
         begin
-            dat = {data_move,dat[6:0]};
+            dat = {data_move,dat[7:1]};
             data_move = dat[4]^dat[3]^dat[2]^dat[0];
         end 
     
