@@ -1,4 +1,4 @@
-TOPNAME = move_register
+TOPNAME = mux4_1
 SUBNAME =
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
