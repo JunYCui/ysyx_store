@@ -1,5 +1,5 @@
 #include <nvboard.h>
-#include <Vmove_register.h>
+#include <VLSFR.h>
 
 static TOP_NAME dut;
 
