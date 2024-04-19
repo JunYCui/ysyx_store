@@ -1,5 +1,5 @@
-TOPNAME = barrel_shifter
-SUBNAME =
+TOPNAME = LSFR
+SUBNAME =seg7
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 CSOURCES=$(shell find $(abspath ./vsrc) -name "$(TOPNAME).v" -or -name "$(SUBNAME).v" )
