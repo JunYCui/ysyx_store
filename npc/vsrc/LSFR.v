@@ -44,19 +44,19 @@ module LSFR (
 
 seg7 seg1
 (
-    .num (unit)
+    .num (unit),
     .seg_out (seg0)
 );
 
 seg7 seg2
 (
-    .num (ten)
+    .num (ten),
     .seg_out (seg1)
 );
 
 seg7 seg3
 (
-    .num (hundred)
+    .num (hundred),
     .seg_out (seg2)
 );
 
