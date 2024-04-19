@@ -12,12 +12,10 @@ module mux4_1
     always@(*)
     begin
         case({s1,s0})
-
-        2'b00:out <= din0; 
-        2'b01:out <= din1;
-        2'b10:out <= din2;
-        2'b11:out <= din3;
-        
+        2'b00:out = din0; 
+        2'b01:out = din1;
+        2'b10:out = din2;
+        2'b11:out = din3;
         endcase 
     end
 
