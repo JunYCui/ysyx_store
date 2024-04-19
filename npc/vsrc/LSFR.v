@@ -35,6 +35,7 @@ module LSFR (
         end
         else 
         begin
+            /* verilator lint_off BLKSEQ */
             dat = {data_move,dat[6:0]};
             data_move = dat[4]^dat[3]^dat[2]^dat[0];
         end 
