@@ -6,7 +6,7 @@ module LSFR (
     output [7:0]seg2
 );
     reg [7:0]dat;
-    reg [31:0]count;
+    reg [31:0]clk_count;
     reg data_move;
     reg clk_fen;
     wire [3:0] unit,ten,hundred;
