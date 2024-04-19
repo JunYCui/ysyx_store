@@ -9,6 +9,8 @@ module barrel_shifter
 );
     reg [7:0]din_1;
     reg [7:0]din_2;
+
+
     always@(*)
     begin
         if(shamt[0] == 1'b1)
@@ -69,3 +71,4 @@ module barrel_shifter
 
 
 endmodule
+
