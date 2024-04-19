@@ -7,8 +7,7 @@ module barrel_shifter
 
     output reg [7:0]dout
 );
-    reg [7:0]din_1;
-    reg [7:0]din_2;
+    reg [7:0]din_1,din_2;
 
 
     always@(*)
