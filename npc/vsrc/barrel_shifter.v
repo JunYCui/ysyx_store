@@ -7,6 +7,7 @@ module barrel_shifter
 
     output reg [7:0]dout
 );
+/* verilator lint_off UNOPTFLAT */
     reg [7:0]din_1,din_2;
 
 
