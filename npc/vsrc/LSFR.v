@@ -7,8 +7,7 @@ module LSFR (
 );
 
 /* verilator lint_off WIDTHTRUNC */
-/* verilator lint_off BLKSEQ */
-    reg [7:0]date1;
+    reg [7:0]dat;
     reg [31:0]clk_count;
     reg data_move;
     reg clk_fen;
@@ -31,21 +30,20 @@ module LSFR (
     begin
         if(load)
         begin
-            date1 <= 8'b0000_0001;
-            data_move <= 1'b1;  
+            dat = 8'b0000_0001;
+            data_move = 1'b1;  
         end
         else 
         begin
-            
-            date1 = {data_move,date1[6:0]};
-            data_move = date1[4]^date1[3]^date1[2]^date1[0];
+            dat = {data_move,dat[6:0]};
+            data_move = dat[4]^dat[3]^dat[2]^dat[0];
         end 
     
     end
 
-    assign unit = date1%10;
-    assign ten = date1/10%10;
-    assign hundred = date1/100;
+    assign unit = dat%10;
+    assign ten = dat/10%10;
+    assign hundred = dat/100;
 
 
 seg7 seg1_inst
