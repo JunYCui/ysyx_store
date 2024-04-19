@@ -5,12 +5,13 @@ module LSFR (
     output [7:0]seg1,
     output [7:0]seg2
 );
+
 /* verilator lint_off WIDTHTRUNC */
     reg [7:0]dat;
     reg [31:0]clk_count;
     reg data_move;
     reg clk_fen;
-    wire [3:0] unit,ten,hundred;
+    wire [2:0] unit,ten,hundred;
 
 
     always @(posedge clk) begin
