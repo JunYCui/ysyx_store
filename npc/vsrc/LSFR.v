@@ -12,7 +12,7 @@ module LSFR (
     reg [31:0]clk_count;
     reg data_move;
     reg clk_fen;
-    wire [2:0] unit,ten,hundred;
+    wire [3:0] unit,ten,hundred;
 
 
     always @(posedge clk) begin
