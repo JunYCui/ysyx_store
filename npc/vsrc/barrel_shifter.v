@@ -5,7 +5,7 @@ module barrel_shifter
     input dir,
     input ari,
 
-    output dout[7:0]
+    output reg [7:0]dout
 );
     reg [7:0]din_1;
     reg [7:0]din_2;
