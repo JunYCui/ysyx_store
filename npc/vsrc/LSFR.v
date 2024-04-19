@@ -37,7 +37,7 @@ module LSFR (
         else 
         begin
             
-            date1 = {data_move,dat[6:0]};
+            date1 = {data_move,date1[6:0]};
             data_move = date1[4]^date1[3]^date1[2]^date1[0];
         end 
     
