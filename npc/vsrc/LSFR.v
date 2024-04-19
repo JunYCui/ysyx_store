@@ -1,7 +1,7 @@
 module LSFR (
     input clk,
     input load,
-    output reg [7:0]dat;
+    output reg [7:0]dat,
     output [7:0]seg0,
     output [7:0]seg1,
     output [7:0]seg2
