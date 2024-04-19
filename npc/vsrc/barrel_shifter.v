@@ -55,14 +55,14 @@ module barrel_shifter
        begin
         if(ari == 1'b1)
             if(dir == 1'b1)
-                dout = {din_2[4:0],3'b000};
+                dout = {din_2[3:0],4'b0000};
             else 
-                dout = {3'b000,din_2[7:3]};
+                dout = {4'b0000,din_2[7:4]};
         else
             if(dir == 1'b1)
-                dout = {din_2[4:0],3'b000};
+                dout = {din_2[3:0],3'b000};
             else 
-                dout = {din_2[7],din_2[7],din_2[7],din_2[7:3]};
+                dout = {din_2[7],din_2[7],din_2[7],din_2[7],din_2[7:4]};
        end
         else 
             dout = din_2; 
