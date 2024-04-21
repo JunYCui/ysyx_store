@@ -22,7 +22,7 @@ always @(posedge clk)
 
 
 
-always @(posedge clk or negedge clrn)
+always @(posedge clk)
     if(clrn == 1'b0)
         nextdat_n <= 1'b1;
     else if(f1_flag == 1'b1)
@@ -30,13 +30,13 @@ always @(posedge clk or negedge clrn)
     else 
         nextdat_n <= 1'b1;
 
-always @(posedge clk or negedge clrn)
+always @(posedge clk)
     if(clrn == 1'b0)
         state <= 3'd0;
     else 
         state <= next_state;
 
-always @(posedge clk or negedge clrn)
+always @(posedge clk)
     if(clrn == 1'b0)
         next_state <= 3'd0;
     else  
@@ -49,7 +49,7 @@ always @(posedge clk or negedge clrn)
             endcase    
         end
 
-always @(posedge clk or negedge clrn)
+always @(posedge clk)
     if(clrn == 1'b0)
         f1_flag <= 1'd0;
     else if(state == 3'd1)
@@ -57,7 +57,7 @@ always @(posedge clk or negedge clrn)
     else 
         f1_flag <= f1_flag;
 
-always @(posedge clk or negedge clrn)
+always @(posedge clk)
     if(clrn == 1'b0)
         led <= 16'd0;
     else if(state == 3'd1)
