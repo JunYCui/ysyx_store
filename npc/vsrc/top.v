@@ -14,7 +14,7 @@ wire [7:0]dat;
 reg nextdat_n;
 reg f1_flag;
 reg [2:0]state,next_state;
-wire overflow;
+reg overflow;
 
 
 always @(posedge clk)
