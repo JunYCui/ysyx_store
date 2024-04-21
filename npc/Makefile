@@ -1,5 +1,5 @@
-TOPNAME = LSFR
-SUBNAME =seg7
+TOPNAME = top
+SUBNAME = ps2_keyboard
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 CSOURCES=$(shell find $(abspath ./vsrc) -name "$(TOPNAME).v" -or -name "$(SUBNAME).v" )
