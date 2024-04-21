@@ -99,7 +99,7 @@ always @(posedge clk)
     else 
         keyvalue <= keyvalue;
 
-
+/* verilator lint_off WIDTHTRUNC */
 seg7 seg7_inst1(
     .num(keyvalue%16),
     .seg_out(seg1)
