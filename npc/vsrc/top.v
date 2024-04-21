@@ -5,7 +5,7 @@ input ps2_dat,
 input clk,
 input clrn,
 
-output [15:0] led
+output reg [15:0] led
 
 );
 
