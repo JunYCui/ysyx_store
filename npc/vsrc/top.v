@@ -73,7 +73,7 @@ always @(posedge clk)
                 next_state<=3'd4;
                 else 
                 next_state<=next_state;
-            3'd4: if(ready&&(overflow == 1'd0)) next_state <= 3'd5; else next_state<=3'b0;
+            3'd4: if(ready&&(overflow == 1'd0)) next_state <= 3'd5; else next_state<=3'd4;
             3'd5:begin
                 if(dat == 8'hF0)
                 next_state <= 3'd3;
