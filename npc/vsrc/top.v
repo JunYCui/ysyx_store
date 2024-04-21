@@ -3,7 +3,7 @@ module top
 input ps2_clk,
 input ps2_dat,
 input clk,
-input clrn,
+input rst,
 
 output reg [15:0] led
 
@@ -15,15 +15,17 @@ reg nextdat_n;
 reg f1_flag;
 reg [2:0]state,next_state;
 reg overflow;
+reg [2:0]count;
+
+
+
+
+
+
 
 
 always @(posedge clk)
-    overflow <= overflow;
-
-
-
-always @(posedge clk)
-    if(clrn == 1'b0)
+    if(rst == 1'b0)
         nextdat_n <= 1'b1;
     else if(f1_flag == 1'b1)
         nextdat_n <= 1'b0;
@@ -31,18 +33,18 @@ always @(posedge clk)
         nextdat_n <= 1'b1;
 
 always @(posedge clk)
-    if(clrn == 1'b0)
+    if(rst == 1'b0)
         state <= 3'd0;
     else 
         state <= next_state;
 
 always @(posedge clk)
-    if(clrn == 1'b0)
+    if(rst == 1'b0)
         next_state <= 3'd0;
     else  
         begin
             case (state)
-            3'd0:if(ready) next_state <= 3'd1; else next_state<=3'b0;
+            3'd0:if(ready&&overflow == 1'd0) next_state <= 3'd1; else next_state<=3'b0;
             3'd1:if(f1_flag == 1'b1) next_state <= 3'd2;
             3'd2:if(nextdat_n == 1'b0) next_state <= 3'd0; 
             default: next_state <= 3'd0;
@@ -50,7 +52,7 @@ always @(posedge clk)
         end
 
 always @(posedge clk)
-    if(clrn == 1'b0)
+    if(rst == 1'b0)
         f1_flag <= 1'd0;
     else if(state == 3'd1)
         f1_flag <= 1'd1;
@@ -58,7 +60,7 @@ always @(posedge clk)
         f1_flag <= f1_flag;
 
 always @(posedge clk)
-    if(clrn == 1'b0)
+    if(rst == 1'b0)
         led <= 16'd0;
     else if(state == 3'd1)
         led <= {8'd0,dat};
@@ -69,7 +71,7 @@ always @(posedge clk)
 ps2_keyboard ps2_keyboard_inst
 (   
     .clk(clk),
-    .clrn(clrn),
+    .clrn(rst),
     .ps2_clk(ps2_clk),
     .ps2_data(ps2_dat),
     .data(dat),
