@@ -1,11 +1,12 @@
 TOPNAME = top
 SUBNAME = ps2_keyboard 
-SUBNAME += seg7
+
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 CSOURCES=$(shell find $(abspath ./vsrc) -name "$(TOPNAME).v" -or -name "$(SUBNAME).v" )
 VSOURCES=$(shell find $(abspath ./csrc) -name "$(TOPNAME).c" -or -name "$(TOPNAME).cc" -or -name "$(TOPNAME).cpp")
 
+VSOURCES += $(abspath ./vsrc/seg7.v)
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 CSOURCES += $(SRC_AUTO_BIND)
 CONSTR = constrain/$(TOPNAME).nxdc
