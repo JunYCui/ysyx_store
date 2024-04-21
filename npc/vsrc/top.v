@@ -57,7 +57,7 @@ always @(posedge clk or negedge clrn)
     if(clrn == 1'b0)
         led <= 16'd0;
     else if (state == 1'd1)
-        led <= {8'd0,dat}
+        led <= {8'd0,dat};
     else 
         led <= led;
 
@@ -77,3 +77,4 @@ ps2_keyboard ps2_keyboard_inst
 
 
 endmodule
+
