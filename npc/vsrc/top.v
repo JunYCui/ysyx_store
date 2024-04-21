@@ -105,7 +105,7 @@ seg7 seg7_inst1(
     .seg_out(seg1)
 );
 
-seg7 seg7_inst1(
+seg7 seg7_inst2(
     .num(keyvalue/16),
     .seg_out(seg2)
 );
