@@ -52,7 +52,7 @@ always @(posedge clk or negedge clrn)
 always @(posedge clk or negedge clrn)
     if(clrn == 1'b0)
         f1_flag <= 1'd0;
-    else if(state == 1'd1)
+    else if(state == 3'd1)
         f1_flag <= 1'd1;
     else 
         f1_flag <= f1_flag;
@@ -60,7 +60,7 @@ always @(posedge clk or negedge clrn)
 always @(posedge clk or negedge clrn)
     if(clrn == 1'b0)
         led <= 16'd0;
-    else if(state == 1'd1)
+    else if(state == 3'd1)
         led <= {8'd0,dat};
     else 
         led <= led;
