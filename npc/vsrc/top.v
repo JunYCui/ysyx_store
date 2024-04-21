@@ -11,7 +11,7 @@ output reg [15:0] led
 
 wire ready;
 wire [7:0]dat;
-wire nextdat_n;
+reg nextdat_n;
 reg f1_flag;
 reg [2:0]state,next_state;
 
