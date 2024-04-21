@@ -11,6 +11,7 @@ output reg [7:0] led
 
 wire ready;
 wire [7:0]dat;
+reg flag;
 reg clrn;
 reg nextdat_n;
 reg [2:0]state,next_state;
@@ -70,25 +71,27 @@ always @(posedge clk)
                 next_state<=next_state;
             3'd3:
                 if(nextdat_n == 1'b0)
-                next_state<=3'd4;
+                next_state<=3'd3;
                 else 
                 next_state<=next_state;
-            3'd4: if(ready&&(overflow == 1'd0)) next_state <= 3'd5; else next_state<=3'd4;
-            3'd5:begin
-                if(dat == 8'hF0)
-                next_state <= 3'd3;
-                else 
-                next_state <= 3'd2;
-                end
             default: next_state <= 3'd0;
             endcase    
         end
 
+always @(posedge clk)
+    if(rst == 1'b0)
+        flag <= 1'b0;
+    else if(state == 3'd3)
+        flag <= 1'b1;
+    else if(state == 3'd2)
+        flag <= 1'b0;
+    else 
+        flag <= flag;
 
 always @(posedge clk)
     if(rst == 1'b0)
         led <= 8'd0;
-    else if(state == 3'd5)
+    else if(flag == 1'b1 &&state == 3'd1)
         led <= dat;
     else 
         led <= led;
