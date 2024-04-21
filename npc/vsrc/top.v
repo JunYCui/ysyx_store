@@ -5,12 +5,15 @@ input ps2_dat,
 input clk,
 input rst,
 
-output reg [7:0] led
+output reg [7:0] seg1,
+output reg [7:0] seg2
+
 
 );
 
 wire ready;
 wire [7:0]dat;
+reg [7:0]keyvalue;
 reg flag;
 reg clrn;
 reg nextdat_n;
@@ -90,11 +93,22 @@ always @(posedge clk)
 
 always @(posedge clk)
     if(rst == 1'b0)
-        led <= 8'd0;
+        keyvalue <= 8'd0;
     else if(flag == 1'b1 &&state == 3'd1)
-        led <= dat;
+        keyvalue <= dat;
     else 
-        led <= led;
+        keyvalue <= keyvalue;
+
+
+seg7 seg7_inst1(
+    .num(keyvalue%16)
+    .seg_out(seg1)
+);
+
+seg7 seg7_inst1(
+    .num(keyvalue/16)
+    .seg_out(seg2)
+);
 
 
 ps2_keyboard ps2_keyboard_inst
