@@ -15,7 +15,7 @@ reg nextdat_n;
 reg f1_flag;
 reg [2:0]state,next_state;
 reg overflow;
-reg [2:0]count;
+
 
 
 
