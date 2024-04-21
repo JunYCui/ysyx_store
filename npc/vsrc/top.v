@@ -29,7 +29,7 @@ always@(posedge clk)
 always@(posedge clk)
     if(rst == 1'b0)
         clrn <= 1'b0;
-    else if (count == 10'd1023||state == 3'd0)
+    else if (count == 10'd1023&&state == 3'd0)
         clrn <= 1'b0;
     else 
         clrn <= 1'b1;
