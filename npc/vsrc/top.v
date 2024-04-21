@@ -71,7 +71,7 @@ ps2_keyboard ps2_keyboard_inst
     .data(dat),
     .ready(ready),
     .nextdata_n(nextdat_n),
-    .overflow(overflow)
+    .overflow()
 );
 
 
