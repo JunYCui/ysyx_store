@@ -1,5 +1,6 @@
 TOPNAME = top
-SUBNAME = ps2_keyboard seg7
+SUBNAME = ps2_keyboard
+SUBNAME+ = seg 7 
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 CSOURCES=$(shell find $(abspath ./vsrc) -name "$(TOPNAME).v" -or -name "$(SUBNAME).v" )
