@@ -16,20 +16,20 @@ reg nextdat_n;
 reg f1_flag;
 reg [2:0]state,next_state;
 reg overflow;
-reg [4:0]count;
+reg [9:0]count;
 
 always@(posedge clk)
     if(rst == 1'b0)
-        count <= 5'b0;
-    else if (count == 5'd31)
-        count <= 5'b0;
+        count <= 10'b0;
+    else if (count == 10'd1023)
+        count <= 10'b0;
     else if(f1_flag == 1'b1)
-        count <= count + 5'd1; 
+        count <= count + 10'd1; 
 
 always@(posedge clk)
     if(rst == 1'b0)
         clrn <= 1'b0;
-    else if (count == 5'd31)
+    else if (count == 5'd1023)
         clrn <= 1'b0;
     else 
         clrn <= 1'b1;
