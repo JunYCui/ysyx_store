@@ -101,12 +101,12 @@ always @(posedge clk)
 
 
 seg7 seg7_inst1(
-    .num(keyvalue%16)
+    .num(keyvalue%16),
     .seg_out(seg1)
 );
 
 seg7 seg7_inst1(
-    .num(keyvalue/16)
+    .num(keyvalue/16),
     .seg_out(seg2)
 );
 
