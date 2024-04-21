@@ -53,3 +53,4 @@ module ps2_keyboard(clk,clrn,ps2_clk,ps2_data,data,
     assign data = fifo[r_ptr]; //always set output data
 
 endmodule
+
