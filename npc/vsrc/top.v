@@ -23,7 +23,7 @@ always@(posedge clk)
         count <= 10'b0;
     else if (count == 10'd1023)
         count <= 10'b0;
-    else if(next_state == 3'd2)
+    else if(state == 3'd2)
         count <= count + 10'd1; 
 
 always@(posedge clk)
@@ -38,7 +38,7 @@ always@(posedge clk)
 always @(posedge clk)
     if(rst == 1'b0)
         nextdat_n <= 1'b1;
-    else if(next_state == 3'd1)
+    else if(State == 3'd1)
         nextdat_n <= 1'b0;
     else 
         nextdat_n <= 1'b1;
