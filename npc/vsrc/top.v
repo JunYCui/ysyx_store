@@ -21,7 +21,7 @@ reg [2:0]state,next_state;
 always @(posedge clk or negedge clrn)
     if(clrn == 1'b0)
         nextdat_n <= 1'b1;
-    else if(fi_flag == 1'b1)
+    else if(f1_flag == 1'b1)
         nextdat_n <= 1'b0;
     else 
         nextdat_n <= 1'b1;
