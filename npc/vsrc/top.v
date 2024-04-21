@@ -38,7 +38,7 @@ always @(posedge clk or negedge clrn)
     else  
         begin
             case (state)
-            3'd0:if(ready) next_state <= 3'd1 else next_state<=3'b0;
+            3'd0:if(ready) next_state <= 3'd1; else next_state<=3'b0;
             3'd1:if(f1_flag == 1'b1) next_state <= 3'd2;
             3'd2:if(nextdat_n == 1'b0) next_state <= 3'd0; 
             default: next_state <= 3'd0;
