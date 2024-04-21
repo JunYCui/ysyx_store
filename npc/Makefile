@@ -3,8 +3,8 @@ SUBNAME = ps2_keyboard
 SUBNAME1 =seg7
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
-CSOURCES=$(shell find $(abspath ./vsrc) -name "$(TOPNAME).v" -or -name "$(SUBNAME).v" -or -name "$(SUBNAME1).v"  )
-VSOURCES=$(shell find $(abspath ./csrc) -name "$(TOPNAME).c" -or -name "$(TOPNAME).cc" -or -name "$(TOPNAME).cpp")
+VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )
+CSOURCES=$(shell find $(abspath ./csrc) -name "$(TOPNAME).c" -or -name "$(TOPNAME).cc" -or -name "$(TOPNAME).cpp")
 
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
