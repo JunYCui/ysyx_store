@@ -23,7 +23,7 @@ always@(posedge clk)
         count <= 10'b0;
     else if (count == 10'd1023)
         count <= 10'b0;
-    else if(f1_flag == 1'b1)
+    else if(next_state == 3'd2)
         count <= count + 10'd1; 
 
 always@(posedge clk)
