@@ -14,7 +14,11 @@ wire [7:0]dat;
 reg nextdat_n;
 reg f1_flag;
 reg [2:0]state,next_state;
+wire overflow;
 
+
+always @(posedge clk)
+    overflow <= overflow;
 
 
 
@@ -71,6 +75,7 @@ ps2_keyboard ps2_keyboard_inst
     .data(dat),
     .ready(ready),
     .nextdata_n(nextdat_n),
+    .overflow(overflow)
 );
 
 
