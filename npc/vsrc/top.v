@@ -107,9 +107,9 @@ always@(posedge clk)
         clear <= clear;
 /* verilator lint_off WIDTHTRUNC */
 seg7 seg7_inst1(
-    .num(keyvalue%16),
+    .num(clear),
     .clear(clear),
-    .seg_out(clear)
+    .seg_out(seg1)
 );
 
 seg7 seg7_inst2(
