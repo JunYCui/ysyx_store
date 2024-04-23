@@ -1,7 +1,7 @@
 module seg7(num,clear,seg_out);
 
 input [3:0]num;
-input clear
+input clear;
 output reg [7:0]seg_out;
 /* verilator lint_off WIDTHEXPAND */
 always @(*) begin
