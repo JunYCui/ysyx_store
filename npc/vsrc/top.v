@@ -102,14 +102,14 @@ always@(posedge clk)
     else if(state == 3'd2)
         clear <= 1'b0; 
     else if(state == 3'd5) 
-        clear <= 1'b1;
+        clear <= 1'b0;
     else 
         clear <= clear;
-/* verilator lint_off WIDTHEXPAND */
+
 /* verilator lint_off WIDTHTRUNC */
 
 seg7 seg7_inst1(
-    .num(clear),
+    .num(keyvalue%16),
     .clear(clear),
     .seg_out(seg1)
 );
