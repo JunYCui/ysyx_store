@@ -83,7 +83,7 @@ always @(posedge clk)
                 next_state<=next_state;
             3'd5:
                 begin   
-                    if(dat == 8'F0)
+                    if(dat == 8'hF0)
                     next_state <= 3'd3; 
                     else 
                     next_state <= 3'd6;
