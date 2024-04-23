@@ -41,7 +41,7 @@ always@(posedge clk)
 always @(posedge clk)
     if(rst == 1'b0)
         nextdat_n <= 1'b1;
-    else if(state == 3'd1)
+    else if(state == 3'd1 || state == 3'd5)
         nextdat_n <= 1'b0;
     else 
         nextdat_n <= 1'b1;
