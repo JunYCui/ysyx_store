@@ -18,21 +18,11 @@ reg clrn;
 reg nextdat_n;
 reg [2:0]state,next_state;
 reg overflow;
-reg [9:0]count;
 reg clear;
+reg flag;
 
 always@(posedge clk)
     if(rst == 1'b0)
-        count <= 10'b0;
-    else if (count == 10'd1023)
-        count <= 10'b0;
-    else if(state == 3'd1 || state == 3'd5)
-        count <= count + 10'd1; 
-
-always@(posedge clk)
-    if(rst == 1'b0)
-        clrn <= 1'b0;
-    else if (count == 10'd1023&&(state == 3'd0 || state == 3'd5))
         clrn <= 1'b0;
     else 
         clrn <= 1'b1;
@@ -41,7 +31,7 @@ always@(posedge clk)
 always @(posedge clk)
     if(rst == 1'b0)
         nextdat_n <= 1'b1;
-    else if(state == 3'd1 || state == 3'd5)
+    else if(flag == 1'b1)
         nextdat_n <= 1'b0;
     else 
         nextdat_n <= 1'b1;
@@ -82,13 +72,6 @@ always @(posedge clk)
                 else 
                 next_state<=next_state;
             3'd5:
-                begin   
-                    if(dat == 8'hF0)
-                    next_state <= 3'd3; 
-                    else 
-                    next_state <= 3'd6;
-                end
-            3'd6:
                 if(nextdat_n == 1'b0)
                 next_state <=3'd0;
                 else 
@@ -98,19 +81,28 @@ always @(posedge clk)
         end
 
 
+always@(posedge clk)
+    if(rst == 1'b0)
+        flag <= 1'b0;
+    else if(state == 3'd2 || state == 3'd5)
+        flag <= 1'b1;
+    else 
+        flag <= flag;
 always @(posedge clk)
     if(rst == 1'b0)
         keyvalue <= 8'd0;
-    else if(state == 3'd5)
+    else if(state == 3'd2)
         keyvalue <= dat;
     else 
         keyvalue <= keyvalue;
 
 always@(posedge clk)
     if(rst == 1'b0)
+        clear <= 1'b1;
+    else if(state == 3'd2)
         clear <= 1'b0; 
     else if(state == 3'd5) 
-        clear <= 1'b0;
+        clear <= 1'b1;
     else 
         clear <= clear;
 /* verilator lint_off WIDTHTRUNC */
