@@ -94,7 +94,7 @@ always @(posedge clk)
 always @(posedge clk)
     if(rst == 1'b0)
         keyvalue <= 8'd0;
-    else if(state == 1'b2)
+    else if(state == 3'd2)
         keyvalue <= dat;
     else if(flag == 1'b1 &&state == 3'd1)
         keyvalue <= 8'h00;
@@ -111,13 +111,13 @@ always@(posedge clk)
 /* verilator lint_off WIDTHTRUNC */
 seg7 seg7_inst1(
     .num(keyvalue%16),
-    .clear(clear)
+    .clear(clear),
     .seg_out(seg1)
 );
 
 seg7 seg7_inst2(
     .num(keyvalue/16),
-    .clear(clear)
+    .clear(clear),
     .seg_out(seg2)
 );
 
