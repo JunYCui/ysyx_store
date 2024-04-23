@@ -26,13 +26,13 @@ always@(posedge clk)
         count <= 10'b0;
     else if (count == 10'd1023)
         count <= 10'b0;
-    else if(state == 3'd1)
+    else if(state == 3'd1 || state == 3'd5)
         count <= count + 10'd1; 
 
 always@(posedge clk)
     if(rst == 1'b0)
         clrn <= 1'b0;
-    else if (count == 10'd1023&&state == 3'd0)
+    else if (count == 10'd1023&&(state == 3'd0 || state == 3'd5))
         clrn <= 1'b0;
     else 
         clrn <= 1'b1;
