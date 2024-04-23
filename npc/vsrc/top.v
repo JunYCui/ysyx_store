@@ -101,7 +101,7 @@ always @(posedge clk)
 always @(posedge clk)
     if(rst == 1'b0)
         keyvalue <= 8'd0;
-    else if(state == 3'd6)
+    else if(state == 3'd2)
         keyvalue <= dat;
     else 
         keyvalue <= keyvalue;
