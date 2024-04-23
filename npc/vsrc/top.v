@@ -82,6 +82,13 @@ always @(posedge clk)
                 else 
                 next_state<=next_state;
             3'd5:
+                begin   
+                    if(dat == 8'F0)
+                    next_state <= 3'd3; 
+                    else 
+                    next_state <= 3'd6;
+                end
+            3'd6:
                 if(nextdat_n == 1'b0)
                 next_state <=3'd0;
                 else 
@@ -94,7 +101,7 @@ always @(posedge clk)
 always @(posedge clk)
     if(rst == 1'b0)
         keyvalue <= 8'd0;
-    else if(state == 3'd5)
+    else if(state == 3'd6)
         keyvalue <= dat;
     else 
         keyvalue <= keyvalue;
