@@ -63,7 +63,7 @@ always @(posedge clk)
                 next_state<=next_state;
             3'd3:
                 if(nextdat_n == 1'b0)
-                next_state<=3'd3;
+                next_state<=3'd0;
                 else 
                 next_state<=next_state;
             3'd4:
