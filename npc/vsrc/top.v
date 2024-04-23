@@ -116,7 +116,7 @@ always@(posedge clk)
     else if(count == 7'd100)
         count <= 7'd0;
     else if(state == 3'd5) 
-        count <= count + 2'd2 ;
+        count <= count + 7'd2 ;
     else 
         count <= count;
 
