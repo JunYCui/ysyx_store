@@ -8,7 +8,9 @@ input rst,
 output reg [7:0] seg1,
 output reg [7:0] seg2,
 output reg [7:0] seg3,
-output reg [7:0] seg4
+output reg [7:0] seg4,
+output reg [7:0] seg5,
+output reg [7:0] seg6
 
 );
 
@@ -21,6 +23,7 @@ reg [2:0]state,next_state;
 reg overflow;
 reg clear;
 reg flag;
+reg [6:0]count;
 wire [7:0] ascill_value;
 
 always@(posedge clk)
@@ -107,6 +110,16 @@ always@(posedge clk)
         clear <= 1'b1;
     else 
         clear <= clear;
+always@(posedge clk)
+    if(rst == 1'b0)
+        count <= 7'b0; 
+    else if(count == 7'd100)
+        count <= 7'd0;
+    else if(state == 3'd5) 
+        count <= count + 1'b1 ;
+    else 
+        count <= count;
+
 /* verilator lint_off WIDTHTRUNC */
 seg7 seg7_inst1(
     .num(keyvalue%16),
@@ -130,6 +143,18 @@ seg7 seg7_inst4(
     .num(ascill_value/10),
     .clear(clear),
     .seg_out(seg4)
+);
+
+seg7 seg7_inst5(
+    .num(count%10),
+    .clear(1'b0),
+    .seg_out(seg5)
+);
+
+seg7 seg7_inst6(
+    .num(count/10),
+    .clear(1'b0),
+    .seg_out(seg6)
 );
 
 
