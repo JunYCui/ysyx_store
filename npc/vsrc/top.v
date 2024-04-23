@@ -91,14 +91,14 @@ always@(posedge clk)
 always @(posedge clk)
     if(rst == 1'b0)
         keyvalue <= 8'd0;
-    else if(state == 3'd5)
+    else if(state == 3'd1)
         keyvalue <= dat;
     else 
         keyvalue <= keyvalue;
 
 always@(posedge clk)
     if(rst == 1'b0)
-        clear <= 1'b1;
+        clear <= 1'b0;
     else if(state == 3'd2)
         clear <= 1'b0; 
     else if(state == 3'd5) 
