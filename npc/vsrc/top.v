@@ -101,7 +101,7 @@ always@(posedge clk)
         clear <= 1'b0;
     else if(state == 3'd2)
         clear <= 1'b0; 
-    else if(state == 3'd5) 
+    else if(state == 3'd4) 
         clear <= 1'b0;
     else 
         clear <= clear;
