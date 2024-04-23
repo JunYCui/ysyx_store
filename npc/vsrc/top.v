@@ -87,7 +87,7 @@ always@(posedge clk)
     else if(state == 3'd2 || state == 3'd5)
         flag <= 1'b1;
     else 
-        flag <= flag;
+        flag <= 1'b0;
 always @(posedge clk)
     if(rst == 1'b0)
         keyvalue <= 8'd0;
