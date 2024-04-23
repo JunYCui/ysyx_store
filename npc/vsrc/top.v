@@ -14,7 +14,6 @@ output reg [7:0] seg2
 wire ready;
 wire [7:0]dat;
 reg [7:0]keyvalue;
-reg flag;
 reg clrn;
 reg nextdat_n;
 reg [2:0]state,next_state;
@@ -74,22 +73,23 @@ always @(posedge clk)
                 next_state<=next_state;
             3'd3:
                 if(nextdat_n == 1'b0)
-                next_state<=3'd0;
+                next_state<=3'd4;
+                else 
+                next_state<=next_state;
+            3'd4:
+                if(ready&&(overflow == 1'd0))
+                next_state<=3'd5;
+                else 
+                next_state<=next_state;
+            3'd5:
+                if(nextdat_n == 1'b0)
+                next_state <=3'd0;
                 else 
                 next_state<=next_state;
             default: next_state <= 3'd0;
             endcase    
         end
 
-always @(posedge clk)
-    if(rst == 1'b0)
-        flag <= 1'b0;
-    else if(state == 3'd3)
-        flag <= 1'b1;
-    else if(state == 3'd2)
-        flag <= 1'b0;
-    else 
-        flag <= flag;
 
 always @(posedge clk)
     if(rst == 1'b0)
@@ -104,10 +104,12 @@ always @(posedge clk)
 always@(posedge clk)
     if(rst == 1'b0)
         clear <= 1'b1; 
-    else if(keyvalue == 8'h00) 
+    else if(state == 3'd3) 
         clear <= 1'b1;
-    else 
+    else if (state ==3'd2)
         clear <= 1'b0;
+    else 
+        clear <= clear;
 /* verilator lint_off WIDTHTRUNC */
 seg7 seg7_inst1(
     .num(keyvalue%16),
