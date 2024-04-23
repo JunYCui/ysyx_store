@@ -105,7 +105,9 @@ always@(posedge clk)
         clear <= 1'b1;
     else 
         clear <= clear;
+/* verilator lint_off WIDTHEXPAND */
 /* verilator lint_off WIDTHTRUNC */
+
 seg7 seg7_inst1(
     .num(clear),
     .clear(clear),
