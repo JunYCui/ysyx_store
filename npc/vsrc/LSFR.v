@@ -51,18 +51,21 @@ module LSFR (
 seg7 seg1_inst
 (
     .num (unit),
+    .clear (1'b0),
     .seg_out (seg0)
 );
 
 seg7 seg2_inst
 (
     .num (ten),
+    .clear (1'b0),
     .seg_out (seg1)
 );
 
 seg7 seg3_inst
 (
     .num (hundred),
+    .clear (1'b0),
     .seg_out (seg2)
 );
 
