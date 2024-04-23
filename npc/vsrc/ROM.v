@@ -44,6 +44,7 @@ always@(posedge clk)
     8'h22:data <= 8'd88;
     8'h35:data <= 8'd89;
     8'h1a:data <= 8'd90;
+    default:data <=8'd00;
     endcase
     end
     
