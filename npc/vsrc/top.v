@@ -6,8 +6,9 @@ input clk,
 input rst,
 
 output reg [7:0] seg1,
-output reg [7:0] seg2
-
+output reg [7:0] seg2,
+output reg [7:0] seg3,
+output reg [7:0] seg4
 
 );
 
@@ -20,6 +21,7 @@ reg [2:0]state,next_state;
 reg overflow;
 reg clear;
 reg flag;
+wire ascill_value;
 
 always@(posedge clk)
     if(rst == 1'b0)
@@ -117,6 +119,28 @@ seg7 seg7_inst2(
     .clear(clear),
     .seg_out(seg2)
 );
+
+seg7 seg7_inst3(
+    .num(ascill_value/10),
+    .clear(clear),
+    .seg_out(seg3)
+);
+
+seg7 seg7_inst4(
+    .num(ascill_value%10),
+    .clear(clear),
+    .seg_out(seg4)
+);
+
+
+
+ROM ROM_Inst
+(
+    .clk(clk),
+    .addr(keyvalue),
+    .data(ascill_value)
+);
+
 
 
 ps2_keyboard ps2_keyboard_inst
