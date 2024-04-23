@@ -109,7 +109,7 @@ always@(posedge clk)
 seg7 seg7_inst1(
     .num(keyvalue%16),
     .clear(clear),
-    .seg_out(seg1)
+    .seg_out(clear)
 );
 
 seg7 seg7_inst2(
