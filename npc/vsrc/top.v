@@ -121,13 +121,13 @@ seg7 seg7_inst2(
 );
 
 seg7 seg7_inst3(
-    .num(ascill_value/10),
+    .num(ascill_value%10),
     .clear(1'b0),
     .seg_out(seg3)
 );
 
 seg7 seg7_inst4(
-    .num(ascill_value%10),
+    .num(ascill_value/10),
     .clear(1'b0),
     .seg_out(seg4)
 );
