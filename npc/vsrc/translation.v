@@ -25,6 +25,7 @@ end
 /* verilator lint_on CASEX */
 seg7 inst1(
     .num(led),
+    .clear (1'b0),
     .seg_out(seg0)
 );
 
