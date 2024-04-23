@@ -1,9 +1,13 @@
-module seg7(num,seg_out);
+module seg7(num,clear,seg_out);
 
 input [3:0]num;
+input clear
 output reg [7:0]seg_out;
 /* verilator lint_off WIDTHEXPAND */
 always @(*) begin
+    if(clear)
+    seg_out <= 8'b1111_1111;
+    else 
     case (num)
     4'd0:seg_out = 8'b00000011;
     4'd1:seg_out = 8'b10011111;
@@ -21,7 +25,7 @@ always @(*) begin
     4'd13:seg_out = 8'b10000101;
     4'd14:seg_out = 8'b01100001;
     4'd15:seg_out = 8'b01110001;
-    default: seg_out = 8'b00000000;
+    default: seg_out = 8'b1111_1111;
     endcase
 end
 /* verilator lint_on WIDTHEXPAND */

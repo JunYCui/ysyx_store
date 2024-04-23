@@ -20,7 +20,7 @@ reg nextdat_n;
 reg [2:0]state,next_state;
 reg overflow;
 reg [9:0]count;
-
+reg clear;
 
 always@(posedge clk)
     if(rst == 1'b0)
@@ -94,19 +94,30 @@ always @(posedge clk)
 always @(posedge clk)
     if(rst == 1'b0)
         keyvalue <= 8'd0;
-    else if(flag == 1'b1 &&state == 3'd1)
+    else if(state == 1'b2)
         keyvalue <= dat;
+    else if(flag == 1'b1 &&state == 3'd1)
+        keyvalue <= 8'h00;
     else 
         keyvalue <= keyvalue;
 
+always@(posedge clk)
+    if(rst == 1'b0)
+        clear <= 1'b1; 
+    else if(keyvalue == 8'h00) 
+        clear <= 1'b1;
+    else 
+        clear <= 1'b0;
 /* verilator lint_off WIDTHTRUNC */
 seg7 seg7_inst1(
     .num(keyvalue%16),
+    .clear(clear)
     .seg_out(seg1)
 );
 
 seg7 seg7_inst2(
     .num(keyvalue/16),
+    .clear(clear)
     .seg_out(seg2)
 );
 
