@@ -21,7 +21,7 @@ reg [2:0]state,next_state;
 reg overflow;
 reg clear;
 reg flag;
-wire ascill_value;
+wire [7:0] ascill_value;
 
 always@(posedge clk)
     if(rst == 1'b0)
