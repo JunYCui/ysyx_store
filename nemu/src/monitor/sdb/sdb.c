@@ -95,7 +95,6 @@ static int cmd_x(char *args)
 {
   char *arg = strtok(args, " ");  
   char *arg1 = strtok(NULL, " ");
-  printf("%s", arg1);
   int16_t n;
   uint32_t address_base;
   if(arg ==  NULL )
