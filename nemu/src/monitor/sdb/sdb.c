@@ -137,7 +137,7 @@ static int cmd_x(char *args)
   }
   for(i=0;i<n;i++)
   {
-    printf(" %x \n",paddr_read(address_base+i,4));
+    printf(" %x \n",paddr_read(address_base+i*4,4));
   }
   return 0;
 }
