@@ -52,10 +52,14 @@ static int cmd_q(char *args) {
   return -1;
 }
 
-static int cmd_si(char *args){
+static int cmd_si(char *args)
+{
   uint64_t n;
-  n = *args - 48;
-  printf("%ld",n);
+  char *arg = strtok(NULL, " ");
+  if(arg == NULL)
+  n = 1;
+  else 
+  n = *arg - 48;
   cpu_exec(n);
   return 0;
 }
