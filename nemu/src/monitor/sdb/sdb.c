@@ -54,7 +54,7 @@ static int cmd_q(char *args) {
 
 static int cmd_si(char *args){
   uint64_t n;
-  n = *args - 32;
+  n = *args - 48;
   printf("%ld",n);
   cpu_exec(n);
   return 0;
