@@ -58,13 +58,13 @@ static int cmd_si(char *args)
   char *arg = strtok(NULL, " ");
   if(arg == NULL)
   n = 1;
-  else 
-  n = *arg - 48;
-  if(n<0)
+  else if ( atoi(arg) )
+  n = atoi(arg);
+  else
   {
-    printf(" error  ");
+  printf(" please enter integer ");
+  return 0;
   }
-  else 
   cpu_exec(n);
   return 0;
 }
