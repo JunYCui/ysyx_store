@@ -93,7 +93,7 @@ static int cmd_info(char *args)
 
 static int cmd_x(char *args)
 {
-  char *arg = strtok(args, " ");  
+  char *arg = strtok(NULL, " ");  
   char *arg1 = strtok(NULL, " ");
   int16_t n;
   uint32_t address_base;
@@ -115,7 +115,7 @@ static int cmd_x(char *args)
   }
   else 
   {
-    address_base = atoi(arg1);
+    sscanf(arg1,"%x",&address_base);
     printf("%x\n",address_base);
   }
   return 0;
