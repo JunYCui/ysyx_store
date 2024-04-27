@@ -62,7 +62,7 @@ static int cmd_si(char *args)
   n = atoi(arg);
   else
   {
-  printf(" please enter integer ");
+  printf(" please enter integer \n");
   return 0;
   }
   cpu_exec(n);
