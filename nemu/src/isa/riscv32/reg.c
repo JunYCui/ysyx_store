@@ -26,7 +26,7 @@ const char *regs[] = {
 void isa_reg_display() {
   uint16_t i;
   for(i = 0;i<regs_len;i++)
-  printf("%s\n",regs[i]);
+  printf("%s:%d\n",regs[i],*regs[i]);
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
