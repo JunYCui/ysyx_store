@@ -60,7 +60,7 @@ static int cmd_si(char *args)
   char *arg1 = strtok(NULL, " ");
   if(arg1 != NULL)
   {
-    printf(" parameters are too much ");
+    printf(" parameters are too much \n");
     return 0;
   }
   if(arg == NULL)
@@ -82,7 +82,7 @@ static int cmd_info(char *args)
   char *arg1 = strtok(NULL, " ");
   if(arg1 != NULL)
   {
-    printf(" parameters are too much ");
+    printf(" parameters are too much \n");
     return 0;
   }
   if(arg ==  NULL)
@@ -99,7 +99,7 @@ static int cmd_info(char *args)
   }
   else 
   {
-    printf(" no parameter");
+    printf(" no parameter \n");
   }
   return 0;
 }
@@ -111,7 +111,7 @@ static int cmd_x(char *args)
   char *arg2 = strtok(NULL, " ");
   if(arg2 != NULL)
   {
-    printf(" parameters are too much ");
+    printf(" parameters are too much \n ");
     return 0;
   }
   int16_t n,i;
