@@ -60,6 +60,7 @@ static int cmd_si(char *args)
   n = 1;
   else 
   n = *arg - 48;
+  printf("%ld",n);
   cpu_exec(n);
   return 0;
 }
