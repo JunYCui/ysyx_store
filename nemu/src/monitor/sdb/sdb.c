@@ -94,11 +94,23 @@ static int cmd_info(char *args)
 static int cmd_x(char *args)
 {
   char *arg = strtok(NULL, "");
-  char *arg1 = strtok(NULL, "");
+  int16_t n;
   uint32_t address_base;
-  if(arg ==  NULL || arg1 == NULL)
+  if(arg ==  NULL )
   {
     printf(" lack parameter \n");
+    return 0;
+  }
+  else 
+  {
+    n = atoi(arg);
+    printf("%d\n",n);
+  }
+  char *arg1 = strtok(NULL, "");
+   if(arg1 ==  NULL )
+  {
+    printf(" lack parameter \n");
+    return 0;
   }
   else 
   {
