@@ -91,6 +91,23 @@ static int cmd_info(char *args)
   return 0;
 }
 
+static int cmd_x(char *args)
+{
+  char *arg = strtok(NULL, "");
+  char *arg1 = strtok(NULL, "");
+  uint32_t address_base;
+  if(arg ==  NULL || arg1 == NULL)
+  {
+    printf(" lack parameter \n");
+  }
+  else 
+  {
+    address_base = atoi(arg1);
+    printf("%x\n",address_base);
+  }
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -102,7 +119,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "execute n instructions", cmd_si},
-  { "info", "print program status", cmd_info}
+  { "info", "print program status", cmd_info},
+  {"x", "check the memory",cmd_x}
   /* TODO: Add more commands */
 
 };
