@@ -17,6 +17,7 @@
 #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <memory/paddr.h>
 #include "sdb.h"
 
 static int is_batch_mode = false;
@@ -56,6 +57,12 @@ static int cmd_si(char *args)
 {
   uint64_t n;
   char *arg = strtok(NULL, " ");
+  char *arg1 = strtok(NULL, " ");
+  if(arg1 != NULL)
+  {
+    printf(" parameters are too much ");
+    return 0;
+  }
   if(arg == NULL)
   n = 1;
   else if ( atoi(arg) )
@@ -71,7 +78,13 @@ static int cmd_si(char *args)
 
 static int cmd_info(char *args)
 {
-  char *arg = strtok(NULL, "");
+  char *arg = strtok(NULL, " ");
+  char *arg1 = strtok(NULL, " ");
+  if(arg1 != NULL)
+  {
+    printf(" parameters are too much ");
+    return 0;
+  }
   if(arg ==  NULL)
   {
     printf(" no parameter \n");
@@ -95,7 +108,13 @@ static int cmd_x(char *args)
 {
   char *arg = strtok(NULL, " ");  
   char *arg1 = strtok(NULL, " ");
-  int16_t n;
+  char *arg2 = strtok(NULL, " ");
+  if(arg2 != NULL)
+  {
+    printf(" parameters are too much ");
+    return 0;
+  }
+  int16_t n,i;
   uint32_t address_base;
   if(arg ==  NULL )
   {
@@ -105,7 +124,6 @@ static int cmd_x(char *args)
   else 
   {
     n = atoi(arg);
-    printf("%d\n",n);
   }
 
    if(arg1 ==  NULL )
@@ -116,7 +134,10 @@ static int cmd_x(char *args)
   else 
   {
     sscanf(arg1,"%x",&address_base);
-    printf("%x\n",address_base);
+  }
+  for(i=0;i<n;i++)
+  {
+    printf("%x",paddr_read(address_base+i,4));
   }
   return 0;
 }
