@@ -163,7 +163,7 @@ static int cmd_p(char *args)
     expr(arg,&success);
     if(success == false)
     {
-      printf("expression is error");
+      printf("expression is error \n");
       return 0;
     }
   }
