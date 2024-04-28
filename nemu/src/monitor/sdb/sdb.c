@@ -154,7 +154,7 @@ static int cmd_p(char *args)
   }
   else 
   {
-    printf("%c",arg[2]);
+    printf("%d",arg[2]);
    /*expr(arg,&success);
     if(success == false)
     {
