@@ -145,7 +145,7 @@ static int cmd_x(char *args)
 
 static int cmd_p(char *args)
 {
- // bool success;
+  bool success;
   char *arg = strtok(NULL, "");
  if(arg == NULL)
   {
@@ -154,13 +154,12 @@ static int cmd_p(char *args)
   }
   else 
   {
-    printf("%d",arg[1]);
-   /*expr(arg,&success);
+   expr(arg,&success);
     if(success == false)
     {
       printf("expression is error \n");
       return 0;
-    }*/
+    }
   }
   return 0 ;
 }
