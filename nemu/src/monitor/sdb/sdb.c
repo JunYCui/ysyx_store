@@ -146,14 +146,8 @@ static int cmd_x(char *args)
 static int cmd_p(char *args)
 {
   bool success;
-  char *arg = strtok(NULL, " ");
-  char *arg1 = strtok(NULL, " ");
-  if(arg1 != NULL)
-  {
-    printf(" parameters are too much \n");
-    return 0;
-  }
-  else if(arg == NULL)
+  char *arg = strtok(NULL, "");
+ if(arg == NULL)
   {
     printf(" lack parameter \n");
     return 0;
