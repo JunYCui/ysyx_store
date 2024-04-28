@@ -110,7 +110,7 @@ static bool make_token(char *e) {
           case '-':break;
           case '(':break;
           case ')':break;
-          case TK_int:return 0;break;
+          case TK_int:break;
           default: TODO();
         }
 
