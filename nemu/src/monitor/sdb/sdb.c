@@ -143,6 +143,33 @@ static int cmd_x(char *args)
   return 0;
 }
 
+static int cmd_p(char *args)
+{
+  bool success;
+  char *arg = strtok(NULL, " ");
+  char *arg1 = strtok(NULL, " ");
+  if(arg1 != NULL)
+  {
+    printf(" parameters are too much \n");
+    return 0;
+  }
+  else if(arg == NULL)
+  {
+    printf(" lack parameter \n");
+    return 0;
+  }
+  else 
+  {
+    expr(arg,&success);
+    if(success == false)
+    {
+      printf("expression is error");
+      return 0;
+    }
+  }
+  return 0 ;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -155,7 +182,8 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "execute n instructions", cmd_si},
   { "info", "print program status", cmd_info},
-  {"x", "check the memory",cmd_x}
+  {"x", "check the memory",cmd_x},
+  {"p", "calculate expression", cmd_p}
   /* TODO: Add more commands */
 
 };
