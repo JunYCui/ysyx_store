@@ -35,7 +35,7 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
+  {"\\d{0,9}", TK_int},   // 0-9 int
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
@@ -43,8 +43,8 @@ static struct rule {
   {"\\-", '-'},         // subtraction
   {"\\/", '/'},         // division
   {"\\(", '('},         // left bracket
-  {"\\)", ')'},          // right bracket
-  {"\\d{0,9}", TK_int}   // 0-9 int
+  {"\\)", ')'}          // right bracket
+ 
 };
 
 #define NR_REGEX ARRLEN(rules)
