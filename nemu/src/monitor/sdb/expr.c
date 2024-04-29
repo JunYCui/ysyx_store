@@ -102,6 +102,7 @@ static bool make_token(char *e) {
          */
         if(state == 1 && rules[i].token_type != TK_int)
         {
+          record[count] = '\0';
           if(count< 32)
           strcpy(tokens[nr_token].str,record);
           else 
