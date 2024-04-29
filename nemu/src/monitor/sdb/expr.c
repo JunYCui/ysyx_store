@@ -105,8 +105,8 @@ static bool make_token(char *e) {
           case '+':tokens[nr_token++].type = '+'; break;
           case '-':tokens[nr_token++].type = '-'; break;
           case  TK_NOTYPE: break;
-          case '(':tokens[nr_token++].type = ')'; break;
-          case ')':tokens[nr_token++].type = '('; break;
+          case '(':tokens[nr_token++].type = '('; break;
+          case ')':tokens[nr_token++].type = ')'; break;
           case TK_int:tokens[nr_token].type = TK_int;strcpy(tokens[nr_token].str,&e[position-substr_len]);nr_token++; break;
           default: TODO();
         }
@@ -133,7 +133,6 @@ word_t expr(char *e, bool *success) {
   }
   else 
   *success = true;
-  printf("%c",tokens[0].type);
   /* TODO: Insert codes to evaluate the expression. */
   return eval(0,nr_token-1);
 }
@@ -142,8 +141,9 @@ word_t expr(char *e, bool *success) {
 static bool check_parentheses(uint8_t p, uint8_t q)
 {
   if( p == '(' && q == ')')
+    return true;
+  else 
     return false;
-  return true;
 }
 
 static word_t eval(uint8_t p ,uint8_t q)
@@ -169,7 +169,6 @@ static word_t eval(uint8_t p ,uint8_t q)
   }
   else if ( check_parentheses(tokens[p].type,tokens[q].type) == true )
   {
-    printf("%c\n",tokens[p].type);
     return eval(p-1,q-1);
   }
   else 
