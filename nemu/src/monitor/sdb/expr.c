@@ -143,7 +143,7 @@ static bool check_parentheses(uint8_t p, uint8_t q)
 {
   printf("%c\n%c\n", p ,q);
   if( p == '(' && q == ')')
-    return true;
+    return false;
   return true;
 }
 
