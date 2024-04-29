@@ -149,6 +149,7 @@ static bool check_parentheses(uint8_t p, uint8_t q)
 static word_t eval(uint8_t p ,uint8_t q)
 {
   uint8_t i,position=0;
+  uint8_t state=0;
   word_t val1,val2;
   if( p > q )
   {
@@ -175,10 +176,25 @@ static word_t eval(uint8_t p ,uint8_t q)
   {
     for(i=p;i<=q;i++)
     {
+      if(tokens[i].type == '(')
+      {
+        state ++;
+      }
+      else if(tokens[i].type == ')')
+      {
+        state --;
+      }
+      if(state == 0)
+      {
       if(tokens[i].type == '*' || tokens[i].type == '/' || tokens[i].type == '+' || tokens[i].type == '-')
       {
         position = i;
         break;
+      }
+      }
+      else 
+      {
+        continue;
       }
     }    
       val1 = eval(p,position-1);
