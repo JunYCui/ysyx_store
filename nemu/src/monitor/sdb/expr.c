@@ -156,9 +156,9 @@ static word_t eval(uint8_t p ,uint8_t q)
   }
   else if (p == q)
   {
-
     if(tokens[p].type == TK_int)
     {
+    printf("%d",atoi(tokens[p].str));
     return atoi(tokens[p].str);
     }
     else
