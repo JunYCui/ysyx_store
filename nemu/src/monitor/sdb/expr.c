@@ -133,6 +133,7 @@ word_t expr(char *e, bool *success) {
   }
   else 
   *success = true;
+
   /* TODO: Insert codes to evaluate the expression. */
   return eval(0,nr_token-1);
 }
@@ -140,14 +141,10 @@ word_t expr(char *e, bool *success) {
 
 static bool check_parentheses(uint8_t p, uint8_t q)
 {
-  printf("%c",p);
-  printf("%c",q);
-  if( p=='(' && q == ')')
+  printf("%c\n %c\n", p ,q);
+  if( p == '(' && q == ')')
     return true;
-  else 
-    {
-    return false;
-    }
+  return true;
 }
 
 static word_t eval(uint8_t p ,uint8_t q)
