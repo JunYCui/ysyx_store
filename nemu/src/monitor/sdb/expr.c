@@ -128,6 +128,7 @@ static word_t eval(uint8_t p ,uint8_t q);
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
+    printf("ok");
     *success = false;
     return 0;
   }
