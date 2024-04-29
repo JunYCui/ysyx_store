@@ -35,7 +35,7 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-  {"[0-9]", TK_int},   // 0-9 int
+  {"[0-9]+", TK_int},   // int
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
@@ -78,9 +78,7 @@ static int nr_token __attribute__((used))  = 0;
 
 static bool make_token(char *e) {
   int position = 0;
-  int i,count=0;
-  char record[32];
-  int state=0;
+  int i;
   regmatch_t pmatch;
 
   nr_token = 0;
@@ -100,19 +98,6 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-        if(state == 1 && rules[i].token_type != TK_int)
-        {
-          state=0;
-          record[count] = '\0';
-          if(count< 32)
-          strcpy(tokens[nr_token].str,record);
-          else 
-          assert(0);
-          printf(" %s \n",tokens[nr_token].str);
-          nr_token++;
-          count = 0;
-          memset(record,0,sizeof(record));
-        }
         switch (rules[i].token_type) 
         {
           case '/':tokens[nr_token++].type = '/' ; break;
@@ -122,10 +107,10 @@ static bool make_token(char *e) {
           case  TK_NOTYPE: break;
           case '(':tokens[nr_token++].type = ')'; break;
           case ')':tokens[nr_token++].type = '('; break;
-          case TK_int:if(state ==0) { state = 1; } record[count++]=e[position-substr_len];break;
+          case TK_int:tokens[nr_token].type = TK_int;strcpy(tokens[nr_token].str,&e[position-substr_len]);printf("%s",tokens[nr_token].str);nr_token++; break;
           default: TODO();
         }
-
+        
 
         break;
       }
