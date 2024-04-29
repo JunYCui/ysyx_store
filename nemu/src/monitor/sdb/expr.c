@@ -103,14 +103,12 @@ static bool make_token(char *e) {
         switch (rules[i].token_type) 
         {
           case '/': tokens[nr_token++].type = '/' ; break;
-          case TK_NOTYPE:tokens[nr_token++].type = TK_NOTYPE; break;
-          case TK_EQ:tokens[nr_token++].type = TK_EQ; break;
           case '*':tokens[nr_token++].type = '*'; break;
           case '+':tokens[nr_token++].type = '+'; break;
           case '-':tokens[nr_token++].type = '-'; break;
           case '(':tokens[nr_token++].type = ')'; break;
           case ')':tokens[nr_token++].type = '('; break;
-          case TK_int:tokens[nr_token].type = TK_int; printf("%c",e[position-substr_len]) ;  break;
+          case TK_int:tokens[nr_token].type = TK_int;strcpy(tokens[nr_token].str , &e[position-substr_len]); nr_token++;  break;
           default: TODO();
         }
 
@@ -126,7 +124,7 @@ static bool make_token(char *e) {
 
   return true;
 }
-
+static word_t eval(uint8_t p ,uint8_t q);
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -135,7 +133,67 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  return eval(0,nr_token-1);
+}
 
+
+static bool check_parentheses(uint8_t p, uint8_t q)
+{
+  if(p=='('&& q == ')')
+    return true;
+  else 
+    return false;
+}
+
+static word_t eval(uint8_t p ,uint8_t q)
+{
+  uint8_t i,position=0;
+  word_t val1,val2;
+  if( p > q )
+  {
+    printf(" p>q  error \n ");
+    assert(0);
+  }
+  else if (p == q)
+  {
+
+    if(tokens[p].type == TK_int)
+    {
+    return atoi(tokens[p].str);
+    }
+    else
+    { 
+    printf(" p==q error ");
+    assert(0);
+    }
+  }
+  else if ( check_parentheses(p,q) == true )
+  {
+    eval(p-1,q-1);
+  }
+  else 
+  {
+    for(i=p;i<=q;i++)
+    {
+      if(tokens[i].type == '*' || tokens[i].type == '/' || tokens[i].type == '+' || tokens[i].type == '-')
+      {
+        position = i;
+        break;
+      }
+    }    
+      val1 = eval(p,position-1);
+      val2 = eval(position+1,q);
+
+      switch(tokens[position].type)
+   {   
+    case '/':return val1/val2;break;
+    case '*':return val1*val2;break;
+    case '+':return val1+val2;break;
+    case '-':return val1-val2;break;
+    default:assert(0);
+   }
+
+  }
   return 0;
 }
+

@@ -147,6 +147,7 @@ static int cmd_p(char *args)
 {
   bool success;
   char *arg = strtok(NULL, "");
+  uint32_t exp_value;
  if(arg == NULL)
   {
     printf(" lack parameter \n");
@@ -154,12 +155,13 @@ static int cmd_p(char *args)
   }
   else 
   {
-   expr(arg,&success);
+    exp_value = expr(arg,&success);
     if(success == false)
     {
       printf("expression is error \n");
       return 0;
     }
+    printf(" %d \n",exp_value);
   }
   return 0 ;
 }
