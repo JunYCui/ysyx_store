@@ -141,7 +141,7 @@ word_t expr(char *e, bool *success) {
 
 static bool check_parentheses(uint8_t p, uint8_t q)
 {
-  printf("%d\n%c\n", p ,q);
+  printf("%d\n%d\n", p ,q);
   printf("%d\n",'(');
   if( p == '(' && q == ')')
     return false;
