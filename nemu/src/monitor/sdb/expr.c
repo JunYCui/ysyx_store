@@ -167,7 +167,7 @@ static word_t eval(uint8_t p ,uint8_t q)
     assert(0);
     }
   }
-  else if ( check_parentheses(p,q) == true )
+  else if ( check_parentheses(tokens[p].type,tokens[q].type) == true )
   {
     eval(p-1,q-1);
   }
