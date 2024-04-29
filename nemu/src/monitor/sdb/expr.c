@@ -143,7 +143,11 @@ static bool check_parentheses(uint8_t p, uint8_t q)
   if(p=='('&& q == ')')
     return true;
   else 
+    {
+    printf("ok");
     return false;
+    
+    }
 }
 
 static word_t eval(uint8_t p ,uint8_t q)
