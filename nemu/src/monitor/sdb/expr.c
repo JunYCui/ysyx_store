@@ -110,7 +110,7 @@ static bool make_token(char *e) {
           case '-':tokens[nr_token++].type = '-'; break;
           case '(':tokens[nr_token++].type = ')'; break;
           case ')':tokens[nr_token++].type = '('; break;
-          case TK_int:tokens[nr_token].type = TK_int; printf("%c",e[position]) ;  break;
+          case TK_int:tokens[nr_token].type = TK_int; printf("%c",e[position-substr_len]) ;  break;
           default: TODO();
         }
 
