@@ -167,6 +167,7 @@ static bool check_parentheses(uint8_t p, uint8_t q)
    }
    else 
    {
+    printf(" lack ");
     assert(0);
    }
     
