@@ -107,7 +107,7 @@ static bool make_token(char *e) {
           case  TK_NOTYPE: break;
           case '(':tokens[nr_token++].type = ')'; break;
           case ')':tokens[nr_token++].type = '('; break;
-          case TK_int:tokens[nr_token].type = TK_int;strcpy(tokens[nr_token].str,&e[position-substr_len]);printf("%s",tokens[nr_token].str);nr_token++; break;
+          case TK_int:tokens[nr_token].type = TK_int;strcpy(tokens[nr_token].str,&e[position-substr_len]);nr_token++; break;
           default: TODO();
         }
         
