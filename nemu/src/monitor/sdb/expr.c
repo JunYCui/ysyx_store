@@ -158,7 +158,9 @@ static bool check_parentheses(uint8_t p, uint8_t q)
           return false;
         }
       }
-    }  
+    }
+    else 
+      return false;  
    if(state == 0)
    {
     return true;
