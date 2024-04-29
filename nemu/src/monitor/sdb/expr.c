@@ -107,7 +107,7 @@ static bool make_token(char *e) {
           strcpy(tokens[nr_token].str,record);
           else 
           assert(0);
-          printf("%s",tokens[nr_token].str);
+          printf(" %s \n",tokens[nr_token].str);
           nr_token++;
           count = 0;
           memset(record,0,sizeof(record));
