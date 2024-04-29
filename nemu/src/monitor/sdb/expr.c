@@ -79,7 +79,7 @@ static int nr_token __attribute__((used))  = 0;
 static bool make_token(char *e) {
   int position = 0;
   int i,count=0;
-  uint8_t record[32];
+  char record[32];
   int state=0;
   regmatch_t pmatch;
 
@@ -103,7 +103,7 @@ static bool make_token(char *e) {
         if(state == 1 && rules[i].token_type != TK_int)
         {
           if(count< 32)
-          strcpy(tokens[nr_token].str,(const char *)record);
+          strcpy(tokens[nr_token].str,record);
           else 
           assert(0);
           printf("%s",tokens[nr_token].str);
