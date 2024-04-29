@@ -133,7 +133,7 @@ word_t expr(char *e, bool *success) {
   }
   else 
   *success = true;
-
+  printf("%c",tokens[0].type);
   /* TODO: Insert codes to evaluate the expression. */
   return eval(0,nr_token-1);
 }
