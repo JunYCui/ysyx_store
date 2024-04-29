@@ -140,13 +140,11 @@ word_t expr(char *e, bool *success) {
 
 static bool check_parentheses(uint8_t p, uint8_t q)
 {
-  if(p=='('&& q == ')')
+  if( p=='(' && q == ')')
     return true;
   else 
     {
-    printf("ok");
     return false;
-    
     }
 }
 
@@ -173,7 +171,7 @@ static word_t eval(uint8_t p ,uint8_t q)
   }
   else if ( check_parentheses(tokens[p].type,tokens[q].type) == true )
   {
-    printf("ok");
+    printf("%d",tokens[p].type);
     return eval(p-1,q-1);
   }
   else 
