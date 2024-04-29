@@ -155,11 +155,11 @@ static bool check_parentheses(uint8_t p, uint8_t q)
         }
         if(state <0)
         {
-          return false;
+          assert(0);
         }
       }
     }
-    else 
+  else 
       return false;  
    if(state == 0)
    {
