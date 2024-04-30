@@ -153,10 +153,6 @@ static bool check_parentheses(uint8_t p, uint8_t q)
         {
           state--;
         }
-        if(state <0)
-        {
-          assert(0);
-        }
       }
     }
   else 
@@ -167,7 +163,7 @@ static bool check_parentheses(uint8_t p, uint8_t q)
    }
    else 
    {
-    printf(" lack ");
+    printf(" lack bracket \n");
     assert(0);
    }
     
@@ -192,7 +188,7 @@ static word_t eval(uint8_t p ,uint8_t q)
     }
     else
     { 
-    printf(" p==q error ");
+    printf(" p==q error \n");
     assert(0);
     }
   }
