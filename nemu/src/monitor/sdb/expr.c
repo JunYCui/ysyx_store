@@ -156,6 +156,7 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
         if(state<0)
         {
           flag = 1;
+          assert(0);
         }
       }
     }
