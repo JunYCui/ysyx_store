@@ -140,16 +140,15 @@ word_t expr(char *e, bool *success) {
 
 static uint8_t check_parentheses(uint8_t p, uint8_t q)
 {
-  uint8_t i,state=0,flag=0;
+  uint8_t i,flag=0;
+  int state=0;
   if( tokens[p].type == '(' && tokens[q].type == ')')
     {
-      assert(0);
       for(i=p+1;i<q-1;i++)
       {
         if(tokens[i].type == '(')
         {
-          state++;
-          
+          state++;     
         }
         else if(tokens[i].type == ')') 
         {
@@ -158,13 +157,12 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
         if(state<0)
         {
           flag = 1;
-          
         }
       }
     }
   else 
       return false;  
-   if(state == 0 )
+   if(state == 0)
    {
     if(flag == 0)
     return 1;
@@ -183,7 +181,7 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
 static word_t eval(uint8_t p ,uint8_t q)
 {
   uint8_t i,position=0;
-  uint8_t state=0;
+  int state=0;
   word_t val1,val2;
   if( p > q )
   {
