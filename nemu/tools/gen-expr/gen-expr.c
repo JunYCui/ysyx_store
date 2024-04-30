@@ -37,6 +37,7 @@ static uint32_t choose(uint32_t max)
   return num;
 }
 
+uint32_t count=0;
 static void gen_op()
 {
   uint8_t op;
@@ -51,7 +52,6 @@ static void gen_op()
   buf[count++] = op;
 }
 
-uint32_t count;
 static void gen_rand_expr() 
 {
   switch(choose(3))
