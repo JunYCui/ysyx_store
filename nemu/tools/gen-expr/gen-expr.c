@@ -33,14 +33,29 @@ static char *code_format =
 
 static uint32_t choose(uint32_t max)
 {
-  uint32_t num = rand()%max;
+  uint32_t num = rand()%max ;
   return num;
 }
 
-uint32_t count=0;
+static void gen_bracket(uint8_t choose)
+{
+  uint8_t bracket;
+  unsigned char str[2];
+  switch(choose)
+  {
+    case 0:bracket = '(';break;
+    case 1:bracket = ')';break;
+  }
+  str[0] = bracket;
+  str[1] = '\0';
+  strcat(buf,str);
+}
+
+
 static void gen_op()
 {
   uint8_t op;
+  unsigned char str[2];
   switch(choose(4))
   {
     case 0:op = '+';break;
@@ -49,15 +64,25 @@ static void gen_op()
     case 3:op = '/';break;
     default:op = '+';break;
   }
-  buf[count++] = op;
+  str[0] = op;
+  str[1] = '\0';
+  strcat(buf,str);
+}
+static void gen_num()
+{
+  int num; 
+  unsigned char str[32];
+  num = rand()%100+1;
+  sprintf(str,"%d",num);
+  strcat(buf,str);
 }
 
 static void gen_rand_expr() 
 {
   switch(choose(3))
   {
-    case 0:buf[count++] = rand(); break;
-    case 1:buf[count++] = '('; gen_rand_expr(); buf[count++] = ')'; break;
+    case 0:gen_num();break;
+    case 1:gen_bracket(0); gen_rand_expr(); gen_bracket(1); break;
     default:gen_rand_expr();gen_op();gen_rand_expr();  break;
   }
 }
@@ -72,9 +97,8 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
-    count = 0; 
+    memset(buf,0,sizeof(buf));
     gen_rand_expr();
-    buf[count] = '\0';
     sprintf(code_buf, code_format, buf);
 
     FILE *fp = fopen("/tmp/.code.c", "w");
