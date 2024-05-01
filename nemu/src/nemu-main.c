@@ -42,9 +42,12 @@ int main(int argc, char *argv[]) {
   {
     sscanf(readbuf,"%u",&results);
     int i=0;
+    int len=0;
     while(readbuf[i++]!=' ')
     ;
     strcpy(exp,readbuf+i);
+    len = strlen(exp);
+    exp[len-1] = '\0';
     cresults = expr(exp,&success);
     if(success == true )
     {
