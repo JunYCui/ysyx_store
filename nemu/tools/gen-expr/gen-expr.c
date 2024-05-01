@@ -68,24 +68,37 @@ static void gen_op()
   str[1] = '\0';
   strcat(buf,str);
 }
+static void gen_blank()
+{
+  unsigned char str[2];
+  if(choose(2))
+  {
+    str[0] = ' ';
+    str[1] = '\0';
+    strcat(buf,str);
+  }
+
+}
+
 static void gen_num()
 {
   int num; 
   unsigned char str[32];
-  num = rand()%100+1;
+  num = rand()%100;
   sprintf(str,"%d",num);
   strcat(buf,str);
 }
 
 static void gen_rand_expr() 
 {
-
+  gen_blank();
   switch(choose(3))
   {
     case 0:gen_num();break;
     case 1:gen_bracket(0); gen_rand_expr(); gen_bracket(1); break;
     default: gen_rand_expr();gen_op();gen_rand_expr();  break;
   }
+  gen_blank();
 }
 
 
