@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, TK_EQ,TK_int
 
   /* TODO: Add more token types */
 
@@ -35,10 +35,16 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
+  {"[0-9]+", TK_int},   // int
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
+  {"\\*", '*'},         // mutiplication
+  {"\\-", '-'},         // subtraction
+  {"\\/", '/'},         // division
+  {"\\(", '('},         // left bracket
+  {"\\)", ')'}          // right bracket
+ 
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -67,7 +73,7 @@ typedef struct token {
   char str[32];
 } Token;
 
-static Token tokens[32] __attribute__((used)) = {};
+static Token tokens[65535] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
 static bool make_token(char *e) {
@@ -88,15 +94,23 @@ static bool make_token(char *e) {
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
 
         position += substr_len;
-
         /* TODO: Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
-        switch (rules[i].token_type) {
+        switch (rules[i].token_type) 
+        {
+          case '/':tokens[nr_token++].type = '/' ; break;
+          case '*':tokens[nr_token++].type = '*'; break;
+          case '+':tokens[nr_token++].type = '+'; break;
+          case '-':tokens[nr_token++].type = '-';  break;
+          case  TK_NOTYPE: break;
+          case '(':tokens[nr_token++].type = '('; break;
+          case ')':tokens[nr_token++].type = ')'; break;
+          case TK_int:tokens[nr_token].type = TK_int;strcpy(tokens[nr_token].str,&e[position-substr_len]);nr_token++; break;
           default: TODO();
         }
+        
 
         break;
       }
@@ -110,16 +124,143 @@ static bool make_token(char *e) {
 
   return true;
 }
-
+static word_t eval(uint8_t p ,uint8_t q);
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;
   }
-
+  else 
+  *success = true;
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  return eval(0,nr_token-1);
+}
 
+
+static uint8_t check_parentheses(uint8_t p, uint8_t q)
+{
+  uint8_t i,flag=0;
+  int state=0;
+  if( tokens[p].type == '(' && tokens[q].type == ')')
+    {
+      for(i=p+1;i<q;i++)
+      {
+        if(tokens[i].type == '(')
+        {
+          state++;     
+        }
+        else if(tokens[i].type == ')') 
+        {
+          state--;
+        }
+        if(state<0&&state>-2)
+        {
+          flag = 1;
+        }
+        else if(state <-1)
+        {
+          printf(" bracket error \n");
+          assert(0);
+        }
+      }
+    }
+  else 
+      return false;  
+   if(state == 0)
+   {
+    if(flag == 0)
+    return 1;
+    else 
+    return 2;
+   }
+   else 
+   {
+    printf(" lack bracket \n");
+    assert(0);
+   }
+    
   return 0;
 }
+
+static word_t eval(uint8_t p ,uint8_t q)
+{
+  uint8_t i,position_add=0,position_mut=0,position=0;
+  bool flag_add=0,flag_mut=0;
+  int state=0;
+  word_t val1,val2;
+  if( p > q )
+  {
+    printf(" p>q  error \n ");
+    assert(0);
+  }
+  else if (p == q)
+  {
+    if(tokens[p].type == TK_int)
+    {
+    return (uint32_t)atoi(tokens[p].str);
+    }
+    else
+    { 
+    printf(" p==q error \n");
+    assert(0);
+    }
+  }
+  else if ( check_parentheses(p,q) == 1 )
+  {
+    return (uint32_t)eval(p+1,q-1);
+  }
+  else 
+  {
+    for(i=p;i<=q;i++)
+    {
+      if(tokens[i].type == '(')
+      {
+        state ++;
+      }
+      else if(tokens[i].type == ')')
+      {
+        state --;
+      }
+      if(state == 0)
+      {
+      if(tokens[i].type == '+' || tokens[i].type == '-')
+      {
+        flag_add = 1;
+        position_add = i;
+      }
+      if(tokens[i].type == '*' || tokens[i].type == '/')
+      {
+        flag_mut=1;
+        position_mut = i;
+      }
+      }
+    }    
+    if(flag_add == 1)
+    {
+      position = position_add;
+    }
+    else if(flag_mut == 1)
+    {
+      position = position_mut;
+    } 
+    else 
+    {
+      printf("expr is error!\n");
+      assert(0);
+    }
+    val1 = eval(p,position-1);
+    val2 = eval(position+1,q);
+
+      switch(tokens[position].type)
+   {   
+    case '/':if(val2 !=0){return (uint32_t)val1/val2;}else { printf("dividened can not be 0 \n"); assert(0); } break;
+    case '*':return (uint32_t)val1*val2;break;
+    case '+':return (uint32_t)val1+val2;break;
+    case '-':return (uint32_t)val1-val2;break;
+    default:assert(0);
+   }
+  }
+  return 0;
+}
+

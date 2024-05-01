@@ -17,6 +17,7 @@
 #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <memory/paddr.h>
 #include "sdb.h"
 
 static int is_batch_mode = false;
@@ -49,7 +50,120 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
+  nemu_state.state = NEMU_QUIT;
   return -1;
+}
+
+static int cmd_si(char *args)
+{
+  uint64_t n;
+  char *arg = strtok(NULL, " ");
+  char *arg1 = strtok(NULL, " ");
+  if(arg1 != NULL)
+  {
+    printf(" parameters are too much \n");
+    return 0;
+  }
+  if(arg == NULL)
+  n = 1;
+  else if ( atoi(arg) )
+  n = atoi(arg);
+  else
+  {
+  printf(" please enter integer \n");
+  return 0;
+  }
+  cpu_exec(n);
+  return 0;
+}
+
+static int cmd_info(char *args)
+{
+  char *arg = strtok(NULL, " ");
+  char *arg1 = strtok(NULL, " ");
+  if(arg1 != NULL)
+  {
+    printf(" parameters are too much \n");
+    return 0;
+  }
+  if(arg ==  NULL)
+  {
+    printf(" no parameter \n");
+  }
+  else if (strcmp(arg,"r") == 0)
+  {
+    isa_reg_display();
+  }
+  else if (strcmp(arg,"w") == 0)
+  {
+
+  }
+  else 
+  {
+    printf(" no parameter \n");
+  }
+  return 0;
+}
+
+static int cmd_x(char *args)
+{
+  char *arg = strtok(NULL, " ");  
+  char *arg1 = strtok(NULL, " ");
+  char *arg2 = strtok(NULL, " ");
+  if(arg2 != NULL)
+  {
+    printf(" parameters are too much \n ");
+    return 0;
+  }
+  int16_t n,i;
+  uint32_t address_base;
+  if(arg ==  NULL )
+  {
+    printf(" lack parameter \n");
+    return 0;
+  }
+  else 
+  {
+    n = atoi(arg);
+  }
+
+   if(arg1 ==  NULL )
+  {
+    printf(" lack parameter \n");
+    return 0;
+  }
+  else 
+  {
+    sscanf(arg1,"%x",&address_base);
+  }
+  for(i=0;i<n;i++)
+  {
+    printf(" %x \n",paddr_read(address_base+i*4,4));
+  }
+  return 0;
+}
+
+static int cmd_p(char *args)
+{
+  bool success;
+  char *arg = strtok(NULL, "");
+  uint32_t exp_value;
+ if(arg == NULL)
+  {
+    printf(" lack parameter \n");
+    return 0;
+  }
+  else 
+  {
+    exp_value = expr(arg,&success);
+    if(success == false)
+    {
+      printf("expression is error \n");
+      return 0;
+    }
+    printf(" %d \n",exp_value);
+  }
+  return 0 ;
 }
 
 static int cmd_help(char *args);
@@ -62,7 +176,10 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "si", "execute n instructions", cmd_si},
+  { "info", "print program status", cmd_info},
+  {"x", "check the memory",cmd_x},
+  {"p", "calculate expression", cmd_p}
   /* TODO: Add more commands */
 
 };
