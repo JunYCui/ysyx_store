@@ -88,16 +88,23 @@ static void gen_num()
   sprintf(str,"%d",num);
   strcat(buf,str);
 }
-
+uint16_t count=0;
 static void gen_rand_expr() 
 {
   gen_blank();
+  if(count++ < 2000)
+  {
   switch(choose(3))
   {
     case 0:gen_num();break;
     case 1:gen_bracket(0); gen_rand_expr(); gen_bracket(1); break;
     default: gen_rand_expr();gen_op();gen_rand_expr();  break;
   }
+  }
+  else 
+  {
+    gen_num();
+  }  
   gen_blank();
 }
 
@@ -112,6 +119,7 @@ int main(int argc, char *argv[]) {
   int i;
   for (i = 0; i < loop; i ++) {
     memset(buf,0,sizeof(buf));
+    count=0;
     gen_rand_expr();
     sprintf(code_buf, code_format, buf);
 
