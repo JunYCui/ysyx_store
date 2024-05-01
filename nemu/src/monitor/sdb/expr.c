@@ -198,7 +198,7 @@ static word_t eval(uint8_t p ,uint8_t q)
   {
     if(tokens[p].type == TK_int)
     {
-    return atoi(tokens[p].str);
+    return (uint32_t)atoi(tokens[p].str);
     }
     else
     { 
@@ -208,7 +208,7 @@ static word_t eval(uint8_t p ,uint8_t q)
   }
   else if ( check_parentheses(p,q) == 1 )
   {
-    return eval(p+1,q-1);
+    return (uint32_t)eval(p+1,q-1);
   }
   else 
   {
@@ -254,10 +254,10 @@ static word_t eval(uint8_t p ,uint8_t q)
 
       switch(tokens[position].type)
    {   
-    case '/':if(val2 !=0){return val1/val2;}else { printf("dividened can not be 0 \n"); assert(0); } break;
-    case '*':return val1*val2;break;
-    case '+':return val1+val2;break;
-    case '-':return val1-val2;break;
+    case '/':if(val2 !=0){return (uint32_t)val1/val2;}else { printf("dividened can not be 0 \n"); assert(0); } break;
+    case '*':return (uint32_t)val1*val2;break;
+    case '+':return (uint32_t)val1+val2;break;
+    case '-':return (uint32_t)val1-val2;break;
     default:assert(0);
    }
   }
