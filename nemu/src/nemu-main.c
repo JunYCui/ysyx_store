@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     {
       if(cresults == results)
       {
-        printf("true!");
+        printf("true! \n");
       }
       else 
       {
