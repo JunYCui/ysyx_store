@@ -79,11 +79,12 @@ static void gen_num()
 
 static void gen_rand_expr() 
 {
+
   switch(choose(3))
   {
     case 0:gen_num();break;
     case 1:gen_bracket(0); gen_rand_expr(); gen_bracket(1); break;
-    default:gen_rand_expr();gen_op();gen_rand_expr();  break;
+    default: gen_rand_expr();gen_op();gen_rand_expr();  break;
   }
 }
 
