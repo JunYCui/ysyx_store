@@ -154,11 +154,11 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
         {
           state--;
         }
-        if(state<0&&state>-2)
+        if(state<-0.1&&state>-2)
         {
           flag = 1;
         }
-        else if(state <-1)
+        else if(state <-1.1)
         {
           printf(" bracket error \n");
           assert(0);
