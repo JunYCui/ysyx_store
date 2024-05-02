@@ -157,7 +157,7 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
         }
           if(strcmp(tokens[1].str,"35")==0)
         {
-          printf("state : %d \n",q);
+          printf("state : %c \n",tokens[0].type);
         }
         if(state<0&&state>-2)
         {        
