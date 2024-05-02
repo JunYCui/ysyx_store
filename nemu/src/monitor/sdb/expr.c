@@ -295,7 +295,7 @@ static int eval(uint32_t p ,uint32_t q)
       if(tokens[position].type == TK_NEQ && tokens[position+1].type  == TK_int)
         {
           val3 = atoi(tokens[position+1].str);
-          printf(" %d \n",0-val3);
+          assert(0);
           return 0-val3;
         }
 
