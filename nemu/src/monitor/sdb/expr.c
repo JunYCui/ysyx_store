@@ -246,7 +246,8 @@ static word_t eval(uint8_t p ,uint8_t q)
     } 
     else 
     {
-      printf("expr is error!\n");
+      
+      printf("expr is error! state = %d p = %d  q= %d\n", state , p , q);
       assert(0);
     }
     val1 = eval(p,position-1);
