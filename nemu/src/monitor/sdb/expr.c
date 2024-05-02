@@ -155,10 +155,6 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
           state--;  
 
         }
-          if(strcmp(tokens[1].str,"35")==0)
-        {
-          printf("state : %c \n",tokens[nr_token-1].type);
-        }
         if(state<0&&state>-2)
         {        
           flag = 1;
@@ -196,6 +192,10 @@ static word_t eval(uint8_t p ,uint8_t q)
   bool flag_add=0,flag_mut=0;
   int state=0;
   word_t val1,val2;
+  if(strcmp(tokens[1].str,"35")==0)
+  {
+    printf("state : %c \n",tokens[q-1].type);
+  }
   if( p > q )
   {
     printf(" p>q  error \n ");
