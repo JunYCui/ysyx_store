@@ -246,7 +246,7 @@ static word_t eval(uint8_t p ,uint8_t q)
     } 
     else 
     {
-      printf("%c %c %d %d \n",tokens[p].type,tokens[q].type,p,q);
+      printf("%c %c %d %d %d \n",tokens[p].type,tokens[q].type,p,q,state);
       printf("expr error!\n");
       assert(0);
     }
