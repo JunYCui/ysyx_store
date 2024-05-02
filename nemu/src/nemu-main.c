@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
       else 
       {
         printf("cpu results:%u, real results: %u , exp: %s \n",cresults,results,exp);
-        printf("false ! ");
+        assert(0);
       }
     }
     else 
