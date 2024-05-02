@@ -82,7 +82,7 @@ static void gen_blank()
 
 static void gen_num()
 {
-  int num; 
+  uint8_t num; 
   unsigned char str[32];
   num = rand()%100;
   sprintf(str,"%u",num);
