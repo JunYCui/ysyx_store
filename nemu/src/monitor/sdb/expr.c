@@ -212,6 +212,10 @@ static word_t eval(uint8_t p ,uint8_t q)
   }
   else 
   {
+    if(tokens[0].type =='('&& strcmp(tokens[1].str,"35")== 0 && tokens[2].type == ')' )
+    {
+      printf("ok");
+    }
     for(i=p;i<=q;i++)
     {
       if(tokens[i].type == '(')
@@ -246,8 +250,6 @@ static word_t eval(uint8_t p ,uint8_t q)
     } 
     else 
     {
-      
-      printf("expr is error! state = %d p = %c  q= %d\n", nr_token , tokens[p].type , position);
       assert(0);
     }
     val1 = eval(p,position-1);
