@@ -162,7 +162,6 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
         }
         else if(state <-1)
         {
-          printf("%c %c %d %d \n",tokens[p].type,tokens[q].type,p,q);
           printf(" bracket error \n");
           assert(0);
         }
@@ -249,7 +248,8 @@ static word_t eval(uint8_t p ,uint8_t q)
     } 
     else 
     {
-
+      printf("%c %c %d %d \n",tokens[p].type,tokens[q].type,p,q);
+      printf("expr error!\n");
       assert(0);
     }
     val1 = eval(p,position-1);
