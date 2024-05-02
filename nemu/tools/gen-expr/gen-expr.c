@@ -84,8 +84,9 @@ static void gen_num()
 {
   uint8_t num; 
   unsigned char str[32];
-  num = rand()%100;
-  sprintf(str,"%u",num);
+  num = rand()%100+1;
+  sprintf(str,"%d",num);
+  strcat(str,"u"); 
   strcat(buf,str);
 }
 uint16_t count=0;
