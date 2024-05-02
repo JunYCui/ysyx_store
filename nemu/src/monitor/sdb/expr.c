@@ -246,11 +246,11 @@ static word_t eval(uint8_t p ,uint8_t q)
     } 
     else 
     {
+      printf("%c %d %d",tokens[p].type,p,q);
       assert(0);
     }
     val1 = eval(p,position-1);
     val2 = eval(position+1,q);
-
       switch(tokens[position].type)
    {   
     case '/':if(val2 !=0){return val1/val2;}else { printf("dividened can not be 0 \n"); assert(0); } break;
