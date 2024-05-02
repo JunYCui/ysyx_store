@@ -144,7 +144,7 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
   int state=0;
   if( tokens[p].type == '(' && tokens[q].type == ')')
     {
-      for(i=p;i<=q;i++)
+      for(i=p-1;i<q;i++)
       {
         if(tokens[i].type == '(')
         {
