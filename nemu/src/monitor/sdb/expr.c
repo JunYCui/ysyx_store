@@ -124,7 +124,7 @@ static bool make_token(char *e) {
 
   return true;
 }
-static word_t eval(uint16_t p ,uint16_t q);
+static word_t eval(uint32_t p ,uint32_t q);
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -138,9 +138,9 @@ word_t expr(char *e, bool *success) {
 }
 
 
-static uint8_t check_parentheses(uint16_t p, uint16_t q)
+static uint8_t check_parentheses(uint32_t p, uint32_t q)
 {
-  uint16_t i,flag=0;
+  uint32_t i,flag=0;
   int state=0;
   if( tokens[p].type == '(' && tokens[q].type == ')')
     {
@@ -186,9 +186,9 @@ static uint8_t check_parentheses(uint16_t p, uint16_t q)
   return 0;
 }
 
-static word_t eval(uint16_t p ,uint16_t q)
+static word_t eval(uint32_t p ,uint32_t q)
 {
-  uint16_t i,position_add=0,position_mut=0,position=0;
+  uint32_t i,position_add=0,position_mut=0,position=0;
   bool flag_add=0,flag_mut=0;
   int state=0;
   word_t val1,val2;
