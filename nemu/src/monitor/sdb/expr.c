@@ -178,7 +178,7 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
    }
    else 
    {
-    printf("%c %d %d \n",tokens[p+1].type,p,q);
+    printf("%c %d %d \n",tokens[p].type,p,q);
     printf(" lack bracket \n");
     assert(0);
    }
