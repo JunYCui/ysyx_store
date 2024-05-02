@@ -140,7 +140,7 @@ word_t expr(char *e, bool *success) {
 
 static uint8_t check_parentheses(uint8_t p, uint8_t q)
 {
-  uint8_t i,flag=0;
+  uint16_t i,flag=0;
   int state=0;
   if( tokens[p].type == '(' && tokens[q].type == ')')
     {
@@ -185,7 +185,7 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
 
 static word_t eval(uint8_t p ,uint8_t q)
 {
-  uint8_t i,position_add=0,position_mut=0,position=0;
+  uint16_t i,position_add=0,position_mut=0,position=0;
   bool flag_add=0,flag_mut=0;
   int state=0;
   word_t val1,val2;
