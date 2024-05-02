@@ -194,7 +194,7 @@ static word_t eval(uint8_t p ,uint8_t q)
   word_t val1,val2;
   if(strcmp(tokens[1].str,"35")==0)
   {
-    printf("state : %c \n",tokens[q-1].type);
+    printf("state : %d \n",q);
   }
   if( p > q )
   {
