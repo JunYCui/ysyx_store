@@ -161,7 +161,7 @@ static int cmd_p(char *args)
       printf("expression is error \n");
       return 0;
     }
-    printf(" %u \n",exp_value);
+    printf(" %d \n",exp_value);
   }
   return 0 ;
 }
