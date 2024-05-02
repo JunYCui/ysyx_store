@@ -16,7 +16,7 @@
 NAME = gen-expr
 SRCS = gen-expr.c
 include $(NEMU_HOME)/scripts/build.mk
-CC=gcc
+ C=gcc
 CFLAGS=-c -Wall
 
 $(NAME).o:$(NAME).c
@@ -29,4 +29,4 @@ run : $(NAME)
 	./$(NAME) 10000 > input
 
 clean: 
-	rm -f *.o $(NAME)
+	rm -f *.o $(NAME) 
