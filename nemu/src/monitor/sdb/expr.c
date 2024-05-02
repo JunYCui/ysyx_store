@@ -246,7 +246,7 @@ static word_t eval(uint8_t p ,uint8_t q)
     } 
     else 
     {
-      printf("%c %d %d",tokens[p].type,p,q);
+      printf("%c %d %d \n",tokens[p].type,p,q);
       assert(0);
     }
     val1 = eval(p,position-1);
