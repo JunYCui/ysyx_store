@@ -266,6 +266,7 @@ static int eval(uint32_t p ,uint32_t q)
       }
       }
     }    
+      printf("%d",flag);
       switch(flag)
       {
         case 1:position = position_add; break;
