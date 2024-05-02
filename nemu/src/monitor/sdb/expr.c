@@ -248,7 +248,7 @@ static word_t eval(uint8_t p ,uint8_t q)
     {
       printf("%c %c %d %d %d \n",tokens[p].type,tokens[q].type,p,q,state);
       printf("expr error!\n");
-      assert(0);
+      //assert(0);
     }
     val1 = eval(p,position-1);
     val2 = eval(position+1,q);
