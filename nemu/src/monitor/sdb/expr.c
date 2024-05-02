@@ -132,7 +132,7 @@ static bool make_token(char *e) {
 
   return true;
 }
-static word_t eval(uint32_t p ,uint32_t q);
+static int eval(uint32_t p ,uint32_t q);
 
 word_t expr(char *e, bool *success) {
   uint8_t i = 0;
@@ -208,7 +208,7 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
   return 0;
 }
 
-static word_t eval(uint32_t p ,uint32_t q)
+static int eval(uint32_t p ,uint32_t q)
 {
   uint32_t i,position_add=0,position_mut=0,position=0,position_signle=0;
   uint8_t flag=0;
