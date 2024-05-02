@@ -134,7 +134,7 @@ static bool make_token(char *e) {
 }
 static int eval(uint32_t p ,uint32_t q);
 
-word_t expr(char *e, bool *success) {
+int expr(char *e, bool *success) {
   uint8_t i = 0;
   if (!make_token(e)) {
     *success = false;
