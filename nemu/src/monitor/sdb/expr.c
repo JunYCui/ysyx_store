@@ -211,15 +211,13 @@ static word_t eval(uint8_t p ,uint8_t q)
     return (uint32_t)eval(p+1,q-1);
   }
   else 
-  {
-  
-    if(tokens[0].type =='('&& strcmp(tokens[1].str,"35")== 0 && tokens[2].type == ')' )
-    {
-      printf("ok\n");
-    }
-  
+  {  
     for(i=p;i<=q;i++)
     {
+    if(tokens[0].type =='('&& strcmp(tokens[1].str,"35")== 0 && tokens[2].type == ')' )
+      {
+      printf("ok\n");
+      }
       if(tokens[i].type == '(')
       {
         state ++;
