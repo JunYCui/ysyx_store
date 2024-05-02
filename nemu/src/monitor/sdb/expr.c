@@ -154,6 +154,10 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
         {
           state--;
         }
+        if(strcpy(tokens[1].str,"35")==0)
+        {
+          printf("state : %d \n",state);
+        }
         if(state<0&&state>-2)
         {
           flag = 1;
