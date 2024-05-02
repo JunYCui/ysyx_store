@@ -293,8 +293,8 @@ static int eval(uint32_t p ,uint32_t q)
     else 
     {
       if(tokens[position].type == TK_NEQ && tokens[position+1].type  == TK_int)
-          return -atoi(tokens[position+1].str);
- 
+          return -(atoi(tokens[position+1].str));
+
     }
   }
   return 0;
