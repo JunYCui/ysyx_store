@@ -162,7 +162,7 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
         }
         else if(state <-1)
         {
-          printf("%c %d %d \n",tokens[p].type,p,q);
+          printf("%c %c %d %d \n",tokens[p].type,tokens[q].type,p,q);
           printf(" bracket error \n");
           assert(0);
         }
