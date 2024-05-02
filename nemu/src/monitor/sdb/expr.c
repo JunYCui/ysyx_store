@@ -213,7 +213,7 @@ static int eval(uint32_t p ,uint32_t q)
   uint32_t i,position_add=0,position_mut=0,position=0,position_signle=0;
   uint8_t flag=0;
   int state=0;
-  word_t val1,val2,val3;
+  word_t val1,val2;
   if( p > q )
   {
     printf(" p>q  error \n ");
@@ -292,13 +292,10 @@ static int eval(uint32_t p ,uint32_t q)
     }
     else 
     {
-      if(tokens[position].type == TK_NEQ && tokens[position+1].type  == TK_int)
+      if(tokens[position].type == TK_NEG && tokens[position+1].type  == TK_int)
         {
-          val3 = atoi(tokens[position+1].str);
-          
-          return 0-val3;
+          return -atoi(tokens[position+1].str);
         }
-      printf("%d",position);
     }
   }
   return 0;
