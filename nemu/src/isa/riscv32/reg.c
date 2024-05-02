@@ -27,7 +27,7 @@ void isa_reg_display()
 {
   uint16_t i;
   for(i = 0;i<regs_len;i++)
-  printf("%s: \r %x \r %d \n",regs[i],cpu.gpr[i],cpu.gpr[i]);
+  printf("%s:   %x   %d \n",regs[i],cpu.gpr[i],cpu.gpr[i]);
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
