@@ -145,7 +145,7 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
   if( tokens[p].type == '(' && tokens[q].type == ')')
     {
       if(tokens[p+1].type == '(' && tokens[q-1].type ==  ')')
-            return true;
+                return true;
       for(i=p+1;i<q;i++)
       {
         if(tokens[i].type == '(')
@@ -178,6 +178,7 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
    }
    else 
    {
+    printf("%c %d %d \n",tokens[p+1].type,p,q);
     printf(" lack bracket \n");
     assert(0);
    }
@@ -248,7 +249,7 @@ static word_t eval(uint8_t p ,uint8_t q)
     } 
     else 
     {
-      printf("%c %d %d \n",tokens[p+1].type,p,q);
+
       assert(0);
     }
     val1 = eval(p,position-1);
