@@ -249,7 +249,7 @@ static word_t eval(uint32_t p ,uint32_t q)
     } 
     else 
     {
-      printf("%c %c %d %d %d \n",tokens[p].type,tokens[q].type,p,q,state);
+      printf("%c %c %d %d  \n",tokens[p].type,tokens[q].type,p,q);
       printf("expr error!\n");
       assert(0);
     }
