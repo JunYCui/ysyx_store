@@ -294,7 +294,7 @@ static word_t eval(uint32_t p ,uint32_t q)
     {
       if(tokens[position].type == TK_NEQ && tokens[position+1].type  == TK_int)
           return -atoi(tokens[position+1].str);
-      printf("%s",tokens[position+1].str);
+      printf("%d",atoi(tokens[position+1].str));
     }
   }
   return 0;
