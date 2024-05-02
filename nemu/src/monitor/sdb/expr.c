@@ -154,7 +154,7 @@ static uint8_t check_parentheses(uint8_t p, uint8_t q)
         {
           state--;
         }
-        if(strcpy(tokens[1].str,"35")==0)
+        if(strcmp(tokens[1].str,"35")==0)
         {
           printf("state : %d \n",state);
         }
@@ -202,7 +202,7 @@ static word_t eval(uint8_t p ,uint8_t q)
   {
     if(tokens[p].type == TK_int)
     {
-    return (uint32_t)atoi(tokens[p].str);
+    return atoi(tokens[p].str);
     }
     else
     { 
@@ -212,7 +212,7 @@ static word_t eval(uint8_t p ,uint8_t q)
   }
   else if ( check_parentheses(p,q) == 1 )
   {
-    return (uint32_t)eval(p+1,q-1);
+    return eval(p+1,q-1);
   }
   else 
   {  
