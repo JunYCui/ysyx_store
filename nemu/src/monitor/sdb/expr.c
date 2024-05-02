@@ -21,8 +21,9 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,TK_int
-
+  TK_NOTYPE = 256,TK_int,TK_HEX,
+  TK_AND,TK_NEQ,TK_EQ,
+  TK_DEREF,TK_NEG
   /* TODO: Add more token types */
 
 };
@@ -43,8 +44,11 @@ static struct rule {
   {"\\-", '-'},         // subtraction
   {"\\/", '/'},         // division
   {"\\(", '('},         // left bracket
-  {"\\)", ')'}          // right bracket
- 
+  {"\\)", ')'},          // right bracket
+  {"0x[0-9\\a-f\\A-F]",TK_HEX}, // HEX 
+  {"&&", TK_AND},         //AND
+  {"!=", TK_NEQ}          // not equal
+
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -108,6 +112,10 @@ static bool make_token(char *e) {
           case '(':tokens[nr_token++].type = '('; break;
           case ')':tokens[nr_token++].type = ')'; break;
           case TK_int:tokens[nr_token].type = TK_int;strncpy(tokens[nr_token].str,&e[position-substr_len],substr_len);nr_token++; break;
+          case TK_HEX:tokens[nr_token].type = TK_HEX;strncpy(tokens[nr_token].str,&e[position-substr_len],substr_len);nr_token++; break;
+          case TK_AND:tokens[nr_token++].type = TK_AND;break;
+          case TK_NEQ:tokens[nr_token++].type = TK_NEQ; break;
+          case TK_EQ:tokens[nr_token++].type = TK_EQ; break;
           default: TODO();
         }
         
@@ -127,6 +135,7 @@ static bool make_token(char *e) {
 static word_t eval(uint32_t p ,uint32_t q);
 
 word_t expr(char *e, bool *success) {
+  uint8_t i = 0;
   if (!make_token(e)) {
     *success = false;
     return 0;
@@ -134,6 +143,19 @@ word_t expr(char *e, bool *success) {
   else 
   *success = true;
   /* TODO: Insert codes to evaluate the expression. */
+  
+  for (i = 0; i < nr_token; i ++) 
+  {
+  if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type !=  TK_int && tokens[i - 1].type !=  TK_HEX  && tokens[i - 1].type !=  ')')  ) ) 
+  {
+    tokens[i].type = TK_DEREF;
+  }
+  else if (tokens[i].type == '-' && (i == 0 || (tokens[i - 1].type !=  TK_int && tokens[i - 1].type !=  TK_HEX  && tokens[i - 1].type !=  ')' ) ) ) 
+  {
+    tokens[i].type = TK_NEG;
+  }
+  }
+
   return eval(0,nr_token-1);
 }
 
@@ -188,8 +210,8 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
 
 static word_t eval(uint32_t p ,uint32_t q)
 {
-  uint32_t i,position_add=0,position_mut=0,position=0;
-  bool flag_add=0,flag_mut=0;
+  uint32_t i,position_add=0,position_mut=0,position=0,position_signle=0;
+  uint8_t flag=0;
   int state=0;
   word_t val1,val2;
   if( p > q )
@@ -229,40 +251,51 @@ static word_t eval(uint32_t p ,uint32_t q)
       {
       if(tokens[i].type == '+' || tokens[i].type == '-')
       {
-        flag_add = 1;
+        flag = 1;
         position_add = i;
       }
-      if(tokens[i].type == '*' || tokens[i].type == '/')
+      else if(tokens[i].type == '*' || tokens[i].type == '/')
       {
-        flag_mut=1;
+        flag=2;
         position_mut = i;
+      }
+      else if(tokens[i].type == TK_NEG || tokens[i].type == TK_DEREF ) 
+      {
+        flag=3;
+        position_signle = i;
       }
       }
     }    
-    if(flag_add == 1)
+      switch(flag)
+      {
+        case 1:position = position_add; break;
+        case 2:position = position_mut;break;
+        case 3:position = position_signle; break;
+        default:
+        printf("%c %c %d %d  \n",tokens[p].type,tokens[q].type,p,q);
+        printf("expr error!\n");
+        assert(0);
+        break;
+      } 
+    if(flag <3)
     {
-      position = position_add;
-    }
-    else if(flag_mut == 1)
-    {
-      position = position_mut;
-    } 
-    else 
-    {
-      printf("%c %c %d %d  \n",tokens[p].type,tokens[q].type,p,q);
-      printf("expr error!\n");
-      assert(0);
-    }
-    val1 = eval(p,position-1);
-    val2 = eval(position+1,q);
+      val1 = eval(p,position-1);
+      val2 = eval(position+1,q);
       switch(tokens[position].type)
-   {   
+    {   
     case '/':if(val2 !=0){return val1/val2;}else { printf("dividened can not be 0 \n"); assert(0); } break;
     case '*':return val1*val2;break;
     case '+':return val1+val2;break;
     case '-':return val1-val2;break;
     default:assert(0);
-   }
+    }
+    }
+    else 
+    {
+      if(tokens[position].type == TK_NEQ && tokens[position+1].type  == TK_int)
+          return -atoi(tokens[position].str);
+    
+    }
   }
   return 0;
 }
