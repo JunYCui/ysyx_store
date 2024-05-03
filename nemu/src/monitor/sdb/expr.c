@@ -213,7 +213,7 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
 static word_t eval(uint32_t p ,uint32_t q)
 {
   uint32_t i,position_add=0,position_mut=0,position=0,position_signle=0;
-  uint8_t flag_add=0,flag_mut=0,flag_single=0;
+  bool flag_add=0,flag_mut=0,flag_single=0;
   int state=0;
   word_t val1,val2;
   if( p > q )
@@ -306,6 +306,7 @@ static word_t eval(uint32_t p ,uint32_t q)
     }
     else 
     {
+      assert(0);
       if(tokens[position].type == TK_NEG)
       {
           val1 = - eval(position+1,q);
