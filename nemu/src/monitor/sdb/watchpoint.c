@@ -40,4 +40,20 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
+WP* new_wp()
+{
+  WP* new;
+  if(free_ == NULL)
+  {
+    printf("all watchpoints are used!");
+    assert(0);
+  }
+  else 
+  {
+    new = free_;
+    new->next = NULL;
+    free_ = free_->next;
+  }
 
+  return new;
+}
