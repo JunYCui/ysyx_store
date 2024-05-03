@@ -275,7 +275,6 @@ static word_t eval(uint32_t p ,uint32_t q)
       }
       }
     }    
-    assert(0);
       if(flag_add==1)
       {
         position = position_add;
