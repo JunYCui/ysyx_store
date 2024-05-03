@@ -38,7 +38,7 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */ 
-  {"0x[0-9\\a-f\\A-F]",TK_HEX}, // HEX 
+  {"0x[0-9\\a-f\\A-F]+",TK_HEX}, // HEX 
   {"[0-9]+(u)?", TK_int},   // int
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
