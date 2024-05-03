@@ -294,7 +294,7 @@ static word_t eval(uint32_t p ,uint32_t q)
         case '+':flag_add=1;position_add=i;break;
         case '-':flag_add= 1;position_add=i;break;
         case TK_NEG:if(flag_single ==0) {flag_single=1;position_single = i;}break;
-        case TK_DEREF:flag_single=1;position_single = i;break;
+        case TK_DEREF:if(flag_single ==0) {flag_single=1;position_single = i;}break;
       }
       }
     }    
