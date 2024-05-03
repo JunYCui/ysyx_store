@@ -303,7 +303,7 @@ static word_t eval(uint32_t p ,uint32_t q)
             }
             count++;
           }
-          return (-1)^count_N*atoi(tokens[position+1].str);
+          return ((-1)^count_N)*atoi(tokens[position+1].str);
         }
     }
   }
