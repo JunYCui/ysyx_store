@@ -235,6 +235,7 @@ static word_t eval(uint32_t p ,uint32_t q)
   }
   else if (p + 1 == q)
   {
+    assert(0);
     if(tokens[p].type == TK_NEG && tokens[q].type  == TK_int)
             return -1*atoi(tokens[q].str);
   }
@@ -306,7 +307,6 @@ static word_t eval(uint32_t p ,uint32_t q)
     }
     else 
     {
-      assert(0);
       if(tokens[position].type == TK_NEG)
       {
           val1 = - eval(position+1,q);
