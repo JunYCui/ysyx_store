@@ -292,9 +292,18 @@ static word_t eval(uint32_t p ,uint32_t q)
     }
     else 
     {
+      uint8_t count = 0,count_N=0;
       if(tokens[position].type == TK_NEG && tokens[position+1].type  == TK_int)
         {
-          return -atoi(tokens[position+1].str);
+          while(tokens[position-count].type == TK_NEG || tokens[position-count].type == '(')  
+          {
+            if(tokens[position-count].type == TK_NEG )
+            {
+              count_N++;
+            }
+            count++;
+          }
+          return (-1)^count_N*atoi(tokens[position+1].str);
         }
     }
   }
