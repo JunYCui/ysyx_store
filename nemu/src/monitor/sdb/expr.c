@@ -37,7 +37,8 @@ static struct rule {
 
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
-   */
+   */ 
+  {"0x[0-9\\a-f\\A-F]",TK_HEX}, // HEX 
   {"[0-9]+(u)?", TK_int},   // int
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
@@ -47,7 +48,6 @@ static struct rule {
   {"\\/", '/'},         // division
   {"\\(", '('},         // left bracket
   {"\\)", ')'},          // right bracket
-  {"0x[0-9\\a-f\\A-F]",TK_HEX}, // HEX 
   {"&&", TK_AND},         //AND
   {"!=", TK_NEQ},          // not equal
   {"\\$[0-9a-zA-Z]+", TK_REG} // regsiter
