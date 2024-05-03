@@ -191,7 +191,7 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
         }
     }
   else 
-      return false;           
+      return 0;           
   
 
    if(state == 0)
@@ -245,7 +245,7 @@ static word_t eval(uint32_t p ,uint32_t q)
             return -1*atoi(tokens[q].str);
   
   }
-  else if ( check_parentheses(p,q) == true)
+  else if (check_parentheses(p,q) == true)
   {
     return eval(p+1,q-1);
   }
