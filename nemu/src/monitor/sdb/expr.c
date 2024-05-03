@@ -303,9 +303,8 @@ static word_t eval(uint32_t p ,uint32_t q)
               count_N++;
             }
             count++;
-            if(position - count == -1)
+            if( position - count == -1)
                 break;
-            printf("%d \n", position-count);
           }
           return ((-1)^count_N)*atoi(tokens[position+1].str);
         }
