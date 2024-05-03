@@ -118,7 +118,7 @@ static bool make_token(char *e) {
           case TK_AND:tokens[nr_token++].type = TK_AND;break;
           case TK_NEQ:tokens[nr_token++].type = TK_NEQ; break;
           case TK_EQ:tokens[nr_token++].type = TK_EQ; break;
-          case TK_REG:tokens[nr_token].type = TK_REG;strncpy(tokens[nr_token].str,&e[position-substr_len],substr_len);nr_token++; break;
+          case TK_REG:tokens[nr_token].type = TK_REG;strncpy(tokens[nr_token].str,&e[position-substr_len+1],substr_len-1);nr_token++; break;
 
           default: TODO();
         }

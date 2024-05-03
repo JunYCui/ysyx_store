@@ -34,7 +34,6 @@ word_t isa_reg_str2val(const char *s, bool *success)
 {
   uint16_t i;
   *success = false;
-  printf("%s",s);
   for(i = 0;i<regs_len;i++)
   {
     if(strcmp(s,reg_name(i))== 0 )
