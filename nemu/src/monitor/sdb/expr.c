@@ -20,6 +20,8 @@
  */
 #include <regex.h>
 
+#include <math.h>
+
 enum {
   TK_NOTYPE = 256,TK_int,TK_HEX,
   TK_AND,TK_NEQ,TK_EQ,
@@ -306,7 +308,7 @@ static word_t eval(uint32_t p ,uint32_t q)
             if( position - count == -1)
                 break;
           }
-          return ((-1)^count_N)*atoi(tokens[position+1].str);
+          return pow(-1,count_N)*atoi(tokens[position+1].str);
         }
     }
   }
