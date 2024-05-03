@@ -168,7 +168,6 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
   int state=0;
   if( tokens[p].type == '(' && tokens[q].type == ')')
     {
-      assert(0);
       for(i=p+1;i<q;i++)
       {
         if(tokens[i].type == '(')
@@ -191,9 +190,11 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
         }
         }
     }
-  else 
+  else
+    {
+      assert(0); 
       return 0;           
-  
+    }
 
    if(state == 0)
    {
