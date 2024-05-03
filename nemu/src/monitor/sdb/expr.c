@@ -307,9 +307,18 @@ static word_t eval(uint32_t p ,uint32_t q)
     }
     else 
     {
+      int count=0;
       if(tokens[position].type == TK_NEG)
       {
-          val1 = - eval(position+1,q);
+          while(tokens[position-count].type == TK_NEG)
+          {
+            count++;
+            if(position-count < 0)
+            {
+              break;
+            }
+          }
+          val1 = pow(-1,count)*eval(position+1,q);
           return val1;
       }
     }
