@@ -330,13 +330,11 @@ static word_t eval(uint32_t p ,uint32_t q)
     }
     else 
     {
-      if(tokens[position].type == TK_NEG)
+      switch (tokens[position].type)
       {
-          return -eval(position+1,q);
-      }
-      else if(tokens[position].type == TK_DEREF)
-      {
-          return paddr_read(eval(position+1,q), 4);
+      case TK_NEG:return -eval(position+1,q);break;
+      case TK_DEREF:return paddr_read(eval(position+1,q), 4); break;
+     
       }
     }
   }
