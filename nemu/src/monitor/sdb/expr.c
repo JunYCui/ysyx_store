@@ -297,7 +297,7 @@ static word_t eval(uint32_t p ,uint32_t q)
         {
           while(tokens[position-count].type == TK_NEG || tokens[position-count].type == '(')  
           {
-            printf("%d \n", count_N);
+            printf("%d \n", count);
             if(tokens[position-count].type == TK_NEG )
             {
               count_N++;
