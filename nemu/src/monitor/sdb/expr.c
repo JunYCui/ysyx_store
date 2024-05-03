@@ -245,7 +245,7 @@ static word_t eval(uint32_t p ,uint32_t q)
             return -1*atoi(tokens[q].str);
   
   }
-  else if ( check_parentheses(p,q) == 1 )
+  else if ( check_parentheses(p,q) == true)
   {
     return eval(p+1,q-1);
   }
