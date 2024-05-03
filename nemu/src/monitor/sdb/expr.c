@@ -188,7 +188,7 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
           printf(" bracket error \n");
           assert(0);
         }
-      }
+        }
     }
   else 
       return false;           
@@ -235,7 +235,7 @@ static word_t eval(uint32_t p ,uint32_t q)
   }
   else if (p + 1 == q)
   {
-  
+    assert(0);
     if(tokens[p].type == TK_NEG && tokens[q].type  == TK_int)
             return -1*atoi(tokens[q].str);
   
@@ -270,7 +270,6 @@ static word_t eval(uint32_t p ,uint32_t q)
       }
       else if(tokens[i].type == TK_NEG || tokens[i].type == TK_DEREF ) 
       {
-        assert(0);
         flag_single=1;
         position_signle = i;
       }
