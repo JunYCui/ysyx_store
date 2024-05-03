@@ -223,15 +223,21 @@ static word_t eval(uint32_t p ,uint32_t q)
   }
   else if (p == q)
   {
-    if(tokens[p].type == TK_int || tokens[p].type == TK_HEX)
+    uint32_t num;
+    if(tokens[p].type == TK_int )
     {
-    return atoi(tokens[p].str);
+      sscanf(tokens[p].str,"%u",&num);
+    }
+    else if(tokens[p].type == TK_HEX)
+    {
+      sscanf(tokens[p].str,"%x",&num);
     }
     else
     { 
     printf(" p==q error \n");
     assert(0);
     }
+    return num;
   }
   else if (p + 1 == q)
   {
