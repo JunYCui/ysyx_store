@@ -191,7 +191,7 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
         }
     }
   else
-      return 3;           
+      return 2;           
 
    if(state == 0)
    {
@@ -246,6 +246,7 @@ static word_t eval(uint32_t p ,uint32_t q)
   }
   else if (check_parentheses(p,q) == 1)
   {
+    assert(0);
     return eval(p+1,q-1);
   }
   else 
