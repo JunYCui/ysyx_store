@@ -256,13 +256,13 @@ static word_t eval(uint32_t p ,uint32_t q)
   }
   else if (p + 1 == q)
   {
-    uint32_t num_fp;
+    uintptr_t num_fp;
     if(tokens[p].type == TK_NEG && tokens[q].type  == TK_int)
           return -1*atoi(tokens[q].str);
     else if(tokens[p].type == TK_NEG && tokens[q].type  == TK_int)
     {
           num_fp = atoi(tokens[q].str);
-          return num_fp;
+          return *((int*)num_fp);
     }
   }
   else if (check_parentheses(p,q) == 1)
@@ -348,9 +348,9 @@ static word_t eval(uint32_t p ,uint32_t q)
       }
       else if(tokens[position].type == TK_DEREF)
       {
-          uint32_t val_fp; 
+          uintptr_t val_fp; 
           val_fp = eval(position+1,q);
-          return val_fp; 
+          return *((int*)val_fp); 
       }
     }
   }
