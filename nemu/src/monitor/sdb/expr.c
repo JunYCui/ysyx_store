@@ -244,11 +244,10 @@ static word_t eval(uint32_t p ,uint32_t q)
     
     if(tokens[p].type == TK_NEG && tokens[q].type  == TK_int)
             return -1*atoi(tokens[q].str);
-  
+    assert(0);
   }
   else if (check_parentheses(p,q) == true)
   {
-    printf("%d",p);
     return eval(p+1,q-1);
   }
   else 
