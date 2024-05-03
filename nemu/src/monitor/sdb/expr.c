@@ -272,7 +272,7 @@ static word_t eval(uint32_t p ,uint32_t q)
         case '/':flag_mut=1;position_mut = i;break;
         case '+':flag_add=1;position_add=i;break;
         case '-':flag_add= 1;position_add=i;break;
-        case TK_NEG:flag_single=1;position_single = i;break;
+        case TK_NEG:if(flag_single ==0) {flag_single=1;position_single = i;}break;
         case TK_DEREF:flag_single=1;position_single = i;break;
       }
       }
@@ -321,14 +321,9 @@ static word_t eval(uint32_t p ,uint32_t q)
     }
     else 
     {
-      int count=0;
       if(tokens[position].type == TK_NEG)
       {
-          while(position-count != 0 && tokens[position].type == TK_NEG)
-          {
-            count++;
-          }
-          val1 = -1*eval(position-count+1,q);
+          val1 = -1*eval(position+1,q);
           return val1;
       }
       else if(tokens[position].type == TK_DEREF)
