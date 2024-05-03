@@ -303,7 +303,7 @@ static word_t eval(uint32_t p ,uint32_t q)
               count_N++;
             }
             count++;
-            if(position -count < 0)
+            if(position - count == -1)
                 break;
             printf("%d \n", position-count);
           }
