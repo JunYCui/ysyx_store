@@ -118,6 +118,8 @@ static bool make_token(char *e) {
           case TK_AND:tokens[nr_token++].type = TK_AND;break;
           case TK_NEQ:tokens[nr_token++].type = TK_NEQ; break;
           case TK_EQ:tokens[nr_token++].type = TK_EQ; break;
+          case TK_REG:tokens[nr_token++].type = TK_REG;strncpy(tokens[nr_token].str,&e[position-substr_len],substr_len);nr_token++; break;
+
           default: TODO();
         }
         
@@ -223,6 +225,7 @@ static word_t eval(uint32_t p ,uint32_t q)
   else if (p == q)
   {
     uint32_t num;
+    bool success;
     if(tokens[p].type == TK_int )
     {
       sscanf(tokens[p].str,"%u",&num);
@@ -230,6 +233,19 @@ static word_t eval(uint32_t p ,uint32_t q)
     else if(tokens[p].type == TK_HEX)
     {
       sscanf(tokens[p].str,"%x",&num);
+    }
+    else if(tokens[p].type == TK_REG)
+    {
+      num = isa_reg_str2val(tokens[p].str,&success);
+      if(success == true)
+      {
+        return num;
+      }
+      else 
+      {
+        printf(" register does not exist. ");
+        assert(0);
+      }
     }
     else
     { 
@@ -240,9 +256,14 @@ static word_t eval(uint32_t p ,uint32_t q)
   }
   else if (p + 1 == q)
   {
-    
+    uint32_t num_fp;
     if(tokens[p].type == TK_NEG && tokens[q].type  == TK_int)
-            return -1*atoi(tokens[q].str);
+          return -1*atoi(tokens[q].str);
+    else if(tokens[p].type == TK_NEG && tokens[q].type  == TK_int)
+    {
+          num_fp = atoi(tokens[q].str);
+          return num_fp;
+    }
   }
   else if (check_parentheses(p,q) == 1)
   {
@@ -327,7 +348,9 @@ static word_t eval(uint32_t p ,uint32_t q)
       }
       else if(tokens[position].type == TK_DEREF)
       {
-
+          uint32_t val_fp; 
+          val_fp = eval(position+1,q);
+          return val_fp; 
       }
     }
   }

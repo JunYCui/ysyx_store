@@ -30,6 +30,17 @@ void isa_reg_display()
   printf("%s: \t 0x%-10x \t %-10d \n",reg_name(i),gpr(i),gpr(i));
 }
 
-word_t isa_reg_str2val(const char *s, bool *success) {
+word_t isa_reg_str2val(const char *s, bool *success) 
+{
+  uint16_t i;
+  *success = false;
+  for(i = 0;i<regs_len;i++)
+  {
+    if(strcmp(s,reg_name(i))== 0 )
+    {
+      *success = true;
+      return gpr(i);
+    }
+  }
   return 0;
 }
