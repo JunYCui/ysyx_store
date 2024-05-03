@@ -19,7 +19,7 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
-
+#include <memory/paddr.h>
 #include <math.h>
 
 enum {
@@ -254,18 +254,6 @@ static word_t eval(uint32_t p ,uint32_t q)
     }
     return num;
   }
-  /*
-  else if (p + 1 == q)
-  {
-    uintptr_t num_fp;
-    if(tokens[p].type == TK_NEG && tokens[q].type  == TK_int)
-          return -1*atoi(tokens[q].str);
-    else if(tokens[p].type == TK_NEG && tokens[q].type  == TK_int)
-    {
-          num_fp = atoi(tokens[q].str);
-          return *((int*)num_fp);
-    }
-  }*/
   else if (check_parentheses(p,q) == 1)
   {
     return eval(p+1,q-1);
@@ -349,9 +337,7 @@ static word_t eval(uint32_t p ,uint32_t q)
       }
       else if(tokens[position].type == TK_DEREF)
       {
-          uintptr_t val_fp; 
-          val_fp = eval(position+1,q);
-          return *((int*)val_fp); 
+          return paddr_read(eval(position+1,q), 4);
       }
     }
   }
