@@ -247,6 +247,7 @@ static word_t eval(uint32_t p ,uint32_t q)
   }
   else if (check_parentheses(p,q) == true)
   {
+    printf("%d",p);
     return eval(p+1,q-1);
   }
   else 
@@ -335,7 +336,7 @@ static word_t eval(uint32_t p ,uint32_t q)
           val1 = -1*eval(position-count+2,q);
           return val1;
       }
-      else if(tokens[position].type == TK_NEG)
+      else if(tokens[position].type == TK_DEREF)
       {
 
       }
