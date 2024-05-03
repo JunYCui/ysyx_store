@@ -215,7 +215,7 @@ static word_t eval(uint32_t p ,uint32_t q)
   uint32_t i,position_add=0,position_mut=0,position=0,position_single=0,position_eq=0,position_and=0;
   bool flag_add=0,flag_mut=0,flag_single=0,flag_eq=0,flag_and=0;
   int state=0;
-  word_t val1,val2;
+  word_t val1=0,val2=0;
   if( p > q )
   {
     printf(" p>q  error \n ");
@@ -241,6 +241,7 @@ static word_t eval(uint32_t p ,uint32_t q)
   }
   else if (p + 1 == q)
   {
+    assert(0);
     if(tokens[p].type == TK_NEG && tokens[q].type  == TK_int)
             return -1*atoi(tokens[q].str);
   
@@ -322,18 +323,10 @@ static word_t eval(uint32_t p ,uint32_t q)
     }
     else 
     {
-      int count=0;
       if(tokens[position].type == TK_NEG)
       {
-          while(tokens[position-count].type == TK_NEG)
-          {
-            count++;
-            if(position-count == -1)
-            {
-              break;
-            }
-          }
-          val1 = -1*eval(position-count+2,q);
+          while(tokens[--position].type == TK_NEG)
+          val1 = -1*eval(position+1,q);
           return val1;
       }
       else if(tokens[position].type == TK_DEREF)
