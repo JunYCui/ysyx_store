@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 #endif
 
 // test for expr
- 
+ /*
   FILE* fp;
   char readbuf[65536+128];
   char exp[65536];
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
       printf("%s\n",exp);
     }
   }
-  
+  */  
   /* Start engine. */
   engine_start();
 
