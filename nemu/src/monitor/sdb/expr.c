@@ -254,6 +254,7 @@ static word_t eval(uint32_t p ,uint32_t q)
     }
     return num;
   }
+  /*
   else if (p + 1 == q)
   {
     uintptr_t num_fp;
@@ -264,7 +265,7 @@ static word_t eval(uint32_t p ,uint32_t q)
           num_fp = atoi(tokens[q].str);
           return *((int*)num_fp);
     }
-  }
+  }*/
   else if (check_parentheses(p,q) == 1)
   {
     return eval(p+1,q-1);
