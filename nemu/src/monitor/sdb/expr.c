@@ -233,6 +233,11 @@ static word_t eval(uint32_t p ,uint32_t q)
     assert(0);
     }
   }
+  else if (p + 1 == q)
+  {
+    if(tokens[p].type == TK_NEG && tokens[q].type  == TK_int)
+            return -1*atoi(tokens[q].str);
+  }
   else if ( check_parentheses(p,q) == 1 )
   {
     return eval(p+1,q-1);
@@ -294,22 +299,11 @@ static word_t eval(uint32_t p ,uint32_t q)
     }
     else 
     {
-      uint8_t count = 0,count_N=0;
-      if(tokens[position].type == TK_NEG && tokens[position+1].type  == TK_int)
-        {
-          while(tokens[position-count].type == TK_NEG || tokens[position-count].type == '(')  
-          {
-           
-            if(tokens[position-count].type == TK_NEG )
-            {
-              count_N++;
-            }
-            count++;
-            if( position - count == -1)
-                break;
-          }
-          return pow(-1,count_N)*atoi(tokens[position+1].str);
-        }
+      if(tokens[position].type == TK_NEG)
+      {
+          val1 = - eval(position+1,p);
+          return val1;
+      }
     }
   }
   return 0;
