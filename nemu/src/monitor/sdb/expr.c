@@ -168,6 +168,7 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
   int state=0;
   if( tokens[p].type == '(' && tokens[q].type == ')')
     {
+      assert(0);
       for(i=p+1;i<q;i++)
       {
         if(tokens[i].type == '(')
@@ -244,7 +245,6 @@ static word_t eval(uint32_t p ,uint32_t q)
     
     if(tokens[p].type == TK_NEG && tokens[q].type  == TK_int)
             return -1*atoi(tokens[q].str);
-    assert(0);
   }
   else if (check_parentheses(p,q) == true)
   {
