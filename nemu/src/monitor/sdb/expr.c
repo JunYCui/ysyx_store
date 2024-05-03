@@ -270,6 +270,7 @@ static word_t eval(uint32_t p ,uint32_t q)
       }
       else if(tokens[i].type == TK_NEG || tokens[i].type == TK_DEREF ) 
       {
+        assert(0);
         flag_single=1;
         position_signle = i;
       }
