@@ -301,8 +301,9 @@ static word_t eval(uint32_t p ,uint32_t q)
     {
       if(tokens[position].type == TK_NEG)
       {
+          printf("%d \n",position);
           val1 = - eval(position+1,p);
-          printf("%d",position);
+          
           return val1;
       }
     }
