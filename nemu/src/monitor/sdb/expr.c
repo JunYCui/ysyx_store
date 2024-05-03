@@ -212,8 +212,8 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
 
 static word_t eval(uint32_t p ,uint32_t q)
 {
-  uint32_t i,position_add=0,position_mut=0,position=0,position_signle=0,position_eq=0;
-  bool flag_add=0,flag_mut=0,flag_single=0,flag_eq=0;
+  uint32_t i,position_add=0,position_mut=0,position=0,position_single=0,position_eq=0,position_and=0;
+  bool flag_add=0,flag_mut=0,flag_single=0,flag_eq=0,flag_and=0;
   int state=0;
   word_t val1,val2;
   if( p > q )
@@ -257,29 +257,25 @@ static word_t eval(uint32_t p ,uint32_t q)
       }
       if(state == 0)
       {
-      if(tokens[i].type == TK_EQ || tokens[i].type == TK_NEQ)
+        switch(tokens[i].type)
       {
-        flag_eq = 1;
-        position_eq = i;
-      }
-      else if(tokens[i].type == '+' || tokens[i].type == '-')
-      {
-        flag_add= 1;
-        position_add = i;
-      }
-      else if(tokens[i].type == '*' || tokens[i].type == '/')
-      {
-        flag_mut=1;
-        position_mut = i;
-      }
-      else if(tokens[i].type == TK_NEG || tokens[i].type == TK_DEREF ) 
-      {
-        flag_single=1;
-        position_signle = i;
+        case TK_AND:flag_and=1;position_and = i;break;
+        case TK_EQ:flag_eq = 1;position_eq = i;break;
+        case TK_NEQ:flag_eq = 1;position_eq = i;break;
+        case '*':flag_mut=1;position_mut = i;break;
+        case '/':flag_mut=1;position_mut = i;break;
+        case '+':flag_add=1;position_add=i;break;
+        case '-':flag_add= 1;position_add=i;break;
+        case TK_NEG:flag_single=1;position_single = i;break;
+        case TK_DEREF:flag_single=1;position_single = i;break;
       }
       }
     }    
-      if (flag_eq == 1)
+      if(flag_and == 1)
+      {
+        position = position_and;
+      }
+      else if (flag_eq == 1)
       {
         position = position_eq;
       }
@@ -293,7 +289,7 @@ static word_t eval(uint32_t p ,uint32_t q)
       }
       else if (flag_single== 1)
       {
-        position = position_signle;
+        position = position_single;
       }
       else 
       {
@@ -301,7 +297,7 @@ static word_t eval(uint32_t p ,uint32_t q)
         printf("expr error!\n");
         assert(0);
       }
-    if(flag_add || flag_mut || flag_eq)
+    if(flag_add || flag_mut || flag_eq || flag_and)
     {
       val1 = eval(p,position-1);
       val2 = eval(position+1,q);
@@ -313,6 +309,7 @@ static word_t eval(uint32_t p ,uint32_t q)
     case '-':return val1-val2;break;
     case TK_EQ:return val1==val2;break;
     case TK_NEQ:return val1!=val2;break;
+    case TK_AND:return val1&&val2;break;
     default:assert(0);
     }
     }
