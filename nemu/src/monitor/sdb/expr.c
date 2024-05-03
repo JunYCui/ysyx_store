@@ -213,7 +213,7 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
 static word_t eval(uint32_t p ,uint32_t q)
 {
   uint32_t i,position_add=0,position_mut=0,position=0,position_signle=0;
-  uint8_t flag=0;
+  uint8_t pri[3];
   int state=0;
   word_t val1,val2;
   if( p > q )
@@ -258,33 +258,40 @@ static word_t eval(uint32_t p ,uint32_t q)
       {
       if(tokens[i].type == '+' || tokens[i].type == '-')
       {
-        flag = 1;
+        pri[0] = 1;
         position_add = i;
       }
       else if(tokens[i].type == '*' || tokens[i].type == '/')
       {
-        flag=2;
+        pri[1]=1;
         position_mut = i;
       }
       else if(tokens[i].type == TK_NEG || tokens[i].type == TK_DEREF ) 
       {
-        flag=3;
+        pri[2]=1;
         position_signle = i;
       }
       }
     }    
-      switch(flag)
+      if(pri[0] ==1)
       {
-        case 1:position = position_add; break;
-        case 2:position = position_mut;break;
-        case 3:position = position_signle; break;
-        default:
+        position = position_add;
+      }
+      else if (pri[1] == 1)
+      {
+        position = position_mut;
+      }
+      else if (pri[2] == 1)
+      {
+        position = position_signle;
+      }
+      else 
+      {
         printf("%c %c %d %d  \n",tokens[p].type,tokens[q].type,p,q);
         printf("expr error!\n");
         assert(0);
-        break;
-      } 
-    if(flag <3)
+      }
+    if(pri[0]==1 || pri[1]==1)
     {
       val1 = eval(p,position-1);
       val2 = eval(position+1,q);
@@ -302,7 +309,6 @@ static word_t eval(uint32_t p ,uint32_t q)
       if(tokens[position].type == TK_NEG)
       {
           val1 = - eval(position+1,q);
-          
           return val1;
       }
     }
