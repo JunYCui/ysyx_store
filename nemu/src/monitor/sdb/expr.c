@@ -326,6 +326,7 @@ static word_t eval(uint32_t p ,uint32_t q)
       if(tokens[position].type == TK_NEG)
       {
           while(tokens[--position].type == TK_NEG)
+          ;
           val1 = -1*eval(position+1,q);
           return val1;
       }
