@@ -25,7 +25,7 @@
 enum {
   TK_NOTYPE = 256,TK_int,TK_HEX,
   TK_AND,TK_NEQ,TK_EQ,
-  TK_DEREF,TK_NEG
+  TK_DEREF,TK_NEG,TK_REG
   /* TODO: Add more token types */
 
 };
@@ -49,8 +49,8 @@ static struct rule {
   {"\\)", ')'},          // right bracket
   {"0x[0-9\\a-f\\A-F]",TK_HEX}, // HEX 
   {"&&", TK_AND},         //AND
-  {"!=", TK_NEQ}          // not equal
-
+  {"!=", TK_NEQ},          // not equal
+  {"\\$[0-9a-zA-Z]+", TK_REG} // regsiter
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -212,8 +212,8 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
 
 static word_t eval(uint32_t p ,uint32_t q)
 {
-  uint32_t i,position_add=0,position_mut=0,position=0,position_signle=0;
-  bool flag_add=0,flag_mut=0,flag_single=0;
+  uint32_t i,position_add=0,position_mut=0,position=0,position_signle=0,position_eq=0;
+  bool flag_add=0,flag_mut=0,flag_single=0,flag_eq=0;
   int state=0;
   word_t val1,val2;
   if( p > q )
@@ -257,7 +257,12 @@ static word_t eval(uint32_t p ,uint32_t q)
       }
       if(state == 0)
       {
-      if(tokens[i].type == '+' || tokens[i].type == '-')
+      if(tokens[i].type == TK_EQ || tokens[i].type == TK_NEQ)
+      {
+        flag_eq = 1;
+        position_eq = i;
+      }
+      else if(tokens[i].type == '+' || tokens[i].type == '-')
       {
         flag_add= 1;
         position_add = i;
@@ -274,7 +279,11 @@ static word_t eval(uint32_t p ,uint32_t q)
       }
       }
     }    
-      if(flag_add==1)
+      if (flag_eq == 1)
+      {
+        position = position_eq;
+      }
+      else if(flag_add==1)
       {
         position = position_add;
       }
@@ -292,7 +301,7 @@ static word_t eval(uint32_t p ,uint32_t q)
         printf("expr error!\n");
         assert(0);
       }
-    if(flag_add || flag_mut)
+    if(flag_add || flag_mut || flag_eq)
     {
       val1 = eval(p,position-1);
       val2 = eval(position+1,q);
@@ -302,6 +311,8 @@ static word_t eval(uint32_t p ,uint32_t q)
     case '*':return val1*val2;break;
     case '+':return val1+val2;break;
     case '-':return val1-val2;break;
+    case TK_EQ:return val1==val2;break;
+    case TK_NEQ:return val1!=val2;break;
     default:assert(0);
     }
     }
