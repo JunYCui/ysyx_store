@@ -71,6 +71,11 @@ void free_wp(int NO)
   WP* temp = free_;
   WP* temp1 = head;
   WP* wp;
+  if(head == NULL)
+  {
+    printf("no working watchpoints\n");
+    assert(0);
+  }
   while(temp1->NO != NO && temp1->next != NULL)
   {
     temp1 = temp1->next;
