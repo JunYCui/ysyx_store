@@ -98,7 +98,7 @@ static int cmd_info(char *args)
   {
     Wp_info_w();
   }
-  else if (strcmp(arg,"r") == 0)
+  else if (strcmp(arg,"f") == 0)
   {
     Wp_info_f();
   }
