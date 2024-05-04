@@ -166,6 +166,41 @@ static int cmd_p(char *args)
   return 0 ;
 }
 
+static int cmd_w(char *args)
+{
+  char *arg = strtok(NULL," ");
+  char *arg1 = strtok(NULL," ");
+  WP* wp1;
+  bool*success=false;
+  uint32_t val=0;
+  if(arg1 != NULL)
+  {
+  printf("parameters are too much! \n");
+    return 0;
+  } 
+  else if(arg == NULL)
+  {
+    printf("lack parameter!\n ");
+    return 0;
+  }
+  wp1 = new_wp();
+  strcpy(wp1->exp,arg1);
+  val =  expr(arg1,success);
+  if(*success == true)
+  {
+    wp1->value = val;
+  }
+  else 
+  {
+    printf("expr is error!\n");
+    assert(0);
+  }
+  printf("%d,%s,%d",wp1->NO,wp1->exp,wp1->value);
+
+  return 0;
+}
+
+
 static int cmd_help(char *args);
 
 static struct {
@@ -179,7 +214,8 @@ static struct {
   { "si", "execute n instructions", cmd_si},
   { "info", "print program status", cmd_info},
   {"x", "check the memory",cmd_x},
-  {"p", "calculate expression", cmd_p}
+  {"p", "calculate expression", cmd_p},
+  {"w", "create watchpoint", cmd_w}
   /* TODO: Add more commands */
 
 };

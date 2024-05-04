@@ -45,8 +45,8 @@ WP* new_wp()
   else 
   {
     new = free_;
+    free_ = free_->next;  
     new->next = NULL;
-    free_ = free_->next;
   }
   
   if(head == NULL)
@@ -56,8 +56,9 @@ WP* new_wp()
   else 
   {
     temp = head;
-    while(temp->next == NULL)
+    while(temp->next != NULL)
       temp = temp->next;
+    temp->next = new;
   }
   return new;
 
@@ -66,6 +67,21 @@ WP* new_wp()
 void free_wp(WP*wp)
 {
   WP* temp = free_;
+  WP* temp1 = head;
+  //delete from work
+  if(head->NO == wp->NO)
+  {
+    head= wp->next;
+  }
+  else 
+  {
+  while(temp1->next->NO != wp->NO)
+  {
+    temp1 = temp1->next;
+  }
+    temp1->next = wp->next;
+  }
+  //insert to free
   if(wp->NO < temp->NO)
   { 
     wp->next = free_;
