@@ -174,9 +174,10 @@ void Cpu_Wp(void)
     assert(success == true);
     if(val != temp->value)
     {
-      record_No[count++] = temp->NO;
+      record_No[count] = temp->NO;
       record_val[count][0]= temp->value;
       record_val[count][1]= val;
+      count++;
       temp->value = val;
     }
     temp = temp->next;
