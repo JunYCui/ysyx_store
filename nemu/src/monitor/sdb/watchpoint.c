@@ -130,13 +130,12 @@ void free_wp(int NO)
   }
 }
 
-int Wp_info(void)
+void Wp_info_w(void)
 {
   WP*temp;
   if(head == NULL)
   {
     printf("no watchpoints \n");
-    return 0;
   }
   temp = head;
   while(temp->next !=  NULL)
@@ -145,7 +144,24 @@ int Wp_info(void)
     temp = temp->next;
   }
   printf("watchpoint %d : exp:%s val: %d \n",temp->NO,temp->exp,temp->value);
-  return 0;
+
+}
+
+void Wp_info_f(void)
+{
+  WP*temp;
+  if(free_ == NULL)
+  {
+    printf("no free watchpoints \n");
+  }
+  temp = free_;
+    while(temp->next !=  NULL)
+  {
+    printf("watchpoint %d is free \n",temp->NO);
+    temp = temp->next;
+  }
+  printf("watchpoint %d is free \n",temp->NO);
+
 }
 
 

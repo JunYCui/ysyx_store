@@ -96,7 +96,11 @@ static int cmd_info(char *args)
   }
   else if (strcmp(arg,"w") == 0)
   {
-    Wp_info();
+    Wp_info_w();
+  }
+  else if (strcmp(arg,"r") == 0)
+  {
+    Wp_info_f();
   }
   else 
   {
@@ -216,7 +220,7 @@ static int cmd_d(char *args)
   }
   NO = atoi(arg);
   free_wp(NO);
-  printf("watchpoint %d is deleted", NO);
+  printf("watchpoint %d is deleted \n", NO);
   return 0;
 }
 
