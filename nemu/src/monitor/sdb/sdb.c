@@ -231,7 +231,7 @@ static int cmd_wa(char *args)
   char *arg1 = strtok(NULL," ");
   char *arg2 = strtok(NULL," ");
   uint32_t address;
-  uint16_t data;
+  uint32_t data;
   if(arg1 == NULL || arg == NULL)
   {
     printf("parameters are too much! \n");
