@@ -27,7 +27,7 @@ void init_wp_pool()
     wp_pool[i].NO = i;
     wp_pool[i].next = (i == NR_WP - 1 ? NULL : &wp_pool[i + 1]);
   }
-
+  
   head = NULL;
   free_ = wp_pool;
 }
@@ -138,12 +138,12 @@ void Wp_info_w(void)
     printf("no watchpoints \n");
   }
   temp = head;
-  while(temp->next !=  NULL)
+  while(temp !=  NULL)
   {
     printf("watchpoint %d : exp:%s val: %d \n",temp->NO,temp->exp,temp->value);
     temp = temp->next;
   }
-  printf("watchpoint %d : exp:%s val: %d \n",temp->NO,temp->exp,temp->value);
+
 
 }
 
@@ -155,13 +155,36 @@ void Wp_info_f(void)
     printf("no free watchpoints \n");
   }
   temp = free_;
-    while(temp->next !=  NULL)
+    while(temp !=  NULL)
   {
     printf("watchpoint %d is free \n",temp->NO);
     temp = temp->next;
   }
-  printf("watchpoint %d is free \n",temp->NO);
-
 }
+void Cpu_Wp(void)
+{
+  uint32_t val;
+  uint8_t count=0,i=0;
+  uint8_t record[NR_WP];
+  bool success;
+  WP* temp =head;
+  while(temp!= NULL)
+  {
+    val =expr(temp->exp,&success);
+    assert(success == true);
+    if(val != temp->value)
+    {
+      record[count++] = temp->NO;
+    }
+    temp = temp->next;
+  }
+  if(count > 0)
+  {
+    for(i=0;i<count;i++)
+    printf("watchpoint %d value has been changed \n",record[i]);
+    nemu_state.state = NEMU_STOP;
+  }
+}
+
 
 

@@ -33,4 +33,6 @@ WP* new_wp();
 void free_wp(int NO);
 void Wp_info_w(void);
 void Wp_info_f(void);
+void Cpu_Wp(void);
+
 #endif
