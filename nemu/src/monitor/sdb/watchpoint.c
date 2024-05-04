@@ -47,7 +47,6 @@ WP* new_wp()
     new = free_;
     free_ = free_->next;  
     new->next = NULL;
-    printf(" %d \n",new->NO);
   }
   
   if(head == NULL)
