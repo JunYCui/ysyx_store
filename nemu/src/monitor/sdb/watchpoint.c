@@ -108,3 +108,21 @@ void free_wp(WP*wp)
   }
   }
 }
+
+int Wp_info(void)
+{
+  WP*temp;
+  if(head == NULL)
+  {
+    printf("no watchpoints \n");
+    return 0;
+  }
+  temp = head;
+  while(temp->next !=  NULL)
+  {
+    printf("watchpoint%d: exp->%s val-> %d",temp->NO,temp->exp,temp->value);
+    temp = temp->next;
+  }
+  printf("watchpoint%d: exp->%s val-> %d",temp->NO,temp->exp,temp->value);
+  return 0;
+}

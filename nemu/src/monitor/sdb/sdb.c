@@ -96,7 +96,7 @@ static int cmd_info(char *args)
   }
   else if (strcmp(arg,"w") == 0)
   {
-
+    Wp_info();
   }
   else 
   {
