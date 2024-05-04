@@ -139,7 +139,7 @@ void Wp_info_w(void)
   temp = head;
   while(temp !=  NULL)
   {
-    printf("watchpoint %d : exp:%s val: %d \n",temp->NO,temp->exp,temp->value);
+    printf("%d hw watchpoint: what:%s\n",temp->NO,temp->exp);
     temp = temp->next;
   }
 
