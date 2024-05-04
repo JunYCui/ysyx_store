@@ -47,11 +47,13 @@ WP* new_wp()
     new = free_;
     free_ = free_->next;  
     new->next = NULL;
+    printf("%d",new->NO);
   }
   
   if(head == NULL)
   {
     head = new;  
+    head->next = NULL;
   }
   else 
   {
