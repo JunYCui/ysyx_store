@@ -184,8 +184,8 @@ static int cmd_w(char *args)
     return 0;
   }
   wp1 = new_wp();
-  //strcpy(wp1->exp,arg1);
-  val =  expr(arg1,success);
+  strcpy(wp1->exp,arg);
+  val =  expr(arg,success);
   if(*success == true)
   {
     wp1->value = val;
