@@ -66,10 +66,24 @@ WP* new_wp()
 
 }
 
-void free_wp(WP*wp)
+void free_wp(int NO)
 {
   WP* temp = free_;
   WP* temp1 = head;
+  WP* wp;
+  while(temp1->NO != NO && temp1->next != NULL)
+  {
+    temp1 = temp1->next;
+  }
+  if(temp1->NO == NO)
+  {
+    wp = temp1;
+  }
+  else 
+  {
+    printf("no %d watchpoints",NO);
+    assert(0);
+  }
   //delete from work
   if(head->NO == wp->NO)
   {
@@ -77,6 +91,7 @@ void free_wp(WP*wp)
   }
   else 
   {
+  temp1 = head;
   while(temp1->next->NO != wp->NO)
   {
     temp1 = temp1->next;
@@ -126,3 +141,5 @@ int Wp_info(void)
   printf("watchpoint %d : exp:%s val: %d \n",temp->NO,temp->exp,temp->value);
   return 0;
 }
+
+
