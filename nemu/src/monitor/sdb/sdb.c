@@ -199,7 +199,7 @@ static int cmd_w(char *args)
     printf("expr is error!\n");
     assert(0);
   }
-  printf("Hardware %d:\t%s\n",wp1->NO,wp1->exp);
+  printf("Hardware %d:%s\n",wp1->NO,wp1->exp);
 
   return 0;
 }
