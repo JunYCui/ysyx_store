@@ -68,7 +68,6 @@ WP* new_wp()
 
 void free_wp(int NO)
 {
-  WP* temp = free_;
   WP* temp1 = head;
   WP* wp;
   if(head == NULL)
@@ -105,10 +104,11 @@ void free_wp(int NO)
     temp1->next = wp->next;
   }
   //insert to free
-  if(wp->NO < temp->NO)
+  WP* temp = free_;
+  if(wp->NO < free_->NO)
   { 
     wp->next = free_;
-    free_ = wp->next;
+    free_ = wp;
   }
   else 
   {
