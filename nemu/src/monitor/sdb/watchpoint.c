@@ -120,9 +120,9 @@ int Wp_info(void)
   temp = head;
   while(temp->next !=  NULL)
   {
-    printf("watchpoint%d: exp->%s val-> %d",temp->NO,temp->exp,temp->value);
+    printf("watchpoint %d : exp:%s val: %d \n",temp->NO,temp->exp,temp->value);
     temp = temp->next;
   }
-  printf("watchpoint%d: exp->%s val-> %d",temp->NO,temp->exp,temp->value);
+  printf("watchpoint %d : exp:%s val: %d \n",temp->NO,temp->exp,temp->value);
   return 0;
 }
