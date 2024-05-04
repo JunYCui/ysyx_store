@@ -224,6 +224,29 @@ static int cmd_d(char *args)
   return 0;
 }
 
+// test watch
+static int cmd_wa(char *args)
+{
+  char *arg = strtok(NULL," ");
+  char *arg1 = strtok(NULL," ");
+  char *arg2 = strtok(NULL," ");
+  uint32_t address;
+  uint16_t data;
+  if(arg1 == NULL || arg == NULL)
+  {
+    printf("parameters are too much! \n");
+    return 0;
+  } 
+  else if(arg2 != NULL)
+  {
+    printf("lack parameter!\n ");
+    return 0;
+  }
+  sscanf(arg,"%x",&address);
+  data = atoi(arg1);
+  paddr_write(address,4,data);
+  return 0;
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -239,7 +262,8 @@ static struct {
   {"x", "check the memory",cmd_x},
   {"p", "calculate expression", cmd_p},
   {"w", "create watchpoint", cmd_w},
-  {"d", "delete watchpoint", cmd_d}
+  {"d", "delete watchpoint", cmd_d},
+  {"wa", "write data to address",cmd_wa}
   /* TODO: Add more commands */
 
 };
