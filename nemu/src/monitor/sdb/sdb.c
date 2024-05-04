@@ -171,7 +171,7 @@ static int cmd_w(char *args)
   char *arg = strtok(NULL," ");
   char *arg1 = strtok(NULL," ");
   WP* wp1;
-  bool*success=false;
+  bool flag=false;
   uint32_t val=0;
   if(arg1 != NULL)
   {
@@ -185,8 +185,8 @@ static int cmd_w(char *args)
   }
   wp1 = new_wp();
   strcpy(wp1->exp,arg);
-  val =  expr(arg,success);
-  if(*success == true)
+  val =  expr(arg,&flag);
+  if(flag == true)
   {
     wp1->value = val;
   }
