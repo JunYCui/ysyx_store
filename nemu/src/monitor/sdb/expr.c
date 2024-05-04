@@ -236,6 +236,13 @@ static word_t eval(uint32_t p ,uint32_t q)
     }
     else if(tokens[p].type == TK_REG)
     {
+      if(strcmp(tokens[p].str,"pc")== 0)
+      {
+        num = cpu.pc;
+        return num;
+      }
+      else 
+    {
       num = isa_reg_str2val(tokens[p].str,&success);
       if(success == true)
       {
@@ -246,6 +253,7 @@ static word_t eval(uint32_t p ,uint32_t q)
         printf(" register does not exist. ");
         assert(0);
       }
+    }
     }
     else
     { 
