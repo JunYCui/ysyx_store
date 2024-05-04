@@ -165,7 +165,7 @@ void Cpu_Wp(void)
   uint32_t val;
   uint8_t count=0,i=0;
   uint8_t record_No[NR_WP];
-  uint8_t record_val[NR_WP][2];
+  uint32_t record_val[NR_WP][2];
   bool success;
   WP* temp =head;
   while(temp!= NULL)
