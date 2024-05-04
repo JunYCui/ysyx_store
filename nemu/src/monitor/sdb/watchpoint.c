@@ -139,7 +139,7 @@ void Wp_info_w(void)
   temp = head;
   while(temp !=  NULL)
   {
-    printf("%d hw watchpoint:%s\n",temp->NO,temp->exp);
+    printf("%d Hw watchpoint:%s\n",temp->NO,temp->exp);
     temp = temp->next;
   }
 
@@ -164,7 +164,8 @@ void Cpu_Wp(void)
 {
   uint32_t val;
   uint8_t count=0,i=0;
-  uint8_t record[NR_WP];
+  uint8_t record_No[NR_WP];
+  uint8_t record_val[NR_WP][2];
   bool success;
   WP* temp =head;
   while(temp!= NULL)
@@ -173,14 +174,21 @@ void Cpu_Wp(void)
     assert(success == true);
     if(val != temp->value)
     {
-      record[count++] = temp->NO;
+      record_No[count++] = temp->NO;
+      record_val[count][0]= temp->value;
+      record_val[count][1]= val;
+      temp->value = val;
     }
     temp = temp->next;
   }
   if(count > 0)
   {
     for(i=0;i<count;i++)
-    printf("watchpoint %d value has been changed \n",record[i]);
+    {
+    printf("watchpoint %d value has been changed \n",record_No[i]);
+    printf("Old Value:%d \n",record_val[i][0]);
+    printf("New Value:%d \n",record_val[i][1]);
+    }
     nemu_state.state = NEMU_STOP;
   }
 }
