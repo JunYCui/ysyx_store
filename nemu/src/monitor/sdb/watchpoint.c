@@ -81,7 +81,8 @@ void free_wp(int NO)
   }
   else 
   {
-    printf("no %d watchpoints",NO);
+    printf("no %d watchpoints \n",NO);
+
     assert(0);
   }
   //delete from work
