@@ -195,7 +195,7 @@ static int cmd_w(char *args)
     printf("expr is error!\n");
     assert(0);
   }
-  //printf("%d,%s,%d",wp1->NO,wp1->exp,wp1->value);
+  printf("%d,%s,%d\n",wp1->NO,wp1->exp,wp1->value);
 
   return 0;
 }
