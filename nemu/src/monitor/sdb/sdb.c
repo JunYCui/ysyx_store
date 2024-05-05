@@ -67,7 +67,11 @@ static int cmd_si(char *args)
   if(arg == NULL)
   n = 1;
   else if ( atoi(arg) )
+  {
   n = atoi(arg);
+  if(n<=0 && n>9)
+    printf("n is our of boudary \n");
+  }
   else
   {
   printf(" please enter integer \n");
