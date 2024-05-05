@@ -69,8 +69,11 @@ static int cmd_si(char *args)
   else if ( atoi(arg) )
   {
   n = atoi(arg);
-  if(n<=0 && n>9)
+  if(n>9)
+  {
     printf("n is our of boudary \n");
+    return 0;
+  }
   }
   else
   {
