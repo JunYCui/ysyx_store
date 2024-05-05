@@ -140,21 +140,10 @@ static int cmd_x(char *args)
   {
     sscanf(arg1,"%x",&address_base);
   }
-  if(address_base >= 0x70000000)
-  {
   for(i=0;i<n;i++)
   {
     printf(" %x \n",paddr_read(address_base+i*4,4));
   }
-  }
-
-  else 
-  {
-  for(i=0;i<n;i++)
-  {
-    printf(" %x \n",vaddr_read(address_base+i*4,4));
-  }
-  } 
    return 0;
 }
 
