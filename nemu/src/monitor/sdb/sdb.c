@@ -24,7 +24,7 @@ static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
-
+word_t vaddr_read(vaddr_t addr, int len);
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -140,11 +140,22 @@ static int cmd_x(char *args)
   {
     sscanf(arg1,"%x",&address_base);
   }
+  if(address_base >= 0x70000000)
+  {
   for(i=0;i<n;i++)
   {
     printf(" %x \n",paddr_read(address_base+i*4,4));
   }
-  return 0;
+  }
+
+  else 
+  {
+  for(i=0;i<n;i++)
+  {
+    printf(" %x \n",vaddr_read(address_base+i*4,4));
+  }
+  } 
+   return 0;
 }
 
 static int cmd_p(char *args)
