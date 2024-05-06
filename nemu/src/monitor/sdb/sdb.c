@@ -24,7 +24,7 @@ static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
-
+word_t vaddr_read(vaddr_t addr, int len);
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -67,7 +67,14 @@ static int cmd_si(char *args)
   if(arg == NULL)
   n = 1;
   else if ( atoi(arg) )
+  {
   n = atoi(arg);
+  if(n>9)
+  {
+    printf("n is our of boudary \n");
+    return 0;
+  }
+  }
   else
   {
   printf(" please enter integer \n");
@@ -96,7 +103,11 @@ static int cmd_info(char *args)
   }
   else if (strcmp(arg,"w") == 0)
   {
-
+    Wp_info_w();
+  }
+  else if (strcmp(arg,"f") == 0)
+  {
+    Wp_info_f();
   }
   else 
   {
@@ -140,14 +151,14 @@ static int cmd_x(char *args)
   {
     printf(" %x \n",paddr_read(address_base+i*4,4));
   }
-  return 0;
+   return 0;
 }
 
 static int cmd_p(char *args)
 {
   bool success;
   char *arg = strtok(NULL, "");
-  uint32_t exp_value;
+  int exp_value;
  if(arg == NULL)
   {
     printf(" lack parameter \n");
@@ -161,11 +172,88 @@ static int cmd_p(char *args)
       printf("expression is error \n");
       return 0;
     }
-    printf(" %d \n",exp_value);
+    printf(" %u \n",exp_value);
   }
   return 0 ;
 }
 
+static int cmd_w(char *args)
+{
+  char *arg = strtok(NULL," ");
+  char *arg1 = strtok(NULL," ");
+  WP* wp1;
+  bool flag=false;
+  uint32_t val=0;
+  if(arg1 != NULL)
+  {
+  printf("parameters are too much! \n");
+    return 0;
+  } 
+  else if(arg == NULL)
+  {
+    printf("lack parameter!\n ");
+    return 0;
+  }
+  wp1 = new_wp();
+  strcpy(wp1->exp,arg);
+  val =  expr(arg,&flag);
+  if(flag == true)
+  {
+    wp1->value = val;
+  }
+  else 
+  {
+    printf("expr is error!\n");
+    assert(0);
+  }
+  printf("Hardware %d:%s\n",wp1->NO,wp1->exp);
+
+  return 0;
+}
+static int cmd_d(char *args)
+{
+  char *arg = strtok(NULL," ");
+  char *arg1 = strtok(NULL," ");
+  uint8_t NO;
+  if(arg1 != NULL)
+  {
+    printf("parameters are too much! \n");
+    return 0;
+  } 
+  else if(arg == NULL)
+  {
+    printf("lack parameter!\n ");
+    return 0;
+  }
+  NO = atoi(arg);
+  free_wp(NO);
+  printf("watchpoint %d is deleted \n", NO);
+  return 0;
+}
+
+// test watch
+static int cmd_wa(char *args)
+{
+  char *arg = strtok(NULL," ");
+  char *arg1 = strtok(NULL," ");
+  char *arg2 = strtok(NULL," ");
+  uint32_t address;
+  uint32_t data;
+  if(arg1 == NULL || arg == NULL)
+  {
+    printf("parameters are too much! \n");
+    return 0;
+  } 
+  else if(arg2 != NULL)
+  {
+    printf("lack parameter!\n ");
+    return 0;
+  }
+  sscanf(arg,"%x",&address);
+  data = atoi(arg1);
+  paddr_write(address,4,data);
+  return 0;
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -179,7 +267,10 @@ static struct {
   { "si", "execute n instructions", cmd_si},
   { "info", "print program status", cmd_info},
   {"x", "check the memory",cmd_x},
-  {"p", "calculate expression", cmd_p}
+  {"p", "calculate expression", cmd_p},
+  {"w", "create watchpoint", cmd_w},
+  {"d", "delete watchpoint", cmd_d},
+  {"wa", "write data to address",cmd_wa}
   /* TODO: Add more commands */
 
 };

@@ -68,24 +68,45 @@ static void gen_op()
   str[1] = '\0';
   strcat(buf,str);
 }
+static void gen_blank()
+{
+  unsigned char str[2];
+  if(choose(2))
+  {
+    str[0] = ' ';
+    str[1] = '\0';
+    strcat(buf,str);
+  }
+
+}
+
 static void gen_num()
 {
-  int num; 
+  uint8_t num; 
   unsigned char str[32];
   num = rand()%100+1;
   sprintf(str,"%d",num);
+  strcat(str,"u"); 
   strcat(buf,str);
 }
-
+uint16_t count=0;
 static void gen_rand_expr() 
 {
-
+  gen_blank();
+  if(count++ < 2000)
+  {
   switch(choose(3))
   {
     case 0:gen_num();break;
     case 1:gen_bracket(0); gen_rand_expr(); gen_bracket(1); break;
     default: gen_rand_expr();gen_op();gen_rand_expr();  break;
   }
+  }
+  else 
+  {
+    gen_num();
+  }  
+  gen_blank();
 }
 
 
@@ -99,6 +120,7 @@ int main(int argc, char *argv[]) {
   int i;
   for (i = 0; i < loop; i ++) {
     memset(buf,0,sizeof(buf));
+    count=0;
     gen_rand_expr();
     sprintf(code_buf, code_format, buf);
 
@@ -107,7 +129,7 @@ int main(int argc, char *argv[]) {
     fputs(code_buf, fp);
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
+    int ret = system("gcc /tmp/.code.c -Wall -Werror -o /tmp/.expr");
     if (ret != 0) continue;
 
     fp = popen("/tmp/.expr", "r");
@@ -115,7 +137,7 @@ int main(int argc, char *argv[]) {
 
     int result;
     ret = fscanf(fp, "%d", &result);
-    pclose(fp);
+     pclose(fp);
 
     printf("%u %s\n", result, buf);
   }
