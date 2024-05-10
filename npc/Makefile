@@ -57,6 +57,4 @@ sim:  $(CSOURCES) $(VSOURCES) $(NVBOARD_ARCHIVE)
 $(SRC_AUTO_BIND): $(CONSTR) 
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py  $^ $@
 
-commit: 
-	$(call git_commit, "sim RTL")
 include ../Makefile
