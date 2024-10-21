@@ -49,7 +49,7 @@ sim:  $(TESTSOURCES) $(VSOURCES)
 	@rm -rf $(BUILD_DIR)
 	$(VERILATOR) $(SIM_FLAGS) \
 	--top-module $(TOPNAME) \
-	$^ \   --trace  
+	$^   --trace 			\
 	--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
 	$(BUILD_DIR)/$(TOPNAME)
 .PHONY:clean		
