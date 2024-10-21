@@ -1,9 +1,9 @@
-TOPNAME = switch
+TOPNAME = light
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )
 CSOURCES=$(shell find $(abspath ./csrc) -name "$(TOPNAME).c" -or -name "$(TOPNAME).cc" -or -name "$(TOPNAME).cpp")
-TESTSOURCES=$(shell find $(abspath ./testbench) -name "$(TOPNAME).c" -or -name "$(TOPNAME).cc" -or -name "$(TOPNAME).cpp")
+
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 CSOURCES += $(SRC_AUTO_BIND)
@@ -11,11 +11,9 @@ CONSTR = constrain/$(TOPNAME).nxdc
 
 BUILD_DIR = ./build
 OBJ_DIR = $(BUILD_DIR)/obj_dir
-BIN = $(BUILD_DIR)/$(TOPNAME )
+BIN = $(BUILD_DIR)/$(TOPNAME)
 
 VERILATOR = verilator
-
-SIM_FLAGS = -Wall --cc
 
 VERILATOR_CFLAGS += -Wall --cc -MMD --build \
 			-O3 --x-assign fast --x-initial fast --noassert 
@@ -33,26 +31,24 @@ $(shell mkdir -p $(BUILD_DIR))
 .PHONY:all
 all:
 	@echo "Write this Makefile by your self."
-	@rm -rf $(BUILD_DIR)
-	$(VERILATOR) $(VERILATOR_CFLAGS) \
-	--top-module $(TOPNAME) \
-	$^ \
-	$(addprefix -LDFLAGS , $(LDFLAGS)) \
-	$(addprefix -CFLAGS , $(CFLAGS)) \
-	--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
+	make clean
+	make sim
 	$(BUILD_DIR)/$(TOPNAME)
 
 .PHONY:sim
-sim:  $(TESTSOURCES) $(VSOURCES) 
+sim:  $(CSOURCES) $(VSOURCES) $(NVBOARD_ARCHIVE) 
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self."
-	@rm -rf $(BUILD_DIR)
-	$(VERILATOR) $(SIM_FLAGS) \
-	--top-module $(TOPNAME) \
-	$^   --trace 			\
-	--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
-	$(BUILD_DIR)/$(TOPNAME)
-.PHONY:clean		
+	@rm -rf $(OBJ_DIR)
+	$(VERILATOR) $(VERILATOR_CFLAGS) \
+		--top-module $(TOPNAME) \
+		$^ \
+		$(addprefix -LDFLAGS , $(LDFLAGS)) \
+		$(addprefix -CFLAGS , $(CFLAGS)) \
+		--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
+
+
+		
 clean:
 	rm -rf $(BUILD_DIR)
 
