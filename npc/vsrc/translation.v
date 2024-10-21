@@ -10,7 +10,7 @@ always @(*)
 begin
     if(en)
     begin
-    signal = 1'b0;
+    signal = 1'b1;
     casex (x) 
     8'b1xxxxxxx :led = 3'b111; 
     8'b01xxxxxx :led = 3'b110;    
@@ -26,7 +26,7 @@ begin
    else 
    begin
    led = 3'b000;
-   signal = 1'b1;
+   signal = 1'b0;
    end
 end
 /* verilator lint_on CASEX */
