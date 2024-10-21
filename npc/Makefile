@@ -1,4 +1,4 @@
-TOPNAME = mux4_1
+TOPNAME = translation
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )

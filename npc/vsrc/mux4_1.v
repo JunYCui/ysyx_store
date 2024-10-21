@@ -1,3 +1,5 @@
+// 2位四选一的多路选择器
+
 module mux4_1
 (
     input [1:0]din0,
