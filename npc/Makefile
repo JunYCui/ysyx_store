@@ -1,4 +1,4 @@
-TOPNAME = light
+TOPNAME = switch
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )
@@ -48,9 +48,11 @@ sim:  $(CSOURCES) $(VSOURCES) $(NVBOARD_ARCHIVE)
 		--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
 
 
-		
+
+
+
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR) *.vcd
 
 #waves:*.vcd
 #	gtkwave *.vcd
