@@ -1,4 +1,4 @@
-TOPNAME = ALU
+TOPNAME = light
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )
@@ -31,6 +31,7 @@ $(shell mkdir -p $(BUILD_DIR))
 .PHONY:all
 all:
 	@echo "Write this Makefile by your self."
+	make clean
 	make sim
 	$(BUILD_DIR)/$(TOPNAME)
 
