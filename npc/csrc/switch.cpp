@@ -23,4 +23,5 @@ int main(int argc,char** argv )
     dut.eval();
     nvboard_update();
     }
+    nvboard_quit();
 }
