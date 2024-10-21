@@ -1,4 +1,4 @@
-TOPNAME = light
+TOPNAME = switch
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )
@@ -14,6 +14,8 @@ OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME )
 
 VERILATOR = verilator
+
+SIM_FLAGS = -Wall --cc
 
 VERILATOR_CFLAGS += -Wall --cc -MMD --build \
 			-O3 --x-assign fast --x-initial fast --noassert 
