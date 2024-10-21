@@ -1,13 +1,13 @@
 module mux4_1
 (
-    input din0,
-    input din1,
-    input din2,
-    input din3,
+    input [1:0]din0,
+    input [1:0]din1,
+    input [1:0]din2,
+    input [1:0]din3,
     input s0,
     input s1,
 
-    output reg out
+    output [1:0]out
 );
     always@(*)
     begin
