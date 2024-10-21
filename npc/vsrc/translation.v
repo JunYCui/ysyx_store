@@ -1,10 +1,10 @@
 module translation(x,en,led,seg0,signal);
 
 input [7:0]x;
-input signal;
 input en;
-output reg [2:0]led;
-output reg [7:0]seg0;
+output reg signal; // 使能信号
+output reg [2:0]led; // 译码信号
+output reg [7:0]seg0; // 数码管
 always @(*) 
 /* verilator lint_off CASEX */
 begin
