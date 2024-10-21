@@ -47,7 +47,7 @@ sim:  $(TESTSOURCES) $(VSOURCES)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self."
 	@rm -rf $(BUILD_DIR)
-	$(VERILATOR) $(VERILATOR_CFLAGS) \ 
+	$(VERILATOR) $(SIM_FLAGS) \ 
 	--top-module $(TOPNAME) \
 	$^ \   --trace  
 	--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
