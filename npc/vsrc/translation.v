@@ -10,7 +10,7 @@ always @(*)
 begin
     if(en)
     begin
-    signal = 1'b1;
+    signal = 1'b0;
     casex (x) 
     8'b1xxxxxxx :led = 3'b111; 
     8'b01xxxxxx :led = 3'b110;    
