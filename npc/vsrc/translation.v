@@ -10,8 +10,8 @@ always @(*)
 begin
     if(en)
     begin
-    signal <= 1'b1
-    casex (x)   
+    signal <= 1'b1;
+    casex (x) 
     8'b1xxxxxxx :led <= 3'b111; 
     8'b01xxxxxx :led <= 3'b110;    
     8'b001xxxxx :led <= 3'b101;
