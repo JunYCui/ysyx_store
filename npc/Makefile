@@ -31,6 +31,8 @@ $(shell mkdir -p $(BUILD_DIR))
 .PHONY:all
 all:
 	@echo "Write this Makefile by your self."
+	make sim
+	source $(BUILD_DIR)/$(TOPNAME)
 
 .PHONY:sim
 sim:  $(CSOURCES) $(VSOURCES) $(NVBOARD_ARCHIVE) 
