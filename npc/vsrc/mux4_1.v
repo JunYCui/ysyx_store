@@ -7,7 +7,7 @@ module mux4_1
     input s0,
     input s1,
 
-    output [1:0]out
+    output reg [1:0]out
 );
     always@(*)
     begin
