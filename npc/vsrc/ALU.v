@@ -8,11 +8,16 @@ module ALU(
 );
     reg [3:0]res_compare; 
     reg [3:0]d2_n;
-    always@(*)
+    
+
+
+
+
+always@(*)
     begin
     case(choice)
     3'b000: begin 
-            res = d1 + d2;
+            res = d1 + d2; //带符号位的加法
             overflow = ((d1[3] == d2[3])&(d1[3]!= res[3]));
             compare  = 1'b0;
             res_compare= 4'b0;
@@ -94,7 +99,7 @@ module ALU(
             end
     endcase
     
-    end
+end
 
 
 endmodule
