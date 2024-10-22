@@ -61,7 +61,11 @@ always@(*)
                         compare = 1'b0;
                 end
             else 
+                begin
+                    if()
 
+
+                end
             res = 4'b0;
             overflow = 1'b0;
             end
@@ -79,7 +83,7 @@ always@(*)
     
 end
 
-add
+add add_inst0
 #(
     .BW(4'd4)
 )
