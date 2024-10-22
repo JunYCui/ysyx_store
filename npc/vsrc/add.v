@@ -9,7 +9,7 @@ module add
    output [BW-1:0]result,
    output overflow    
 );
-
+// if {choose_add_sub == 1} addd_1 - add_2 else  add_1 + add_2
 
 wire [BW-1:0]add_3;
 

@@ -62,22 +62,22 @@ always@(*)
                 end
             else 
                 begin
-                    if()
-
-
+                    if(result[3] == 1'b1)
+                        compare = 1'b1;
+                    else 
+                        compare = 1'b1;
                 end
             res = 4'b0;
             overflow = 1'b0;
             end
     3'b111:begin 
-                res_compare = d1 + (~d2) + 1'b1;
-            if(res_compare[2:0] == 3'b000)
-                compare  = 1'b1;
+            choose_add_sub = 1'b1;
+            if(result[3:0] == 4'd0)
+                compare = 1'b1;
             else 
-                compare = 1'b0;
-                res = 4'b0;
-                overflow = 1'b0;
-                d2_n =4'b0;
+                compre = 1'b0;
+            res = 4'b0;
+            overflow = 1'b0;
             end
     endcase
     
