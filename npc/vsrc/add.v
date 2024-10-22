@@ -13,7 +13,7 @@ module add
 
 wire [BW-1:0]add_3;
 
-assign add_3 = (choose_add_sub == 1'b1)? add_2:(~add_2 + 1'b1);
+assign add_3 = (choose_add_sub == 1'b0)? add_2:(~add_2 + 1'b1);
 
 assign result = add_1 + add_3;
 
