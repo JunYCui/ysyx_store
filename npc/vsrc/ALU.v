@@ -8,17 +8,15 @@ module ALU(
 );
     reg [3:0]res_compare; 
     reg [3:0]d2_n;
+    wire[3:0] result;
     
-
-
-
-
 always@(*)
     begin
     case(choice)
     3'b000: begin 
-            res = d1 + d2; //带符号位的加法
-            overflow = ((d1[3] == d2[3])&(d1[3]!= res[3]));
+            add_1 = d1;
+            add_2 = d2;
+            overflow = add_overflow;
             compare  = 1'b0;
             res_compare= 4'b0;
             d2_n =4'b0;
@@ -67,9 +65,9 @@ always@(*)
             if(d2_n == 4'b1000)
                 d2_n = 4'b0000;    
             if(d1!=4'b1000)
-            res_compare = d1 + d2_n;
+                res_compare = d1 + d2_n;
             else 
-            res_compare = 4'b0000 + d2_n;
+                res_compare = 4'b0000 + d2_n;
             if((d1[3] == d2_n[3])&&(d1[3]!= res_compare[3]))
             begin
                 if(res_compare[3]==1'b1)
@@ -84,22 +82,33 @@ always@(*)
                 else 
                  compare = 1'b1;
             end
-            res = 4'b0;
-            overflow = 1'b0;
+                res = 4'b0;
+                overflow = 1'b0;
             end
     3'b111:begin 
-            res_compare = d1 + (~d2) + 1'b1;
+                res_compare = d1 + (~d2) + 1'b1;
             if(res_compare[2:0] == 3'b000)
                 compare  = 1'b1;
             else 
                 compare = 1'b0;
-            res = 4'b0;
-            overflow = 1'b0;
-            d2_n =4'b0;
+                res = 4'b0;
+                overflow = 1'b0;
+                d2_n =4'b0;
             end
     endcase
     
 end
+
+add add_inst(
+    .parameter(3)    
+)#
+(
+    .add_1      (d1),
+    .add_2      (d2),
+    .result     (result),
+    .overflow   (overflow)
+
+);
 
 
 endmodule
