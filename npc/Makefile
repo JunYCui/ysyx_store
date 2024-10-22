@@ -1,4 +1,4 @@
-TOPNAME = LSFR
+TOPNAME = top
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )
