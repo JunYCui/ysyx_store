@@ -83,10 +83,10 @@ always@(*)
     
 end
 
-add add_inst0
+add 
 #(
     .BW(4'd4)
-)
+)add_inst0
 (
    .choose_add_sub(choose_add_sub),
    .add_1(d1),
