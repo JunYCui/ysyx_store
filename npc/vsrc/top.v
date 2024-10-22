@@ -89,7 +89,7 @@ always @(posedge clk)
 always@(posedge clk)
     if(rst == 1'b0)
         flag <= 1'b0;
-    else if(state == 3'd2 || state == 3'd3 || state == 3'd5)
+    else if(state == 1|| state == 3'd5)
         flag <= 1'b1;
     else 
         flag <= 1'b0;
