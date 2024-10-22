@@ -9,7 +9,7 @@ module ALU(
     reg [3:0]res_compare; 
     reg [3:0]d2_n;
     wire[3:0] result;
-    
+
 always@(*)
     begin
     case(choice)
@@ -99,16 +99,16 @@ always@(*)
     
 end
 
-add add_inst(
-    .parameter(3)    
-)#
-(
-    .add_1      (d1),
-    .add_2      (d2),
-    .result     (result),
-    .overflow   (overflow)
+// add add_inst(
+//     .parameter(3'd4)    
+// )#
+// (
+//     .add_1      (d1),
+//     .add_2      (d2),
+//     .result     (result),
+//     .overflow   (overflow)
 
-);
+// );
 
 
 endmodule

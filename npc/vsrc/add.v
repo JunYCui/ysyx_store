@@ -11,7 +11,7 @@ module add
 );
 
 
-wire [BW-1] add_3;
+wire [BW-1:0]add_3;
 
 assign add_3 = (choose_add_sub == 1'b1)? add_2:(~add_2 + 1'b1) 
 
