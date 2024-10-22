@@ -75,7 +75,7 @@ always@(*)
             if(result[3:0] == 4'd0)
                 compare = 1'b1;
             else 
-                compre = 1'b0;
+                compare = 1'b0;
             res = 4'b0;
             overflow = 1'b0;
             end
