@@ -218,7 +218,7 @@ config RT_CHECK
 endmenu
 
 menu "Personal Setting"
-config CONFIG_WATCHPOINT
+config WATCHPOINT
   bool "Enable watchpoint for execute"
   default y
 

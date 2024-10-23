@@ -8,8 +8,6 @@ config RVE
   bool "Use E extension"
   default n
 
-config WATCHPOINT
-  bool "use watchpoints"
-  default n
+
 
 endmenu
