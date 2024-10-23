@@ -29,7 +29,7 @@ void init_wp_pool()
   }
   
   head = NULL;
-  free_ = wp_pool;
+  free_ = wp_pool;//空闲指针指向池
 }
 
 /* TODO: Implement the functionality of watchpoint */
@@ -102,6 +102,7 @@ void free_wp(int NO)
   }
     temp1->next = wp->next;
   }
+  
   //insert to free
   WP* temp = free_;
   if(wp->NO < free_->NO)
