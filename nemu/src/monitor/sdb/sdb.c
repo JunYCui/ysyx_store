@@ -50,11 +50,11 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
-  nemu_state.state = NEMU_QUIT;
+  nemu_state.state = NEMU_QUIT; 
   return -1;
 }
 
-static int cmd_si(char *args)
+static int cmd_si(char *args) //单步执行
 {
   uint64_t n;
   char *arg = strtok(NULL, " ");
@@ -64,9 +64,9 @@ static int cmd_si(char *args)
     printf(" parameters are too much \n");
     return 0;
   }
-  if(arg == NULL)
+  if(arg == NULL) // 没有输入,默认为1
   n = 1;
-  else if ( atoi(arg) )
+  else if (atoi(arg))
   {
   n = atoi(arg);
   if(n>9)
@@ -99,11 +99,11 @@ static int cmd_info(char *args)
   }
   else if (strcmp(arg,"r") == 0)
   {
-    isa_reg_display();
+    isa_reg_display(); //打印存储器状态
   }
   else if (strcmp(arg,"w") == 0)
   {
-    Wp_info_w();
+    Wp_info_w(); 
   }
   else if (strcmp(arg,"f") == 0)
   {
@@ -149,7 +149,7 @@ static int cmd_x(char *args)
   }
   for(i=0;i<n;i++)
   {
-    printf(" %x \n",paddr_read(address_base+i*4,4));
+    printf(" %x \n",paddr_read(address_base+i*4,4)); //读取内存函数
   }
    return 0;
 }
