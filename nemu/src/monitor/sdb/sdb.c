@@ -179,17 +179,13 @@ static int cmd_p(char *args)
 
 static int cmd_w(char *args)
 {
-  char *arg = strtok(NULL," ");
-  char *arg1 = strtok(NULL," ");
+  char *arg = strtok(NULL,"");
+  //char *arg1 = strtok(NULL,"");
   WP* wp1;
   bool flag=false;
   uint32_t val=0;
-  if(arg1 != NULL)
-  {
-  printf("parameters are too much! \n");
-    return 0;
-  } 
-  else if(arg == NULL)
+
+  if(arg == NULL)
   {
     printf("lack parameter!\n ");
     return 0;
