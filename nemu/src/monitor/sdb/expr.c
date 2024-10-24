@@ -96,8 +96,8 @@ static bool make_token(char *e) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-            i, rules[i].regex, position, substr_len, substr_len, substr_start);
+       /* Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+            i, rules[i].regex, position, substr_len, substr_len, substr_start);*/
 
         position += substr_len;
         /* TODO: Now a new token is recognized with rules[i]. Add codes
@@ -113,12 +113,12 @@ static bool make_token(char *e) {
           case  TK_NOTYPE: break;
           case '(':tokens[nr_token++].type = '('; break;
           case ')':tokens[nr_token++].type = ')'; break;
-          case TK_int:tokens[nr_token].type = TK_int;strncpy(tokens[nr_token].str,&e[position-substr_len],substr_len);nr_token++; break;
-          case TK_HEX:tokens[nr_token].type = TK_HEX;strncpy(tokens[nr_token].str,&e[position-substr_len],substr_len);nr_token++; break;
+          case TK_int:tokens[nr_token].type = TK_int;strncpy(tokens[nr_token].str,substr_start,substr_len);nr_token++; break;
+          case TK_HEX:tokens[nr_token].type = TK_HEX;strncpy(tokens[nr_token].str,substr_start,substr_len);nr_token++; break;
           case TK_AND:tokens[nr_token++].type = TK_AND;break;
           case TK_NEQ:tokens[nr_token++].type = TK_NEQ; break;
           case TK_EQ:tokens[nr_token++].type = TK_EQ; break;
-          case TK_REG:tokens[nr_token].type = TK_REG;strncpy(tokens[nr_token].str,&e[position-substr_len+1],substr_len-1);nr_token++; break;
+          case TK_REG:tokens[nr_token].type = TK_REG;strncpy(tokens[nr_token].str,substr_start+1,substr_len-1);nr_token++; break;
 
           default: TODO();
         }
