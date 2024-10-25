@@ -146,7 +146,7 @@ static int cmd_x(char *args)
   }
   else 
   {
-    address_base = expr(arg,&success);
+    address_base = expr(arg1,&success);
     if(success == false)
     {
       printf("expression is error");
