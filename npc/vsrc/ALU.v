@@ -6,95 +6,94 @@ module ALU(
     output reg overflow,
     output reg compare
 );
-    reg [3:0]res_compare; 
-    reg [3:0]d2_n;
-    always@(*)
+    reg choose_add_sub;
+    wire add_of;
+    wire[3:0] result;
+
+always@(*)
     begin
     case(choice)
-    3'b000: begin 
-            res = d1 + d2;
-            overflow = ((d1[3] == d2[3])&(d1[3]!= res[3]));
+    3'b000: begin  //加法
+            choose_add_sub = 1'b0;
+            overflow = add_of;
             compare  = 1'b0;
-            res_compare= 4'b0;
-            d2_n =4'b0;
+            res =result;
             end
-    3'b001: begin
-                /* verilator lint_off WIDTHEXPAND */
-                d2_n = ~d2 + 4'b0001;
-                res  = d1 + d2_n ;
-                overflow = ((d1[3] == d2_n[3])&(d1[3]!= res[3]));
-                 /* verilator lint_on WIDTHEXPAND */
-                compare  = 1'b0;
-                res_compare= 4'b0;
+    3'b001: begin //减法
+            choose_add_sub = 1'b1;
+            overflow = add_of;
+            compare  = 1'b0;
+            res =result;
             end
-    3'b010: begin 
+    3'b010: begin //取反
         /* verilator lint_off WIDTHEXPAND */
-            res = ~d1;
+            res = ~d1 + 1'b1;
         /* verilator lint_on WIDTHEXPAND */
+            choose_add_sub = 1'b0;
             overflow = 1'b0;
-            compare  = 1'b0;
-            res_compare= 4'b0;
-            d2_n =4'b0;      
+            compare  = 1'b0;    
             end
-    3'b011: begin 
+    3'b011: begin //与
             res = d1 & d2;
             overflow = 1'b0;
             compare  = 1'b0; 
-            res_compare= 4'b0;
-            d2_n =4'b0;
+            choose_add_sub = 1'b0;
             end
-    3'b100: begin 
+    3'b100: begin //或
             res = d1 | d2;
             overflow = 1'b0;
             compare  = 1'b0;    
-            res_compare= 4'b0; 
-            d2_n =4'b0;         
+            choose_add_sub = 1'b0;      
             end
-    3'b101: begin
+    3'b101: begin //异或
             res = d1 ^ d2;
             overflow = 1'b0;
             compare  = 1'b0;  
-            res_compare= 4'b0;
-            d2_n =4'b0;             
+            choose_add_sub = 1'b0;               
             end
-    3'b110:begin 
-            d2_n = ~d2 + 4'b0001;
-            if(d2_n == 4'b1000)
-                d2_n = 4'b0000;    
-            if(d1!=4'b1000)
-            res_compare = d1 + d2_n;
+    3'b110:begin // 比较大小
+            choose_add_sub = 1'b1;
+            if(d1[3] != d2[3])
+                begin
+                    if(d1[3] == 1'b1)
+                        compare = 1'b1;
+                    else 
+                        compare = 1'b0;
+                end
             else 
-            res_compare = 4'b0000 + d2_n;
-            if((d1[3] == d2_n[3])&&(d1[3]!= res_compare[3]))
-            begin
-                if(res_compare[3]==1'b1)
-                  compare = 1'b0; 
-                else 
-                  compare = 1'b1; 
-            end
-            else 
-            begin
-                if(res_compare[3]==1'b0)
-                 compare = 1'b0; 
-                else 
-                 compare = 1'b1;
-            end
+                begin
+                    if(result[3] == 1'b1)
+                        compare = 1'b1;
+                    else 
+                        compare = 1'b1;
+                end
             res = 4'b0;
             overflow = 1'b0;
             end
     3'b111:begin 
-            res_compare = d1 + (~d2) + 1'b1;
-            if(res_compare[2:0] == 3'b000)
-                compare  = 1'b1;
+            choose_add_sub = 1'b1;
+            if(result[3:0] == 4'd0)
+                compare = 1'b1;
             else 
                 compare = 1'b0;
             res = 4'b0;
             overflow = 1'b0;
-            d2_n =4'b0;
             end
     endcase
     
-    end
+end
+
+add 
+#(
+    .BW(4'd4)
+)add_inst0
+(
+   .choose_add_sub(choose_add_sub),
+   .add_1(d1),
+   .add_2(d2),
+   .result(result),
+   .overflow(add_of)    
+);
 
 
 endmodule

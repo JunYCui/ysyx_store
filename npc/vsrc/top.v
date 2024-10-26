@@ -57,21 +57,21 @@ always @(posedge clk)
             3'd1:
                 begin
                 if(dat == 8'hF0)
-                next_state <= 3'd3;
+                next_state <= 3'd3;//松手
                 else 
                 next_state <= 3'd2;
                 end
-            3'd2:
+            3'd2://未松手
                 if(nextdat_n == 1'b0)
                 next_state<=3'b0;
                 else 
                 next_state<=next_state;
-            3'd3:
+            3'd3: //F0H
                 if(nextdat_n == 1'b0)
                 next_state<=3'd4;
                 else 
                 next_state<=next_state;
-            3'd4:
+            3'd4:// 松手的键值
                 if(ready&&(overflow == 1'd0))
                 next_state<=3'd5;
                 else 

@@ -96,8 +96,8 @@ static bool make_token(char *e) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-            i, rules[i].regex, position, substr_len, substr_len, substr_start);
+       /* Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+            i, rules[i].regex, position, substr_len, substr_len, substr_start);*/
 
         position += substr_len;
         /* TODO: Now a new token is recognized with rules[i]. Add codes
@@ -113,12 +113,12 @@ static bool make_token(char *e) {
           case  TK_NOTYPE: break;
           case '(':tokens[nr_token++].type = '('; break;
           case ')':tokens[nr_token++].type = ')'; break;
-          case TK_int:tokens[nr_token].type = TK_int;strncpy(tokens[nr_token].str,&e[position-substr_len],substr_len);nr_token++; break;
-          case TK_HEX:tokens[nr_token].type = TK_HEX;strncpy(tokens[nr_token].str,&e[position-substr_len],substr_len);nr_token++; break;
+          case TK_int:tokens[nr_token].type = TK_int;strncpy(tokens[nr_token].str,substr_start,substr_len);nr_token++; break;
+          case TK_HEX:tokens[nr_token].type = TK_HEX;strncpy(tokens[nr_token].str,substr_start,substr_len);nr_token++; break;
           case TK_AND:tokens[nr_token++].type = TK_AND;break;
           case TK_NEQ:tokens[nr_token++].type = TK_NEQ; break;
           case TK_EQ:tokens[nr_token++].type = TK_EQ; break;
-          case TK_REG:tokens[nr_token].type = TK_REG;strncpy(tokens[nr_token].str,&e[position-substr_len+1],substr_len-1);nr_token++; break;
+          case TK_REG:tokens[nr_token].type = TK_REG;strncpy(tokens[nr_token].str,substr_start+1,substr_len-1);nr_token++; break;
 
           default: TODO();
         }
@@ -152,11 +152,11 @@ word_t expr(char *e, bool *success) {
   {
   if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type !=  TK_int && tokens[i - 1].type !=  TK_HEX  && tokens[i - 1].type !=  ')')  ) ) 
   {
-    tokens[i].type = TK_DEREF;
+    tokens[i].type = TK_DEREF;//判断是取地址符号还是乘法
   }
   else if (tokens[i].type == '-' && (i == 0 || (tokens[i - 1].type !=  TK_int && tokens[i - 1].type !=  TK_HEX  && tokens[i - 1].type !=  ')' ) ) ) 
   {
-    tokens[i].type = TK_NEG;
+    tokens[i].type = TK_NEG;// 判断是负号，还是减号
   }
   }
 
@@ -181,9 +181,9 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
           state--;  
 
         }
-        if(state<0&&state>-2)
+        if(state == -1)
         {        
-          flag = 1;
+          flag = 1; // 并不匹配，(a+b)+(c+d)
         }
         else if(state <-1)
         {
@@ -193,14 +193,14 @@ static uint8_t check_parentheses(uint32_t p, uint32_t q)
         }
     }
   else
-      return 2;           
+      return false;           
 
    if(state == 0)
    {
     if(flag == 0)
-    return 1;
+    return true;
     else 
-    return 2;
+    return false;
    }
    else 
    {
@@ -228,7 +228,7 @@ static word_t eval(uint32_t p ,uint32_t q)
     bool success;
     if(tokens[p].type == TK_int )
     {
-      sscanf(tokens[p].str,"%u",&num);
+      sscanf(tokens[p].str,"%u",&num);// 无符号整数
     }
     else if(tokens[p].type == TK_HEX)
     {
@@ -262,7 +262,7 @@ static word_t eval(uint32_t p ,uint32_t q)
     }
     return num;
   }
-  else if (check_parentheses(p,q) == 1)
+  else if (check_parentheses(p,q) == true)
   {
     return eval(p+1,q-1);
   }
@@ -320,7 +320,7 @@ static word_t eval(uint32_t p ,uint32_t q)
         printf("expr error!\n");
         assert(0);
       }
-    if(flag_add || flag_mut || flag_eq || flag_and)
+    if(flag_add || flag_mut || flag_eq || flag_and) // 二元操作符
     {
       val1 = eval(p,position-1);
       val2 = eval(position+1,q);
@@ -336,7 +336,7 @@ static word_t eval(uint32_t p ,uint32_t q)
     default:assert(0);
     }
     }
-    else 
+    else  //一元操作符
     {
       switch (tokens[position].type)
       {

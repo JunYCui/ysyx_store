@@ -50,11 +50,11 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
-  nemu_state.state = NEMU_QUIT;
+  nemu_state.state = NEMU_QUIT; 
   return -1;
 }
 
-static int cmd_si(char *args)
+static int cmd_si(char *args) //单步执行
 {
   uint64_t n;
   char *arg = strtok(NULL, " ");
@@ -64,9 +64,9 @@ static int cmd_si(char *args)
     printf(" parameters are too much \n");
     return 0;
   }
-  if(arg == NULL)
+  if(arg == NULL) // 没有输入,默认为1
   n = 1;
-  else if ( atoi(arg) )
+  else if (atoi(arg))
   {
   n = atoi(arg);
   if(n>9)
@@ -99,11 +99,11 @@ static int cmd_info(char *args)
   }
   else if (strcmp(arg,"r") == 0)
   {
-    isa_reg_display();
+    isa_reg_display(); //打印存储器状态
   }
   else if (strcmp(arg,"w") == 0)
   {
-    Wp_info_w();
+    Wp_info_w(); 
   }
   else if (strcmp(arg,"f") == 0)
   {
@@ -121,6 +121,7 @@ static int cmd_x(char *args)
   char *arg = strtok(NULL, " ");  
   char *arg1 = strtok(NULL, " ");
   char *arg2 = strtok(NULL, " ");
+  bool success;
   if(arg2 != NULL)
   {
     printf(" parameters are too much \n ");
@@ -145,11 +146,16 @@ static int cmd_x(char *args)
   }
   else 
   {
-    sscanf(arg1,"%x",&address_base);
+    address_base = expr(arg1,&success);
+    if(success == false)
+    {
+      printf("expression is error");
+      return 0 ;
+    }
   }
   for(i=0;i<n;i++)
   {
-    printf(" %x \n",paddr_read(address_base+i*4,4));
+    printf(" %x \n",paddr_read(address_base+i*4,4)); //读取内存函数
   }
    return 0;
 }
@@ -179,17 +185,13 @@ static int cmd_p(char *args)
 
 static int cmd_w(char *args)
 {
-  char *arg = strtok(NULL," ");
-  char *arg1 = strtok(NULL," ");
+  char *arg = strtok(NULL,"");
+  //char *arg1 = strtok(NULL,"");
   WP* wp1;
   bool flag=false;
   uint32_t val=0;
-  if(arg1 != NULL)
-  {
-  printf("parameters are too much! \n");
-    return 0;
-  } 
-  else if(arg == NULL)
+
+  if(arg == NULL)
   {
     printf("lack parameter!\n ");
     return 0;
@@ -237,6 +239,7 @@ static int cmd_wa(char *args)
   char *arg = strtok(NULL," ");
   char *arg1 = strtok(NULL," ");
   char *arg2 = strtok(NULL," ");
+  bool success;
   uint32_t address;
   uint32_t data;
   if(arg1 == NULL || arg == NULL)
@@ -249,7 +252,7 @@ static int cmd_wa(char *args)
     printf("lack parameter!\n ");
     return 0;
   }
-  sscanf(arg,"%x",&address);
+  address = expr(arg,&success);
   data = atoi(arg1);
   paddr_write(address,4,data);
   return 0;
@@ -262,15 +265,15 @@ static struct {
   int (*handler) (char *);
 } cmd_table [] = {
   { "help", "Display information about all supported commands", cmd_help },
-  { "c", "Continue the execution of the program", cmd_c },
+  { "c", "Continue the execution of the program ", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-  { "si", "execute n instructions", cmd_si},
-  { "info", "print program status", cmd_info},
-  {"x", "check the memory",cmd_x},
-  {"p", "calculate expression", cmd_p},
-  {"w", "create watchpoint", cmd_w},
-  {"d", "delete watchpoint", cmd_d},
-  {"wa", "write data to address",cmd_wa}
+  { "si", "execute n instructions: si+num", cmd_si},
+  { "info", "print program status: 1.info+w(watchpoints)  2. info+r(reg) 3. info+f(free watchpoints)", cmd_info},
+  {"x", "check the memory: x+n+address",cmd_x},
+  {"p", "calculate expression: p+exp", cmd_p},
+  {"w", "create watchpoint: w+n", cmd_w},
+  {"d", "delete watchpoint: d+n", cmd_d},
+  {"wa", "write data to address: wa+address+data",cmd_wa}
   /* TODO: Add more commands */
 
 };
