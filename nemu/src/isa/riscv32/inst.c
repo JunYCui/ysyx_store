@@ -57,6 +57,7 @@ static int decode_exec(Decode *s) {
   int rd = 0;
   word_t src1 = 0, src2 = 0, imm = 0;
   s->dnpc = s->snpc;
+  int64_t res;
 
 #define INSTPAT_INST(s) ((s)->isa.inst.val)
 #define INSTPAT_MATCH(s, name, type, ... /* execute body */ ) { \
@@ -107,7 +108,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("0000001 ????? ????? 110 ????? 01100 11", rem    , RE, R(rd) = src1 % src2);
   INSTPAT("0000001 ????? ????? 111 ????? 01100 11", remu   , RE, R(rd) = (uint64_t)src1 % (uint64_t)src2);
   INSTPAT("0000000 ????? ????? 010 ????? 01100 11", slt    , RE, if(compare(src1, src2)==-1){R(rd) = 1;}else{R(rd) = 0; } );
-  INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh   , RE, printf("%d",((int32_t)src1)));
+  INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh   , RE, res=(int32_t)src1*src2;  printf("%ld",res));
 
 
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is a$a0 q
