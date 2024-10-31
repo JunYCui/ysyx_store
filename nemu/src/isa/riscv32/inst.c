@@ -133,8 +133,8 @@ int compare(word_t in1, word_t in2)
   int32_t signed_in1,signed_in2;
   signed_in1 =(int32_t)in1;
   signed_in2 =(int32_t)in2;
-  printf("%d", signed_in1);
-  printf("%d", signed_in2);
+  printf(" %d \n", signed_in1);
+  printf(" %d \n", signed_in2);
   if(signed_in1 > signed_in2)
     return 1;
   else if(signed_in1 == signed_in2)
