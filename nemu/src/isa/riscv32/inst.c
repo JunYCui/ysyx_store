@@ -130,15 +130,13 @@ int isa_exec_once(Decode *s) {
 // 补码比较
 int compare(word_t in1, word_t in2)
 {
-  if(BITS(in1,31,31) == 0 && BITS(in2,31,31) == 1)
-      return 1;
-  else if(BITS(in1,31,31) == 1 && BITS(in2,31,31) == 0)
-      return -1;
+  int32_t signed_in1,signed_in2;
+  signed_in1 =(int32_t)in1;
+  signed_in2 =(int32_t)in2;
+  if(signed_in1 > signed_in2)
+    return 1;
+  else if(signed_in1 == signed_in2)
+    return 0;
   else 
-      if(in1 > in2)
-        return 1;
-      else if(in1 == in2)
-        return 0;
-      else 
-        return -1;
+    return -1;
 }
