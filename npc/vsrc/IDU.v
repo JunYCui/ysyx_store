@@ -1,4 +1,4 @@
-#include "para.v"
+`include "para.v"
 
 localparam i0_NR_KEY  = 6;
 localparam i0_KEY_LEN = 7;
@@ -35,3 +35,4 @@ MuxKeyInternal #(i0_NR_KEY, i0_KEY_LEN, i0_DATA_LEN, 0) i0 (out, key, {i0_DATA_L
 
 
 endmodule
+
