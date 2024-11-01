@@ -2,7 +2,7 @@
 #include "stdlib.h"
 #include "assert.h"
 
-#include "Vswitch.h"
+#include "Vcpu_v1.h"
 #include <verilated.h>
 
 #define CONFIG_MSIZE 0x8000000 
@@ -21,6 +21,8 @@ static unsigned char pmem[CONFIG_MSIZE] ={
 
 };
 
+static TOP_NAME top;
+
 uint8_t * guest_to_host(uint32_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 
 static uint32_t pmem_read(uint32_t addr) {
@@ -34,13 +36,11 @@ void nvboard_bind_all_pins(TOP_NAME* top);
 int main(int argc,char** argv )
 {
     // bind all pins
-    nvboard_bind_all_pins(&dut);
-    nvboard_init();
 
     while(1)
     {
+    top->inst = pmem_read(top->pc)
+    printf(" %x ", top->inst)
     dut.eval();
-    nvboard_update();
     }
-    nvboard_quit();
 }
