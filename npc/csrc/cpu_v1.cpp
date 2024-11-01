@@ -17,25 +17,19 @@ typedef unsigned int uint32_t;
 
 #define PG_ALIGN __attribute((aligned(4096)))
 
-static unsigned char pmem[CONFIG_MSIZE]PG_ALIGN ={
+static uint32_t pmem[CONFIG_MSIZE]PG_ALIGN ={
     0x11111111,
-    
+    0x22222222
 
 };
 
 
-static inline uint32_t host_read(void *addr, int len) {
-  switch (len) {
-    case 1: return *(uint8_t  *)addr;
-    case 2: return *(uint16_t *)addr;
-    case 4: return *(uint32_t *)addr;
-  }
-}
 
-uint8_t * guest_to_host(uint32_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 
-static uint32_t pmem_read(uint32_t addr, int len) {
-  uint32_t ret = host_read(guest_to_host(addr), len);
+uint32_t * guest_to_host(uint32_t paddr) { return pmem + paddr - CONFIG_MBASE; }
+
+static uint32_t pmem_read(uint32_t addr) {
+  uint32_t ret = *guest_to_host(addr);
   return ret;
 }
 
@@ -53,7 +47,7 @@ int main(int argc,char** argv )
     while(!contextp->gotFinish())
     {
     top->eval();
-    top->inst = pmem_read(top->pc, 4);
+    top->inst = pmem_read(top->pc);
     printf(" %x ", top->inst);
     }
 }
