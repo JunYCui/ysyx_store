@@ -1,6 +1,6 @@
-`include "para.v"
+`include "vsrc/para.v"
 
-localparam i0_NR_KEY  = 6;
+localparam i0_NR_KEY  = 9;
 localparam i0_KEY_LEN = 7;
 localparam i0_DATA_LEN = 4;
 
@@ -20,15 +20,15 @@ assign opcode = PC[6:0];
 
 // choose type
 MuxKeyInternal #(i0_NR_KEY, i0_KEY_LEN, i0_DATA_LEN, 0) i0 (out, key, {i0_DATA_LEN{1'b0}}, 
-{{R_opcode,R_Type},
- {B_opcode,B_Type},
- {S_opcode,S_Type},
- {I0_opcode,I_Type},
- {I1_opcode,I_Type},
- {J0_opcode,J_Type},
- {J1_opcode,J_Type},
- {U0_opcode,U_Type},
- {U1_opcode,U_Type},
+{R_opcode,R_Type,
+ B_opcode,B_Type,
+ S_opcode,S_Type,
+ I0_opcode,I_Type,
+ I1_opcode,I_Type,
+ J0_opcode,J_Type,
+ J1_opcode,J_Type,
+ U0_opcode,U_Type,
+ U1_opcode,U_Type,
 
  });
 
