@@ -28,8 +28,7 @@ MuxKeyInternal #(i0_NR_KEY, i0_KEY_LEN, i0_DATA_LEN, 0) i0 (out, key, {i0_DATA_L
  J0_opcode,J_Type,
  J1_opcode,J_Type,
  U0_opcode,U_Type,
- U1_opcode,U_Type,
-
+ U1_opcode,U_Type
  });
 
 
