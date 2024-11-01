@@ -1,5 +1,5 @@
 `include "vsrc/para.v"
-
+/* verilator lint_off UNUSEDPARAM */
 localparam i0_NR_KEY  = 4'd9;
 localparam i0_KEY_LEN = 4'd7;
 localparam i0_DATA_LEN= 4'd4;
