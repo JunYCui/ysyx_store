@@ -1,8 +1,8 @@
 `include "vsrc/para.v"
 
-localparam i0_NR_KEY  = 9;
-localparam i0_KEY_LEN = 7;
-localparam i0_DATA_LEN = 4;
+localparam i0_NR_KEY  = 4'd9;
+localparam i0_KEY_LEN = 4'd7;
+localparam i0_DATA_LEN= 4'd4;
 
 module IDU(
     input [31:0]PC  ,
