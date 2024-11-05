@@ -3,6 +3,7 @@
 // See Vcpu_v1.h for the primary calling header
 
 #include "verilated.h"
+#include "verilated_dpi.h"
 
 #include "Vcpu_v1__Syms.h"
 #include "Vcpu_v1___024root.h"

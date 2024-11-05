@@ -4,6 +4,7 @@
 #include "Vcpu_v1.h"
 #include "Vcpu_v1__Syms.h"
 #include "verilated_vcd_c.h"
+#include "verilated_dpi.h"
 
 //============================================================
 // Constructors
@@ -16,6 +17,7 @@ Vcpu_v1::Vcpu_v1(VerilatedContext* _vcontextp__, const char* _vcname__)
     , inst{vlSymsp->TOP.inst}
     , pc{vlSymsp->TOP.pc}
     , rs1_bo{vlSymsp->TOP.rs1_bo}
+    , __PVT____024unit{vlSymsp->TOP.__PVT____024unit}
     , rootp{&(vlSymsp->TOP)}
 {
     // Register model with the context

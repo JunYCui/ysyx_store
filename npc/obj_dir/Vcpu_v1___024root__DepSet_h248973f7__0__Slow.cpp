@@ -3,6 +3,7 @@
 // See Vcpu_v1.h for the primary calling header
 
 #include "verilated.h"
+#include "verilated_dpi.h"
 
 #include "Vcpu_v1___024root.h"
 
@@ -100,7 +101,7 @@ VL_ATTR_COLD void Vcpu_v1___024root___eval_settle(Vcpu_v1___024root* vlSelf) {
 #ifdef VL_DEBUG
                 Vcpu_v1___024root___dump_triggers__stl(vlSelf);
 #endif
-                VL_FATAL_MT("vsrc/cpu_v1.v", 1, "", "Settle region did not converge.");
+                VL_FATAL_MT("vsrc/cpu_v1.v", 4, "", "Settle region did not converge.");
             }
             vlSelf->__VstlIterCount = ((IData)(1U) 
                                        + vlSelf->__VstlIterCount);
@@ -195,7 +196,6 @@ VL_ATTR_COLD void Vcpu_v1___024root___ctor_var_reset(Vcpu_v1___024root* vlSelf) 
     vlSelf->pc = VL_RAND_RESET_I(32);
     vlSelf->rs1_bo = VL_RAND_RESET_I(32);
     vlSelf->cpu_v1__DOT__imm = VL_RAND_RESET_I(32);
-    vlSelf->cpu_v1__DOT__rs1_value = VL_RAND_RESET_I(32);
     vlSelf->cpu_v1__DOT__rs2_value = VL_RAND_RESET_I(32);
     vlSelf->cpu_v1__DOT__EXU_inst0__DOT__add_2 = VL_RAND_RESET_I(32);
     for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
@@ -237,6 +237,8 @@ VL_ATTR_COLD void Vcpu_v1___024root___ctor_var_reset(Vcpu_v1___024root* vlSelf) 
     vlSelf->cpu_v1__DOT__IDU_inst0__DOT__i1__DOT__lut_out = VL_RAND_RESET_I(32);
     vlSelf->cpu_v1__DOT__IDU_inst0__DOT__i1__DOT__hit = VL_RAND_RESET_I(1);
     vlSelf->__VdfgTmp_h5152c62b__0 = 0;
+    vlSelf->__VdfgTmp_hac3a854f__0 = 0;
+    vlSelf->__VdfgTmp_hfb3d7b8b__0 = 0;
     vlSelf->__Vtrigrprev__TOP__clk = VL_RAND_RESET_I(1);
     for (int __Vi0 = 0; __Vi0 < 3; ++__Vi0) {
         vlSelf->__Vm_traceActivity[__Vi0] = 0;

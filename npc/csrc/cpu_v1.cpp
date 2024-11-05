@@ -6,6 +6,9 @@
 #include <verilated.h>
 #include <verilated_vcd_c.h>  //VCD波形输出头文件
 
+#include "svdpi.h"
+#include "Vcpu_v1__Dpi.h"
+
 
 #define CONFIG_MSIZE 0x8000000 
 #define CONFIG_MBASE 0x80000000
@@ -23,12 +26,13 @@ static uint32_t pmem[CONFIG_MSIZE]PG_ALIGN ={
     0x00100293,    // addi $t0, $zero, 1
     0x00128293,    // addi $to  $t0  , 1   
     0x00128293,    // addi $to  $t0  , 1   
-    0x00128293 ,   // addi $to  $t0  , 1   
-    0x00128293     // addi $to  $t0  , 1   
+    0x00128293,    // addi $to  $t0  , 1   
+    0x00128293,    // addi $to  $t0  , 1
+    0x00100073     // ebreak
 };
 
 
-
+void fi() { exit(0); }
 
 uint32_t * guest_to_host(uint32_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 
@@ -70,8 +74,8 @@ int main(int argc,char** argv )
     top->clk ^=1;
     if(top->clk == 0)
     {
-    printf(" %d ", top->rs1_bo);
     top->inst = pmem_read(top->pc);
+    printf(" %d ", top->rs1_bo);
     }
     top->eval();
     //将所有跟踪的信号值写入波形转储文件

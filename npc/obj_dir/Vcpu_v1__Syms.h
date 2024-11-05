@@ -17,6 +17,8 @@
 #include "Vcpu_v1___024root.h"
 #include "Vcpu_v1___024unit.h"
 
+// DPI TYPES for DPI Export callbacks (Internal use)
+
 // SYMS CLASS (contains all model state)
 class Vcpu_v1__Syms final : public VerilatedSyms {
   public:
@@ -29,6 +31,7 @@ class Vcpu_v1__Syms final : public VerilatedSyms {
 
     // MODULE INSTANCE STATE
     Vcpu_v1___024root              TOP;
+    Vcpu_v1___024unit              TOP____024unit;
 
     // CONSTRUCTORS
     Vcpu_v1__Syms(VerilatedContext* contextp, const char* namep, Vcpu_v1* modelp);

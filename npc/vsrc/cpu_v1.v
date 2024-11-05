@@ -1,3 +1,6 @@
+import "DPI-C" function void fi();
+
+
 module cpu_v1
 (
     input  clk          ,
@@ -24,7 +27,7 @@ wire [31:0]rs2_value;
 wire [31:0]rd_value;
 
 
-assign rs1_bo = rd_value;
+assign rs1_bo = rs1_value;
 
 
 always @(posedge clk) begin
@@ -36,7 +39,11 @@ always @(posedge clk) begin
     pc <= pc + 1'b1;
 end
 
-
+always @(*)
+begin
+    if(inst == 32'h00100073)
+        fi();
+end
  EXU EXU_inst0
  (
     .clk      (clk)         ,
