@@ -12,6 +12,7 @@
 
 class Vcpu_v1__Syms;
 class Vcpu_v1___024root;
+class VerilatedVcdC;
 
 // This class is the main interface to the Verilated model
 class Vcpu_v1 VL_NOT_FINAL : public VerilatedModel {
@@ -24,9 +25,11 @@ class Vcpu_v1 VL_NOT_FINAL : public VerilatedModel {
     // PORTS
     // The application code writes and reads these signals to
     // propagate new values into/out from the Verilated model.
+    VL_IN8(&clk,0,0);
+    VL_IN8(&rst,0,0);
     VL_IN(&inst,31,0);
     VL_OUT(&pc,31,0);
-    VL_OUT(&inst_out,31,0);
+    VL_OUT(&rs1_bo,31,0);
 
     // CELLS
     // Public to allow access to /* verilator public */ items.
@@ -63,6 +66,8 @@ class Vcpu_v1 VL_NOT_FINAL : public VerilatedModel {
     bool eventsPending();
     /// Returns time at next time slot. Aborts if !eventsPending()
     uint64_t nextTimeSlot();
+    /// Trace signals in the model; called by application code
+    void trace(VerilatedVcdC* tfp, int levels, int options = 0);
     /// Retrieve name of this model instance (as passed to constructor).
     const char* name() const;
 
@@ -70,6 +75,7 @@ class Vcpu_v1 VL_NOT_FINAL : public VerilatedModel {
     const char* hierName() const override final;
     const char* modelName() const override final;
     unsigned threads() const override final;
+    std::unique_ptr<VerilatedTraceConfig> traceConfig() const override final;
 } VL_ATTR_ALIGNED(VL_CACHE_LINE_BYTES);
 
 #endif  // guard

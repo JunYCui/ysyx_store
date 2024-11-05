@@ -4,6 +4,8 @@
 
 #include "Vcpu_v1.h"
 #include <verilated.h>
+#include <verilated_vcd_c.h>  //VCD波形输出头文件
+
 
 #define CONFIG_MSIZE 0x8000000 
 #define CONFIG_MBASE 0x80000000
@@ -18,9 +20,11 @@ typedef unsigned int uint32_t;
 #define PG_ALIGN __attribute((aligned(4096)))
 
 static uint32_t pmem[CONFIG_MSIZE]PG_ALIGN ={
-    0x11111111,
-    0x22222222
-
+    0x00100293,    // addi $t0, $zero, 1
+    0x00128293,    // addi $to  $t0  , 1   
+    0x00128293,    // addi $to  $t0  , 1   
+    0x00128293 ,   // addi $to  $t0  , 1   
+    0x00128293     // addi $to  $t0  , 1   
 };
 
 
@@ -33,6 +37,7 @@ static uint32_t pmem_read(uint32_t addr) {
   return ret;
 }
 
+
 // contextp用来保存仿真的时间
 VerilatedContext *contextp = new VerilatedContext;
 
@@ -40,14 +45,38 @@ VerilatedContext *contextp = new VerilatedContext;
 Vcpu_v1 *top = new Vcpu_v1{contextp};
 
 
+#define MAX_SIM_TIME 100 //定义模拟的时钟边沿数（包括上下边沿）
+vluint64_t sim_time = 0;
+
 int main(int argc,char** argv )
 {
-    // bind all pins
-
-    while(!contextp->gotFinish())
-    {
+        // 开启波形跟踪
+    Verilated::traceEverOn(true);
+    // 实例化一个 VerilatedVcdC 类型的对象 m_trace，用于波形跟踪
+    VerilatedVcdC *m_trace = new VerilatedVcdC;
+    // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
+    top->trace(m_trace, 5);
+    m_trace->open("waveform.vcd");
+    top->clk = 0;
+    top->rst = 0;
     top->eval();
+    top->clk = 1;
+    top->eval();
+    top->rst = 1;
+    top->clk = 0;
+    top->eval();
+    while(!sim_time < MAX_SIM_TIME)
+    {
+    top->clk ^=1;
+    if(top->clk == 0)
+    {
+    printf(" %d ", top->rs1_bo);
     top->inst = pmem_read(top->pc);
-    printf(" %x ", top->inst);
     }
+    top->eval();
+    //将所有跟踪的信号值写入波形转储文件
+    m_trace->dump(sim_time);
+    sim_time++; // 模拟时钟边沿数加1
+    }
+    m_trace->close();
 }

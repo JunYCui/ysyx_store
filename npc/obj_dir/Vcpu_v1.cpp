@@ -3,6 +3,7 @@
 
 #include "Vcpu_v1.h"
 #include "Vcpu_v1__Syms.h"
+#include "verilated_vcd_c.h"
 
 //============================================================
 // Constructors
@@ -10,9 +11,11 @@
 Vcpu_v1::Vcpu_v1(VerilatedContext* _vcontextp__, const char* _vcname__)
     : VerilatedModel{*_vcontextp__}
     , vlSymsp{new Vcpu_v1__Syms(contextp(), _vcname__, this)}
+    , clk{vlSymsp->TOP.clk}
+    , rst{vlSymsp->TOP.rst}
     , inst{vlSymsp->TOP.inst}
     , pc{vlSymsp->TOP.pc}
-    , inst_out{vlSymsp->TOP.inst_out}
+    , rs1_bo{vlSymsp->TOP.rs1_bo}
     , rootp{&(vlSymsp->TOP)}
 {
     // Register model with the context
@@ -48,6 +51,7 @@ void Vcpu_v1::eval_step() {
     // Debug assertions
     Vcpu_v1___024root___eval_debug_assertions(&(vlSymsp->TOP));
 #endif  // VL_DEBUG
+    vlSymsp->__Vm_activity = true;
     vlSymsp->__Vm_deleter.deleteAll();
     if (VL_UNLIKELY(!vlSymsp->__Vm_didInit)) {
         vlSymsp->__Vm_didInit = true;
@@ -97,3 +101,39 @@ VL_ATTR_COLD void Vcpu_v1::final() {
 const char* Vcpu_v1::hierName() const { return vlSymsp->name(); }
 const char* Vcpu_v1::modelName() const { return "Vcpu_v1"; }
 unsigned Vcpu_v1::threads() const { return 1; }
+std::unique_ptr<VerilatedTraceConfig> Vcpu_v1::traceConfig() const {
+    return std::unique_ptr<VerilatedTraceConfig>{new VerilatedTraceConfig{false, false, false}};
+};
+
+//============================================================
+// Trace configuration
+
+void Vcpu_v1___024root__trace_init_top(Vcpu_v1___024root* vlSelf, VerilatedVcd* tracep);
+
+VL_ATTR_COLD static void trace_init(void* voidSelf, VerilatedVcd* tracep, uint32_t code) {
+    // Callback from tracep->open()
+    Vcpu_v1___024root* const __restrict vlSelf VL_ATTR_UNUSED = static_cast<Vcpu_v1___024root*>(voidSelf);
+    Vcpu_v1__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    if (!vlSymsp->_vm_contextp__->calcUnusedSigs()) {
+        VL_FATAL_MT(__FILE__, __LINE__, __FILE__,
+            "Turning on wave traces requires Verilated::traceEverOn(true) call before time 0.");
+    }
+    vlSymsp->__Vm_baseCode = code;
+    tracep->scopeEscape(' ');
+    tracep->pushNamePrefix(std::string{vlSymsp->name()} + ' ');
+    Vcpu_v1___024root__trace_init_top(vlSelf, tracep);
+    tracep->popNamePrefix();
+    tracep->scopeEscape('.');
+}
+
+VL_ATTR_COLD void Vcpu_v1___024root__trace_register(Vcpu_v1___024root* vlSelf, VerilatedVcd* tracep);
+
+VL_ATTR_COLD void Vcpu_v1::trace(VerilatedVcdC* tfp, int levels, int options) {
+    if (tfp->isOpen()) {
+        vl_fatal(__FILE__, __LINE__, __FILE__,"'Vcpu_v1::trace()' shall not be called after 'VerilatedVcdC::open()'.");
+    }
+    if (false && levels && options) {}  // Prevent unused
+    tfp->spTrace()->addModel(this);
+    tfp->spTrace()->addInitCb(&trace_init, &(vlSymsp->TOP));
+    Vcpu_v1___024root__trace_register(&(vlSymsp->TOP), tfp->spTrace());
+}

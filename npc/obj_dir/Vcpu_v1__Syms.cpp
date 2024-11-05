@@ -4,6 +4,7 @@
 #include "Vcpu_v1__Syms.h"
 #include "Vcpu_v1.h"
 #include "Vcpu_v1___024root.h"
+#include "Vcpu_v1___024unit.h"
 
 // FUNCTIONS
 Vcpu_v1__Syms::~Vcpu_v1__Syms()
