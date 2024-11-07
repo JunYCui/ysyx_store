@@ -6,7 +6,7 @@ html:
 .PHONY: html
 
 ARCH = riscv32-nemu
-SRCS = 
+SRCS = ./nemu/src
 ## 1. Basic Setup and Checks
 
 ### Default to create a bare-metal kernel image
