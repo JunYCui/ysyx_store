@@ -4,7 +4,7 @@
 html:
 	cat Makefile | sed 's/^\([^#]\)/    \1/g' | markdown_py > Makefile.html  
 .PHONY: html
-ARCH =riscv32-nemu
+
 
 ## 1. Basic Setup and Checks
 
