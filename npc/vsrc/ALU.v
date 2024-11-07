@@ -1,14 +1,19 @@
-module ALU(
-    input [3:0] d1,
-    input [3:0] d2,
+
+module ALU
+#(
+    parameter BW = 4
+)
+(
+    input [BW-1:0] d1,
+    input [BW-1:0] d2,
     input [2:0] choice,
-    output reg [3:0] res,
+    output reg [BW-1:0] res,
     output reg overflow,
     output reg compare
 );
     reg choose_add_sub;
     wire add_of;
-    wire[3:0] result;
+    wire[BW-1:0] result;
 
 always@(*)
     begin
@@ -67,7 +72,7 @@ always@(*)
                     else 
                         compare = 1'b1;
                 end
-            res = 4'b0;
+            res = 0;
             overflow = 1'b0;
             end
     3'b111:begin 
@@ -76,7 +81,7 @@ always@(*)
                 compare = 1'b1;
             else 
                 compare = 1'b0;
-            res = 4'b0;
+            res = 0;
             overflow = 1'b0;
             end
     endcase
@@ -85,7 +90,7 @@ end
 
 add 
 #(
-    .BW(4'd4)
+    .BW(BW)
 )add_inst0
 (
    .choose_add_sub(choose_add_sub),

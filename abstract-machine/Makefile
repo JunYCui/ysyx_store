@@ -2,9 +2,11 @@
 
 ### *Get a more readable version of this Makefile* by `make html` (requires python-markdown)
 html:
-	cat Makefile | sed 's/^\([^#]\)/    \1/g' | markdown_py > Makefile.html
+	cat Makefile | sed 's/^\([^#]\)/    \1/g' | markdown_py > Makefile.html  
 .PHONY: html
 
+ARCH = riscv32-nemu
+SRCS = 
 ## 1. Basic Setup and Checks
 
 ### Default to create a bare-metal kernel image
