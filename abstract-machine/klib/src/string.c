@@ -129,14 +129,14 @@ int memcmp(const void *s1, const void *s2, size_t n) {
   size_t i=0;
   while(*(p1+i)==*(p2+i))
   {
+    i++;    
     if(i==n)
       return 0;
     else 
     {
-      if(p1[i] == '\0')
+      if(*(p1+i) == '\0')
       return 0;
     }
-    i++;    
   }
   return *(p1+i)-*(p2+i);
 }
