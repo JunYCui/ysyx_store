@@ -33,30 +33,31 @@ int sprintf(char *out, const char *fmt, ...) {
           switch(*p1)
           {
             case 'd':
-            Argintval = va_arg(pArgs, int);
-            while(Argintval)
-            {
-              store[count++]=Argintval%10;
-              Argintval = Argintval/10;
-              if(count>50)
-                panic("int is too big");
-            }
-            while(count)
-            {
-              *(p2++) = store[--count]+48;
-              num++;
-            }
-            memset(store,0,sizeof(store));
-            break;
+              Argintval = va_arg(pArgs, int);
+              while(Argintval)
+              {
+                store[count++]=Argintval%10;
+                Argintval = Argintval/10;
+                if(count>50)
+                  panic("int is too big");
+              }
+              while(count)
+              {
+                *(p2++) = store[--count]+48;
+                num++;
+              }
+              p1++;
+              memset(store,0,sizeof(store));
+              break;
             case 's':
-            Argstrval = va_arg(pArgs, char*);
-            while(*Argstrval != '\0')
-            {
-              *(p2++) = *(Argstrval++);
-              num++;
-            }
-            p1++;
-            break;
+              Argstrval = va_arg(pArgs, char*);
+              while(*Argstrval != '\0')
+              {
+                *(p2++) = *(Argstrval++);
+                num++;
+              }
+              p1++;
+              break;
 
             default:
                   panic("parameter is error");
