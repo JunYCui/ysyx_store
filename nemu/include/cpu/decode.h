@@ -28,7 +28,7 @@ typedef struct Decode {
 
 // --- pattern matching mechanism ---
 __attribute__((always_inline))
-static inline void pattern_decode(const char *str, int len,
+static inline void pattern_decode(const char *str, int len, //指令字符串，长度，指令名称，指令类型，指令执行操作
     uint64_t *key, uint64_t *mask, uint64_t *shift) {
   uint64_t __key = 0, __mask = 0, __shift = 0;
 #define macro(i) \
@@ -44,7 +44,7 @@ static inline void pattern_decode(const char *str, int len,
     } \
   }
 
-#define macro2(i)  macro(i);   macro((i) + 1)
+#define macro2(i)  macro(i);   macro((i) + 1) // macro(i); macro(i+1)
 #define macro4(i)  macro2(i);  macro2((i) + 2)
 #define macro8(i)  macro4(i);  macro4((i) + 4)
 #define macro16(i) macro8(i);  macro8((i) + 8)

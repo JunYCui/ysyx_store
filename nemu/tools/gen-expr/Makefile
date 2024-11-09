@@ -26,7 +26,7 @@ $(NAME):$(NAME).o
 	$(CC)  $(NAME).o -o $(NAME)
 
 run : $(NAME)
-	./$(NAME) 1000 > input
+	./$(NAME) 500 > input
 
 clean: 
 	rm -f *.o $(NAME) 
