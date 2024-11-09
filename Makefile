@@ -1,5 +1,5 @@
-STUID = ysyx_22040000
-STUNAME =Cui Jun Yan
+STUID = ysyx_24100029
+STUNAME =Cui Junyan
 
 # DO NOT modify the following code!!!
 
