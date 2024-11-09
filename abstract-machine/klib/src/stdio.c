@@ -71,6 +71,7 @@ int sprintf(char *out, const char *fmt, ...) {
     }
   }
   va_end(pArgs);
+  *p2 = '\0';
   return num;
 }
 
