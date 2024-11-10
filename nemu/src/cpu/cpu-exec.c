@@ -113,7 +113,9 @@ void assert_fail_msg() {
   int flag = fifo_count-1;
   if( flag < 0)
     flag = 63;
-  for(i=0;i<64;i++)
+  isa_reg_display();
+  statistic();
+    for(i=0;i<64;i++)
   {
     if(strlen(trace_fifo[i].logbuf)>0)
     {
@@ -127,8 +129,6 @@ void assert_fail_msg() {
       }
     }
   }
-  isa_reg_display();
-  statistic();
 }
 
 /* Simulate how the CPU works. */
