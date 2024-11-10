@@ -51,11 +51,10 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
-  if (CONFIG_WATCHPOINT) Cpu_Wp();
-  if (CONFIG_IRINGBUF)
-  {
+  IFDEF(CONFIG_WATCHPOINT, Cpu_Wp());
+#ifdef CONFIG_IRINGBUF
   strcpy(trace_fifo[fifo_count++].logbuf,_this->logbuf);if(fifo_count == MAX_FIFO_BUF){fifo_count = 0;}
-  }
+#endif
 
 
 }
@@ -115,8 +114,7 @@ static void statistic() {
 
 void assert_fail_msg() {
   isa_reg_display();
-  if (CONFIG_IRINGBUF)
-{
+#ifdef CONFIG_IRINGBUF
   uint8_t i=0;
   int flag = fifo_count-1;
   if( flag < 0)
@@ -135,7 +133,7 @@ void assert_fail_msg() {
       }
     }
   }
-}
+#endif
   statistic();
 
 }
