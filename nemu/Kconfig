@@ -224,6 +224,8 @@ config WATCHPOINT
 config IRINGBUF
   bool "Enable iringbuf for execute"
   default y
-
+config MTRACE
+  bool "memory trace"
+  default y
 endmenu
 
