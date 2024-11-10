@@ -108,6 +108,7 @@ static void statistic() {
 
   for(i=0;i<64;i++)
   {
+    if(sizeof(trace_fifo[i].logbuf)!=0)
     puts(trace_fifo[i].logbuf);
   }
 }
