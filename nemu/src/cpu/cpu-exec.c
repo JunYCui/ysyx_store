@@ -25,16 +25,22 @@ void Cpu_Wp(void);
  * You can modify this value as you want.
  */
 #define MAX_INST_TO_PRINT 10
+#define MAX_FIFO_BUF 64
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
-
+struct Ring
+{
+  char logbuf[128];
+}trace_fifo[MAX_FIFO_BUF];
+static uint8_t fifo_count=0;
 
 
 void device_update();
+
 
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
@@ -43,7 +49,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 #ifdef CONFIG_ITRACE_COND
   if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
 #endif
-  if (g_print_step) { ;}//IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
+  if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); strcpy(trace_fifo[fifo_count++].logbuf,_this->logbuf);if(fifo_count == MAX_FIFO_BUF){fifo_count = 0;} }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   if (CONFIG_WATCHPOINT) Cpu_Wp();
 
