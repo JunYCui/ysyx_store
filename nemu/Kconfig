@@ -220,12 +220,12 @@ endmenu
 menu "Personal Setting"
 config WATCHPOINT
   bool "Enable watchpoint for execute"
-  default y
+  default 0
 config IRINGBUF
   bool "Enable iringbuf for execute"
-  default y
+  default 0
 config MTRACE
   bool "memory trace"
-  default y
+  default 0
 endmenu
 
