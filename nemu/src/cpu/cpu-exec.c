@@ -126,11 +126,11 @@ void assert_fail_msg() {
     {
       if(i == flag)
       {
-        printf("%s  \t%s",ANSI_FMT("-->", ANSI_FG_RED),trace_fifo[i].logbuf);
+        printf("%s  \t%s \n",ANSI_FMT("-->", ANSI_FG_RED),trace_fifo[i].logbuf);
       }
       else 
       {
-        printf("\t %s",trace_fifo[i].logbuf);
+        printf("\t %s \n",trace_fifo[i].logbuf);
       }
     }
   }
