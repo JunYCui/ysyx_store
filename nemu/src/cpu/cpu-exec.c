@@ -130,7 +130,7 @@ void assert_fail_msg() {
       }
       else 
       {
-        printf("\t %s \n",trace_fifo[i].logbuf);
+        printf("\t%s \n",trace_fifo[i].logbuf);
       }
     }
   }
