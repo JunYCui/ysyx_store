@@ -114,8 +114,7 @@ void assert_fail_msg() {
   if( flag < 0)
     flag = 63;
   isa_reg_display();
-  statistic();
-    for(i=0;i<64;i++)
+  for(i=0;i<64;i++)
   {
     if(strlen(trace_fifo[i].logbuf)>0)
     {
@@ -129,6 +128,8 @@ void assert_fail_msg() {
       }
     }
   }
+  statistic();
+
 }
 
 /* Simulate how the CPU works. */
