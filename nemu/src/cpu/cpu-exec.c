@@ -111,6 +111,12 @@ static void statistic() {
 void assert_fail_msg() {
   isa_reg_display();
   statistic();
+  uint8_t i=0;
+  for(i=0;i<64;i++)
+  {
+    if(strlen(trace_fifo[i].logbuf)>0)
+      puts(trace_fifo[i].logbuf);
+  }
 }
 
 /* Simulate how the CPU works. */
