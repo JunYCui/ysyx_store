@@ -112,10 +112,22 @@ void assert_fail_msg() {
   isa_reg_display();
   statistic();
   uint8_t i=0;
+  int flag = fifo_count-1;
+  if( flag < 0)
+    flag = 63;
   for(i=0;i<64;i++)
   {
     if(strlen(trace_fifo[i].logbuf)>0)
-      puts(trace_fifo[i].logbuf);
+    {
+      if(i == flag)
+      {
+        printf("->   %s",trace_fifo[i].logbuf);
+      }
+      else 
+      {
+        printf("     %s",trace_fifo[i].logbuf);
+      }
+    }
   }
 }
 
