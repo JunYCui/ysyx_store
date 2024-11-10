@@ -98,7 +98,7 @@ static void execute(uint64_t n) {
 }
 
 static void statistic() {
-  uint8_t i=0;
+
   IFNDEF(CONFIG_TARGET_AM, setlocale(LC_NUMERIC, ""));
 #define NUMBERIC_FMT MUXDEF(CONFIG_TARGET_AM, "%", "%'") PRIu64
   Log("host time spent = " NUMBERIC_FMT " us", g_timer);
@@ -106,11 +106,6 @@ static void statistic() {
   if (g_timer > 0) Log("simulation frequency = " NUMBERIC_FMT " inst/s", g_nr_guest_inst * 1000000 / g_timer);
   else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 
-  for(i=0;i<64;i++)
-  {
-    if(strlen(trace_fifo[i].logbuf)>0)
-      puts(trace_fifo[i].logbuf);
-  }
 }
 
 void assert_fail_msg() {
