@@ -52,9 +52,12 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   if (CONFIG_WATCHPOINT) Cpu_Wp();
-#ifdef CONFIG_IRINGBUF
+  if (CONFIG_IRINGBUF)
+  {
   strcpy(trace_fifo[fifo_count++].logbuf,_this->logbuf);if(fifo_count == MAX_FIFO_BUF){fifo_count = 0;}
-#endif
+  }
+
+
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
@@ -116,14 +119,15 @@ void assert_fail_msg() {
   if( flag < 0)
     flag = 63;
   isa_reg_display();
-#ifdef CONFIG_IRINGBUF
+  if (CONFIG_IRINGBUF)
+{
   for(i=0;i<64;i++)
   {
     if(strlen(trace_fifo[i].logbuf)>0)
     {
       if(i == flag)
       {
-        printf("-->  \t%s\n",trace_fifo[i].logbuf);
+        printf("%s  \t%s\n",ANSI_FMT("-->", ANSI_FG_RED),trace_fifo[i].logbuf);
       }
       else 
       {
@@ -131,7 +135,7 @@ void assert_fail_msg() {
       }
     }
   }
-#endif
+}
   statistic();
 
 }
