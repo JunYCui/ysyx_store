@@ -29,9 +29,16 @@ void Cpu_Wp(void);
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
-static bool g_print_step = false;
+static bool g_print_step = true;
+
+struct 
+{
+  char logbuf[128];
+}trace_fifo[64];
+
 
 void device_update();
+
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
@@ -53,7 +60,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
-  int ilen = s->snpc - s->pc;
+  int ilen = s->snpc - s->pc;//指令长度
   int i;
   uint8_t *inst = (uint8_t *)&s->isa.inst.val;
   for (i = ilen - 1; i >= 0; i --) {
@@ -69,7 +76,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 #ifndef CONFIG_ISA_loongarch32r
   void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
   disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
-      MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst.val, ilen);
+      MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst.val, ilen);//反汇编
 #else
   p[0] = '\0'; // the upstream llvm does not support loongarch32r
 #endif
