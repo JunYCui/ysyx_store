@@ -121,7 +121,6 @@ void assert_fail_msg() {
   int flag = fifo_count-1;
   if( flag < 0)
     flag = 63;
-  Log("");
   for(i=0;i<64;i++)
   {
     if(strlen(trace_fifo[i].logbuf)>0)
