@@ -109,8 +109,6 @@ static void statistic() {
 }
 
 void assert_fail_msg() {
-  isa_reg_display();
-  statistic();
   uint8_t i=0;
   int flag = fifo_count-1;
   if( flag < 0)
@@ -129,6 +127,8 @@ void assert_fail_msg() {
       }
     }
   }
+  isa_reg_display();
+  statistic();
 }
 
 /* Simulate how the CPU works. */
