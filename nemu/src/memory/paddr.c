@@ -36,6 +36,8 @@ static word_t pmem_read(paddr_t addr, int len) {
 
 static void pmem_write(paddr_t addr, int len, word_t data) {
   host_write(guest_to_host(addr), len, data);
+  if(CONFIG_MTRACE)
+  printf("The address " ANSI_FMT(FMT_WORD, ANSI_FG_BLUE) " is written at pc = "FMT_WORD "\n",addr,cpu.pc);
 }
 
 static void out_of_bound(paddr_t addr) {
