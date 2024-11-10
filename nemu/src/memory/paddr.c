@@ -29,7 +29,7 @@ paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
 
 static word_t pmem_read(paddr_t addr, int len) {
   word_t ret = host_read(guest_to_host(addr), len);
-  printf("The address " FMT_WORD " is read at pc = \n"FMT_WORD, addr,cpu.pc);
+  printf("The address " FMT_WORD " is read at pc = "FMT_WORD "\n",addr,cpu.pc);
   return ret;
 }
 
