@@ -120,11 +120,11 @@ void assert_fail_msg() {
     {
       if(i == flag)
       {
-        printf("->   %s \n",trace_fifo[i].logbuf);
+        printf("->   %s\n",trace_fifo[i].logbuf);
       }
       else 
       {
-        printf("     %s \n",trace_fifo[i].logbuf);
+        printf("     %s\n",trace_fifo[i].logbuf);
       }
     }
   }
