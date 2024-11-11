@@ -26,7 +26,7 @@ $(BINARY):: compile_git
 
 override ARGS ?= --log=$(BUILD_DIR)/nemu-log.txt 
 override ARGS += $(ARGS_DIFF)
-override ARGS += --elf=.../am-kernels/tests/cpu-tests/build/add-longlong-riscv32-nemu.elf 
+override ARGS += --elf=../am-kernels/tests/cpu-tests/build/add-longlong-riscv32-nemu.elf 
 # Command to execute NEMU
 IMG ?=
 NEMU_EXEC := $(BINARY) $(ARGS) $(IMG)
