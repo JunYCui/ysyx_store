@@ -5,12 +5,12 @@
 static void find_symtab_32(FILE* fp)
 {
     Elf32_Ehdr* Ehdr= malloc(sizeof(Elf32_Ehdr)); 
-    uint16_t section_off;
+    Elf32_Off section_off;
     size_t num;
     fseek(fp,0,SEEK_SET);
     num = fread(Ehdr,sizeof(Elf32_Ehdr),1,fp);
     assert(num == 1);
-    section_off = Ehdr->e_shnum;
+    section_off = Ehdr->e_shoff;
     if(section_off == 0)
     {
         printf("there is no section header table! \n");
