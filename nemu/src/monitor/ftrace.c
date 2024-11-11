@@ -21,7 +21,7 @@ static void find_symtab_32(FILE* fp)
     Elf32_Shdr *Eshdr = malloc(sizeof(Elf32_Shdr[section_num]));
     num = fread(Eshdr,sizeof(Elf32_Shdr),section_num,fp);
     assert(num == section_num);
-    printf("[Nr]\t Name \t Type \t Addr \t Off \t Size \t ES \t Flg \t Lk \t Inf \t Al \t");
+    printf("[Nr]\t Name \t Type \t Addr \t Off \t Size \t ES \t Flg \t Lk \t Inf \t Al \t \n");
     for(int i=0;i<section_num;i++)
     {
     switch (Eshdr[i].sh_type)
@@ -45,7 +45,7 @@ static void find_symtab_32(FILE* fp)
     default:
         break;
     }
-    printf("[%d]\t %d \t %s \t Addr \t Off \t Size \t ES \t Flg \t Lk \t Inf \t Al \t",i,Eshdr[i].sh_name,type);
+    printf("[%d]\t %d \t %s \t Addr \t Off \t Size \t ES \t Flg \t Lk \t Inf \t Al \t \n",i,Eshdr[i].sh_name,type);
     
     }
     fseek(fp,section_off,SEEK_SET);
