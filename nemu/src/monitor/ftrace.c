@@ -42,7 +42,7 @@ static void find_symtab_32(FILE* fp)
     case 0x7fffffff:strcpy(type,"SHT_HIPROC");break;
     case 0x80000000:strcpy(type,"SHT_LOUSER");break;
     case 0xffffffff:strcpy(type,"SHT_HIUSER");break;
-    default:
+    default:strcpy(type,"error");
         break;
     }
     printf("[%d]\t %u \t\t %s \t Addr \t Off \t Size \t ES \t Flg \t Lk \t Inf \t Al \t \n",i,Eshdr[i].sh_name,type);
