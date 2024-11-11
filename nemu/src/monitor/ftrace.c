@@ -9,12 +9,12 @@ static void find_symtab_32(FILE* fp)
     size_t num;
     num = fread(Ehdr,sizeof(Ehdr),1,fp);
     assert(num == 1);
-    section_off = Ehdr->e_shoff;
+    section_off = Ehdr->e_shentsize;
     if(section_off == 0)
     {
         printf("there is no section header table! \n");
     }
-    printf("0x%x",section_off);
+    printf("%d",section_off);
     free(Ehdr);
 }
 
