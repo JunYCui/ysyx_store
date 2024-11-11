@@ -15,7 +15,7 @@ static void find_symtab_32(FILE* fp)
         printf("there is no section header table! \n");
     }
     printf("%u",section_off);
-
+    free(Ehdr);
 }
 
 
