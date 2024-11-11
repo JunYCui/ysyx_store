@@ -45,7 +45,7 @@ static void find_symtab_32(FILE* fp)
     default:
         break;
     }
-    printf("[%d]\t %d \t %s \t Addr \t Off \t Size \t ES \t Flg \t Lk \t Inf \t Al \t \n",i,Eshdr[i].sh_name,type);
+    printf("[%d]\t %u \t %s \t Addr \t Off \t Size \t ES \t Flg \t Lk \t Inf \t Al \t \n",i,Eshdr[i].sh_name,type);
     
     }
     fseek(fp,section_off,SEEK_SET);
