@@ -5,7 +5,7 @@
 static void find_symtab_32(FILE* fp)
 {
     Elf32_Ehdr* Ehdr= malloc(sizeof(Elf32_Ehdr)); 
-    uint8_t section_off;
+    uint16_t section_off;
     size_t num;
     num = fread(Ehdr,sizeof(Ehdr),1,fp);
     assert(num == 1);
