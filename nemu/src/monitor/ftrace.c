@@ -46,7 +46,7 @@ static void find_symtab_32(FILE* fp)
     default:strcpy(type,"error");
         break;
     }
-    printf("[%d]\t %u \t %20s \t\t Addr \t Off \t Size \t ES \t Flg \t Lk \t Inf \t Al \t \n",i,Eshdr[i].sh_name,type);
+    printf("[%d]\t %u \t %15s \t\t Addr \t Off \t Size \t ES \t Flg \t Lk \t Inf \t Al \t \n",i,Eshdr[i].sh_name,type);
     
     }
     free(Ehdr);
