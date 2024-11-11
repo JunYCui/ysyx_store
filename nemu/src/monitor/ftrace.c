@@ -2,7 +2,10 @@
 #include "elf.h"
 void init_ftrace(char* elf_file)
 {
-    Elf32_Ehdr *elf_hdr = (Elf32_Ehdr*)elf_file;
-    printf(" \n ************%c************* \n",elf_hdr->e_ident[4]);
-
+    char str[20];
+    size_t num;
+    FILE* fp= fopen(elf_file,"rb");
+    num = fread(str,1,5,fp);
+    if(num == 5)
+    printf("*****%s*****",str);
 }
