@@ -220,7 +220,7 @@ void ftrace_exe(Decode* s)
                 {
                 if(func_array[i].state == true)
                 {
-                   if(s->pc>=func_array[i].addr && s->pc<func_array[i].addr+func_array[i].size) 
+                   if(s->dnpc>=func_array[i].addr && s->dnpc<func_array[i].addr+func_array[i].size) 
                    {    
                     printf("0x%x",s->pc);
                     printf("rt[%s]\n",func_array[i].name);
