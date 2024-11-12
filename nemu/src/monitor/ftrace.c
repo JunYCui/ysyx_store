@@ -177,7 +177,6 @@ void init_ftrace(char* elf_file)
 
 }
 
-int ftnum=0;
 void ftrace_exe(Decode* s)
 {
     char str[128];
@@ -202,7 +201,6 @@ void ftrace_exe(Decode* s)
                    {
                     printf("0x%x:",s->pc);
                     printf("call [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
-                    ftnum++;
                     break;
                    }
                 }
@@ -223,7 +221,6 @@ void ftrace_exe(Decode* s)
                 {
                    if(func_array[i].addr == s->dnpc) 
                    {    
-                    ftnum--;
                     printf("0x%x",s->pc);
                     printf("rt\n");
                     break;
