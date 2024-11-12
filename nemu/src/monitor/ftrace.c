@@ -112,7 +112,7 @@ static void find_strsymtab_32(FILE* fp)
         case STT_OBJECT: strcpy(symtype_str,"OBJECT");break;
         default: assert(0);break;
     }
-    printf("\t%d\t%-10x \t\t%x \t%s \t%s \t %x \n",i,Esym[i].st_value,Esym[i].st_size,symtype_str,symbind_str,Esym[i].st_name);
+    printf("\t%d\t%-10x \t%x \t%s \t%s \t %x \n",i,Esym[i].st_value,Esym[i].st_size,symtype_str,symbind_str,Esym[i].st_name);
     }
     free(Esym);
     free(shstrtable);
