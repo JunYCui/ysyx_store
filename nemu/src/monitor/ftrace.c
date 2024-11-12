@@ -2,6 +2,7 @@
 #include "cpu/decode.h"
 
 FUNC_TR func_array[FUNC_MAXNUM];
+void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 
 static void find_strsymtab_32(FILE* fp)
 {
@@ -179,5 +180,8 @@ void init_ftrace(char* elf_file)
 
 void ftrace_exe(Decode* s)
 {
-
+    char str[128];
+    int ilen = s->snpc - s->pc;//指令长度  
+    disassemble(str,sizeof(str),s->pc,(uint8_t *)&s->isa.inst.val, ilen);
+    printf("%s \n",str);
 }
