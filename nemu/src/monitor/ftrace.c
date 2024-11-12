@@ -27,23 +27,25 @@ static void find_symtab_32(FILE* fp)
     {
     switch (Eshdr[i].sh_type)
     {
-    case 0:strcpy(type,"SHT_NULL");break;
-    case 1:strcpy(type,"SHT_PROGBITS");break;
-    case 2:strcpy(type,"SHT_SYMTAB");break;
-    case 3:strcpy(type,"SHT_STRTAB");break;
-    case 4:strcpy(type,"SHT_RELA");break;
-    case 5:strcpy(type,"SHT_HASH");break;
-    case 6:strcpy(type,"SHT_DYNAMIC");break;
-    case 7:strcpy(type,"SHT_NOTE");break;
-    case 8:strcpy(type,"SHT_NOBITS");break;
-    case 9:strcpy(type,"SHT_REL");break;
-    case 10:strcpy(type,"SHT_SHLIB");break;
-    case 11:strcpy(type,"SHT_DYNSYM");break;
-    case 0x70000000:strcpy(type,"SHT_LOPROC");break;
-    case 0x7fffffff:strcpy(type,"SHT_HIPROC");break;
-    case 0x80000000:strcpy(type,"SHT_LOUSER");break;
-    case 0xffffffff:strcpy(type,"SHT_HIUSER");break;
-    default:strcpy(type,"error");
+    case SHT_NULL:strcpy(type,"NULL");break;
+    case SHT_PROGBITS:strcpy(type,"PROGBITS");break;
+    case SHT_SYMTAB:strcpy(type,"SYMTAB");break;
+    case SHT_STRTAB:strcpy(type,"STRTAB");break;
+    case SHT_RELA:strcpy(type,"RELA");break;
+    case SHT_HASH:strcpy(type,"HASH");break;
+    case SHT_DYNAMIC:strcpy(type,"DYNAMIC");break;
+    case SHT_NOTE:strcpy(type,"NOTE");break;
+    case SHT_NOBITS:strcpy(type,"NOBITS");break;
+    case SHT_REL:strcpy(type,"REL");break;
+    case SHT_SHLIB:strcpy(type,"SHLIB");break;
+    case SHT_DYNSYM:strcpy(type,"DYNSYM");break;
+    case SHT_LOPROC:strcpy(type,"LOPROC");break;
+    case SHT_HIPROC:strcpy(type,"HIPROC");break;
+    case SHT_LOUSER:strcpy(type,"LOUSER");break;
+    case SHT_HIUSER:strcpy(type,"HIUSER");break;
+    default:
+        printf("*******%d***********\n",Eshdr[i].sh_type);
+        strcpy(type,"error");
         break;
     }
     printf("[%d]\t %u \t %15s \t Addr \t Off \t Size \t ES \t Flg \t Lk \t Inf \t Al \t \n",i,Eshdr[i].sh_name,type);
