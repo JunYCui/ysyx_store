@@ -189,7 +189,7 @@ void ftrace_exe(Decode* s)
     if(inst!= NULL)
     {
         rd = strtok(NULL,",");
-        rs1 =strtok(NULL,",");
+        rs1 =strtok(NULL," ");
         if((strcmp(inst,"jal") == 0 ))
         {
             
