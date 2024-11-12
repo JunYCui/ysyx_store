@@ -221,7 +221,7 @@ void ftrace_exe(Decode* s)
         {
              if(strcmp(rd,"zero")==0 || strcmp(rs1,"0(ra)") ==0)
              {
-                printf("rt");
+                printf("rt\n");
                 ftnum--;
              }
              else 
