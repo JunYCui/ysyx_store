@@ -194,7 +194,7 @@ void ftrace_exe(Decode* s)
         if((strcmp(inst,"jal") == 0 ) || (strcmp(inst,"jalr") == 0 ))
         {
             rs1 =strtok(NULL,",");
-            printf("%s\t %s\n",rs1,rd);
+            printf("%s\t %s\n",rd,rs1);
         }
     }
 }
