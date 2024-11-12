@@ -24,7 +24,7 @@ static void find_symtab_32(FILE* fp)
     num = fread(Eshdr,sizeof(Elf32_Shdr),section_num,fp);
     for(int i=0;i<section_num-1;i++)
     {
-        for(int j=i;j<section_num;j++)
+        for(int j=i+1;j<section_num;j++)
         if(Eshdr[i].sh_name > Eshdr[j].sh_name)
         {
             *exchange = Eshdr[i];
