@@ -213,7 +213,7 @@ void ftrace_exe(Decode* s)
         }
         else if(strcmp(inst, "jalr") == 0)
         {
-            printf("%s, %s \n",rd,rs1);
+            printf("%d, %d \n",strcmp(rd,"zero")==0,strcmp(rs1,"0(ra)") ==0);
              if((strcmp(rd,"zero")==0 )&& (strcmp(rs1,"0(ra)") ==0))
              {
                 for(int i=0;i<FUNC_MAXNUM;i++)
