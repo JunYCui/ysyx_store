@@ -193,6 +193,7 @@ void ftrace_exe(Decode* s)
         rs1 =strtok(NULL,",");
         if((strcmp(inst,"jal") == 0 ))
         {
+            
             for(int i=0;i<FUNC_MAXNUM;i++)
             {
                 if(func_array[i].state == true)
@@ -206,6 +207,7 @@ void ftrace_exe(Decode* s)
                     }
                     printf("call [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
                     ftnum++;
+                    break;
                    }
                 }
                 else 
@@ -213,6 +215,7 @@ void ftrace_exe(Decode* s)
                     break;
                 }
             }
+            
         }
         else if(strcmp(inst, "jalr") == 0)
         {
