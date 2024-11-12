@@ -229,10 +229,6 @@ void ftrace_exe(Decode* s)
                    {    
                     ftnum--;
                     printf("0x%x",s->pc);
-                     for(int j=0;j<ftnum;j++)
-                    {
-                    printf(" ");
-                    }
                     printf("rt\n");
                     break;
                    }
@@ -252,12 +248,7 @@ void ftrace_exe(Decode* s)
                    if(func_array[i].addr == s->dnpc) 
                    {
                     printf("0x%x:",s->pc);
-                    for(int j=0;j<ftnum;j++)
-                    {
-                    printf(" ");
-                    }
                     printf("call [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
-                    ftnum++;
                     break;
                    }
                 }
