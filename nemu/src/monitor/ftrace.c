@@ -44,7 +44,7 @@ static void find_symtab_32(FILE* fp)
     case SHT_LOUSER:strcpy(type,"LOUSER");break;
     case SHT_HIUSER:strcpy(type,"HIUSER");break;
     default:
-        printf("*******%d***********\n",Eshdr[i].sh_type);
+        printf("*******%x***********\n",Eshdr[i].sh_type);
         strcpy(type,"error");
         break;
     }
