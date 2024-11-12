@@ -116,7 +116,6 @@ static void find_strsymtab_32(FILE* fp)
         strcpy(func_array[func_num].name,symname );
         func_array[func_num].size = Esym[i].st_size;
         func_array[func_num].state = true;
-        printf("%s:0x%x\n",func_array[func_num].name,func_array[func_num].addr );
         func_num++;
     }
 
@@ -206,7 +205,7 @@ void ftrace_exe(Decode* s)
                     {
                     printf(" ");
                     }
-                    printf("call [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
+                    printf("call [%s@0x%x]\n",func_array[i].name,s->dnpc);
                     ftnum++;
                     break;
                    }
