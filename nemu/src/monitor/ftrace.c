@@ -177,7 +177,7 @@ void init_ftrace(char* elf_file)
 
 }
 
-//static int ftnum=0;
+int ftnum=0;
 void ftrace_exe(Decode* s)
 {
     char str[128];
@@ -190,12 +190,37 @@ void ftrace_exe(Decode* s)
     if(inst!= NULL)
     {
         rd = strtok(NULL,",");
-        
-        if((strcmp(inst,"jal") == 0 ) || (strcmp(inst,"jalr") == 0 ))
+        rs1 =strtok(NULL,",");
+        if((strcmp(inst,"jal") == 0 ))
         {
-            rs1 =strtok(NULL,",");
-            printf("%x\t %s\n",s->dnpc,rs1);
-            rs1 =rd;
+            for(int i=0;i<FUNC_MAXNUM;i++)
+            {
+                if(func_array[i].state == true)
+                {
+                   if(func_array[i].addr == s->dnpc) 
+                   {
+                    printf("0x%x:",s->pc);
+                    for(i=0;i<ftnum;i++)
+                    {
+                    printf(" ");
+                    }
+                    printf("call [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
+                    ftnum++;
+                   }
+                }
+                else 
+                {
+                    break;
+                }
+            }
+        }
+        else if(strcmp(inst, "jalr") == 0)
+        {
+
+             if(strcmp(rd,"0")==0 || strcmp(rs1,"0(ra)") ==0)
+             {
+                printf("rt");
+             }
         }
     }
 }
