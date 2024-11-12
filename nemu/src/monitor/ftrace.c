@@ -188,8 +188,8 @@ void ftrace_exe(Decode* s)
     inst = strtok(str," ");
     if(inst!= NULL)
     {
-    printf("%s",inst);
+    printf("%s\n",inst);
     rd = strtok(str,",");
-    printf("%s",rd);
+    printf("%s\n",rd);
     }
 }
