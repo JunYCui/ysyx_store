@@ -221,8 +221,22 @@ void ftrace_exe(Decode* s)
         {
              if(strcmp(rd,"zero")==0 || strcmp(rs1,"0(ra)") ==0)
              {
-                printf("rt\n");
-                ftnum--;
+                for(int i=0;i<FUNC_MAXNUM;i++)
+                {
+                if(func_array[i].state == true)
+                {
+                   if(func_array[i].addr == s->dnpc) 
+                   {    
+                    printf("rt");
+                    ftnum--;
+                    break;
+                   }
+                }
+                else 
+                {
+                    break;
+                }
+                }
              }
              else 
              {
