@@ -18,9 +18,22 @@ static void find_symtab_32(FILE* fp)
     {
         printf("there is no section header table! \n");
     }
+    Elf32_Shdr *exchange = malloc(sizeof(Elf32_Shdr));
     Elf32_Shdr *Eshdr = malloc(sizeof(Elf32_Shdr[section_num]));
     fseek(fp,section_off,SEEK_SET);
     num = fread(Eshdr,sizeof(Elf32_Shdr),section_num,fp);
+    for(int i=0;i<section_num-1;i++)
+    {
+        for(int j=i;j<section_num;j++)
+        if(Eshdr[i].sh_name > Eshdr[j].sh_name)
+        {
+            *exchange = Eshdr[i];
+            Eshdr[i] = Eshdr[j]; 
+            Eshdr[j] = Eshdr[i];
+        }
+
+    }
+    free(exchange);
     assert(num == section_num);
     printf("[Nr]\t Name \t Type \t\t\t Addr \t\t Off \t Size  \n");
     for(int i=0;i<section_num;i++)
