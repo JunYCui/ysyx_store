@@ -61,7 +61,7 @@ static void find_symtab_32(FILE* fp)
         break;
     }
     strcpy(name,&shstrtable[Eshdr[i].sh_name]);
-    printf("[%d]\t %s             \t %-15s \t %-8x \t %x \t %x  \n",i,name,type,Eshdr[i].sh_addr,
+    printf("[%d]\t %-15s\t %-15s \t %-8x \t %x \t %x  \n",i,name,type,Eshdr[i].sh_addr,
     Eshdr[i].sh_offset,Eshdr[i].sh_size);
     memset(type,0,sizeof(type));
     }
