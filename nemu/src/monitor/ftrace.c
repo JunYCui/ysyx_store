@@ -83,15 +83,27 @@ static void find_strsymtab_32(FILE* fp)
  */
     }
  /* 4. 对于 symtab 进行解析 */
+    Elf32_Word symnum = Esh_symtab.sh_size/sizeof(Elf32_Sym);
+    Elf32_Sym *Esym = malloc(sizeof(Elf32_Sym[symnum]));
+    char symbind;
+    char symtype;
+  //  char symbind_str[20];
+  //  char symtype_str[20];
     fseek(fp,Esh_symtab.sh_offset,SEEK_SET);
-    printf("**********%ld*********\n",Esh_symtab.sh_size/sizeof(Elf32_Sym));
-    printf("**********%x*********\n",Esh_strtab.sh_size);
+    num = fread(Esym,sizeof(Elf32_Sym),symnum,fp);
 
+    printf("\tNum \tValue \tSize \tType \t Bind\tName \n");
+    for(int i=0;i<symnum;i++)
+    {
+    symbind = ELF32_ST_BIND(Esym[i].st_info);
+    symtype = ELF32_ST_TYPE(Esym[i].st_info);
+   printf("symbind:%d  symtype:%d ",symbind,symtype);
+   // printf("i\t%x \t%x \t%s");
+    }
+    free(Esym);
     free(shstrtable);
     free(Ehdr);
     free(Eshdr);
-
-
 }
 
 
