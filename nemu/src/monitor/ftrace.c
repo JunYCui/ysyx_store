@@ -87,8 +87,8 @@ static void find_strsymtab_32(FILE* fp)
     Elf32_Sym *Esym = malloc(sizeof(Elf32_Sym[symnum]));
     char symbind;
     char symtype;
-  //  char symbind_str[20];
-  //  char symtype_str[20];
+    char symbind_str[20];
+    char symtype_str[20];
     fseek(fp,Esh_symtab.sh_offset,SEEK_SET);
     num = fread(Esym,sizeof(Elf32_Sym),symnum,fp);
 
@@ -97,8 +97,22 @@ static void find_strsymtab_32(FILE* fp)
     {
     symbind = ELF32_ST_BIND(Esym[i].st_info);
     symtype = ELF32_ST_TYPE(Esym[i].st_info);
-   printf("symbind:%d  symtype:%d  \n",symbind,symtype);
-   // printf("i\t%x \t%x \t%s");
+    switch(symbind)
+    {
+        case STB_GLOBAL:strcpy(symbind_str,"GLOBAL") ;break;
+        case STB_LOCAL:strcpy(symbind_str,"LOCAL");break;
+        default: assert(0);break;
+    }
+    switch(symtype)
+    {
+        case STT_NOTYPE:strcpy(symtype_str,"NOTYPE");break;
+        case STT_SECTION:strcpy(symtype_str,"SECTION");break;
+        case STT_FUNC: strcpy(symtype_str,"FUNC");break;
+        case STT_FILE: strcpy(symtype_str,"FILE");break;
+        case STT_OBJECT: strcpy(symtype_str,"OBJECT");break;
+        default: assert(0);break;
+    }
+    printf("%d\t%x \t%x \t%s \t%s \t %x",i,Esym[i].st_value,Esym[i].st_size,symtype_str,symbind_str,Esym[i].st_name);
     }
     free(Esym);
     free(shstrtable);
