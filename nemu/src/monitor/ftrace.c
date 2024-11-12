@@ -48,7 +48,7 @@ static void find_symtab_32(FILE* fp)
         strcpy(type,"error");
         break;
     }
-    printf("[%d]\t %u \t %-15s \t %-10x \t %x \t %x  \n",i,Eshdr[i].sh_name,type,Eshdr[i].sh_addr,
+    printf("[%d]\t %u \t %-15s \t %-8x \t %x \t %x  \n",i,Eshdr[i].sh_name,type,Eshdr[i].sh_addr,
     Eshdr[i].sh_offset,Eshdr[i].sh_size);
     
     }
