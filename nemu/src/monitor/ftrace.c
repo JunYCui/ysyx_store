@@ -92,7 +92,7 @@ static void find_strsymtab_32(FILE* fp)
     fseek(fp,Esh_symtab.sh_offset,SEEK_SET);
     num = fread(Esym,sizeof(Elf32_Sym),symnum,fp);
 
-    printf("\tNum \tValue \tSize \tType \t Bind\tName \n");
+    printf("\tNum \tValue \t\tSize \tType \t Bind\tName \n");
     for(int i=0;i<symnum;i++)
     {
     symbind = ELF32_ST_BIND(Esym[i].st_info);
@@ -112,7 +112,7 @@ static void find_strsymtab_32(FILE* fp)
         case STT_OBJECT: strcpy(symtype_str,"OBJECT");break;
         default: assert(0);break;
     }
-    printf("\t%d\t%x \t%x \t%s \t%s \t %x \n",i,Esym[i].st_value,Esym[i].st_size,symtype_str,symbind_str,Esym[i].st_name);
+    printf("\t%d\t%x \t%x \t\t%s \t%s \t %x \n",i,Esym[i].st_value,Esym[i].st_size,symtype_str,symbind_str,Esym[i].st_name);
     }
     free(Esym);
     free(shstrtable);
