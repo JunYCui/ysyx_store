@@ -1,4 +1,5 @@
 #include "ftrace.h"
+#include "cpu/decode.h"
 
 FUNC_TR func_array[FUNC_MAXNUM];
 
@@ -136,17 +137,7 @@ static void find_strsymtab_32(FILE* fp)
     printf("\t%d\t%-10x \t%d \t%-8s \t%s \t %d \n",i,Esym[i].st_value,Esym[i].st_size,symtype_str,symbind_str,Esym[i].st_name);
 */    
 }
-    for(int i=0;i<FUNC_MAXNUM;i++)
-    {
-        if(func_array[i].state == true)
-        {
-            printf("%x: \t%10s\t%d\n",func_array[i].addr,func_array[i].name,func_array[i].size);
-        }
-        else 
-        {
-            break;
-        }
-    }
+
     free(strtable);
     free(Esym);
     free(shstrtable);
@@ -183,7 +174,10 @@ void init_ftrace(char* elf_file)
     if(osType == 32)
       find_strsymtab_32(fp);
 
-
 }
 
 
+void ftrace_exe(Decode* s)
+{
+
+}

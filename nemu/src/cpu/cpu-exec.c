@@ -18,6 +18,7 @@
 #include <cpu/difftest.h>
 #include <locale.h>
 
+
 void Cpu_Wp(void);
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
