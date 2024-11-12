@@ -97,7 +97,7 @@ static void find_strsymtab_32(FILE* fp)
     {
     symbind = ELF32_ST_BIND(Esym[i].st_info);
     symtype = ELF32_ST_TYPE(Esym[i].st_info);
-   printf("symbind:%d  symtype:%d ",symbind,symtype);
+   printf("symbind:%d  symtype:%d  \n",symbind,symtype);
    // printf("i\t%x \t%x \t%s");
     }
     free(Esym);
