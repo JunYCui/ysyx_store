@@ -193,7 +193,7 @@ void ftrace_exe(Decode* s)
         //printf("%s",rd);
         if((strcmp(inst,"jal") == 0 )&& (strcmp(rd,"ra")==0))
         {
-            rs1 =strtok(str,",");
+            rs1 =strtok(NULL,",");
             printf("%s\n",rs1);
         }
     }
