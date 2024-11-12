@@ -34,7 +34,7 @@ static void find_symtab_32(FILE* fp)
     num = fread(shstrtable,Eshdr[shstrindex].sh_size,1,fp);
     assert(num == 1);
 
-    printf("[Nr]\t Name \t\t Type \t\t\t Addr \t\t Off \t Size  \n");    
+    printf("[Nr]\t Name \t\t\t Type \t\t\t Addr \t\t Off \t Size  \n");    
     for(int i=0;i<section_num;i++)
     {
     switch (Eshdr[i].sh_type)
