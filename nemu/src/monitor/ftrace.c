@@ -227,7 +227,7 @@ void ftrace_exe(Decode* s)
                 {
                    if(func_array[i].addr == s->dnpc) 
                    {    
-                    printf("rt");
+                    printf("%x:rt\n",s->pc);
                     ftnum--;
                     break;
                    }
