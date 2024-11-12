@@ -177,19 +177,23 @@ void init_ftrace(char* elf_file)
 
 }
 
-
+//static int ftnum=0;
 void ftrace_exe(Decode* s)
 {
     char str[128];
     char* inst;
     char* rd;
+    char* rs1;
     int ilen = s->snpc - s->pc;//指令长度  
     disassemble(str,sizeof(str),s->pc,(uint8_t *)&s->isa.inst.val, ilen);
     inst = strtok(str,"\t");
     if(inst!= NULL)
     {
-    printf("%s\n",inst);
-    rd = strtok(NULL,",");
-    printf("%s\n",rd);
+        rd = strtok(str,",");
+        if(strcmp(inst,"jal") == 0 && strcmp(rd,"ra")==0)
+        {
+            rs1 =strtok(str,",");
+            printf("%s\n",rs1);
+        }
     }
 }
