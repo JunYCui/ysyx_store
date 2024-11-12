@@ -1,6 +1,6 @@
-#include "common.h"
-#include "elf.h"
+#include "ftrace.h"
 
+FUNC_TR func_array[FUNC_MAXNUM];
 
 static void find_strsymtab_32(FILE* fp)
 {
@@ -88,11 +88,12 @@ static void find_strsymtab_32(FILE* fp)
     Elf32_Word symnum = Esh_symtab.sh_size/sizeof(Elf32_Sym);
     Elf32_Sym *Esym = malloc(sizeof(Elf32_Sym[symnum]));
     char *strtable= malloc(Esh_strtab.sh_size);
-    char symbind;
+    //char symbind;
     char symtype;
-    char symbind_str[20];
-    char symtype_str[20];
+    //char symbind_str[20];
+    //char symtype_str[20];
     char symname[20];
+    unsigned char func_num=0;
 
     fseek(fp,Esh_symtab.sh_offset,SEEK_SET);
     num = fread(Esym,sizeof(Elf32_Sym),symnum,fp);
@@ -105,8 +106,29 @@ static void find_strsymtab_32(FILE* fp)
     for(int i=0;i<symnum;i++)
     {
     strcpy(symname,&strtable[Esym[i].st_name]);
-    symbind = ELF32_ST_BIND(Esym[i].st_info);
+   // symbind = ELF32_ST_BIND(Esym[i].st_info);
     symtype = ELF32_ST_TYPE(Esym[i].st_info);
+    if(symtype == STT_FUNC)
+    {
+        func_array[func_num].addr = Esym[i].st_value;
+        strcpy(func_array[func_num].name,symname );
+        func_array[func_num].size = Esym[i].st_size;
+        func_array[func_num].state = true;
+        func_num++;
+    }
+    for(i=0;i<FUNC_MAXNUM;i++)
+    {
+        if(func_array[i].state == true)
+        {
+            printf("%x: \t%s\t%d\n",func_array[i].addr,func_array[i].name,func_array[i].size);
+        }
+        else 
+        {
+            break;
+        }
+    }
+
+/*
     switch(symbind)
     {
         case STB_GLOBAL:strcpy(symbind_str,"GLOBAL") ;break;
@@ -123,7 +145,8 @@ static void find_strsymtab_32(FILE* fp)
         default: assert(0);break;
     }
     printf("\t%d\t%-10x \t%d \t%-8s \t%s \t %d \n",i,Esym[i].st_value,Esym[i].st_size,symtype_str,symbind_str,Esym[i].st_name);
-    }
+*/    
+}
 
     free(strtable);
     free(Esym);
