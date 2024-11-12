@@ -1,7 +1,6 @@
 #include "common.h"
 #include "elf.h"
-Elf32_Shdr Esh_strtab;
-Elf32_Shdr Esh_symtab;
+
 
 static void find_strsymtab_32(FILE* fp)
 {
@@ -39,6 +38,9 @@ static void find_strsymtab_32(FILE* fp)
 
  //   printf("[Nr]\t Name \t\t\t Type \t\t\t Addr \t\t Off \t Size  \n");    
  /* 3. 根据name 找到strtab 和 symtab */
+    Elf32_Shdr Esh_strtab;
+    Elf32_Shdr Esh_symtab;
+
     for(int i=0;i<section_num;i++)
     {
     strcpy(name,&shstrtable[Eshdr[i].sh_name]);
@@ -85,16 +87,24 @@ static void find_strsymtab_32(FILE* fp)
  /* 4. 对于 symtab 进行解析 */
     Elf32_Word symnum = Esh_symtab.sh_size/sizeof(Elf32_Sym);
     Elf32_Sym *Esym = malloc(sizeof(Elf32_Sym[symnum]));
+    char *strtable= malloc(Esh_strtab.sh_size);
     char symbind;
     char symtype;
     char symbind_str[20];
     char symtype_str[20];
+    char symname[20];
+
     fseek(fp,Esh_symtab.sh_offset,SEEK_SET);
     num = fread(Esym,sizeof(Elf32_Sym),symnum,fp);
+    assert(num == symnum);
+    fseek(fp,Esh_strtab.sh_offset,SEEK_SET);
+    num = fread(strtable,Esh_strtab.sh_size,1,fp);
+    assert(num == 1);
 
     printf("\tNum \tValue \t\tSize \tType \t\t Bind\tName \n");
     for(int i=0;i<symnum;i++)
     {
+    strcpy(symname,&strtable[Esym[i].st_name]);
     symbind = ELF32_ST_BIND(Esym[i].st_info);
     symtype = ELF32_ST_TYPE(Esym[i].st_info);
     switch(symbind)
@@ -112,7 +122,7 @@ static void find_strsymtab_32(FILE* fp)
         case STT_OBJECT: strcpy(symtype_str,"OBJECT");break;
         default: assert(0);break;
     }
-    printf("\t%d\t%-10x \t%d \t%-8s \t%s \t %x \n",i,Esym[i].st_value,Esym[i].st_size,symtype_str,symbind_str,Esym[i].st_name);
+    printf("\t%d\t%-10x \t%d \t%-8s \t%s \t %s \n",i,Esym[i].st_value,Esym[i].st_size,symtype_str,symbind_str,symname);
     }
     free(Esym);
     free(shstrtable);
