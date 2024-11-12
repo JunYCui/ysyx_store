@@ -111,7 +111,7 @@ void init_ftrace(char* elf_file)
     if(osType == 32)
       Esh_strtab = find_strtab_32(fp);
 
-    printf("%u",Esh_strtab.sh_size);
+    printf("%x",Esh_strtab.sh_size);
 }
 
 
