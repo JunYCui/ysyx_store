@@ -7,13 +7,17 @@ static void find_symtab_32(FILE* fp)
     Elf32_Ehdr* Ehdr= malloc(sizeof(Elf32_Ehdr)); 
     Elf32_Off section_off;
     Elf32_Half section_num;
+    Elf32_Half shstrindex;
     char type[20];
+    //unsigned char name[50];
     size_t num;
     fseek(fp,0,SEEK_SET);
     num = fread(Ehdr,sizeof(Elf32_Ehdr),1,fp);
     assert(num == 1);
     section_off = Ehdr->e_shoff;
     section_num = Ehdr->e_shnum;
+    shstrindex = Ehdr->e_shstrndx;
+    printf("********%d*********\n",shstrindex);
     if(section_off == 0)
     {
         printf("there is no section header table! \n");
@@ -33,9 +37,9 @@ static void find_symtab_32(FILE* fp)
         }
 
     }
-    free(exchange);
     assert(num == section_num);
-    printf("[Nr]\t Name \t Type \t\t\t Addr \t\t Off \t Size  \n");
+//    printf("[Nr]\t Name \t Type \t\t\t Addr \t\t Off \t Size  \n");
+    
     for(int i=0;i<section_num;i++)
     {
     switch (Eshdr[i].sh_type)
@@ -63,8 +67,10 @@ static void find_symtab_32(FILE* fp)
     }
     printf("[%d]\t %u \t %-15s \t %-8x \t %x \t %x  \n",i,Eshdr[i].sh_name,type,Eshdr[i].sh_addr,
     Eshdr[i].sh_offset,Eshdr[i].sh_size);
-    
+    memset(type,0,sizeof(type));
     }
+ 
+    free(exchange);
     free(Ehdr);
     free(Eshdr);
 }
