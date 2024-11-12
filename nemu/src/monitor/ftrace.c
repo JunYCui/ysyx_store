@@ -29,7 +29,7 @@ static void find_symtab_32(FILE* fp)
         {
             *exchange = Eshdr[i];
             Eshdr[i] = Eshdr[j]; 
-            Eshdr[j] = Eshdr[i];
+            Eshdr[j] = *exchange;
         }
 
     }
