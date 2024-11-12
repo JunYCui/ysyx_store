@@ -22,7 +22,7 @@ static void find_symtab_32(FILE* fp)
     fseek(fp,section_off,SEEK_SET);
     num = fread(Eshdr,sizeof(Elf32_Shdr),section_num,fp);
     assert(num == section_num);
-    printf("[Nr]\t Name \t\t Type \t\t Addr \t Off \t Size \t ES \t Flg \t Lk \t Inf \t Al \t \n");
+    printf("[Nr]\t Name \t\t Type \t\t Addr \t Off \t Size  \n");
     for(int i=0;i<section_num;i++)
     {
     switch (Eshdr[i].sh_type)
@@ -43,12 +43,13 @@ static void find_symtab_32(FILE* fp)
     case SHT_HIPROC:strcpy(type,"HIPROC");break;
     case SHT_LOUSER:strcpy(type,"LOUSER");break;
     case SHT_HIUSER:strcpy(type,"HIUSER");break;
+    case 0x70000003:strcpy(type,"RISCV_ATTRIBUTE ");break;
     default:
-        printf("*******%x***********\n",Eshdr[i].sh_type);
         strcpy(type,"error");
         break;
     }
-    printf("[%d]\t %u \t %15s \t Addr \t Off \t Size \t ES \t Flg \t Lk \t Inf \t Al \t \n",i,Eshdr[i].sh_name,type);
+    printf("[%d]\t %u \t %-15s \t %x \t %x \t %x  \n",i,Eshdr[i].sh_name,type,Eshdr[i].sh_addr,
+    Eshdr[i].sh_offset,Eshdr[i].sh_size);
     
     }
     free(Ehdr);
