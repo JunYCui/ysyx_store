@@ -181,7 +181,15 @@ void init_ftrace(char* elf_file)
 void ftrace_exe(Decode* s)
 {
     char str[128];
+    char* inst;
+    char* rd;
     int ilen = s->snpc - s->pc;//指令长度  
     disassemble(str,sizeof(str),s->pc,(uint8_t *)&s->isa.inst.val, ilen);
-    printf("%s \n",str);
+    inst = strtok(str," ");
+    if(inst!= NULL)
+    {
+    printf("%s",inst);
+    rd = strtok(str,",");
+    printf("%s",rd);
+    }
 }
