@@ -84,7 +84,7 @@ static void find_strsymtab_32(FILE* fp)
     }
  /* 4. 对于 symtab 进行解析 */
     fseek(fp,Esh_symtab.sh_offset,SEEK_SET);
-    printf("**********%x*********\n",Esh_symtab.sh_size);
+    printf("**********%ld*********\n",Esh_symtab.sh_size/sizeof(Elf32_Sym));
     printf("**********%x*********\n",Esh_strtab.sh_size);
 
     free(shstrtable);
