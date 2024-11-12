@@ -9,26 +9,32 @@ static void find_symtab_32(FILE* fp)
     Elf32_Half section_num;
     Elf32_Half shstrindex;
     char type[20];
-    //unsigned char name[50];
+    char name[50];
     size_t num;
+  /*1. 读取表头信息，找到section偏移地址*/
     fseek(fp,0,SEEK_SET);
     num = fread(Ehdr,sizeof(Elf32_Ehdr),1,fp);
     assert(num == 1);
     section_off = Ehdr->e_shoff;
     section_num = Ehdr->e_shnum;
-    shstrindex = Ehdr->e_shstrndx;
-    printf("********%d*********\n",shstrindex);
+    shstrindex = Ehdr->e_shstrndx;//shstr表头索引
     if(section_off == 0)
     {
         printf("there is no section header table! \n");
     }
-    Elf32_Shdr *exchange = malloc(sizeof(Elf32_Shdr));
+    /*2. 读取section，并根据shstr表头索引，找到shstr表里面有name信息*/
     Elf32_Shdr *Eshdr = malloc(sizeof(Elf32_Shdr[section_num]));
+    char *shstrtable= malloc(Eshdr[shstrindex].sh_size);
+
     fseek(fp,section_off,SEEK_SET);
     num = fread(Eshdr,sizeof(Elf32_Shdr),section_num,fp);
     assert(num == section_num);
-//    printf("[Nr]\t Name \t Type \t\t\t Addr \t\t Off \t Size  \n");
-    
+
+    fseek(fp,Eshdr[shstrindex].sh_offset,SEEK_SET);
+    num = fread(shstrtable,Eshdr[shstrindex].sh_size,1,fp);
+    assert(num == 1);
+
+    printf("[Nr]\t Name \t Type \t\t\t Addr \t\t Off \t Size  \n");    
     for(int i=0;i<section_num;i++)
     {
     switch (Eshdr[i].sh_type)
@@ -54,12 +60,12 @@ static void find_symtab_32(FILE* fp)
         strcpy(type,"error");
         break;
     }
-    printf("[%d]\t %u \t %-15s \t %-8x \t %x \t %x  \n",i,Eshdr[i].sh_name,type,Eshdr[i].sh_addr,
+    strcpy(name,&shstrtable[Eshdr[i].sh_name]);
+    printf("[%d]\t %s \t %-15s \t %-8x \t %x \t %x  \n",i,name,type,Eshdr[i].sh_addr,
     Eshdr[i].sh_offset,Eshdr[i].sh_size);
     memset(type,0,sizeof(type));
     }
- 
-    free(exchange);
+    free(shstrtable);
     free(Ehdr);
     free(Eshdr);
 }
