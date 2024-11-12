@@ -219,10 +219,34 @@ void ftrace_exe(Decode* s)
         }
         else if(strcmp(inst, "jalr") == 0)
         {
-            printf("%s %s \n",rd,rs1);
-             if(strcmp(rd,"0")==0 || strcmp(rs1,"0(ra)") ==0)
+             if(strcmp(rd,"zero")==0 || strcmp(rs1,"0(ra)") ==0)
              {
                 printf("rt");
+                ftnum--;
+             }
+             else 
+             {
+                for(int i=0;i<FUNC_MAXNUM;i++)
+                {
+                if(func_array[i].state == true)
+                {
+                   if(func_array[i].addr == s->dnpc) 
+                   {
+                    printf("0x%x:",s->pc);
+                    for(int j=0;j<ftnum;j++)
+                    {
+                    printf(" ");
+                    }
+                    printf("call [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
+                    ftnum++;
+                    break;
+                   }
+                }
+                else 
+                {
+                    break;
+                }
+                }
              }
         }
     }
