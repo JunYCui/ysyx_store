@@ -190,8 +190,8 @@ void ftrace_exe(Decode* s)
     if(inst!= NULL)
     {
         rd = strtok(NULL,",");
-        //printf("%s",rd);
-        if((strcmp(inst,"jal") == 0 )&& (strcmp(rd,"ra")==0))
+        printf("%s\n",rd);
+        if((strcmp(inst,"jal") == 0 ))
         {
             rs1 =strtok(NULL,",");
             printf("%s\n",rs1);
