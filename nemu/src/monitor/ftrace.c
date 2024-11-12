@@ -102,7 +102,7 @@ static void find_strsymtab_32(FILE* fp)
     num = fread(strtable,Esh_strtab.sh_size,1,fp);
     assert(num == 1);
 
-    printf("\tNum \tValue \t\tSize \tType \t\t Bind\tName \n");
+//    printf("\tNum \tValue \t\tSize \tType \t\t Bind\tName \n");
     for(int i=0;i<symnum;i++)
     {
     strcpy(symname,&strtable[Esym[i].st_name]);
@@ -140,11 +140,11 @@ static void find_strsymtab_32(FILE* fp)
     {
         if(func_array[i].state == true)
         {
-            printf("%x: \t%s\t%d\n",func_array[i].addr,func_array[i].name,func_array[i].size);
+            printf("%x: \t%10s\t%d\n",func_array[i].addr,func_array[i].name,func_array[i].size);
         }
         else 
         {
-            return;
+            break;
         }
     }
     free(strtable);
