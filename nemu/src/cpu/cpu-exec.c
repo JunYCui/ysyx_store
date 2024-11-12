@@ -25,13 +25,24 @@ void Cpu_Wp(void);
  * You can modify this value as you want.
  */
 #define MAX_INST_TO_PRINT 10
+#define MAX_FIFO_BUF 64
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
+#ifdef CONFIG_IRINGBUF
+struct Ring
+{
+  char logbuf[128];
+}trace_fifo[MAX_FIFO_BUF];
+static uint8_t fifo_count=0;
+#endif
+
 void device_update();
+
+
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
@@ -41,7 +52,11 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
-  if (CONFIG_WATCHPOINT) Cpu_Wp();
+  IFDEF(CONFIG_WATCHPOINT, Cpu_Wp());
+#ifdef CONFIG_IRINGBUF
+  strcpy(trace_fifo[fifo_count++].logbuf,_this->logbuf);if(fifo_count == MAX_FIFO_BUF){fifo_count = 0;}
+#endif
+
 
 }
 
@@ -53,7 +68,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
-  int ilen = s->snpc - s->pc;
+  int ilen = s->snpc - s->pc;//指令长度
   int i;
   uint8_t *inst = (uint8_t *)&s->isa.inst.val;
   for (i = ilen - 1; i >= 0; i --) {
@@ -69,7 +84,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
 #ifndef CONFIG_ISA_loongarch32r
   void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
   disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
-      MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst.val, ilen);
+      MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst.val, ilen);//反汇编
 #else
   p[0] = '\0'; // the upstream llvm does not support loongarch32r
 #endif
@@ -88,17 +103,40 @@ static void execute(uint64_t n) {
 }
 
 static void statistic() {
+
   IFNDEF(CONFIG_TARGET_AM, setlocale(LC_NUMERIC, ""));
 #define NUMBERIC_FMT MUXDEF(CONFIG_TARGET_AM, "%", "%'") PRIu64
   Log("host time spent = " NUMBERIC_FMT " us", g_timer);
   Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
   if (g_timer > 0) Log("simulation frequency = " NUMBERIC_FMT " inst/s", g_nr_guest_inst * 1000000 / g_timer);
   else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
+
 }
 
 void assert_fail_msg() {
   isa_reg_display();
+#ifdef CONFIG_IRINGBUF
+  uint8_t i=0;
+  int flag = fifo_count-1;
+  if( flag < 0)
+    flag = 63;
+  for(i=0;i<64;i++)
+  {
+    if(strlen(trace_fifo[i].logbuf)>0)
+    {
+      if(i == flag)
+      {
+        printf("%s  \t%s \n",ANSI_FMT("-->", ANSI_FG_RED),trace_fifo[i].logbuf);
+      }
+      else 
+      {
+        printf("\t%s \n",trace_fifo[i].logbuf);
+      }
+    }
+  }
+#endif
   statistic();
+
 }
 
 /* Simulate how the CPU works. */
