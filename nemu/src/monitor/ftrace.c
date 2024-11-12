@@ -227,12 +227,12 @@ void ftrace_exe(Decode* s)
                 {
                    if(func_array[i].addr == s->dnpc) 
                    {    
-                    printf("0x%x:rt\n",s->pc);
                     ftnum--;
                      for(int j=0;j<ftnum;j++)
                     {
                     printf(" ");
                     }
+                    printf("0x%x:rt\n",s->pc);
                     break;
                    }
                 }
