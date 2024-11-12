@@ -22,7 +22,7 @@ static void find_symtab_32(FILE* fp)
     fseek(fp,section_off,SEEK_SET);
     num = fread(Eshdr,sizeof(Elf32_Shdr),section_num,fp);
     assert(num == section_num);
-    printf("[Nr]\t Name \t\t Type \t\t Addr \t Off \t Size  \n");
+    printf("[Nr]\t Name \t Type \t Addr \t Off \t Size  \n");
     for(int i=0;i<section_num;i++)
     {
     switch (Eshdr[i].sh_type)
