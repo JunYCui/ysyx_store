@@ -213,7 +213,6 @@ void ftrace_exe(Decode* s)
         }
         else if(strcmp(inst, "jalr") == 0)
         {
-            printf("%d, %ld \n",strcmp(rd,"zero")==0,strlen(rs1));
              if((strcmp(rd,"zero")==0 )&& (strcmp(rs1,"0(ra)") ==0))
              {
                 for(int i=0;i<FUNC_MAXNUM;i++)
@@ -222,7 +221,7 @@ void ftrace_exe(Decode* s)
                 {
                    if(s->dnpc>=func_array[i].addr && s->dnpc<func_array[i].addr+func_array[i].size) 
                    {    
-                    printf("0x%x",s->pc);
+                    printf("0x%x:",s->pc);
                     printf("rt[%s]\n",func_array[i].name);
                     break;
                    }
