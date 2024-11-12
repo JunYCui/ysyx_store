@@ -116,7 +116,7 @@ static void find_strsymtab_32(FILE* fp)
         strcpy(func_array[func_num].name,symname );
         func_array[func_num].size = Esym[i].st_size;
         func_array[func_num].state = true;
-        printf("0x%x\n",func_array[func_num].addr );
+        printf("%s:0x%x\n",func_array[func_num].name,func_array[func_num].addr );
         func_num++;
     }
 
