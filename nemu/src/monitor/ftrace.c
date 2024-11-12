@@ -189,7 +189,7 @@ void ftrace_exe(Decode* s)
     if(inst!= NULL)
     {
     printf("%s\n",inst);
-    rd = strtok(str,",");
+    rd = strtok(NULL,",");
     printf("%s\n",rd);
     }
 }
