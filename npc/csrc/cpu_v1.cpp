@@ -30,7 +30,7 @@ static uint32_t img[CONFIG_MSIZE]PG_ALIGN ={
     0x00128293,    // addi $to  $t0  , 1
     0x00100073     // ebreak
 };
-
+/* verilator lint_off EOFNEWLINE */
 
 void fi() { exit(0); }
 
