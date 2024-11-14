@@ -36,7 +36,7 @@ all:
 	$(BUILD_DIR)/$(TOPNAME)
 
 .PHONY:sim
-sim:  $(CSOURCES) $(VSOURCES) $(NVBOARD_ARCHIVE) 
+sim:  $(CSOURCES) $(VSOURCES) 
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self."
 	@rm -rf $(OBJ_DIR)
