@@ -21,11 +21,14 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
   for(int i=0;i<MUXDEF(CONFIG_RVE, 16, 32);i++)
   {
     if(ref_r->gpr[i] != gpr(i))
+    {
+      printf("0x%x: %s value is error",pc,reg_name(i));
       return false;
+    }
   }
-  if(ref_r->pc != pc)
+  if(ref_r->pc != cpu.pc)
   {
-    printf("%x\n",pc);
+    printf("0x%x: %d value is error",pc, cpu.pc);
     return false;
   }
   return true;
