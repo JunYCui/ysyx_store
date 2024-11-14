@@ -12,6 +12,7 @@
 
 #define CONFIG_MSIZE 0x8000000 
 #define CONFIG_MBASE 0x80000000
+#define RESET_VECTOR CONFIG_MBASE
 
 typedef signed char int8_t;
 typedef unsigned char uint8_t;
