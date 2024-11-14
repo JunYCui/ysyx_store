@@ -35,25 +35,7 @@ static uint32_t img[]={
 
 uint32_t * guest_to_host(uint32_t paddr) { return img + paddr - CONFIG_MBASE; }
 
-static long load_img() {
-  if (img_file == NULL) {
-    return 4096; // built-in image size
-  }
 
-  FILE *fp = fopen(img_file, "rb");
-
-  fseek(fp, 0, SEEK_END);
-  long size = ftell(fp);
-
-  printf("The image is %s, size = %ld \n", img_file, size);
-
-  fseek(fp, 0, SEEK_SET);
-  int ret = fread(guest_to_host(RESET_VECTOR), size, 1, fp);
-  assert(ret == 1);
-
-  fclose(fp);
-  return size;
-}
 
 void fi() { exit(0); }
 
