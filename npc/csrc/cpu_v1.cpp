@@ -24,7 +24,7 @@ typedef unsigned int uint32_t;
 static char *img_file = NULL;
 
 /* verilator lint_off EOFNEWLINE */
-static uint32_t img[CONFIG_MSIZE]={
+static uint32_t img[]={
     0x00100293,    // addi $t0, $zero, 1
     0x00128293,    // addi $to  $t0  , 1   
     0x00128293,    // addi $to  $t0  , 1   
@@ -37,7 +37,6 @@ uint32_t * guest_to_host(uint32_t paddr) { return img + paddr - CONFIG_MBASE; }
 
 static long load_img() {
   if (img_file == NULL) {
-    printf("******ok****");
     return 4096; // built-in image size
   }
 
@@ -75,7 +74,7 @@ Vcpu_v1 *top = new Vcpu_v1{contextp};
 #define MAX_SIM_TIME 100 //定义模拟的时钟边沿数（包括上下边沿）
 vluint64_t sim_time = 0;
 
-int main(int argc,char** argv )
+int main(int argc,char* argv[])
 {
         // 开启波形跟踪
     Verilated::traceEverOn(true);
