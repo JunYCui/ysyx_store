@@ -22,7 +22,7 @@ typedef unsigned int uint32_t;
 
 #define PG_ALIGN __attribute((aligned(4096)))
 
-static uint32_t pmem[CONFIG_MSIZE]PG_ALIGN ={
+static uint32_t img[CONFIG_MSIZE]PG_ALIGN ={
     0x00100293,    // addi $t0, $zero, 1
     0x00128293,    // addi $to  $t0  , 1   
     0x00128293,    // addi $to  $t0  , 1   
@@ -34,7 +34,7 @@ static uint32_t pmem[CONFIG_MSIZE]PG_ALIGN ={
 
 void fi() { exit(0); }
 
-uint32_t * guest_to_host(uint32_t paddr) { return pmem + paddr - CONFIG_MBASE; }
+uint32_t * guest_to_host(uint32_t paddr) { return img + paddr - CONFIG_MBASE; }
 
 static uint32_t pmem_read(uint32_t addr) {
   uint32_t ret = *guest_to_host(addr);
