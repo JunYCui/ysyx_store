@@ -43,11 +43,10 @@ sim:  $(CSOURCES) $(VSOURCES)
 	$(VERILATOR) $(VERILATOR_CFLAGS) \
 		--top-module $(TOPNAME) \
 		$^ \
-		$(addprefix -LDFLAGS , $(LDFLAGS)) \
-		$(addprefix -CFLAGS , $(CFLAGS)) \
 		--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
 
-
+#$(addprefix -LDFLAGS , $(LDFLAGS)) 
+#$(addprefix -CFLAGS , $(CFLAGS)) 
 
 
 
