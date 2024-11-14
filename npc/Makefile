@@ -32,8 +32,8 @@ $(shell mkdir -p $(BUILD_DIR))
 .PHONY:all
 all:$(IMG)
 	@echo "Write this Makefile by your self."
-	make clean
-	make sim
+	rm -rf $(BUILD_DIR) *.vcd
+	make sim \
 	$(BUILD_DIR)/$(TOPNAME)
 
 .PHONY:sim
@@ -50,9 +50,6 @@ sim:  $(CSOURCES) $(VSOURCES)
 #$(addprefix -CFLAGS , $(CFLAGS)) 
 
 
-
-clean:
-	rm -rf $(BUILD_DIR) *.vcd
 
 #waves:*.vcd
 #	gtkwave *.vcd
