@@ -21,7 +21,7 @@ typedef signed int int32_t;
 typedef unsigned int uint32_t;
 
 #define PG_ALIGN __attribute((aligned(4096)))
-
+/* verilator lint_off EOFNEWLINE */
 static uint32_t img[CONFIG_MSIZE]PG_ALIGN ={
     0x00100293,    // addi $t0, $zero, 1
     0x00128293,    // addi $to  $t0  , 1   
