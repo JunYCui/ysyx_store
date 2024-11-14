@@ -30,14 +30,14 @@ IMG ?=
 $(shell mkdir -p $(BUILD_DIR))
 
 .PHONY:all
-all:
+all:$(IMG)
 	@echo "Write this Makefile by your self."
 	make clean
 	make sim
 	$(BUILD_DIR)/$(TOPNAME)
 
 .PHONY:sim
-sim:  $(CSOURCES) $(VSOURCES) $(IMG)
+sim:  $(CSOURCES) $(VSOURCES) 
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self."
 	@rm -rf $(OBJ_DIR)
