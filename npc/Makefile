@@ -26,6 +26,7 @@ INCFLAGS = $(addprefix -I, $(INC_PATH))
 
 CFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
 
+IMG ?=
 $(shell mkdir -p $(BUILD_DIR))
 
 .PHONY:all
@@ -36,7 +37,7 @@ all:
 	$(BUILD_DIR)/$(TOPNAME)
 
 .PHONY:sim
-sim:  $(CSOURCES) $(VSOURCES) 
+sim:  $(CSOURCES) $(VSOURCES) $(IMG)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self."
 	@rm -rf $(OBJ_DIR)
