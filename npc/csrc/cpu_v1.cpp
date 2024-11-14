@@ -75,7 +75,7 @@ int main(int argc,char** argv )
     if(top->clk == 0)
     {
     top->inst = pmem_read(top->pc);
-    printf(" %d ",top->inst );
+    printf(" %x ",top->inst );
     
     
     }
