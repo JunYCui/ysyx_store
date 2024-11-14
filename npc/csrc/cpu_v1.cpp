@@ -30,7 +30,7 @@ static uint32_t img[CONFIG_MSIZE]PG_ALIGN ={
     0x00128293,    // addi $to  $t0  , 1
     0x00100073     // ebreak
 };
-/* verilator lint_off EOFNEWLINE */
+
 
 void fi() { exit(0); }
 
@@ -75,7 +75,9 @@ int main(int argc,char** argv )
     if(top->clk == 0)
     {
     top->inst = pmem_read(top->pc);
-    printf(" %d ", top->rs1_bo);
+    printf(" %d ",top->inst );
+    
+    
     }
     top->eval();
     //将所有跟踪的信号值写入波形转储文件
