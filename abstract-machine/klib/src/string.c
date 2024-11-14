@@ -70,7 +70,7 @@ int strcmp(const char *s1, const char *s2) {
   {
     if(s1[i] == '\0')
       return 0;
-    i++;
+    i++;panic("Not implemented");
   }
   return s1[i]-s2[i];
 }
@@ -120,7 +120,32 @@ void *memmove(void *dst, const void *src, size_t n) {
 }
 
 void *memcpy(void *out, const void *in, size_t n) {
-  panic("Not implemented");
+  char *p0=out;
+  const char*p1 = in;
+  size_t i=0;
+  size_t len = strlen(p1);
+  if(len<n)
+  {
+    while(i<len)
+    {
+      p0[i] = p1[i];
+      i++;
+    }  
+    while(i<n)
+    {
+      p0[i] = 0x00;
+      i++;
+    }
+  }
+  else 
+  {
+    while(i<n)
+  {
+    p0[i]=p1[i];
+    i++;
+  }
+  }
+
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {
