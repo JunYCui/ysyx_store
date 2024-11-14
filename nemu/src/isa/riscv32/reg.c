@@ -22,11 +22,11 @@ const char *regs[] = {
   "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
   "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
 };
-#define regs_len sizeof(regs)/sizeof(regs[0])
+
 void isa_reg_display() 
 {
   uint16_t i;
-  for(i = 0;i<regs_len;i++)
+  for(i = 0;i<MUXDEF(CONFIG_RVE, 16, 32);i++)
   printf("%s: \t 0x%-10x \t %-10d \n",reg_name(i),gpr(i),gpr(i));
 }
 
@@ -34,11 +34,10 @@ word_t isa_reg_str2val(const char *s, bool *success)
 {
   uint16_t i;
   *success = false;
-  for(i = 0;i<regs_len;i++)
+  for(i = 0;i<MUXDEF(CONFIG_RVE, 16, 32);i++)
   {
     if(strcmp(s,reg_name(i))== 0 )
     {
-      
       *success = true;
       return gpr(i);
     }
