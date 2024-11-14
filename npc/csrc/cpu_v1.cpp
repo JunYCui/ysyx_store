@@ -63,7 +63,7 @@ int main(int argc,char* argv[])
     // 实例化一个 VerilatedVcdC 类型的对象 m_trace，用于波形跟踪
     VerilatedVcdC *m_trace = new VerilatedVcdC;
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
-    long size = load_img();
+
 
     top->trace(m_trace, 5);
     m_trace->open("waveform.vcd");
@@ -81,7 +81,7 @@ int main(int argc,char* argv[])
     if(top->clk == 0)
     {
     top->inst = pmem_read(top->pc);
-    printf(" %x ",top->inst );
+    printf(" %ld ",sizeof(img) );
     
     
     }
