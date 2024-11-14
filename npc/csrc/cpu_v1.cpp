@@ -37,6 +37,7 @@ uint32_t * guest_to_host(uint32_t paddr) { return img + paddr - CONFIG_MBASE; }
 
 static long load_img() {
   if (img_file == NULL) {
+    printf("******ok****");
     return 4096; // built-in image size
   }
 
