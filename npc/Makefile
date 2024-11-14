@@ -15,7 +15,7 @@ BIN = $(BUILD_DIR)/$(TOPNAME)
 
 VERILATOR = verilator
 
-VERILATOR_CFLAGS += -Wall --cc -MMD --build \
+VERILATOR_CFLAGS += -Wall --cc -MMD --build --trace\
 			-O3 --x-assign fast --x-initial fast --noassert 
 
 LDFLAGS += -lSDL2 -lSDL2_image
