@@ -6,7 +6,7 @@ CSOURCES=$(shell find $(abspath ./csrc) -name "$(TOPNAME).c" -or -name "$(TOPNAM
 
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
-CSOURCES += $(SRC_AUTO_BIND)
+#CSOURCES += $(SRC_AUTO_BIND)
 CONSTR = constrain/$(TOPNAME).nxdc
 
 BUILD_DIR = ./build
