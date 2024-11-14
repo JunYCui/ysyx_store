@@ -20,6 +20,7 @@ typedef unsigned short int uint16_t;
 typedef signed int int32_t;
 typedef unsigned int uint32_t;
 
+static char *img_file = NULL;
 
 /* verilator lint_off EOFNEWLINE */
 static uint32_t img[CONFIG_MSIZE]={
@@ -31,10 +32,32 @@ static uint32_t img[CONFIG_MSIZE]={
     0x00100073     // ebreak
 };
 
+uint32_t * guest_to_host(uint32_t paddr) { return img + paddr - CONFIG_MBASE; }
+
+static long load_img() {
+  if (img_file == NULL) {
+    Log("No image is given. Use the default build-in image.");
+    return 4096; // built-in image size
+  }
+
+  FILE *fp = fopen(img_file, "rb");
+  Assert(fp, "Can not open '%s'", img_file);
+
+  fseek(fp, 0, SEEK_END);
+  long size = ftell(fp);
+
+  Log("The image is %s, size = %ld", img_file, size);
+
+  fseek(fp, 0, SEEK_SET);
+  int ret = fread(guest_to_host(RESET_VECTOR), size, 1, fp);
+  assert(ret == 1);
+
+  fclose(fp);
+  return size;
+}
 
 void fi() { exit(0); }
 
-uint32_t * guest_to_host(uint32_t paddr) { return img + paddr - CONFIG_MBASE; }
 
 static uint32_t pmem_read(uint32_t addr) {
   uint32_t ret = *guest_to_host(addr);
@@ -59,6 +82,8 @@ int main(int argc,char** argv )
     // 实例化一个 VerilatedVcdC 类型的对象 m_trace，用于波形跟踪
     VerilatedVcdC *m_trace = new VerilatedVcdC;
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
+    long size = load_img();
+
     top->trace(m_trace, 5);
     m_trace->open("waveform.vcd");
     top->clk = 0;
