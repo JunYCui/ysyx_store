@@ -33,19 +33,19 @@ NPC_EXEC = $()
 
 
 .PHONY:sim
-sim:  $(CSOURCES) $(VSOURCES) 
+sim:all
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
+	@echo "Write this Makefile by your self."
+	./build/$(TOPNAME)
+
+.PHONY:all
+all:$(CSOURCES) $(VSOURCES) 
 	@echo "Write this Makefile by your self."
 	@rm -rf $(OBJ_DIR)
 	$(VERILATOR) $(VERILATOR_CFLAGS) \
-		--top-module $(TOPNAME) \
+	--top-module $(TOPNAME) \
 		$^ \
-		--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
-
-.PHONY:all
-all:sim
-	@echo "Write this Makefile by your self."
-	./build/$(TOPNAME)
+		--Mdir $(OBJ_DIR)  --exe \
 
 #$(addprefix -LDFLAGS , $(LDFLAGS)) 
 #$(addprefix -CFLAGS , $(CFLAGS)) 
