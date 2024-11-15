@@ -32,12 +32,6 @@ $(shell mkdir -p $(BUILD_DIR))
 NPC_EXEC = $()
 
 
-.PHONY:all
-all:sim
-	@echo "Write this Makefile by your self."
-	./build/$(TOPNAME)
-
-
 .PHONY:sim
 sim:  $(CSOURCES) $(VSOURCES) 
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
@@ -47,6 +41,11 @@ sim:  $(CSOURCES) $(VSOURCES)
 		--top-module $(TOPNAME) \
 		$^ \
 		--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
+
+.PHONY:all
+all:sim
+	@echo "Write this Makefile by your self."
+	./build/$(TOPNAME)
 
 #$(addprefix -LDFLAGS , $(LDFLAGS)) 
 #$(addprefix -CFLAGS , $(CFLAGS)) 
