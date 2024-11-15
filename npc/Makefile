@@ -30,13 +30,13 @@ IMG ?=
 $(shell mkdir -p $(BUILD_DIR))
 
 NEMU_EXEC := $(OBJ_DIR) $(IMG)
-run-env: $(BINARY) $(DIFF_REF_SO)
+
 
 .PHONY:all
-all:run-env
+all:
 	make sim
 	@echo "Write this Makefile by your self."
-#$(NEMU_EXEC)
+	$(NEMU_EXEC)
 
 
 .PHONY:sim
