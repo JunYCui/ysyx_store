@@ -9,7 +9,7 @@ SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 #CSOURCES += $(SRC_AUTO_BIND)
 CONSTR = constrain/$(TOPNAME).nxdc
 
-BUILD_DIR = ./build
+BUILD_DIR = $(NPC_HOME)/build
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
 
@@ -29,10 +29,11 @@ CFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
 IMG ?=
 $(shell mkdir -p $(BUILD_DIR))
 
+NEMU_EXEC := $(OBJ_DIR) $(ARGS) $(IMG)
+
 .PHONY:all
-all:$(IMG)
-	@echo "Write this Makefile by your self."
-	$(BUILD_DIR)/$(TOPNAME)
+all:$(OBJ_DIR) $(IMG)
+#@echo "Write this Makefile by your self."
 
 .PHONY:sim
 sim:  $(CSOURCES) $(VSOURCES) 
