@@ -29,14 +29,14 @@ CFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
 IMG ?=
 $(shell mkdir -p $(BUILD_DIR))
 
-NPC_EXEC = $(shell find $(abspath ./build) -name "$(TOPNAME)" ) $(IMG)
+NPC_EXEC = 
 
 
 .PHONY:all
-all:
+all:sim
 	make sim
 	@echo "Write this Makefile by your self."
-	$(NEMU_EXEC)
+	$(NPC_EXEC)
 
 
 .PHONY:sim
