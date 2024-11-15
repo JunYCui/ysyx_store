@@ -35,7 +35,7 @@ NPC_EXEC = $()
 .PHONY:sim
 sim:all
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	@echo "Write this Makefile by your self."
+	@echo "Write this Makefile by your self." \
 	./build/$(TOPNAME)
 
 .PHONY:all
