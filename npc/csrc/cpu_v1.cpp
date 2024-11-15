@@ -24,7 +24,7 @@ typedef unsigned int uint32_t;
 static char *img_file = NULL;
 
 /* verilator lint_off EOFNEWLINE */
-static uint32_t img[]={
+static uint32_t img[CONFIG_MSIZE]={
     0x00100293,    // addi $t0, $zero, 1
     0x00128293,    // addi $to  $t0  , 1   
     0x00128293,    // addi $to  $t0  , 1   
@@ -52,6 +52,7 @@ static long load_img() {
   }
 
   FILE *fp = fopen(img_file, "rb");
+
 
   fseek(fp, 0, SEEK_END);
   long size = ftell(fp);
