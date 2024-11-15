@@ -29,11 +29,15 @@ CFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
 IMG ?=
 $(shell mkdir -p $(BUILD_DIR))
 
-NEMU_EXEC := $(OBJ_DIR) $(ARGS) $(IMG)
+NEMU_EXEC := $(OBJ_DIR) $(IMG)
+run-env: $(BINARY) $(DIFF_REF_SO)
 
 .PHONY:all
-all:$(OBJ_DIR) $(IMG)
-#@echo "Write this Makefile by your self."
+all:run-env
+	make sim
+	@echo "Write this Makefile by your self."
+#$(NEMU_EXEC)
+
 
 .PHONY:sim
 sim:  $(CSOURCES) $(VSOURCES) 
