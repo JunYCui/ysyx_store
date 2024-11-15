@@ -36,7 +36,7 @@ NPC_EXEC = $()
 sim:all
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self." 
-	$(NPC_HOME)/build/$(TOPNAME)
+	@./build/$(TOPNAME)
 
 .PHONY:all
 all:$(CSOURCES) $(VSOURCES) 
