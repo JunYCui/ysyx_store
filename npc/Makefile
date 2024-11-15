@@ -45,7 +45,7 @@ all:$(CSOURCES) $(VSOURCES)
 	$(VERILATOR) $(VERILATOR_CFLAGS) \
 	--top-module $(TOPNAME) \
 		$^ \
-		--Mdir $(OBJ_DIR)  --exe \
+		--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
 
 #$(addprefix -LDFLAGS , $(LDFLAGS)) 
 #$(addprefix -CFLAGS , $(CFLAGS)) 
