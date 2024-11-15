@@ -116,13 +116,13 @@ int main(int argc,char* argv[])
     top->rst = 1;
     top->clk = 0;
     top->eval();
+    printf("0x%x \n",img[1]);    
     while(!sim_time < MAX_SIM_TIME)
     {
     top->clk ^=1;
     if(top->clk == 0)
     {
     top->inst = pmem_read(top->pc);  
-    printf("0x%x \n",top->inst);    
     }
     top->eval();
     //将所有跟踪的信号值写入波形转储文件
