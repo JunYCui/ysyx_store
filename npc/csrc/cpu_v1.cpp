@@ -122,7 +122,7 @@ int main(int argc,char* argv[])
     if(top->clk == 0)
     {
     top->inst = pmem_read(top->pc);  
-    printf(" %d \n",top->inst);    
+    printf("0x%x \n",top->inst);    
     }
     top->eval();
     //将所有跟踪的信号值写入波形转储文件
