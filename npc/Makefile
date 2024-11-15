@@ -29,14 +29,14 @@ CFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
 IMG ?=
 $(shell mkdir -p $(BUILD_DIR))
 
-NPC_EXEC = $()
+NPC_EXEC = $(BIN) $(IMG)
 
 
 .PHONY:sim
 sim:all
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self." 
-	@./build/$(TOPNAME)
+	$(NPC_EXEC)
 
 .PHONY:all
 all:$(CSOURCES) $(VSOURCES) 
