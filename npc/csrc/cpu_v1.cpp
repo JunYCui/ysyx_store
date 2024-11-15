@@ -64,7 +64,7 @@ int main(int argc,char* argv[])
     VerilatedVcdC *m_trace = new VerilatedVcdC;
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
 
-  printf(" %ld ",sizeof(img) );
+  printf(" %ld \n",sizeof(img) );
     top->trace(m_trace, 5);
     m_trace->open("waveform.vcd");
     top->clk = 0;
