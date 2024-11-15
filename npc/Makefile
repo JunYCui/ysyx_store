@@ -29,7 +29,7 @@ CFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
 IMG ?=
 $(shell mkdir -p $(BUILD_DIR))
 
-NEMU_EXEC := $(OBJ_DIR) $(IMG)
+NPC_EXEC = $(shell find $(abspath ./build) -name "$(TOPNAME)" ) $(IMG)
 
 
 .PHONY:all
