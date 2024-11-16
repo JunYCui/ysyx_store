@@ -10,7 +10,7 @@
 #include "Vcpu_ysyx_24100029__Dpi.h"
 #include "getopt.h"
 
-#define CONFIG_MSIZE 0x8000000 
+#define CONFIG_MSIZE 0x8000000
 #define CONFIG_MBASE 0x80000000
 #define RESET_VECTOR CONFIG_MBASE
 
@@ -21,29 +21,43 @@ typedef unsigned short int uint16_t;
 typedef signed int int32_t;
 typedef unsigned int uint32_t;
 
+static uint8_t *pmem = NULL;
 static char *img_file = NULL;
 
 /* verilator lint_off EOFNEWLINE */
-static uint32_t img[CONFIG_MSIZE]={
-    0x00100293,    // addi $t0, $zero, 1
-    0x00128293,    // addi $to  $t0  , 1   
-    0x00128293,    // addi $to  $t0  , 1   
-    0x00128293,    // addi $to  $t0  , 1   
-    0x00128293,    // addi $to  $t0  , 1
-    0x00100073     // ebreak
+static const uint32_t img [] = {
+  0x00000297,  // auipc t0,0
+  0x00028823,  // sb  zero,16(t0)
+  0x0102c503,  // lbu a0,16(t0)
+  0x00100073,  // ebreak (used as nemu_trap)
+  0xdeadbeef,  // some data
 };
 
-uint32_t * guest_to_host(uint32_t paddr) { return img + paddr - CONFIG_MBASE; }
+uint8_t* guest_to_host(uint32_t paddr) { return pmem + paddr - CONFIG_MBASE; }
+uint32_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
 
+void init_mem() {
+  pmem = (uint8_t*)malloc(CONFIG_MSIZE);
+  assert(pmem);
+}
 
+static inline uint32_t host_read(void *addr, int len) {
+  switch (len) {
+    case 1: return *(uint8_t  *)addr;
+    case 2: return *(uint16_t *)addr;
+    case 4: return *(uint32_t *)addr;
+    default: return 0;
+  }
+}
 
+static uint32_t pmem_read(uint32_t addr, int len) {
+  uint32_t ret = host_read(guest_to_host(addr), len);
+
+  return ret;
+}
 void fi() { exit(0); }
 
 
-static uint32_t pmem_read(uint32_t addr) {
-  uint32_t ret = *guest_to_host(addr);
-  return ret;
-}
 
 static long load_img() {
   if (img_file == NULL) {
@@ -100,6 +114,8 @@ int main(int argc,char* argv[])
     // 实例化一个 VerilatedVcdC 类型的对象 m_trace，用于波形跟踪
     VerilatedVcdC *m_trace = new VerilatedVcdC;
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
+    init_mem();
+
     parse_args(argc,argv);
     
     long size = load_img();
@@ -122,7 +138,7 @@ int main(int argc,char* argv[])
     top->clk ^=1;
     if(top->clk == 0)
     {
-    top->inst = pmem_read(top->pc);  
+    top->inst = pmem_read(top->pc,4);  
     }
     top->eval();
     //将所有跟踪的信号值写入波形转储文件
