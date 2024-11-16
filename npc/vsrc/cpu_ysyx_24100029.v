@@ -32,9 +32,9 @@ wire [31:0]npc      ;
 wire [31:0]EX_result;
 
 assign rs1_bo = rs1_value;
-assign snpc = pc + 1;
+assign snpc = pc + 4;
 assign npc = (jump_flag == 1'd1)? dnpc:snpc ;
-assign rd_value = (jump_flag == 1'd1)? pc+1 : EX_result ;
+assign rd_value = (jump_flag == 1'd1)? pc+4 : EX_result ;
 assign dnpc = EX_result;
 
 always @(posedge clk) begin
