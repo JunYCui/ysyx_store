@@ -2,12 +2,12 @@
 #include "stdlib.h"
 #include "assert.h"
 
-#include "Vcpu_v1.h"
+#include "Vcpu_ysyx_24100029.h"
 #include <verilated.h>
 #include <verilated_vcd_c.h>  //VCD波形输出头文件
 
 #include "svdpi.h"
-#include "Vcpu_v1__Dpi.h"
+#include "Vcpu_ysyx_24100029__Dpi.h"
 #include "getopt.h"
 
 #define CONFIG_MSIZE 0x8000000 
@@ -87,7 +87,7 @@ static int parse_args(int argc, char *argv[]) {
 VerilatedContext *contextp = new VerilatedContext;
 
 // 构建一个名为top的仿真模型
-Vcpu_v1 *top = new Vcpu_v1{contextp};
+Vcpu_ysyx_24100029 *top = new Vcpu_ysyx_24100029{contextp};
 
 
 #define MAX_SIM_TIME 100 //定义模拟的时钟边沿数（包括上下边沿）

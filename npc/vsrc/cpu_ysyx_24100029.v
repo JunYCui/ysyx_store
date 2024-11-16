@@ -1,7 +1,7 @@
 import "DPI-C" function void fi();
 
 
-module cpu_v1
+module cpu_ysyx_24100029
 (
     input  clk          ,
     input  rst          ,
@@ -11,7 +11,6 @@ module cpu_v1
 );
 
 
-parameter PC_MAX = 32'h80000005;
  
 
 wire [4 :0]rs1   ;
@@ -20,23 +19,29 @@ wire [4 :0]rd    ;
 wire [31:0]imm   ;
 wire [2: 0]funct3;
 wire [6: 0]opcode;
+wire reg_wen;
+wire jump_flag;
 
 wire [31:0]rs1_value;
 wire [31:0]rs2_value;
 
-wire [31:0]rd_value;
-
+wire [31:0]rd_value ;
+wire [31:0]snpc     ;
+wire [31:0]dnpc     ;
+wire [31:0]npc      ;
+wire [31:0]EX_result;
 
 assign rs1_bo = rs1_value;
-
+assign snpc = pc + 1;
+assign npc = (jump_flag == 1'd1)? dnpc:snpc ;
+assign rd_value = (jump_flag == 1'd1)? pc+1 : EX_result ;
+assign dnpc = EX_result;
 
 always @(posedge clk) begin
     if(!rst)
     pc <= 32'h80000000;
-    else if(pc == PC_MAX)
-    pc <= 32'h80000000;
     else 
-    pc <= pc + 1'b1;
+    pc <= npc;
 end
 
 always @(*)
@@ -48,6 +53,7 @@ end
  (
     .clk      (clk)         ,
     .rst      (rst)         ,
+    .pc       (pc)          ,
 
     .funct3   (funct3)      ,
     .opcode   (opcode)      ,
@@ -56,7 +62,7 @@ end
     .rs1_value(rs1_value)   ,
     .rs2_value(rs2_value)   ,
 
-    .rd_value (rd_value)    
+    .EX_result (EX_result)  
 );
 
 
@@ -67,7 +73,7 @@ Reg_Stack Reg_Stack_inst0(
     .rs2       (rs2     )       ,
     .rd        (rd      )       ,
     .rd_value  (rd_value)       ,
-    .wen       (rst)            ,
+    .wen       (reg_wen)        ,
 
     .rs1_value (rs1_value)      ,
     .rs2_value (rs2_value)
@@ -81,7 +87,9 @@ IDU IDU_inst0(
     .rd      (rd     ),
     .imm     (imm    ),
     .funct3  (funct3 ),
-    .opcode  (opcode )
+    .opcode  (opcode ),
+    .reg_wen (reg_wen),
+    .jump_flag(jump_flag)
 );
 
 

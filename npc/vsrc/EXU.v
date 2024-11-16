@@ -3,6 +3,7 @@
 module EXU (
     input clk                 ,
     input rst                 ,
+    input [31:0]pc            ,
 
     input [2:0]funct3         ,
     input [6:0]opcode         ,
@@ -11,36 +12,56 @@ module EXU (
     input [31:0]rs1_value     ,
     input [31:0]rs2_value     ,
 
-    output [31:0]rd_value     
+    output [31:0]EX_result    
 );
 
 
-localparam i2_NR_KEY    = 2     ;
-localparam i2_KEY_LEN   = 7     ;
-localparam i2_DATA_LEN  = 32    ;
+localparam NR_KEY_add2   =  5     ;
+localparam KEY_LEN_add2   = 7     ;
+localparam DATA_LEN_add2  = 32    ;
+
+localparam NR_KEY_add1   =  5     ;
+localparam KEY_LEN_add1   = 7     ;
+localparam DATA_LEN_add1  = 32    ;
+
 
 
 wire [31:0]add_1;
 wire [31:0]add_2;
-wire [31:0]ALU_res;
+
 
 wire [31:0]imm_12u;
 wire [31:0]imm_12i;
+
+wire [31:0]imm_20u;
+wire [31:0]imm_20i;
 
 wire overflow;
 wire compare;
 
 
-assign imm_12u = imm;
-assign rd_value = ALU_res;
-assign add_1 = rs1_value;
+assign imm_12u = {20'd0,imm[11:0]};
+assign imm_20u = {12'd0,imm[19:0]};
 
 /* verilator lint_off IMPLICIT */
 
-MuxKeyInternal #(i2_NR_KEY, i2_KEY_LEN, i2_DATA_LEN, 0) i0 (add_2, opcode, {i2_DATA_LEN{1'b0}}, 
+MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, opcode, {DATA_LEN_add2{1'b0}}, 
 {
-`R_opcode,   rs2_value,
-`I1_opcode,  imm_12i
+`R_opcode_ysyx_24100029,   rs2_value            ,
+`I1_opcode_ysyx_24100029,  imm_12i              ,
+`U0_opcode_ysyx_24100029,  imm_20i              ,
+`U1_opcode_ysyx_24100029,  {imm[19:0],12'd0}    ,
+`J0_opcode_ysyx_24100029,  imm_20i              
+}
+);
+
+MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (add_1, opcode, {DATA_LEN_add1{1'b0}}, 
+{
+`R_opcode_ysyx_24100029,   rs1_value    ,
+`I1_opcode_ysyx_24100029,  rs1_value    ,
+`U0_opcode_ysyx_24100029,  32'd0        ,
+`U1_opcode_ysyx_24100029,  pc           ,
+`J0_opcode_ysyx_24100029,  pc           
 }
 );
 
@@ -52,7 +73,7 @@ ALU #(
     .d1     (add_1)     ,
     .d2     (add_2)     ,
     .choice (funct3)    ,
-    .res    (ALU_res)   ,
+    .res    (EX_result) ,
     .overflow(overflow) ,
     .compare (compare) 
 
@@ -66,6 +87,17 @@ sext #(
     .data(imm[11:0])          ,
     .sext_data(imm_12i)
 );
+
+sext #(
+    .DATA_WIDTH(20),
+    .OUT_WIDTH(32)
+) sext_i20
+(
+    .data(imm[19:0])          ,
+    .sext_data(imm_20i)
+);
+
+
 
 endmodule
 
