@@ -1,8 +1,9 @@
 TOPNAME = cpu_ysyx_24100029
+INC_PATH ?= $(NPC_HOME)/include
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )
-CSOURCES=$(shell find $(abspath ./csrc) -name "$(TOPNAME).c" -or -name "$(TOPNAME).cc" -or -name "$(TOPNAME).cpp")
+CSOURCES=$(shell find $(abspath ./csrc/cpu) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
 
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
@@ -44,11 +45,11 @@ all:$(CSOURCES) $(VSOURCES)
 	@rm -rf $(OBJ_DIR) *.vcd
 	$(VERILATOR) $(VERILATOR_CFLAGS) \
 	--top-module $(TOPNAME) \
-		$^ \
-		--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
+	$^ \
+	$(addprefix -CFLAGS , $(CFLAGS))  $(addprefix -LDFLAGS , $(LDFLAGS)) \
+	--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
 
-#$(addprefix -LDFLAGS , $(LDFLAGS)) 
-#$(addprefix -CFLAGS , $(CFLAGS)) 
+
 
 clean: 
 	rm -rf $(BUILD_DIR) *.vcd

@@ -1,0 +1,86 @@
+#include "init.h"
+
+uint8_t *pmem = NULL;
+char *img_file = NULL;
+
+static const uint32_t img [] = {
+  0x00000297,  // auipc t0,0
+  0x00028823,  // sb  zero,16(t0)
+  0x0102c503,  // lbu a0,16(t0)
+  0x00100073,  // ebreak (used as nemu_trap)
+  0xdeadbeef,  // some data
+};
+
+static void init_mem() {
+  pmem = (uint8_t*)malloc(CONFIG_MSIZE);
+  assert(pmem);
+}
+
+
+static uint8_t* guest_to_host(uint32_t paddr) { return pmem + paddr - CONFIG_MBASE; }
+
+
+static inline uint32_t host_read(void *addr, int len) {
+  switch (len) {
+    case 1: return *(uint8_t  *)addr;
+    case 2: return *(uint16_t *)addr;
+    case 4: return *(uint32_t *)addr;
+    default: return 0;
+  }
+}
+
+uint32_t pmem_read(uint32_t addr, int len) {
+  uint32_t ret = host_read(guest_to_host(addr), len);
+  return ret;
+}
+
+static int parse_args(int argc, char *argv[]) {
+  const struct option table[] = {
+    {0          , 0                , NULL,  0 },
+  };
+  int o;
+  while ( (o = getopt_long(argc, argv, "-bhl:d:p:e:", table, NULL)) != -1) {
+    switch (o) {
+      case 1: img_file = optarg; return 0;
+      default:
+        printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
+        printf("\n");
+        exit(0);
+    }
+  }
+  return 0;
+}
+
+static void load_img() {
+  if (img_file == NULL) {
+    printf("No image is given. Use the default build-in image. \n");
+
+  }
+
+  FILE *fp = fopen(img_file, "rb");
+
+
+  fseek(fp, 0, SEEK_END);
+  long size = ftell(fp);
+
+  printf("The image is %s, size = %ld \n", img_file, size);
+
+  fseek(fp, 0, SEEK_SET);
+  int ret = fread(guest_to_host(RESET_VECTOR), size, 1, fp);
+  assert(ret == 1);
+
+  fclose(fp);
+
+}
+
+
+
+
+void init_monitor(int argc, char *argv[])
+{
+  init_mem();
+
+  parse_args(argc, argv);
+
+  load_img();
+}
