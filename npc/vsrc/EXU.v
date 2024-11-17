@@ -51,7 +51,7 @@ MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, opcode,
 `I1_opcode_ysyx_24100029,  imm_12i              ,
 `U0_opcode_ysyx_24100029,  imm_20i              ,
 `U1_opcode_ysyx_24100029,  {imm[19:0],12'd0}    ,
-`J0_opcode_ysyx_24100029,  imm_20i<<1              
+`J0_opcode_ysyx_24100029,  imm_20i              
 }
 );
 
