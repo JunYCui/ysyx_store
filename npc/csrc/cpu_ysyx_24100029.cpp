@@ -133,6 +133,7 @@ int main(int argc,char* argv[])
     sim_time++;
     top->rst = 1;
     top->clk = 0;
+    top->inst = pmem_read(top->pc,4);  
     top->eval();
     sim_time++;
     printf("0x%x \n",img[1]);    
