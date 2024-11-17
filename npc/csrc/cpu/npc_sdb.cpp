@@ -134,7 +134,9 @@ static int cmd_x(char *args)
   }
   for(i=0;i<n;i++)
   {
-    printf(" %x \n",paddr_read(address_base+i*4,4)); //读取内存函数
+    printf("%d \n", i);
+    printf(" 0x%x \n",paddr_read(address_base+i*4,4)); //读取内存函数
+    printf(" %d \n",paddr_read(address_base+i*4,4));
   }
    return 0;
 }
