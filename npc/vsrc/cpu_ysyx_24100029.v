@@ -43,13 +43,12 @@ always @(posedge clk) begin
     else 
     pc <= npc;
 end
-/*
+
 always @(*)
 begin
     if(inst == 32'h00100073)
         fi();
 end
-*/
  EXU EXU_inst0
  (
     .clk      (clk)         ,
