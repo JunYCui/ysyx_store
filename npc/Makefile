@@ -41,7 +41,7 @@ sim:all
 .PHONY:all
 all:$(CSOURCES) $(VSOURCES) 
 	@echo "Write this Makefile by your self."
-	@rm -rf $(OBJ_DIR)
+	@rm -rf $(OBJ_DIR) *.vcd
 	$(VERILATOR) $(VERILATOR_CFLAGS) \
 	--top-module $(TOPNAME) \
 		$^ \
