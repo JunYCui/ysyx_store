@@ -59,17 +59,15 @@ void fi() { exit(0); }
 
 
 
-static long load_img() {
+static void load_img() {
   if (img_file == NULL) {
     printf("No image is given. Use the default build-in image. \n");
-    return 4096; // built-in image size
   }
 
   FILE *fp = fopen(img_file, "rb");
-
+  long size = ftell(fp);
 
   fseek(fp, 0, SEEK_END);
-  long size = ftell(fp);
 
   printf("The image is %s, size = %ld \n", img_file, size);
 
@@ -78,7 +76,6 @@ static long load_img() {
   assert(ret == 1);
 
   fclose(fp);
-  return size;
 }
 
 static int parse_args(int argc, char *argv[]) {
@@ -118,10 +115,6 @@ int main(int argc,char* argv[])
 
     parse_args(argc,argv);
     
-    long size = load_img();
-    
-    printf("%ld \n",size);
-
     top->trace(m_trace, 5);
     m_trace->open("waveform.vcd");
     top->clk = 0;
@@ -139,13 +132,13 @@ int main(int argc,char* argv[])
     top->eval();
     m_trace->dump(sim_time);
     sim_time++;
-    printf("0x%x \n",img[1]);    
     while(!sim_time < MAX_SIM_TIME)
     {
     top->clk ^=1;
     if(top->clk == 0)
     {
     top->inst = pmem_read(top->pc,4);  
+    printf("npc = 0x%x\n",top->rs1_bo);
     }
     top->eval();
     //将所有跟踪的信号值写入波形转储文件

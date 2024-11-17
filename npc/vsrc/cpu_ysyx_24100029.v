@@ -31,7 +31,7 @@ wire [31:0]dnpc     ;
 wire [31:0]npc      ;
 wire [31:0]EX_result;
 
-assign rs1_bo = rs1_value;
+assign rs1_bo = npc;
 assign snpc = pc + 4;
 assign npc = (jump_flag == 1'd1)? dnpc:snpc ;
 assign rd_value = (jump_flag == 1'd1)? pc+4 : EX_result ;
