@@ -127,14 +127,17 @@ int main(int argc,char* argv[])
     top->clk = 0;
     top->rst = 0;
     top->eval();
+    m_trace->dump(sim_time);
     sim_time++;
     top->clk = 1;
     top->eval();
+    m_trace->dump(sim_time);
     sim_time++;
     top->rst = 1;
     top->clk = 0;
     top->inst = pmem_read(top->pc,4);  
     top->eval();
+    m_trace->dump(sim_time);
     sim_time++;
     printf("0x%x \n",img[1]);    
     while(!sim_time < MAX_SIM_TIME)
