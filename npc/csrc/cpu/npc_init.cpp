@@ -1,6 +1,8 @@
 #include "npc_init.h"
 #include "npc_memory.h"
 
+void init_sdb();
+
 uint8_t *pmem = NULL;
 char *img_file = NULL;
 
@@ -66,4 +68,6 @@ void init_monitor(int argc, char *argv[])
   parse_args(argc, argv);
 
   load_img();
+
+  init_sdb();
 }
