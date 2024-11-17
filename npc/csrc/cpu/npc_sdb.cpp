@@ -1,9 +1,12 @@
 #include "npc_common.h"
+#include "npc_memory.h"
 #include "npc_cpu_exec.h"
 #include "npc_sdb.h"
 #include "npc_reg.h"
 #include <readline/readline.h>
 #include <readline/history.h>
+
+word_t expr(char *e, bool *success);
 
 static int is_batch_mode = false;
 
@@ -91,6 +94,72 @@ static int cmd_info(char *args)
   return 0;
 }
 
+static int cmd_x(char *args)
+{
+  char *arg = strtok(NULL, " ");  
+  char *arg1 = strtok(NULL, " ");
+  char *arg2 = strtok(NULL, " ");
+  bool success;
+  if(arg2 != NULL)
+  {
+    printf(" parameters are too much \n ");
+    return 0;
+  }
+  int16_t n,i;
+  uint32_t address_base;
+  if(arg ==  NULL )
+  {
+    printf(" lack parameter \n");
+    return 0;
+  }
+  else 
+  {
+    n = atoi(arg);
+  }
+
+   if(arg1 ==  NULL )
+  {
+    printf(" lack parameter \n");
+    return 0;
+  }
+  else 
+  {
+    address_base = expr(arg1,&success);
+    if(success == false)
+    {
+      printf("expression is error");
+      return 0 ;
+    }
+  }
+  for(i=0;i<n;i++)
+  {
+    printf(" %x \n",paddr_read(address_base+i*4,4)); //读取内存函数
+  }
+   return 0;
+}
+
+static int cmd_p(char *args)
+{
+  bool success;
+  char *arg = strtok(NULL, "");
+  int exp_value;
+ if(arg == NULL)
+  {
+    printf(" lack parameter \n");
+    return 0;
+  }
+  else 
+  {
+    exp_value = expr(arg,&success);
+    if(success == false)
+    {
+      printf("expression is error \n");
+      return 0;
+    }
+    printf(" %u \n",exp_value);
+  }
+  return 0 ;
+}
 
 static struct {
   const char *name;
@@ -102,6 +171,8 @@ static struct {
   { "q", "Exit NPC", cmd_q },
   { "si", "execute n instructions: si+num", cmd_si},
   { "info", "print program status: 1.info+w(watchpoints)  2. info+r(reg) 3. info+f(free watchpoints)", cmd_info},
+  {"x", "check the memory: x+n+address",cmd_x},
+  {"p", "calculate expression: p+exp", cmd_p}
   /* TODO: Add more commands */
 
 };
