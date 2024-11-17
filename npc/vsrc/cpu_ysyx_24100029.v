@@ -6,8 +6,7 @@ module cpu_ysyx_24100029
     input  clk          ,
     input  rst          ,
     input  [31:0] inst  ,
-    output reg [31:0] pc,
-    output [31:0]rs1_bo
+    output reg [31:0] pc
 );
 
 
@@ -31,7 +30,6 @@ wire [31:0]dnpc     ;
 wire [31:0]npc      ;
 wire [31:0]EX_result;
 
-assign rs1_bo = npc;
 assign snpc = pc + 4;
 assign npc = (jump_flag == 1'd1)? dnpc:snpc ;
 assign rd_value = (jump_flag == 1'd1)? pc+4 : EX_result ;

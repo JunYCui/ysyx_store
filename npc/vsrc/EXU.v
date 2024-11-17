@@ -16,11 +16,11 @@ module EXU (
 );
 
 
-localparam NR_KEY_add2   =  5     ;
+localparam NR_KEY_add2   =  6     ;
 localparam KEY_LEN_add2   = 7     ;
 localparam DATA_LEN_add2  = 32    ;
 
-localparam NR_KEY_add1   =  5     ;
+localparam NR_KEY_add1   =  6     ;
 localparam KEY_LEN_add1   = 7     ;
 localparam DATA_LEN_add1  = 32    ;
 
@@ -51,7 +51,8 @@ MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, opcode,
 `I1_opcode_ysyx_24100029,  imm_12i              ,
 `U0_opcode_ysyx_24100029,  imm_20i              ,
 `U1_opcode_ysyx_24100029,  {imm[19:0],12'd0}    ,
-`J0_opcode_ysyx_24100029,  imm_20i<<1              
+`J0_opcode_ysyx_24100029,  imm_20i<<1           ,
+`I2_opcode_ysyx_24100029,  imm_12i  
 }
 );
 
@@ -61,7 +62,8 @@ MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (add_1, opcode,
 `I1_opcode_ysyx_24100029,  rs1_value    ,
 `U0_opcode_ysyx_24100029,  32'd0        ,
 `U1_opcode_ysyx_24100029,  pc           ,
-`J0_opcode_ysyx_24100029,  pc           
+`J0_opcode_ysyx_24100029,  pc           ,
+`I2_opcode_ysyx_24100029,  rs1_value
 }
 );
 
