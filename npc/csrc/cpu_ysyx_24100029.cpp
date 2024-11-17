@@ -143,11 +143,12 @@ int main(int argc,char* argv[])
     {
     top->clk ^=1;
     if(top->clk == 0)
-    {
+    {   
+    printf("npc = 0x%x\n",top->pc);
     top->inst = pmem_read(top->pc,4);  
     }
     top->eval();
-    printf("npc = 0x%x\n",top->rs1_bo);
+ 
     //将所有跟踪的信号值写入波形转储文件
     m_trace->dump(sim_time);
     sim_time++; // 模拟时钟边沿数加1
