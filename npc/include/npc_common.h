@@ -4,6 +4,7 @@
 
 #include "stdio.h"
 #include "stdlib.h"
+#include "string.h"
 #include "assert.h"
 #include "getopt.h"
 #include "Vcpu_ysyx_24100029.h"

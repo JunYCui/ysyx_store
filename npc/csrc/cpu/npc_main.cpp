@@ -7,6 +7,8 @@
 #include "npc_common.h"
 #include "npc_memory.h"
 #include "npc_cpu_exec.h"
+#include "npc_sdb.h"
+
 // 实例化一个 VerilatedVcdC 类型的对象 m_trace，用于波形跟踪
 VerilatedVcdC *m_trace = new VerilatedVcdC;
 
@@ -62,9 +64,9 @@ int main(int argc,char* argv[])
     m_trace->open("waveform.vcd");
     cpu_reset();
 
-    while(!sim_time < MAX_SIM_TIME)
+    while(sim_time < MAX_SIM_TIME)
     {
-      cpu_exec(1);
+      sdb_mainloop();
       wave_record();
     }
     m_trace->close();

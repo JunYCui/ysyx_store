@@ -19,13 +19,13 @@ VERILATOR = verilator
 VERILATOR_CFLAGS += -Wall --cc -MMD --build --trace\
 			-O3 --x-assign fast --x-initial fast --noassert 
 
-LDFLAGS += -lSDL2 -lSDL2_image
+LDFLAGS := -lSDL2 -lSDL2_image -O2 -lreadline -ldl -pie
 
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 
-CFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
+CFLAGS  := -O2 -MMD -Wall -Werror $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
 
 IMG ?=
 $(shell mkdir -p $(BUILD_DIR))
