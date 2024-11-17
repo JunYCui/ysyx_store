@@ -36,6 +36,37 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+static int cmd_si(char *args) //单步执行
+{
+  uint64_t n;
+  char *arg = strtok(NULL, " ");
+  char *arg1 = strtok(NULL, " ");
+  if(arg1 != NULL)
+  {
+    printf(" parameters are too much \n");
+    return 0;
+  }
+  if(arg == NULL) // 没有输入,默认为1
+  n = 1;
+  else if (atoi(arg))
+  {
+  n = atoi(arg);
+  if(n>9)
+  {
+    printf("n is our of boudary \n");
+    return 0;
+  }
+  }
+  else
+  {
+  printf(" please enter integer \n");
+  return 0;
+  }
+  cpu_exec(n);
+  return 0;
+}
+
+
 static struct {
   const char *name;
   const char *description;
@@ -43,7 +74,8 @@ static struct {
 } cmd_table [] = {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program ", cmd_c},
-  { "q", "Exit NEMU", cmd_q },
+  { "q", "Exit NPC", cmd_q },
+    { "si", "execute n instructions: si+num", cmd_si}
   /* TODO: Add more commands */
 
 };
