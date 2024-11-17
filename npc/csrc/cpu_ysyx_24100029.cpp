@@ -127,11 +127,14 @@ int main(int argc,char* argv[])
     top->clk = 0;
     top->rst = 0;
     top->eval();
+    sim_time++;
     top->clk = 1;
     top->eval();
+    sim_time++;
     top->rst = 1;
     top->clk = 0;
     top->eval();
+    sim_time++;
     printf("0x%x \n",img[1]);    
     while(!sim_time < MAX_SIM_TIME)
     {
