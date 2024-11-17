@@ -1,6 +1,7 @@
 #include "npc_common.h"
 #include "npc_cpu_exec.h"
 #include "npc_sdb.h"
+#include "npc_reg.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -66,6 +67,30 @@ static int cmd_si(char *args) //单步执行
   return 0;
 }
 
+static int cmd_info(char *args)
+{
+  char *arg = strtok(NULL, " ");
+  char *arg1 = strtok(NULL, " ");
+  if(arg1 != NULL)
+  {
+    printf(" parameters are too much \n");
+    return 0;
+  }
+  if(arg ==  NULL)
+  {
+    printf(" no parameter \n");
+  }
+  else if (strcmp(arg,"r") == 0)
+  {
+    isa_reg_display(); //打印存储器状态
+  }
+  else 
+  {
+    printf(" no parameter \n");
+  }
+  return 0;
+}
+
 
 static struct {
   const char *name;
@@ -75,7 +100,8 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program ", cmd_c},
   { "q", "Exit NPC", cmd_q },
-    { "si", "execute n instructions: si+num", cmd_si}
+  { "si", "execute n instructions: si+num", cmd_si},
+  { "info", "print program status: 1.info+w(watchpoints)  2. info+r(reg) 3. info+f(free watchpoints)", cmd_info},
   /* TODO: Add more commands */
 
 };

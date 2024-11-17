@@ -18,7 +18,7 @@ void cpu_exec(uint32_t n)
     top->clk ^=1;
     if(top->clk == 0)
     {   
-    top->inst = pmem_read(top->pc,4);  
+    top->inst = paddr_read(top->pc,4);  
     }
     top->eval();
     wave_record();

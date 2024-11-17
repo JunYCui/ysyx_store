@@ -14,7 +14,14 @@ static inline uint32_t host_read(void *addr, int len) {
   }
 }
 
-uint32_t pmem_read(uint32_t addr, int len) {
+static uint32_t pmem_read(uint32_t addr, int len) {
   uint32_t ret = host_read(guest_to_host(addr), len);
   return ret;
+}
+
+
+word_t paddr_read(paddr_t addr, int len) {
+  if (likely(in_pmem(addr))) return pmem_read(addr, len);
+  printf("******* 0x%x is out of boudary ******** \n",addr);
+  return 0;
 }

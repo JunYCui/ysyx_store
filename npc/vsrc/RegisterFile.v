@@ -22,9 +22,18 @@ module RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
       rf[0] <= 32'd0;
   end
 
+
+task ReadReg;
+  input int reg_num;
+  output bit[31:0] reg_value;
+  reg_value = rf[reg_num];
+endtask
+
 assign rs1_value = rf[rs1_addr];
 assign rs2_value = rf[rs2_addr];
 assign a0_value = rf[10];
+
+export "DPI-C" task ReadReg;
 
 endmodule
 

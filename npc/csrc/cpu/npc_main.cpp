@@ -1,6 +1,3 @@
-#include "svdpi.h"
-#include "Vcpu_ysyx_24100029__Dpi.h"
-
 #include "npc_init.h"
 #include "npc_common.h"
 #include "npc_memory.h"
@@ -37,7 +34,7 @@ void cpu_reset(void)
     sim_time++;
     top->rst = 1;
     top->clk = 0;
-    top->inst = pmem_read(top->pc,4);  
+    top->inst = paddr_read(top->pc,4);  
     top->eval();
     m_trace->dump(sim_time);
     sim_time++;
