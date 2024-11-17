@@ -23,6 +23,7 @@ wire jump_flag;
 
 wire [31:0]rs1_value;
 wire [31:0]rs2_value;
+wire [31:0]a0_value;
 
 wire [31:0]rd_value ;
 wire [31:0]snpc     ;
@@ -45,7 +46,13 @@ end
 always @(*)
 begin
     if(inst == 32'h00100073)
+    begin
         fi();
+        if(a0_value == 0)
+            $display("\033[32;42m Hit The Good TRAP\033[0m");
+        else 
+            $display("\033[31;41m Hit The Bad TRAP\033[0m");
+    end
 end
  EXU EXU_inst0
  (
@@ -74,7 +81,8 @@ Reg_Stack Reg_Stack_inst0(
     .wen       (reg_wen)        ,
 
     .rs1_value (rs1_value)      ,
-    .rs2_value (rs2_value)
+    .rs2_value (rs2_value)      ,
+    .a0_value  (a0_value)
 );
 
 

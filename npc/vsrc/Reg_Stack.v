@@ -8,7 +8,8 @@ module Reg_Stack(
     input wen               ,
 
     output [31:0]rs1_value  ,
-    output [31:0]rs2_value
+    output [31:0]rs2_value  ,
+    output [31:0]a0_value
 );
 
 
@@ -24,7 +25,8 @@ RegisterFile #(5, 32) io(
      .rs2_addr(rs2)         ,
 
      .rs1_value(rs1_value)  ,  
-     .rs2_value(rs2_value)
+     .rs2_value(rs2_value)  ,
+     .a0_value(a0_value)
 );
 
 
