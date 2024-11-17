@@ -62,12 +62,14 @@ void fi() { exit(0); }
 static void load_img() {
   if (img_file == NULL) {
     printf("No image is given. Use the default build-in image. \n");
+
   }
 
   FILE *fp = fopen(img_file, "rb");
-  long size = ftell(fp);
+
 
   fseek(fp, 0, SEEK_END);
+  long size = ftell(fp);
 
   printf("The image is %s, size = %ld \n", img_file, size);
 
@@ -76,6 +78,7 @@ static void load_img() {
   assert(ret == 1);
 
   fclose(fp);
+
 }
 
 static int parse_args(int argc, char *argv[]) {
@@ -115,6 +118,7 @@ int main(int argc,char* argv[])
 
     parse_args(argc,argv);
     
+
     top->trace(m_trace, 5);
     m_trace->open("waveform.vcd");
     top->clk = 0;
@@ -132,6 +136,7 @@ int main(int argc,char* argv[])
     top->eval();
     m_trace->dump(sim_time);
     sim_time++;
+    printf("0x%x \n",img[1]);    
     while(!sim_time < MAX_SIM_TIME)
     {
     top->clk ^=1;
