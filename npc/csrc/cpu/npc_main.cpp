@@ -1,5 +1,3 @@
-#include <verilated_vcd_c.h>  //VCD波形输出头文件
-
 #include "svdpi.h"
 #include "Vcpu_ysyx_24100029__Dpi.h"
 
@@ -64,10 +62,8 @@ int main(int argc,char* argv[])
     m_trace->open("waveform.vcd");
     cpu_reset();
 
-    while(sim_time < MAX_SIM_TIME)
-    {
-      sdb_mainloop();
-      wave_record();
-    }
+    sdb_mainloop();
+    wave_record();
+    
     m_trace->close();
 }

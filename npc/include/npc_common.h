@@ -9,6 +9,7 @@
 #include "getopt.h"
 #include "Vcpu_ysyx_24100029.h"
 #include <verilated.h>
+#include <verilated_vcd_c.h>  //VCD波形输出头文件
 
 #define CONFIG_MSIZE 0x8000000
 #define CONFIG_MBASE 0x80000000
