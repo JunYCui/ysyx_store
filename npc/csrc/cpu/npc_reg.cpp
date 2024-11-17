@@ -1,4 +1,5 @@
 #include "npc_common.h"
+extern void ReadReg(int reg_num, svBitVecVal* reg_value);
 
 const char *regs[] = {
   "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
