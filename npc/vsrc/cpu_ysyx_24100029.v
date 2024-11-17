@@ -48,9 +48,9 @@ begin
     if(inst == 32'h00100073)
     begin
         if(a0_value == 0)
-            $display("\033[32;42m Hit The Good TRAP\033[0m");
+            $display("\033[32;42m Hit The Good TRAP \033[0m");
         else 
-            $display("\033[31;41m Hit The Bad TRAP\033[0m");
+            $display("\033[31;41m Hit The Bad TRAP \033[0m");
         fi();
     end
 end
