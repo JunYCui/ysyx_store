@@ -118,6 +118,8 @@ int main(int argc,char* argv[])
 
     parse_args(argc,argv);
     
+    load_img();
+    
 
     top->trace(m_trace, 5);
     m_trace->open("waveform.vcd");
