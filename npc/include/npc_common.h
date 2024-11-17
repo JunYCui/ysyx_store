@@ -1,11 +1,13 @@
-#ifndef  __COMMON_H__
-#define  __COMMON_H__
+#ifndef  __NPC_COMMON_H__
+#define  __NPC_COMMON_H__
 
 
 #include "stdio.h"
 #include "stdlib.h"
 #include "assert.h"
 #include "getopt.h"
+#include "Vcpu_ysyx_24100029.h"
+#include <verilated.h>
 
 #define CONFIG_MSIZE 0x8000000
 #define CONFIG_MBASE 0x80000000
@@ -17,6 +19,9 @@ typedef signed short int int16_t;
 typedef unsigned short int uint16_t;
 typedef signed int int32_t;
 typedef unsigned int uint32_t;
+
+
+
 
 
 #endif

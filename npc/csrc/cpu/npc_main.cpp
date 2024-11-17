@@ -1,24 +1,20 @@
-#include "Vcpu_ysyx_24100029.h"
-#include <verilated.h>
 #include <verilated_vcd_c.h>  //VCD波形输出头文件
 
 #include "svdpi.h"
 #include "Vcpu_ysyx_24100029__Dpi.h"
 
-#include "../include/init.h"
-
-
-
-
+#include "npc_init.h"
+#include "npc_common.h"
+#include "npc_memory.h"
+#include "npc_cpu_exec.h"
+// 实例化一个 VerilatedVcdC 类型的对象 m_trace，用于波形跟踪
+VerilatedVcdC *m_trace = new VerilatedVcdC;
 
 // contextp用来保存仿真的时间
 VerilatedContext *contextp = new VerilatedContext;
 
 // 构建一个名为top的仿真模型
 Vcpu_ysyx_24100029 *top = new Vcpu_ysyx_24100029{contextp};
-
-// 实例化一个 VerilatedVcdC 类型的对象 m_trace，用于波形跟踪
-VerilatedVcdC *m_trace = new VerilatedVcdC;
 
 
 #define MAX_SIM_TIME 100 //定义模拟的时钟边沿数（包括上下边沿）
@@ -47,28 +43,16 @@ void cpu_reset(void)
     sim_time++;
 }
 
-void cpu_exec(int n)
+void wave_record(void)
 {
-    for(int i=0;i<n;i++)
-    {
-    top->clk ^=1;
-    if(top->clk == 0)
-    {   
-    printf("npc = 0x%x\n",top->pc);
-    top->inst = pmem_read(top->pc,4);  
-    }
-    top->eval();
- 
     //将所有跟踪的信号值写入波形转储文件
     m_trace->dump(sim_time);
     sim_time++; // 模拟时钟边沿数加1
-    }
 }
-
 
 int main(int argc,char* argv[])
 {
-        // 开启波形跟踪
+    // 开启波形跟踪
     Verilated::traceEverOn(true);
 
     init_monitor(argc, argv);
@@ -81,6 +65,7 @@ int main(int argc,char* argv[])
     while(!sim_time < MAX_SIM_TIME)
     {
       cpu_exec(1);
+      wave_record();
     }
     m_trace->close();
 }
