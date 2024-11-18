@@ -8,6 +8,13 @@ extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
 
+typedef struct 
+{
+   uint32_t pc;
+   uint32_t inst;
+}Decode;
+
+Decode *s;
 void Cpu_Wp(void);
 static void wave_record(void)
 {
@@ -17,12 +24,9 @@ static void wave_record(void)
 }
 extern Vcpu_ysyx_24100029 *top; 
 
-static void itrace()
+static void itrace(Decode* _this)
 {
-    svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
-    uint32_t inst;
-    GetInst(&inst);
-    printf("0x%x: %x \n",top->pc,inst);
+    printf("0x%x: %x \n",_this->pc,_this->inst);
 }
 
 
@@ -40,15 +44,16 @@ static void exec_once()
     }
 }
 
-static void trace_and_difftest()
+static void trace_and_difftest(Decode* _this)
 {
     Cpu_Wp();
-    itrace();
+    itrace(_this);
 }
 
 
 void cpu_exec(uint32_t n)
 {
+    uint32_t pc;
     switch (npc_state.state) {
     case NPC_END: case NPC_ABORT:
       printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
@@ -57,8 +62,11 @@ void cpu_exec(uint32_t n)
   }
     for(int i=0;i<n;i++)
     {
+        s->pc = top->pc;
         exec_once();
-        trace_and_difftest();
+        svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
+        GetInst(&s->inst);
+        trace_and_difftest(s);
         if(npc_state.state !=NPC_RUNNING)
             break;
     }
