@@ -13,7 +13,7 @@ void isa_reg_display()
 {
   uint16_t i;
   uint32_t regvalue;
-  
+  svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.io"));
   for(i = 0;i<32;i++)
   {
   ReadReg(i,&regvalue);

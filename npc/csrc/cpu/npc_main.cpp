@@ -49,7 +49,7 @@ void wave_record(void)
 
 int main(int argc,char* argv[])
 {
-    svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.io"));
+
     // 开启波形跟踪
     Verilated::traceEverOn(true);
 
