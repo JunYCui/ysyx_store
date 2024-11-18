@@ -8,7 +8,8 @@ extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
 
-Decode s;
+Decode *s;
+
 
 void Cpu_Wp(void);
 static void wave_record(void)
@@ -51,6 +52,7 @@ static void trace_and_difftest()
 
 void cpu_exec(uint32_t n)
 {
+    s=(Decode*)malloc(sizeof(Decode));
     switch (npc_state.state) {
     case NPC_END: case NPC_ABORT:
       printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
@@ -59,11 +61,11 @@ void cpu_exec(uint32_t n)
   }
     for(int i=0;i<n;i++)
     {
-        (&s)->pc = top->pc;
+        s->pc = top->pc;
         exec_once();
         trace_and_difftest();
         if(npc_state.state !=NPC_RUNNING)
             break;
     }
-
+    free(s);
 }
