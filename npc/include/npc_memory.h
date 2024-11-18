@@ -8,11 +8,8 @@
 #define unlikely(cond) __builtin_expect(cond, 0)
 #endif
 
-typedef struct Decode
-{
-    uint32_t pc;
-    uint32_t inst;
-}De;
+
+
 
 uint8_t* guest_to_host(uint32_t paddr) ;
 word_t paddr_read(paddr_t addr, int len);
