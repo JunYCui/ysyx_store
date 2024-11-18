@@ -5,9 +5,18 @@
 #include "npc_reg.h"
 #include <readline/readline.h>
 #include <readline/history.h>
+#include "npc_isa.h"
+
+extern NPCState npc_state;
 
 word_t expr(char *e, bool *success);
 void init_regex() ;
+void init_wp_pool() ;
+WP* new_wp();
+void free_wp(int NO);
+void Wp_info_w(void);
+void Wp_info_f(void);
+void Cpu_Wp(void);
 
 static int is_batch_mode = false;
 
@@ -33,11 +42,13 @@ static int cmd_help(char *args);
 
 static int cmd_c(char *args) {
   cpu_exec(-1);
+  npc_state.state = NPC_RUNNING;
   return 0;
 }
 
 
 static int cmd_q(char *args) {
+  npc_state.state = NPC_QUIT;
   return -1;
 }
 
@@ -243,4 +254,5 @@ void init_sdb() {
   /* Compile the regular expressions. */
   init_regex();
 
+  init_wp_pool() ;
 }

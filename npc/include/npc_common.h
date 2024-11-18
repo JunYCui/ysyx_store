@@ -28,6 +28,13 @@ typedef uint32_t paddr_t;
 
 #define ARRLEN(arr) (int)(sizeof(arr) / sizeof(arr[0]))
 
+typedef struct watchpoint {
+  int NO;
+  struct watchpoint *next;
 
+  /* TODO: Add more members if necessary */
+  char exp[32];
+  uint32_t value;
+} WP;
 
 #endif
