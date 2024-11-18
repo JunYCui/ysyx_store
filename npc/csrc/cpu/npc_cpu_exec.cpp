@@ -9,7 +9,7 @@ extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
 
 
-Decode *s1;
+De *scode;
 
 void Cpu_Wp(void);
 static void wave_record(void)
@@ -60,7 +60,7 @@ void cpu_exec(uint32_t n)
   }
     for(int i=0;i<n;i++)
     {
-        s1->pc = top ->pc;
+        scode->pc = 1;
         exec_once();
         trace_and_difftest();
         if(npc_state.state !=NPC_RUNNING)
