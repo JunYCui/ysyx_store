@@ -31,7 +31,7 @@ static void exec_once()
     for(int i=0;i<2;i++)
     {
     top->clk ^=1;
-    if(top->clk == 0)
+    if(top->clk == 1)
     {   
     itrace();
     top->inst = paddr_read(top->pc,4);  
