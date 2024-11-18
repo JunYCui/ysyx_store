@@ -8,6 +8,14 @@ extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
 
+typedef struct 
+{
+    uint32_t pc;
+    uint32_t inst;
+}Decode;
+
+Decode *s;
+
 void Cpu_Wp(void);
 static void wave_record(void)
 {
@@ -57,6 +65,7 @@ void cpu_exec(uint32_t n)
   }
     for(int i=0;i<n;i++)
     {
+        s->pc = top ->pc;
         exec_once();
         trace_and_difftest();
         if(npc_state.state !=NPC_RUNNING)
