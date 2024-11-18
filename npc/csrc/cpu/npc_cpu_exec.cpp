@@ -23,12 +23,12 @@ static void wave_record(void)
     sim_time++; // 模拟时钟边沿数加1
 }
 extern Vcpu_ysyx_24100029 *top; 
-
+/*
 static void itrace(Decode* _this)
 {
     printf("0x%x: %x \n",_this->pc,_this->inst);
 }
-
+*/
 
 static void exec_once()
 {
@@ -43,13 +43,13 @@ static void exec_once()
     wave_record();
     }
 }
-
+/*
 static void trace_and_difftest(Decode* _this)
 {
     Cpu_Wp();
     itrace(_this);
 }
-
+*/
 
 void cpu_exec(uint32_t n)
 {
@@ -66,7 +66,7 @@ void cpu_exec(uint32_t n)
         s->pc = top->pc;
         exec_once();
         //GetInst(&s->inst);
-        trace_and_difftest(s);
+       // trace_and_difftest(s);
         if(npc_state.state !=NPC_RUNNING)
             break;
     }
