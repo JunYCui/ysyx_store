@@ -6,6 +6,9 @@ extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
 
+
+extern void GetInst(svBitVecVal* inst_exec);
+
 void Cpu_Wp(void);
 static void wave_record(void)
 {
@@ -34,7 +37,7 @@ static void trace_and_difftest()
 {
     uint32_t inst;
     GetInst(&inst);
-    //printf("inst = 0x%x  \n", inst);
+    printf("inst = 0x%x  \n", inst);
     Cpu_Wp();
 }
 
