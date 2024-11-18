@@ -34,7 +34,7 @@ static void exec_once()
 
 static void itrace(uint32_t inst)
 {
-    printf("0x%x: %x",top->pc,inst);
+    printf("0x%x: %x \n",top->pc,inst);
 }
 
 static void trace_and_difftest()
