@@ -193,8 +193,8 @@ void Cpu_Wp(void)
     for(i=0;i<count;i++)
     {
     printf("watchpoint %d value has been changed \n",record_No[i]);
-    printf("Old Value:%u \n",record_val[i][0]);
-    printf("New Value:%u \n",record_val[i][1]);
+    printf("Old Value:0x%x \n",record_val[i][0]);
+    printf("New Value:0x%x \n",record_val[i][1]);
     }
     npc_state.state = NPC_STOP;
   }
