@@ -18,6 +18,8 @@ extern Vcpu_ysyx_24100029 *top;
 
 static void exec_once()
 {
+    for(int i=0;i<2;i++)
+    {
     top->clk ^=1;
     if(top->clk == 0)
     {   
@@ -25,6 +27,7 @@ static void exec_once()
     }
     top->eval();
     wave_record();
+    }
 }
 
 static void trace_and_difftest()
