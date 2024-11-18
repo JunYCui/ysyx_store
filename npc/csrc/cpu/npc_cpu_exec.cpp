@@ -36,6 +36,7 @@ static void exec_once()
 static void trace_and_difftest()
 {
     uint32_t inst;
+    svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
     GetInst(&inst);
     printf("inst = 0x%x  \n", inst);
     Cpu_Wp();
