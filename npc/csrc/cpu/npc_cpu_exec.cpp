@@ -33,7 +33,6 @@ static void exec_once()
     top->clk ^=1;
     if(top->clk == 1)
     {   
-    itrace();
     top->inst = paddr_read(top->pc,4);  
     }
     top->eval();
@@ -44,6 +43,7 @@ static void exec_once()
 static void trace_and_difftest()
 {
     Cpu_Wp();
+    itrace();
 }
 
 
