@@ -2,12 +2,11 @@
 #include "npc_memory.h"
 #include "npc_isa.h"
 
+extern void GetInst(svBitVecVal* inst_exec);
+
 extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
-
-
-extern void GetInst(svBitVecVal* inst_exec);
 
 void Cpu_Wp(void);
 static void wave_record(void)
@@ -33,14 +32,20 @@ static void exec_once()
     }
 }
 
+static void itrace(uint32_t inst)
+{
+    printf("0x%x: %x",top->pc,inst);
+}
+
 static void trace_and_difftest()
 {
     uint32_t inst;
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
     GetInst(&inst);
-    printf("inst = 0x%x  \n", inst);
+    itrace(inst);
     Cpu_Wp();
 }
+
 
 void cpu_exec(uint32_t n)
 {

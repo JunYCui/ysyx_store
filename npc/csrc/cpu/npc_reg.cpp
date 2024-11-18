@@ -26,6 +26,7 @@ word_t isa_reg_str2val(const char *s, bool *success)
   uint16_t i;
   uint32_t regvalue;
   *success = false;
+  svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.io"));
   for(i = 0;i<32;i++)
   {
     if(strcmp(s,regs[i])== 0 )
