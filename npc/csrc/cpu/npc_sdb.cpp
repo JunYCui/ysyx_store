@@ -99,6 +99,14 @@ static int cmd_info(char *args)
   {
     isa_reg_display(); //打印存储器状态
   }
+  else if (strcmp(arg,"w") == 0)
+  {
+    Wp_info_w(); 
+  }
+  else if (strcmp(arg,"f") == 0)
+  {
+    Wp_info_f();
+  }
   else 
   {
     printf(" no parameter \n");
@@ -175,6 +183,36 @@ static int cmd_p(char *args)
   return 0 ;
 }
 
+static int cmd_w(char *args)
+{
+  char *arg = strtok(NULL,"");
+  //char *arg1 = strtok(NULL,"");
+  WP* wp1;
+  bool flag=false;
+  uint32_t val=0;
+
+  if(arg == NULL)
+  {
+    printf("lack parameter!\n ");
+    return 0;
+  }
+  wp1 = new_wp();
+  strcpy(wp1->exp,arg);
+  val =  expr(arg,&flag);
+  if(flag == true)
+  {
+    wp1->value = val;
+  }
+  else 
+  {
+    printf("expr is error!\n");
+    assert(0);
+  }
+  printf("Hardware %d:%s\n",wp1->NO,wp1->exp);
+
+  return 0;
+}
+
 static struct {
   const char *name;
   const char *description;
@@ -186,7 +224,8 @@ static struct {
   { "si", "execute n instructions: si+num", cmd_si},
   { "info", "print program status: 1.info+w(watchpoints)  2. info+r(reg) 3. info+f(free watchpoints)", cmd_info},
   {"x", "check the memory: x+n+address",cmd_x},
-  {"p", "calculate expression: p+exp", cmd_p}
+  {"p", "calculate expression: p+exp", cmd_p},
+  {"w", "create watchpoint: w+n", cmd_w},
   /* TODO: Add more commands */
 
 };
