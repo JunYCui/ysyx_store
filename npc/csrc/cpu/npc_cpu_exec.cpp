@@ -8,13 +8,8 @@ extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
 
-typedef struct 
-{
-    uint32_t pc;
-    uint32_t inst;
-}deco;
 
-deco *s;
+Decode *s;
 
 void Cpu_Wp(void);
 static void wave_record(void)
