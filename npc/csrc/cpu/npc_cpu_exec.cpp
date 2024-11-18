@@ -12,9 +12,9 @@ typedef struct
 {
     uint32_t pc;
     uint32_t inst;
-}Decode;
+}deco;
 
-Decode *s;
+deco *s;
 
 void Cpu_Wp(void);
 static void wave_record(void)
