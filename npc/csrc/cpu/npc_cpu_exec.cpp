@@ -60,7 +60,7 @@ void cpu_exec(uint32_t n)
   }
     for(int i=0;i<n;i++)
     {
-        scode->pc = 1;
+        printf("%d",scode->pc);
         exec_once();
         trace_and_difftest();
         if(npc_state.state !=NPC_RUNNING)
