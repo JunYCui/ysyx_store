@@ -8,7 +8,7 @@ extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
 
-Decode* s;
+Decode* s=NULL;
 
 void Cpu_Wp(void);
 static void wave_record(void)
