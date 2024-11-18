@@ -54,6 +54,13 @@ begin
         fi();
     end
 end
+
+task  GetInst;
+    output bit[31:0]inst_exec;
+    inst_exec = inst;
+endtask 
+export "DPI-C" task GetInst;
+
  EXU EXU_inst0
  (
     .clk      (clk)         ,

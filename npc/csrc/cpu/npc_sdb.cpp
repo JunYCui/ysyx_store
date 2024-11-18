@@ -213,6 +213,28 @@ static int cmd_w(char *args)
   return 0;
 }
 
+static int cmd_d(char *args)
+{
+  char *arg = strtok(NULL," ");
+  char *arg1 = strtok(NULL," ");
+  uint8_t NO;
+  if(arg1 != NULL)
+  {
+    printf("parameters are too much! \n");
+    return 0;
+  } 
+  else if(arg == NULL)
+  {
+    printf("lack parameter!\n ");
+    return 0;
+  }
+  NO = atoi(arg);
+  free_wp(NO);
+  printf("watchpoint %d is deleted \n", NO);
+  return 0;
+}
+
+
 static struct {
   const char *name;
   const char *description;
@@ -226,6 +248,7 @@ static struct {
   {"x", "check the memory: x+n+address",cmd_x},
   {"p", "calculate expression: p+exp", cmd_p},
   {"w", "create watchpoint: w+n", cmd_w},
+  {"d", "delete watchpoint: d+n", cmd_d}
   /* TODO: Add more commands */
 
 };
