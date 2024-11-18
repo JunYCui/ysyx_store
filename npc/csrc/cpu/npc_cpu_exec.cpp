@@ -32,6 +32,9 @@ static void exec_once()
 
 static void trace_and_difftest()
 {
+    uint32_t inst;
+    GetInst(&inst);
+    printf("inst = 0x%x  \n", inst);
     Cpu_Wp();
 }
 
