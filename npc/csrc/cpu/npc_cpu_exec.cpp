@@ -65,8 +65,7 @@ void cpu_exec(uint32_t n)
         s->pc = top->pc;
         exec_once();
         svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
-        GetInst(&s->inst);
-        printf("%d \n",s->inst);
+        //GetInst(&s->inst);
         trace_and_difftest(s);
         if(npc_state.state !=NPC_RUNNING)
             break;
