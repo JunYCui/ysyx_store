@@ -33,8 +33,6 @@ void cpu_reset(void)
     m_trace->dump(sim_time);
     sim_time++;
     top->rst = 1;
-    top->clk = 0;
-    top->inst = paddr_read(top->pc,4);  
     top->eval();
     m_trace->dump(sim_time);
     sim_time++;
