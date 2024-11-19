@@ -19,12 +19,11 @@ static void wave_record(void)
 }
 extern Vcpu_ysyx_24100029 *top; 
 
-static void itrace()
+static void itrace(Decode s)
 {
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
-    uint32_t inst;
-    GetInst(&inst);
-    printf("0x%x: %x \n",top->pc,inst);
+    GetInst(&s.inst);
+    printf("0x%x: %x \n",s.pc,s.inst);
 }
 
 static void exec_once()
@@ -42,10 +41,10 @@ static void exec_once()
 }
 
 
-static void trace_and_difftest()
+static void trace_and_difftest(Decode s)
 {
     Cpu_Wp();
-    itrace();
+    itrace(s);
 }
 
 
@@ -61,7 +60,7 @@ void cpu_exec(uint32_t n)
     {
         s.pc=top->pc;
         exec_once();
-        trace_and_difftest();
+        trace_and_difftest(s);
         if(npc_state.state !=NPC_RUNNING)
             break;
     }
