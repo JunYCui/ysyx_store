@@ -1,5 +1,4 @@
 #include "npc_cpu_exec.h"
-#include "npc_memory.h"
 #include "npc_isa.h"
 
 extern void GetInst(svBitVecVal* inst_exec);
@@ -8,7 +7,7 @@ extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
 
-Decode *s;
+Decode s;
 
 
 void Cpu_Wp(void);
@@ -35,7 +34,6 @@ static void exec_once()
     top->clk ^=1;
     if(top->clk == 0)
     {   
-    itrace();
     top->inst = paddr_read(top->pc,4);  
     }
     top->eval();
@@ -47,12 +45,12 @@ static void exec_once()
 static void trace_and_difftest()
 {
     Cpu_Wp();
+    itrace();
 }
 
 
 void cpu_exec(uint32_t n)
 {
-    s=(Decode*)malloc(sizeof(Decode));
     switch (npc_state.state) {
     case NPC_END: case NPC_ABORT:
       printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
@@ -61,11 +59,11 @@ void cpu_exec(uint32_t n)
   }
     for(int i=0;i<n;i++)
     {
-        s->pc = top->pc;
+        s.pc=top->pc;
         exec_once();
         trace_and_difftest();
         if(npc_state.state !=NPC_RUNNING)
             break;
     }
-    free(s);
+
 }
