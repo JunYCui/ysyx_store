@@ -73,6 +73,6 @@ void init_monitor(int argc, char *argv[])
 
   init_sdb();
 
-  init_disasm("riscv32""-pc-linux-gnu");
+
 
 }
