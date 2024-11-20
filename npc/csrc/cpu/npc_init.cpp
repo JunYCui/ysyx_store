@@ -71,7 +71,7 @@ void init_monitor(int argc, char *argv[])
 
   load_img();
 
-  init_sdb();
+ // init_sdb();
 
   init_disasm("riscv32""-pc-linux-gnu");
 
