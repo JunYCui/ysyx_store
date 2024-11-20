@@ -1,6 +1,9 @@
 #include "npc_cpu_exec.h"
 #include "npc_isa.h"
 
+
+void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+
 extern void GetInst(svBitVecVal* inst_exec);
 
 extern NPCState npc_state;
@@ -9,7 +12,6 @@ extern uint64_t sim_time;
 
 Decode s;
 
-//void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 
 
 
@@ -24,9 +26,9 @@ extern Vcpu_ysyx_24100029 *top;
 
 static void itrace(Decode s)
 {
-
+    char str[20];
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
-   // disassemble(str, sizeof(str),s.pc, (uint8_t *)&s.inst, 4);
+    disassemble(str, sizeof(str),s.pc, (uint8_t *)&s.inst, 4);
     GetInst(&s.inst);
     printf("0x%x: %x  \n",s.pc,s.inst);
 }
