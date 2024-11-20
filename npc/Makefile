@@ -29,10 +29,9 @@ INCFLAGS = $(addprefix -I, $(INC_PATH))
 
 CFLAGS  = -O2 -MMD -Wall -Werror $(INCFLAGS) 
 
+LDFLAGS += $(shell llvm-config --libs)
 
 
-CFLAGS  += -fPIC -fvisibility=hidden
-LDFLAGS += -shared -fPIC
 
 IMG ?=
 $(shell mkdir -p $(BUILD_DIR))
