@@ -28,8 +28,8 @@ static void itrace(Decode s)
 {
     char str[20];
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
-    disassemble(str, sizeof(str),s.pc, (uint8_t *)&s.inst, 4);
     GetInst(&s.inst);
+    disassemble(str, sizeof(str),s.pc, (uint8_t *)&s.inst, 4);
     printf("0x%x: %x \t %s  \n",s.pc,s.inst,str);
 }
 
