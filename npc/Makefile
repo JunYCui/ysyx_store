@@ -1,9 +1,9 @@
 TOPNAME = cpu_ysyx_24100029
-INC_PATH ?= $(NPC_HOME)/include 
+INC_PATH ?= $(NPC_HOME)/include
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
-VSOURCES =$(shell find $(abspath ./vsrc) -name "*.v" )
-CSOURCES =$(shell find $(abspath ./csrc/cpu) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
+VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )
+CSOURCES=$(shell find $(abspath ./csrc/cpu) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
 
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
@@ -25,16 +25,13 @@ LDFLAGS = -lSDL2 -lSDL2_image -O2 -lreadline -ldl -pie
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 
-INCFLAGS = $(addprefix -I, $(INC_PATH)) 
-
-LDFLAGS += $(shell llvm-config --libs ) 
-
-CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE
+INCFLAGS = $(addprefix -I, $(INC_PATH))
 
 CFLAGS  = -O2 -MMD -Wall -Werror $(INCFLAGS) 
 
-CFLAGS  += -fPIC -fvisibility=hidden
-LDFLAGS += -shared -fPIC
+LDFLAGS += $(shell llvm-config --libs)
+
+CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
 
 IMG ?=
 $(shell mkdir -p $(BUILD_DIR))
