@@ -27,7 +27,7 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 
-CFLAGS  = -O2 -MMD -Wall -Werror $(INCFLAGS) 
+CFLAGS  = -O2 -MMD -Wall -Werror $(INCFLAGS) -fsanitize=address
 
 LDFLAGS += $(shell llvm-config --libs)
 
