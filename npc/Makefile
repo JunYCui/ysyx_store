@@ -17,17 +17,22 @@ BIN = $(BUILD_DIR)/$(TOPNAME)
 VERILATOR = verilator
 
 VERILATOR_CFLAGS += -Wall --cc -MMD --build --trace\
-			-O3 --x-assign fast --x-initial fast --noassert 
+			-O3 --x-assign fast --x-initial fast --noassert -DTOP_NAME="\"V$(TOPNAME)\""
+
 
 LDFLAGS = -lSDL2 -lSDL2_image -O2 -lreadline -ldl -pie
 
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 
+
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 
-CFLAGS  = -O2 -MMD -Wall -Werror $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
+CFLAGS  = -O2 -MMD -Wall -Werror $(INCFLAGS) 
 
 LDFLAGS += $(shell llvm-config --libs)
+
+CFLAGS  += -fPIC -fvisibility=hidden
+LDFLAGS += -shared -fPIC
 
 IMG ?=
 $(shell mkdir -p $(BUILD_DIR))
@@ -49,6 +54,7 @@ all:$(CSOURCES) $(VSOURCES)
 	--top-module $(TOPNAME) \
 	$^ \
 	$(addprefix -CFLAGS , $(CFLAGS))  $(addprefix -LDFLAGS , $(LDFLAGS)) \
+	--compiler gcc \
 	--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
 
 

@@ -2,7 +2,7 @@
 #include "npc_memory.h"
 
 void init_sdb();
-
+void init_disasm(const char *triple);
 
 
 uint8_t *pmem = NULL;
@@ -72,4 +72,7 @@ void init_monitor(int argc, char *argv[])
   load_img();
 
   init_sdb();
+
+  init_disasm("riscv32""-pc-linux-gnu");
+
 }

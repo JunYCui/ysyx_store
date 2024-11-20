@@ -9,6 +9,9 @@ extern uint64_t sim_time;
 
 Decode s;
 
+void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+
+
 
 void Cpu_Wp(void);
 static void wave_record(void)
@@ -21,9 +24,11 @@ extern Vcpu_ysyx_24100029 *top;
 
 static void itrace(Decode s)
 {
+    char str[30];
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
+    disassemble(str, sizeof(str),s.pc, (uint8_t *)&s.inst, 4);
     GetInst(&s.inst);
-    printf("0x%x: %x \n",s.pc,s.inst);
+    printf("0x%x: %x \t%s \n",s.pc,s.inst,str);
 }
 
 static void exec_once()
