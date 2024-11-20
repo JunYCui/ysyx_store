@@ -9,7 +9,7 @@ extern uint64_t sim_time;
 
 Decode s;
 
-void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+//void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 
 
 
