@@ -24,7 +24,7 @@ extern Vcpu_ysyx_24100029 *top;
 
 static void itrace(Decode s)
 {
-    char str[30];
+    char str[30]={"ok"};
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
    // disassemble(str, sizeof(str),s.pc, (uint8_t *)&s.inst, 4);
     GetInst(&s.inst);
