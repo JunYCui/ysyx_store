@@ -31,6 +31,9 @@ CFLAGS  = -O2 -MMD -Wall -Werror $(INCFLAGS)
 
 
 
+CFLAGS  += -fPIC -fvisibility=hidden
+LDFLAGS += -shared -fPIC
+
 IMG ?=
 $(shell mkdir -p $(BUILD_DIR))
 
