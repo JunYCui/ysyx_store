@@ -2,7 +2,7 @@
 #include "npc_isa.h"
 
 
-void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 
 extern void GetInst(svBitVecVal* inst_exec);
 

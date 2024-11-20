@@ -2,7 +2,7 @@
 #include "npc_memory.h"
 
 void init_sdb();
-void init_disasm(const char *triple);
+extern "C" void init_disasm(const char *triple);
 
 
 uint8_t *pmem = NULL;
