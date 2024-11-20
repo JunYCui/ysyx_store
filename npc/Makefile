@@ -46,6 +46,10 @@ sim:all
 	@echo "Write this Makefile by your self." 
 	$(NPC_EXEC)
 
+gdb: all
+	$(call git_commit, "gdb NEMU")
+	gdb -s $(BIN) --args $(NPC_EXEC)
+
 .PHONY:all
 all:$(CSOURCES) $(VSOURCES) 
 	@echo "Write this Makefile by your self."
