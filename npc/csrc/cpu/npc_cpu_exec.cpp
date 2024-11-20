@@ -30,7 +30,7 @@ static void itrace(Decode s)
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
     disassemble(str, sizeof(str),s.pc, (uint8_t *)&s.inst, 4);
     GetInst(&s.inst);
-    printf("0x%x: %x  \n",s.pc,s.inst);
+    printf("0x%x: %x \t %s  \n",s.pc,s.inst,str);
 }
 
 static void exec_once()
