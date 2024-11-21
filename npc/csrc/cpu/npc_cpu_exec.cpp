@@ -30,8 +30,6 @@ extern Vcpu_ysyx_24100029 *top;
 static void itrace(Decode *s)
 {
     char str[20];
-    svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
-    GetInst(&s->inst);
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
 }
@@ -74,6 +72,8 @@ void cpu_exec(uint32_t n)
         s.pc=top->pc;
         s.dnpc=top->dnpc;
         s.snpc=top->snpc;
+    svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
+        GetInst(&s.inst);
         exec_once();
         trace_and_difftest(&s);
         if(npc_state.state !=NPC_RUNNING)
