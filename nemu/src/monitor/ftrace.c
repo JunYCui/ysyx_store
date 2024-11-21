@@ -234,6 +234,7 @@ void ftrace_exe(Decode* s)
                     }    
                     printf("0x%x:",s->pc);
                     printf("rt   [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
+                    count--;
                     break;
                    }
                 }
