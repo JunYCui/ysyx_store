@@ -6,7 +6,9 @@ module cpu_ysyx_24100029
     input  clk          ,
     input  rst          ,
     input  [31:0] inst  ,
-    output reg [31:0] pc
+    output reg [31:0] pc,
+    output [31:0]snpc   ,
+    output [31:0]dnpc    
 );
 
 
@@ -26,8 +28,6 @@ wire [31:0]rs2_value;
 wire [31:0]a0_value;
 
 wire [31:0]rd_value ;
-wire [31:0]snpc     ;
-wire [31:0]dnpc     ;
 wire [31:0]npc      ;
 wire [31:0]EX_result;
 

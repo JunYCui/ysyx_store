@@ -1,5 +1,5 @@
-#include "npc_ftrace.h"
-
+#include "ftrace.h"
+#include "cpu/decode.h"
 
 FUNC_TR func_array[FUNC_MAXNUM];
 void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
@@ -178,15 +178,15 @@ void init_ftrace(char* elf_file)
       find_strsymtab_32(fp);
 
 }
-
+uint32_t count;
 void ftrace_exe(Decode* s)
 {
     char str[128];
     char* inst;
     char* rd;
     char* rs1;
-    int ilen = 4//指令长度  
-    disassemble(str,sizeof(str),s->pc,(uint8_t *)&s->inst, ilen);
+    int ilen = s->snpc - s->pc;//指令长度  
+    disassemble(str,sizeof(str),s->pc,(uint8_t *)&s->isa.inst.val, ilen);
     inst = strtok(str,"\t");
     if(inst!= NULL)
     {
@@ -201,8 +201,13 @@ void ftrace_exe(Decode* s)
                 {
                    if(func_array[i].addr == s->dnpc) 
                    {
+                    for(int j=0;j<count;j++)
+                    {
+                        printf(" ");
+                    }
                     printf("0x%x:",s->pc);
                     printf("call [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
+                    count++;
                     break;
                    }
                 }
@@ -222,9 +227,14 @@ void ftrace_exe(Decode* s)
                 if(func_array[i].state == true)
                 {
                    if(s->dnpc>=func_array[i].addr && s->dnpc<func_array[i].addr+func_array[i].size) 
-                   {    
+                   {
+                     count--;
+                        for(int j=0;j<count;j++)
+                    {
+                        printf(" ");
+                    }    
                     printf("0x%x:",s->pc);
-                    printf("rt   [%s]\n",func_array[i].name);
+                    printf("rt   [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
                     break;
                    }
                 }
@@ -242,8 +252,13 @@ void ftrace_exe(Decode* s)
                 {
                    if(func_array[i].addr == s->dnpc) 
                    {
+                    for(int j=0;j<count;j++)
+                    {
+                        printf(" ");
+                    }
                     printf("0x%x:",s->pc);
                     printf("call [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
+                    count++;
                     break;
                    }
                 }

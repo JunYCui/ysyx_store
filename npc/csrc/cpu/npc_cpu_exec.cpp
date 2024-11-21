@@ -66,6 +66,8 @@ void cpu_exec(uint32_t n)
     for(int i=0;i<n;i++)
     {
         s.pc=top->pc;
+        s.dnpc=top->dnpc;
+        s.snpc=top->snpc;
         exec_once();
         trace_and_difftest(s);
         if(npc_state.state !=NPC_RUNNING)

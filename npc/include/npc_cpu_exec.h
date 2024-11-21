@@ -8,6 +8,8 @@ void cpu_exec(unsigned int n);
 typedef struct 
 {
   uint32_t pc;
+  uint32_t dnpc;
+  uint32_t snpc;
   uint32_t inst;
 }Decode;
 

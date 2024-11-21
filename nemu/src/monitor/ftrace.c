@@ -252,8 +252,13 @@ void ftrace_exe(Decode* s)
                 {
                    if(func_array[i].addr == s->dnpc) 
                    {
+                    for(int j=0;j<count;j++)
+                    {
+                        printf(" ");
+                    }
                     printf("0x%x:",s->pc);
                     printf("call [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
+                    count++;
                     break;
                    }
                 }
