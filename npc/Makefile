@@ -39,7 +39,7 @@ ARGS ?=
 
 $(shell mkdir -p $(BUILD_DIR))
 
-NPC_EXEC = $(BIN) $(IMG) $(ARGS)
+NPC_EXEC = $(BIN) $(ARGS) $(IMG)
 
 
 .PHONY:sim
