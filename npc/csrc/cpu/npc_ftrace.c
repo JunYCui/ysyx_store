@@ -1,12 +1,12 @@
-#include "ftrace.h"
-#include "cpu/decode.h"
+#include "npc_ftrace.h"
+#include "npc_cpu_exec.h"
 
 FUNC_TR func_array[FUNC_MAXNUM];
-void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 
 static void find_strsymtab_32(FILE* fp)
 {
-    Elf32_Ehdr* Ehdr= malloc(sizeof(Elf32_Ehdr)); 
+    Elf32_Ehdr* Ehdr= (Elf32_Ehdr*)malloc(sizeof(Elf32_Ehdr)); 
     Elf32_Off section_off;
     Elf32_Half section_num;
     Elf32_Half shstrindex;
@@ -27,8 +27,8 @@ static void find_strsymtab_32(FILE* fp)
     }
 
 /* 2. 读取section，并根据shstr表头索引，找到shstr表里面有name信息 */
-    Elf32_Shdr *Eshdr = malloc(sizeof(Elf32_Shdr[section_num]));
-    char *shstrtable= malloc(Eshdr[shstrindex].sh_size);
+    Elf32_Shdr *Eshdr = (Elf32_Shdr *)malloc(sizeof(Elf32_Shdr[section_num]));
+    char *shstrtable= (char *)malloc(Eshdr[shstrindex].sh_size);
 
     fseek(fp,section_off,SEEK_SET);
     num = fread(Eshdr,sizeof(Elf32_Shdr),section_num,fp);
@@ -40,8 +40,8 @@ static void find_strsymtab_32(FILE* fp)
 
  //   printf("[Nr]\t Name \t\t\t Type \t\t\t Addr \t\t Off \t Size  \n");    
  /* 3. 根据name 找到strtab 和 symtab */
-    Elf32_Shdr Esh_strtab;
-    Elf32_Shdr Esh_symtab;
+    Elf32_Shdr Esh_strtab = {};
+    Elf32_Shdr Esh_symtab = {};
 
     for(int i=0;i<section_num;i++)
     {
@@ -54,7 +54,6 @@ static void find_strsymtab_32(FILE* fp)
     {
         Esh_symtab = Eshdr[i];
     }
-
     memset(name,0,sizeof(name));
 /*
     switch (Eshdr[i].sh_type)
@@ -88,8 +87,8 @@ static void find_strsymtab_32(FILE* fp)
     }
  /* 4. 对于 symtab 进行解析 */
     Elf32_Word symnum = Esh_symtab.sh_size/sizeof(Elf32_Sym);
-    Elf32_Sym *Esym = malloc(sizeof(Elf32_Sym[symnum]));
-    char *strtable= malloc(Esh_strtab.sh_size);
+    Elf32_Sym *Esym = (Elf32_Sym *)malloc(sizeof(Elf32_Sym[symnum]));
+    char *strtable= (char *)malloc(Esh_strtab.sh_size);
     //char symbind;
     char symtype;
     //char symbind_str[20];
@@ -186,7 +185,7 @@ void ftrace_exe(Decode* s)
     char* rd;
     char* rs1;
     int ilen = s->snpc - s->pc;//指令长度  
-    disassemble(str,sizeof(str),s->pc,(uint8_t *)&s->isa.inst.val, ilen);
+    disassemble(str,sizeof(str),s->pc,(uint8_t *)&s->inst, ilen);
     inst = strtok(str,"\t");
     if(inst!= NULL)
     {
