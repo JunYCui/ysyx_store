@@ -34,9 +34,12 @@ LDFLAGS += $(shell llvm-config --libs)
 CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
 
 IMG ?=
+
+ARGS ?=
+
 $(shell mkdir -p $(BUILD_DIR))
 
-NPC_EXEC = $(BIN) $(IMG)
+NPC_EXEC = $(BIN) $(IMG) $(ARGS)
 
 
 .PHONY:sim

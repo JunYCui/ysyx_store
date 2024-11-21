@@ -2,11 +2,13 @@
 #include "npc_memory.h"
 
 void init_sdb();
+void init_ftrace(char* elf_file);
 extern "C" void init_disasm(const char *triple);
 
 
 uint8_t *pmem = NULL;
 char *img_file = NULL;
+static char *elf_file = NULL;
 
 static const uint32_t img [] = {
   0x00000297,  // auipc t0,0
@@ -24,13 +26,16 @@ static void init_mem() {
 static int parse_args(int argc, char *argv[]) {
   const struct option table[] = {
     {0          , 0                , NULL,  0 },
+    {"elf"      , required_argument, NULL, 'e'}
   };
   int o;
-  while ( (o = getopt_long(argc, argv, "-bhl:d:p:e:", table, NULL)) != -1) {
+  while ( (o = getopt_long(argc, argv, "-e:", table, NULL)) != -1) {
     switch (o) {
+      case 'e': elf_file = optarg;break;
       case 1: img_file = optarg; return 0;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
+        printf("\t-e,--elf=FILE           input ELF FILE\n");
         printf("\n");
         exit(0);
     }
@@ -70,6 +75,8 @@ void init_monitor(int argc, char *argv[])
   parse_args(argc, argv);
 
   load_img();
+
+  init_ftrace(elf_file);
 
   init_sdb();
 
