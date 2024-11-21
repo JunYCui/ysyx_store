@@ -15,7 +15,7 @@ extern uint64_t sim_time;
 
 Decode s;
 
-
+uint8_t g_print_step;
 
 
 void Cpu_Wp(void);
@@ -54,6 +54,7 @@ static void exec_once()
 static void trace_and_difftest(Decode *s)
 {
     Cpu_Wp();
+    if(g_print_step)
     itrace(s);
     ftrace_exe(s);
 }
@@ -61,6 +62,7 @@ static void trace_and_difftest(Decode *s)
 
 void cpu_exec(uint32_t n)
 {
+    g_print_step = (n < MAX_INST_TO_PRINT);
     switch (npc_state.state) {
     case NPC_END: case NPC_ABORT:
       printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");

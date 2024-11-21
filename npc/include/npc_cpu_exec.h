@@ -13,4 +13,6 @@ typedef struct
   uint32_t inst;
 }Decode;
 
+#define MAX_INST_TO_PRINT 10
+
 #endif
