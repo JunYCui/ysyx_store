@@ -149,7 +149,10 @@ static void find_strsymtab_32(FILE* fp)
 void init_ftrace(char* elf_file)
 {
     if(elf_file == NULL)
+    {
+        printf("elf file is NULL ! \n");
         return;
+    }
     char str[20];
     size_t num;
     char osType;
