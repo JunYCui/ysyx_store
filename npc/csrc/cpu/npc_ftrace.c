@@ -189,7 +189,7 @@ void ftrace_exe(Decode* s)
     char* rs1;
     int ilen = s->snpc - s->pc;//指令长度  
     disassemble(str,sizeof(str),s->pc,(uint8_t *)&s->inst, ilen);
-    printf("%s",str);
+    printf("%d",ilen);
     inst = strtok(str,"\t");
     if(inst!= NULL)
     {
