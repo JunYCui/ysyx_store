@@ -228,13 +228,13 @@ void ftrace_exe(Decode* s)
                 {
                    if(s->dnpc>=func_array[i].addr && s->dnpc<func_array[i].addr+func_array[i].size) 
                    {
+                     count--;
                         for(int j=0;j<count;j++)
                     {
                         printf(" ");
                     }    
                     printf("0x%x:",s->pc);
                     printf("rt   [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
-                    count--;
                     break;
                    }
                 }
