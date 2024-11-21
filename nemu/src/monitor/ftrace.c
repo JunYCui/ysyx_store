@@ -178,7 +178,7 @@ void init_ftrace(char* elf_file)
       find_strsymtab_32(fp);
 
 }
-
+uint32_t count;
 void ftrace_exe(Decode* s)
 {
     char str[128];
@@ -201,8 +201,13 @@ void ftrace_exe(Decode* s)
                 {
                    if(func_array[i].addr == s->dnpc) 
                    {
+                    for(int j=0;j<count;j++)
+                    {
+                        printf(" ");
+                    }
                     printf("0x%x:",s->pc);
                     printf("call [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
+                    count++;
                     break;
                    }
                 }
@@ -221,10 +226,14 @@ void ftrace_exe(Decode* s)
                 {
                 if(func_array[i].state == true)
                 {
+                    for(int j=0;j<count;j++)
+                    {
+                        printf(" ");
+                    }
                    if(s->dnpc>=func_array[i].addr && s->dnpc<func_array[i].addr+func_array[i].size) 
                    {    
                     printf("0x%x:",s->pc);
-                    printf("rt   [%s]\n",func_array[i].name);
+                    printf("rt   [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
                     break;
                    }
                 }
