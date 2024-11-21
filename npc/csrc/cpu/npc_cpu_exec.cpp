@@ -3,12 +3,15 @@
 
 
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+void ftrace_exe(Decode* s);
 
+/* DPI-C*/
 extern void GetInst(svBitVecVal* inst_exec);
 
 extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
+
 
 Decode s;
 
@@ -24,13 +27,13 @@ static void wave_record(void)
 }
 extern Vcpu_ysyx_24100029 *top; 
 
-static void itrace(Decode s)
+static void itrace(Decode *s)
 {
     char str[20];
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
-    GetInst(&s.inst);
-    disassemble(str, sizeof(str),s.pc, (uint8_t *)&s.inst, 4);
-    printf("0x%x: %x \t %s  \n",s.pc,s.inst,str);
+    GetInst(&s->inst);
+    disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
+    printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
 }
 
 static void exec_once()
@@ -48,10 +51,11 @@ static void exec_once()
 }
 
 
-static void trace_and_difftest(Decode s)
+static void trace_and_difftest(Decode *s)
 {
     Cpu_Wp();
     itrace(s);
+    ftrace_exe(s);
 }
 
 
@@ -69,7 +73,7 @@ void cpu_exec(uint32_t n)
         s.dnpc=top->dnpc;
         s.snpc=top->snpc;
         exec_once();
-        trace_and_difftest(s);
+        trace_and_difftest(&s);
         if(npc_state.state !=NPC_RUNNING)
             break;
     }
