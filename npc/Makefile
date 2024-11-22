@@ -17,7 +17,7 @@ BIN = $(BUILD_DIR)/$(TOPNAME)
 
 DIFF_REF_PATH = $(NEMU_HOME)
 DIFF_REF_SO = $(DIFF_REF_PATH)/build/$(ISA)-nemu-interpreter-so
-ARGS_DIFF = --diff=$(DIFF_REF_SO)
+ARGS_DIFF = -d $(DIFF_REF_SO)
 
 VERILATOR = verilator
 
