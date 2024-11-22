@@ -42,7 +42,7 @@ IMG ?=
 
 ARGS ?=
 
-override ARGS += $(ARGS_DIFF)
+# override ARGS += $(ARGS_DIFF)
 
 $(shell mkdir -p $(BUILD_DIR))
 
