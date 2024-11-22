@@ -1,6 +1,6 @@
 TOPNAME = cpu_ysyx_24100029
 INC_PATH = $(NPC_HOME)/include
-ISA = riscv-32 
+ISA = riscv32 
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )
