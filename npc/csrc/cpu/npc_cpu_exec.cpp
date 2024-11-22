@@ -3,6 +3,7 @@
 
 
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+extern void ReadReg(int reg_num, svBitVecVal* reg_value);
 void ftrace_exe(Decode* s);
 
 /* DPI-C*/
@@ -12,6 +13,7 @@ extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
 
+CPU_state cpu={};
 
 Decode s;
 
@@ -45,6 +47,12 @@ static void exec_once()
     }
     top->eval();
     wave_record();
+    }
+    cpu.pc = top->pc;
+svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.io"));
+    for(int i;i<32;i++)
+    {
+        ReadReg(i,&cpu.gpr[i]);
     }
 }
 
@@ -80,4 +88,10 @@ void cpu_exec(uint32_t n)
             break;
     }
 
+}
+
+void cpu_init()
+{
+    cpu.gpr[0] = 0;
+    cpu.pc = RESET_VECTOR;
 }

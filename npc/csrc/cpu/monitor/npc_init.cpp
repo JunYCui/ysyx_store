@@ -1,14 +1,17 @@
 #include "npc_init.h"
 #include "npc_memory.h"
 
+
 void init_sdb();
 void init_ftrace(char* elf_file);
+void cpu_init();
 extern "C" void init_disasm(const char *triple);
-
 
 uint8_t *pmem = NULL;
 char *img_file = NULL;
 static char *elf_file = NULL;
+static char *diff_so_file = NULL;
+static int difftest_port = 1234;
 
 static const uint32_t img [] = {
   0x00000297,  // auipc t0,0
@@ -26,16 +29,22 @@ static void init_mem() {
 static int parse_args(int argc, char *argv[]) {
   const struct option table[] = {
     {0          , 0                , NULL,  0 },
-    {"elf"      , required_argument, NULL, 'e'}
+    {"elf"      , required_argument, NULL, 'e'},
+    {"diff"     , required_argument, NULL, 'd'},
+    {"port"     , required_argument, NULL, 'p'},
   };
   int o;
-  while ( (o = getopt_long(argc, argv, "-e:", table, NULL)) != -1) {
+  while ( (o = getopt_long(argc, argv, "-e:d:p:", table, NULL)) != -1) {
     switch (o) {
       case 'e': elf_file = optarg;break;
+      case 'p': sscanf(optarg, "%d", &difftest_port); break;
+      case 'd': diff_so_file = optarg; break;
       case 1: img_file = optarg; return 0;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
         printf("\t-e,--elf=FILE           input ELF FILE\n");
+        printf("\t-d,--diff=REF_SO        run DiffTest with reference REF_SO\n");
+        printf("\t-p,--port=PORT          run DiffTest with port PORT\n");
         printf("\n");
         exit(0);
     }
@@ -43,7 +52,7 @@ static int parse_args(int argc, char *argv[]) {
   return 0;
 }
 
-static void load_img() {
+static long load_img() {
   if (img_file == NULL) {
     printf("No image is given. Use the default build-in image. \n");
 
@@ -63,8 +72,8 @@ static void load_img() {
 
   fclose(fp);
 
+  return size;
 }
-
 
 
 
@@ -74,11 +83,15 @@ void init_monitor(int argc, char *argv[])
 
   parse_args(argc, argv);
 
-  load_img();
+  long img_size = load_img();
 
   init_ftrace(elf_file);
 
   init_sdb();
+
+  cpu_init();
+
+  init_difftest(diff_so_file, img_size, difftest_port);
 
   init_disasm("riscv32""-pc-linux-gnu");
 

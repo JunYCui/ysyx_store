@@ -10,7 +10,10 @@ typedef struct {
   uint32_t halt_ret;
 } NPCState;
 
-
+typedef struct {
+  word_t gpr[32];
+  word_t pc;
+} CPU_state;
 
 
 #endif

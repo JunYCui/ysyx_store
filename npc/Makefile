@@ -1,5 +1,6 @@
 TOPNAME = cpu_ysyx_24100029
-INC_PATH ?= $(NPC_HOME)/include
+INC_PATH = $(NPC_HOME)/include
+ISA = riscv-32 
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )
@@ -13,6 +14,10 @@ CONSTR = constrain/$(TOPNAME).nxdc
 BUILD_DIR = $(NPC_HOME)/build
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
+
+DIFF_REF_PATH = $(NEMU_HOME)
+DIFF_REF_SO = $(DIFF_REF_PATH)/build/$(ISA)-nemu-interpreter-so
+ARGS_DIFF = --diff=$(DIFF_REF_SO)
 
 VERILATOR = verilator
 
@@ -36,6 +41,7 @@ CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D
 IMG ?=
 
 ARGS ?=
+ARGS += $(ARGS_DIFF)
 
 $(shell mkdir -p $(BUILD_DIR))
 
