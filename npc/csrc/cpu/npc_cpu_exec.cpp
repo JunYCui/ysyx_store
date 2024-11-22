@@ -50,7 +50,7 @@ static void exec_once()
     }
     cpu.pc = top->pc;
 svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.io"));
-    for(int i;i<32;i++)
+    for(int i=0;i<32;i++)
     {
         ReadReg(i,&cpu.gpr[i]);
     }

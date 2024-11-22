@@ -19,6 +19,7 @@
 
 typedef uint32_t word_t;
 typedef uint32_t paddr_t;
+typedef uint32_t vaddr_t;
 
 #define ARRLEN(arr) (int)(sizeof(arr) / sizeof(arr[0]))
 
