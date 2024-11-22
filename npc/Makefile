@@ -1,6 +1,6 @@
 TOPNAME = cpu_ysyx_24100029
 INC_PATH = $(NPC_HOME)/include
-ISA = riscv32 
+
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )
@@ -16,7 +16,7 @@ OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
 
 DIFF_REF_PATH = $(NEMU_HOME)
-DIFF_REF_SO = $(DIFF_REF_PATH)/build/$(ISA)-nemu-interpreter-so
+DIFF_REF_SO = $(DIFF_REF_PATH)/build/riscv32-nemu-interpreter-so
 ARGS_DIFF = -d $(DIFF_REF_SO)
 
 VERILATOR = verilator
