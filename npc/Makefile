@@ -21,7 +21,7 @@ ARGS_DIFF = -d $(DIFF_REF_SO)
 
 VERILATOR = verilator
 
-VERILATOR_CFLAGS += -Wall --cc -MMD --build --trace\
+VERILATOR_CFLAGS += -Wall --cc -MMD --build --trace \
 			-O3 --x-assign fast --x-initial fast --noassert -DTOP_NAME="\"V$(TOPNAME)\""
 
 
