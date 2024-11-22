@@ -41,7 +41,8 @@ CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D
 IMG ?=
 
 ARGS ?=
-ARGS += $(ARGS_DIFF)
+
+override ARGS += $(ARGS_DIFF)
 
 $(shell mkdir -p $(BUILD_DIR))
 
