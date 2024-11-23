@@ -48,8 +48,7 @@ static void exec_once()
     top->eval();
     wave_record();
     }
- //   cpu.pc = top->pc;
-svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.io"));
+
 
 }
 
@@ -79,6 +78,8 @@ void cpu_exec(uint32_t n)
         s.snpc=top->snpc;
         svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
         exec_once();
+         //   cpu.pc = top->pc;
+svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.io"));
         GetInst(&s.inst);
         trace_and_difftest(&s);
         if(npc_state.state !=NPC_RUNNING)
