@@ -6,7 +6,7 @@ extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int
 
 static void find_strsymtab_32(FILE* fp)
 {
-    Elf32_Ehdr* Ehdr= malloc(sizeof(Elf32_Ehdr)); 
+    Elf32_Ehdr* Ehdr= (Elf32_Ehdr*)malloc(sizeof(Elf32_Ehdr)); 
     Elf32_Off section_off;
     Elf32_Half section_num;
     Elf32_Half shstrindex;
@@ -27,8 +27,8 @@ static void find_strsymtab_32(FILE* fp)
     }
 
 /* 2. 读取section，并根据shstr表头索引，找到shstr表里面有name信息 */
-    Elf32_Shdr *Eshdr = malloc(sizeof(Elf32_Shdr[section_num]));
-    char *shstrtable= malloc(Eshdr[shstrindex].sh_size);
+    Elf32_Shdr *Eshdr = ( Elf32_Shdr *)malloc(sizeof(Elf32_Shdr[section_num]));
+    char *shstrtable= (char*)malloc(Eshdr[shstrindex].sh_size);
 
     fseek(fp,section_off,SEEK_SET);
     num = fread(Eshdr,sizeof(Elf32_Shdr),section_num,fp);
@@ -88,8 +88,8 @@ static void find_strsymtab_32(FILE* fp)
     }
  /* 4. 对于 symtab 进行解析 */
     Elf32_Word symnum = Esh_symtab.sh_size/sizeof(Elf32_Sym);
-    Elf32_Sym *Esym = malloc(sizeof(Elf32_Sym[symnum]));
-    char *strtable= malloc(Esh_strtab.sh_size);
+    Elf32_Sym *Esym = (Elf32_Sym *)malloc(sizeof(Elf32_Sym[symnum]));
+    char *strtable= (char *)malloc(Esh_strtab.sh_size);
     //char symbind;
     char symtype;
     //char symbind_str[20];
@@ -105,7 +105,7 @@ static void find_strsymtab_32(FILE* fp)
     assert(num == 1);
 
 //    printf("\tNum \tValue \t\tSize \tType \t\t Bind\tName \n");
-    for(int i=0;i<symnum;i++)
+    for(unsigned int i=0;i<symnum;i++)
     {
     strcpy(symname,&strtable[Esym[i].st_name]);
    // symbind = ELF32_ST_BIND(Esym[i].st_info);
@@ -201,7 +201,7 @@ void ftrace_exe(Decode* s)
                 {
                    if(func_array[i].addr == s->dnpc) 
                    {
-                    for(int j=0;j<count;j++)
+                    for(unsigned int j=0;j<count;j++)
                     {
                         printf(" ");
                     }
@@ -222,14 +222,14 @@ void ftrace_exe(Decode* s)
         {
              if((strcmp(rd,"zero")==0 )&& (strcmp(rs1,"0(ra)") ==0))
              {
-                for(int i=0;i<FUNC_MAXNUM;i++)
+                for(unsigned int i=0;i<FUNC_MAXNUM;i++)
                 {
                 if(func_array[i].state == true)
                 {
                    if(s->dnpc>=func_array[i].addr && s->dnpc<func_array[i].addr+func_array[i].size) 
                    {
                      count--;
-                        for(int j=0;j<count;j++)
+                        for(unsigned int j=0;j<count;j++)
                     {
                         printf(" ");
                     }    
@@ -252,7 +252,7 @@ void ftrace_exe(Decode* s)
                 {
                    if(func_array[i].addr == s->dnpc) 
                    {
-                    for(int j=0;j<count;j++)
+                    for(unsigned int j=0;j<count;j++)
                     {
                         printf(" ");
                     }
