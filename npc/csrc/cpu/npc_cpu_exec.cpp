@@ -52,7 +52,7 @@ static void exec_once()
 svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.io"));
     for(int i=0;i<32;i++)
     {
-        ReadReg(i,&cpu.gpr[i]);
+       // ReadReg(i,&cpu.gpr[i]);
     }
 }
 
