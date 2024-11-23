@@ -139,7 +139,7 @@ static bool make_token(char *e) {
 static word_t eval(uint32_t p ,uint32_t q);
 
 word_t expr(char *e, bool *success) {
-  uint32_t i = 0;
+  int i = 0;
   if (!make_token(e)) {
     *success = false;
     return 0;

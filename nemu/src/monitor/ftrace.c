@@ -147,7 +147,7 @@ static void find_strsymtab_32(FILE* fp)
 }
 
 
-extern "C" void init_ftrace(char* elf_file)
+ void init_ftrace(char* elf_file)
 {
     if(elf_file == NULL)
         return;
