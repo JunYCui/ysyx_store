@@ -4,6 +4,7 @@
 
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 extern void ReadReg(int reg_num, svBitVecVal* reg_value);
+void difftest_step(vaddr_t pc, vaddr_t npc);
 void ftrace_exe(Decode* s);
 
 /* DPI-C*/
@@ -59,6 +60,7 @@ static void trace_and_difftest(Decode *s)
     if(g_print_step)
     itrace(s);
     ftrace_exe(s);
+    difftest_step(s->pc,s->dnpc);
 }
 
 
