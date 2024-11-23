@@ -15,8 +15,8 @@ BUILD_DIR = $(NPC_HOME)/build
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
 
-DIFF_REF_PATH = $(NEMU_HOME)
-DIFF_REF_SO = $(DIFF_REF_PATH)/build/riscv32-nemu-interpreter-so
+
+DIFF_REF_SO = $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
 ARGS_DIFF = -d $(DIFF_REF_SO)
 
 VERILATOR = verilator
@@ -34,7 +34,7 @@ INCFLAGS = $(addprefix -I, $(INC_PATH))
 
 CFLAGS  = -O2 -MMD -Wall -Werror $(INCFLAGS) 
 
-LDFLAGS += $(shell llvm-config --libs) -fsanitize=address
+LDFLAGS += $(shell llvm-config --libs) 
 
 CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
 
