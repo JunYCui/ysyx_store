@@ -4,7 +4,7 @@
 
 void init_sdb();
 void init_ftrace(char* elf_file);
-void cpu_init();
+void npc_cpu_init();
 extern "C" void init_disasm(const char *triple);
 void init_difftest(char *ref_so_file, long img_size, int port) ;
 
@@ -90,7 +90,7 @@ void init_monitor(int argc, char *argv[])
 
   init_sdb();
 
-  cpu_init();
+  npc_cpu_init();
 
   init_difftest(diff_so_file, img_size, difftest_port);
 

@@ -89,8 +89,8 @@ void cpu_exec(uint32_t n)
     }
 
 }
-
-void cpu_init()
+    
+void npc_cpu_init()
 {
     cpu.gpr[0] = 0;
     cpu.pc = RESET_VECTOR;
