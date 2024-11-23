@@ -13,11 +13,13 @@ module Reg_Stack(
 );
 
 
+wire [31:0]wdata;
 
+assign  wdata= (rd == 5'd0)? 32'd0:rd_value;
 
 RegisterFile #(5, 32) io(
      .clk(clk)              ,
-     .wdata(rd_value)       ,
+     .wdata(wdata)       ,
      .waddr(rd)             ,
      .wen(wen)              ,
      .rst(rst)              ,
