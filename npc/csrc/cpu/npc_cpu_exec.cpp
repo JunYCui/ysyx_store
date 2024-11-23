@@ -87,6 +87,7 @@ void cpu_exec(uint32_t n)
     {
         ReadReg(j,&cpu.gpr[j]);
     }
+        svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
         trace_and_difftest(&s);
         if(npc_state.state !=NPC_RUNNING)
             break;
