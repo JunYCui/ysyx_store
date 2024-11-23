@@ -24,7 +24,7 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
     for(unsigned int i=0;i<n;i++)
     {
       if(i%4 ==0)
-      printf(" %x  \n",*(uint8_t*)buf);
+      printf(" %x  \n",*(uint32_t*)buf);
       paddr_write(addr+i,1,*(uint8_t*)buf);
     }
   }
