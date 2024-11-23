@@ -16,7 +16,7 @@ OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
 
 
-DIFF_REF_SO = ./nemu/build/riscv32-nemu-interpreter-so
+DIFF_REF_SO = $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
 ARGS_DIFF = -d $(DIFF_REF_SO)
 
 VERILATOR = verilator
