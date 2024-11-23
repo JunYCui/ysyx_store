@@ -2,7 +2,7 @@
 #include "npc_isa.h"
 
 
-extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+extern "C++" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 extern void ReadReg(int reg_num, svBitVecVal* reg_value);
 void difftest_step(vaddr_t pc, vaddr_t npc);
 void ftrace_exe(Decode* s);
