@@ -147,7 +147,7 @@ static void find_strsymtab_32(FILE* fp)
 }
 
 
-void init_ftrace(char* elf_file)
+extern "C" void init_ftrace(char* elf_file)
 {
     if(elf_file == NULL)
         return;
@@ -179,7 +179,7 @@ void init_ftrace(char* elf_file)
 
 }
 uint32_t count;
-void ftrace_exe(Decode* s)
+extern "C" void ftrace_exe(Decode* s)
 {
     char str[128];
     char* inst;
