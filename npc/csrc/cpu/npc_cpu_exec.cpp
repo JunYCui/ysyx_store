@@ -48,7 +48,12 @@ static void exec_once()
     top->eval();
     wave_record();
     }
-
+ //   cpu.pc = top->pc;
+svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.io"));
+    for(int j=0;j<32;j++)
+    {
+       // ReadReg(i,&cpu.gpr[i]);
+    }
 }
 
 
