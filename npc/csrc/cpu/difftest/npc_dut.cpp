@@ -24,13 +24,13 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
   {
     if(ref_r->gpr[i] != cpu.gpr[i])
     {
-      printf("0x%x: %s value is error",pc,reg_name(i));
+      printf("0x%x: %s value is error \n",pc,reg_name(i));
       return false;
     }
   }
   if(ref_r->pc != cpu.pc)
   {
-    printf("0x%x: %d value is error",pc, cpu.pc);
+    printf("0x%x: %d value is error \n",pc, cpu.pc);
     return false;
   }
   return true;

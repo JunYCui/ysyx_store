@@ -60,7 +60,6 @@ static void trace_and_difftest(Decode *s)
     if(g_print_step)
     itrace(s);
     ftrace_exe(s);
-    printf("******* 0x%x 0x%x   ********** \n",s->pc,s->dnpc);
     difftest_step(s->pc,s->dnpc);
 }
 
