@@ -34,7 +34,7 @@ INCFLAGS = $(addprefix -I, $(INC_PATH))
 
 CFLAGS  = -O2 -MMD -Wall  $(INCFLAGS) 
 
-LDFLAGS += $(shell llvm-config --libs) -fsanitize=address 
+LDFLAGS += $(shell llvm-config --libs) -fsanitize=address -L$(NEMU_HOME)/build/riscv32-nemu-interpreter-so/
 
 CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE 
 
