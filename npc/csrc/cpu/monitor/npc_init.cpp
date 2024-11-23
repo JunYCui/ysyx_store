@@ -5,7 +5,7 @@
 void init_sdb();
 void init_ftrace(char* elf_file);
 void npc_cpu_init();
-extern "C++" void init_disasm(const char *triple);
+extern "C" void init_disasm(const char *triple);
 void init_difftest(char *ref_so_file, long img_size, int port) ;
 
 uint8_t *pmem = NULL;
@@ -92,7 +92,7 @@ void init_monitor(int argc, char *argv[])
 
   npc_cpu_init();
 
-   init_difftest(diff_so_file, img_size, difftest_port);
+  init_difftest(diff_so_file, img_size, difftest_port);
 
   init_disasm("riscv32""-pc-linux-gnu");
 
