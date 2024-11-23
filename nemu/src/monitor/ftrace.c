@@ -179,7 +179,7 @@ extern "C" void init_ftrace(char* elf_file)
 
 }
 uint32_t count;
-extern "C" void ftrace_exe(Decode* s)
+void ftrace_exe(Decode* s)
 {
     char str[128];
     char* inst;
