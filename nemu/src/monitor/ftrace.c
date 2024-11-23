@@ -2,7 +2,7 @@
 #include "cpu/decode.h"
 
 FUNC_TR func_array[FUNC_MAXNUM];
-void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 
 static void find_strsymtab_32(FILE* fp)
 {
