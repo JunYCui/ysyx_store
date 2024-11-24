@@ -62,8 +62,8 @@ MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (rd_data, funct3, {i4_DA
 });
 MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wmask, funct3, {i5_DATA_LEN{1'b0}},{
   3'b000,8'd1,
-  3'b001,8'd3,
-  3'b010,8'd31
+  3'b001,8'd2,
+  3'b010,8'd4
 });
 
 
