@@ -27,7 +27,7 @@
 module IFU(
     input              [  31: 0] pc                         ,
     input                        valid                      ,
-    output reg         [  31: 0] inst                       
+    output reg         [  31: 0] inst                        
 );
 
 
@@ -36,10 +36,10 @@ MEM MEM_inst(
     .valid                       (valid                     ),
     .raddr                       (pc                        ),
     .wdata                       (32'd0                     ),
-    .wmask                       (8'd0                      ),
+    .funct3                      (3'b010                    ),
     .waddr                       (32'd0                     ),
     .wen                         (1'd0                      ),
-    .rdata                       (inst                      ) 
+    .rd_data                     (inst                      ) 
 );
                                                                    
 endmodule

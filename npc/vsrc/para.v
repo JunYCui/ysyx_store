@@ -12,8 +12,8 @@
 `define I0_opcode_ysyx_24100029 7'b0000011
 `define I1_opcode_ysyx_24100029 7'b0010011
 `define I2_opcode_ysyx_24100029 7'b1100111
-`define S_opcode_ysyx_24100029 7'b0100011
-`define B_opcode_ysyx_24100029 7'b1100011
+`define S_opcode_ysyx_24100029  7'b0100011
+`define B_opcode_ysyx_24100029  7'b1100011
 `define U0_opcode_ysyx_24100029 7'b0110111
 `define U1_opcode_ysyx_24100029 7'b0010111
 `define J0_opcode_ysyx_24100029 7'b1101111

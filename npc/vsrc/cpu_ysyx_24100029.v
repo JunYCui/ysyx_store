@@ -19,7 +19,8 @@ module cpu_ysyx_24100029
     wire               [  31: 0] imm                        ;
     wire               [   2: 0] funct3                     ;
     wire               [   6: 0] opcode                     ;
-    wire                         reg_wen                    ;
+    wire                         re_wen                     ;
+    wire                         mem_wen                    ;
     wire                         jump_flag                  ;
 
     wire               [  31: 0] rs1_value                  ;
@@ -33,10 +34,21 @@ module cpu_ysyx_24100029
     wire               [  31: 0] inst                       ;
     reg                          valid                      ;
 
+    wire               [  31: 0] mem_wdata                  ;
+    wire                         mem_ren                    ;
+    wire               [  31: 0] mem_rdata                  ;
+
     assign                       snpc                      = pc + 4;
     assign                       npc                       = (jump_flag == 1'd1)? dnpc:snpc;
-    assign                       rd_value                  = (jump_flag == 1'd1)? pc+4 : EX_result;
+    assign                       rd_value                  = (jump_flag == 1'd1)? pc+4 : (mem_ren == 1'b1)?  mem_rdata:EX_result;
     assign                       dnpc                      = (jump_flag == 1'd1)? EX_result: pc+4;
+    assign                       mem_wdata                 = rs2_value;
+
+
+
+
+
+
 
     always @(posedge clk) begin
         if(!rst_n)
@@ -54,9 +66,9 @@ module cpu_ysyx_24100029
     always @(*)begin
         if(inst == 32'h00100073)begin
             if(a0_value == 0)
-            $display("\033[32;42m Hit The Good TRAP \033[0m");
+                $display("\033[32;42m Hit The Good TRAP \033[0m");
             else
-            $display("\033[31;41m Hit The Bad TRAP \033[0m");
+                $display("\033[31;41m Hit The Bad TRAP \033[0m");
             fi();
         end
     end
@@ -103,7 +115,7 @@ Reg_Stack Reg_Stack_inst0(
     .rs2                         (rs2                       ),
     .rd                          (rd                        ),
     .rd_value                    (rd_value                  ),
-    .wen                         (reg_wen                   ),
+    .wen                         (re_wen                    ),
 
     .rs1_value                   (rs1_value                 ),
     .rs2_value                   (rs2_value                 ),
@@ -113,17 +125,29 @@ Reg_Stack Reg_Stack_inst0(
 
 IDU IDU_inst0(
     .inst                        (inst                      ),
+    
     .rs1                         (rs1                       ),
     .rs2                         (rs2                       ),
     .rd                          (rd                        ),
     .imm                         (imm                       ),
     .funct3                      (funct3                    ),
     .opcode                      (opcode                    ),
-    .reg_wen                     (reg_wen                   ),
+    .re_wen                      (re_wen                    ),
+
+    .mem_wen                     (mem_wen                   ),
+    .mem_ren                     (mem_ren                   ),
     .jump_flag                   (jump_flag                 ) 
 );
 
-
+MEM Data_MEM_inst(
+    .valid                       (mem_ren                   ),
+    .raddr                       (EX_result                 ),
+    .wdata                       (mem_wdata                 ),
+    .funct3                      (funct3                    ),
+    .waddr                       (EX_result                 ),
+    .wen                         (mem_wen                   ),
+    .rd_data                     (mem_rdata                 ) 
+);
 
 
 

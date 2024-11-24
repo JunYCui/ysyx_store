@@ -25,18 +25,54 @@
 //****************************************************************************************//
 import "DPI-C" function int npc_pmem_read(input int raddr);
 import "DPI-C" function void npc_pmem_write(
-  input int waddr, input int wdata, input byte wmask);
+    input                        int waddr, input int wdata, input byte wmask);
+
+
+    localparam                   i4_NR_KEY                 = 5     ; //键值的个数
+    localparam                   i4_KEY_LEN                = 3     ; //键值的长度
+    localparam                   i4_DATA_LEN               = 32    ; //数据的长度
+
+    localparam                   i5_NR_KEY                 = 3     ; //键值的个数
+    localparam                   i5_KEY_LEN                = 3     ; //键值的长度
+    localparam                   i5_DATA_LEN               = 8    ; //数据的长度
 
 
 module MEM(
     input                        valid                      ,
     input              [  31: 0] raddr                      ,
     input              [  31: 0] wdata                      ,
-    input              [   7: 0] wmask                      ,
+    input              [   2: 0] funct3                     ,
     input              [  31: 0] waddr                      ,
     input                        wen                        ,
-    output reg         [  31: 0] rdata                       
+    output             [  31: 0] rd_data                     
 );
+
+    wire               [  31: 0] rdata_8i                   ;
+    wire               [  31: 0] rdata_16i                  ;
+    wire               [  31: 0] rdata_8u                   ;
+    wire               [  31: 0] rdata_16u                  ;
+
+
+MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (rd_data, funct3, {i4_DATA_LEN{1'b0}},{
+  3'b000,rdata_8i,                                                  // lb
+  3'b001,rdata_16i,                                                 // lh
+  3'b010,rdata,                                                     // lw
+  3'b100,rdata_8u,                                                  // 1bu
+  3'b101,rdata_16u                                                  // 1hu
+});
+MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wmask, funct3, {i5_DATA_LEN{1'b0}},{
+  3'b000,8'd1,
+  3'b001,8'd3,
+  3'b010,8'd31
+});
+
+
+    wire               [   7: 0] wmask                      ;
+
+    reg                [  31: 0] rdata                      ;
+
+    assign                       rdata_8u                  = {24'd0,rdata[7:0]};
+    assign                       rdata_16u                 = {16'd0,rdata[15:0]};
 
 always @(*) begin
   if (valid) begin                                                  // 有读写请求时
@@ -49,6 +85,26 @@ always @(*) begin
     rdata = 0;
   end
 end
+
+
+sext #(
+    .DATA_WIDTH                  (8                         ),
+    .OUT_WIDTH                   (32                        ) 
+) sext_i8
+(
+    .data                        (rdata[7:0]                ),
+    .sext_data                   (rdata_8i                  ) 
+);
+
+sext #(
+    .DATA_WIDTH                  (16                        ),
+    .OUT_WIDTH                   (32                        ) 
+) sext_i16
+(
+    .data                        (rdata[15:0]               ),
+    .sext_data                   (rdata_16i                 ) 
+);
+
 
 endmodule
 
