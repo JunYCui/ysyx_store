@@ -25,7 +25,7 @@
 //****************************************************************************************//
 import "DPI-C" function int npc_pmem_read(input int raddr);
 import "DPI-C" function void npc_pmem_write(
-    input                        int waddr, input int wdata, input byte wmask);
+    input int waddr, input int wdata, input byte wmask);
 
 
     localparam                   i4_NR_KEY                 = 5     ; //键值的个数
