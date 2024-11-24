@@ -26,12 +26,6 @@ word_t paddr_read(paddr_t addr, int len) {
   return 0;
 }
 
-extern "C" int npc_pmem_read(int addr)
-{
-  int paddr = addr&(~0x03u);
-  
-  return *(int*)guest_to_host(paddr);
-}
 
 extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
 {
@@ -47,6 +41,11 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
 
 }
 
-
+extern "C" int npc_pmem_read(int addr)
+{
+  int paddr = addr&(~0x03u);
+  
+  return *(int*)guest_to_host(paddr);
+}
 
 
