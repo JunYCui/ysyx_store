@@ -24,7 +24,7 @@ void fi() { exit(0); }
 void cpu_reset(void)
 {
     top->clk = 0;
-    top->rst = 0;
+    top->rst_n = 0;
     top->eval();
     m_trace->dump(sim_time);
     sim_time++;
@@ -32,7 +32,7 @@ void cpu_reset(void)
     top->eval();
     m_trace->dump(sim_time);
     sim_time++;
-    top->rst = 1;
+    top->rst_n = 1;
     top->clk = 1;
     top->eval();
     m_trace->dump(sim_time);

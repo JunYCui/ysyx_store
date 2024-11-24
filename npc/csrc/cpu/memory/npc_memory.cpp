@@ -25,3 +25,26 @@ word_t paddr_read(paddr_t addr, int len) {
   printf("******* 0x%x is out of boudary ******** \n",addr);
   return 0;
 }
+
+extern "C" int npc_pmem_read(int addr)
+{
+  int paddr = addr&(~0x03u);
+  
+  return *(int*)guest_to_host(paddr);
+}
+
+extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
+{
+  int paddr = addr&(~0x03u);
+  switch (wmask)
+  {
+    case 1: *(int  *)guest_to_host(paddr) = wdata & (0xff); return;
+    case 2: *(int  *)guest_to_host(paddr) = wdata & (0xffff); return;
+    case 4: *(int  *)guest_to_host(paddr) = wdata & (0xffffffff); return;
+  }
+
+}
+
+
+
+
