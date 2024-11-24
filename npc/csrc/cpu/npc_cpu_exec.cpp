@@ -74,9 +74,9 @@ void cpu_exec(uint32_t n)
         s.pc=top->pc;
         s.dnpc=top->dnpc;
         s.snpc=top->snpc;
-        exec_once();
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
         GetInst(&s.inst);    
+        exec_once();
         cpu.pc = top->pc;
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.io"));
     for(int j=0;j<32;j++)
