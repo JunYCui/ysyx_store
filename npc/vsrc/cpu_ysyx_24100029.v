@@ -140,7 +140,7 @@ IDU IDU_inst0(
 );
 
 MEM Data_MEM_inst(
-    .valid                       (mem_ren                   ),
+    .valid                       (1'd1                      ),
     .raddr                       (EX_result                 ),
     .wdata                       (mem_wdata                 ),
     .funct3                      (funct3                    ),
