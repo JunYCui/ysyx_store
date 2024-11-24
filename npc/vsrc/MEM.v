@@ -34,7 +34,7 @@ import "DPI-C" function void npc_pmem_write(
 
     localparam                   i5_NR_KEY                 = 3     ; //键值的个数
     localparam                   i5_KEY_LEN                = 3     ; //键值的长度
-    localparam                   i5_DATA_LEN               = 8    ; //数据的长度
+    localparam                   i5_DATA_LEN               = 8     ; //数据的长度
 
 
 module MEM(
