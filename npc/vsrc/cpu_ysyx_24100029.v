@@ -145,7 +145,7 @@ MEM Data_MEM_inst(
     .wdata                       (mem_wdata                 ),
     .funct3                      (funct3                    ),
     .waddr                       (EX_result                 ),
-    .wen                         (mem_wen||1'd1             ),
+    .wen                         (mem_wen                   ),
     .rd_data                     (mem_rdata                 ) 
 );
 
