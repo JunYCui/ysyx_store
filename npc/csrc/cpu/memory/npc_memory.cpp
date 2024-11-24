@@ -35,8 +35,8 @@ extern "C" int npc_pmem_read(int addr)
 
 extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
 {
+  assert(0);
   int paddr = addr&(~0x03u);
-
   printf("  addr0x%x: 0x%x is written!    \n",paddr,wdata);
   switch (wmask)
   {
