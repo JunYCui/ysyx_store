@@ -62,7 +62,9 @@ module Control(
             comp_flag = 1'b1;
         else if(opcode == `I1_opcode_ysyx_24100029 && (funct3 == 3'b011))
             comp_flag = 1'b1;
-        else
+        else if(opcode == `R_opcode_ysyx_24100029 && (funct3 ==  3'b011))
+            comp_flag = 1'b1;
+        else 
             comp_flag = 1'b0;
     end
 
