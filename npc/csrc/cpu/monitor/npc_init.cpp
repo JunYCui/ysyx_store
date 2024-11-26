@@ -36,7 +36,7 @@ static int parse_args(int argc, char *argv[]) {
     {"port"     , required_argument, NULL, 'p'},
   };
   int o;
-  while ( (o = getopt_long(argc, argv, "-e:d:p:", table, NULL)) != -1) {
+  while ( (o = getopt_long(argc, argv, "-e:d:p:b", table, NULL)) != -1) {
     switch (o) {
       case 'b': sdb_set_batch_mode();break;
       case 'e': elf_file = optarg;break;
