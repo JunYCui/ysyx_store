@@ -32,7 +32,7 @@ extern Vcpu_ysyx_24100029 *top;
 
 static void itrace(Decode *s)
 {
-    char str[20];
+    char str[50];
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
 }
