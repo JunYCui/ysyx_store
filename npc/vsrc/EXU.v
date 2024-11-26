@@ -41,7 +41,7 @@ module EXU (
 
     reg                [  31: 0] imm_add                    ;
     
-    assign                       EX_result                 = inv_flag ? ~alu_res :alu_res;
+    assign                       EX_result                 = alu_res ^{31'd0,inv_flag};
 
 
     always@(*)begin
