@@ -41,8 +41,8 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
   int data;
   switch (wmask)
   {
-    case 1: data = wdata & (0x0000ff); break;
-    case 2: data = wdata & (0x00ffff); break;
+    case 1: data = wdata & (0x000000ff); break;
+    case 2: data = wdata & (0x0000ffff); break;
     case 4: data = wdata & (0xffffffff); break;
     default: 
     printf("wmask      =    %d \n",wmask);
