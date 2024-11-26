@@ -57,14 +57,14 @@ always@(*)
                 if(d1[BW-1] != d2[BW-1])
                     begin
                         if(d1[BW-1] == 1'b1)
-                            res = 1;
+                            res = {BW{1'b1}};
                         else
                             res = 0;
                     end
                 else
                     begin
                         if(result[BW-1] == 1'b1)
-                            res = 1;
+                            res = {BW{1'b1}};
                         else
                             res = 0;
                     end

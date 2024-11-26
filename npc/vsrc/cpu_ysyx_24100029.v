@@ -53,7 +53,7 @@ module cpu_ysyx_24100029
     assign                       snpc                      = pc + 4;
     assign                       npc                       = (jump_flag == 1'd1 || branch_flag == 1'd1)? dnpc:snpc;
     assign                       rd_value                  = (jump_flag == 1'd1)? pc+4 : (mem_ren == 1'b1)?  mem_rdata:EX_result;
-    assign                       dnpc                      = (jump_flag == 1'd1)? EX_result: (branch_flag == 1'b0)? pc+4:(EX_result == 32'hffffffff)? pc+({{20{imm[11]}},imm[11:0]}<<1) :pc+4;
+    assign                       dnpc                      = (jump_flag == 1'd1)? EX_result: (branch_flag == 1'b0)? pc+4:(EX_result != 32'd0)? pc+({{20{imm[11]}},imm[11:0]}<<1) :pc+4;
     assign                       mem_wdata                 = rs2_value;
     assign                       Data_mem_valid            = mem_ren|mem_wen;
 
