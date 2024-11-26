@@ -5,9 +5,14 @@ module EXU (
     input                        rst                        ,
     input              [  31: 0] pc                         ,
 
-    input              [   2: 0] funct3                     ,
-    input              [   6: 0] opcode                     ,
     input              [  31: 0] imm                        ,
+    input              [   1: 0] imm_opcode                 ,
+    input              [   3: 0] alu_opcode                 ,
+    input                        comp_flag                  ,
+    input                        inv_flag                   ,
+    
+    input              [   1: 0] rs1_flag                   ,
+    input                        rs2_flag                   ,
 
     input              [  31: 0] rs1_value                  ,
     input              [  31: 0] rs2_value                  ,
@@ -15,80 +20,70 @@ module EXU (
     output             [  31: 0] EX_result                   
 );
 
-
-    localparam                   NR_KEY_add2               = 8     ;
-    localparam                   KEY_LEN_add2              = 7     ;
-    localparam                   DATA_LEN_add2             = 32    ;
-
-    localparam                   NR_KEY_add1               = 8     ;
-    localparam                   KEY_LEN_add1              = 7     ;
+    localparam                   NR_KEY_add1               = 3     ;
+    localparam                   KEY_LEN_add1              = 2     ;
     localparam                   DATA_LEN_add1             = 32    ;
 
+    localparam                   NR_KEY_add2               = 2     ;
+    localparam                   KEY_LEN_add2              = 1     ;
+    localparam                   DATA_LEN_add2             = 32    ;
 
 
     wire               [  31: 0] add_1                      ;
     wire               [  31: 0] add_2                      ;
 
 
-    wire               [  31: 0] imm_12u                    ;
     wire               [  31: 0] imm_12i                    ;
-
-    wire               [  31: 0] imm_20u                    ;
     wire               [  31: 0] imm_20i                    ;
-
+ 
     wire                         overflow                   ;
-    wire                         compare                    ;
-    wire               [   2: 0] choice                     ;
+    wire               [  31: 0] alu_res                    ;
 
-    assign                       imm_12u                   = {20'd0,imm[11:0]};
-    assign                       imm_20u                   = {12'd0,imm[19:0]};
+    reg                [  31: 0] imm_add                    ;
+    
+    assign                       EX_result                 = inv_flag ? ~alu_res :alu_res;
 
 
-
-    assign                       choice                    = (opcode == `S_opcode_ysyx_24100029 || opcode == `I0_opcode_ysyx_24100029)? 3'b000:funct3;
+    always@(*)begin
+        case(imm_opcode)
+        `imm_12i_ysyx_24100029: imm_add = imm_12i;
+        `imm_20u_ysyx_24100029: imm_add = {imm[19:0] , 12'd0} ;
+        `imm_20i_ysyx_24100029: imm_add = imm_20i << 1;
+        `imm_5u_ysyx_24100029:  imm_add = {27'd0,imm[4:0]};
+        endcase
+    end
 
 
 
 
 /* verilator lint_off IMPLICIT */
 
-MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, opcode, {DATA_LEN_add2{1'b0}},
+MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, rs2_flag, {DATA_LEN_add2{1'b0}},
 {
-`R_opcode_ysyx_24100029,   rs2_value            ,
-`I1_opcode_ysyx_24100029,  imm_12i              ,
-`U0_opcode_ysyx_24100029,  imm_20i              ,
-`U1_opcode_ysyx_24100029,  {imm[19:0],12'd0}    ,
-`J0_opcode_ysyx_24100029,  imm_20i<<1           ,
-`I2_opcode_ysyx_24100029,  imm_12i              ,
-`S_opcode_ysyx_24100029,   rs1_value            ,
-`I0_opcode_ysyx_24100029,  rs1_value
+1'b1, rs2_value,
+1'b0, imm_add
 }
 );
 
-MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (add_1, opcode, {DATA_LEN_add1{1'b0}},
+MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (add_1, rs1_flag, {DATA_LEN_add1{1'b0}},
 {
-`R_opcode_ysyx_24100029,   rs1_value    ,
-`I1_opcode_ysyx_24100029,  rs1_value    ,
-`U0_opcode_ysyx_24100029,  32'd0        ,
-`U1_opcode_ysyx_24100029,  pc           ,
-`J0_opcode_ysyx_24100029,  pc           ,
-`I2_opcode_ysyx_24100029,  rs1_value    ,
-`S_opcode_ysyx_24100029 ,  imm_12i      ,
-`I0_opcode_ysyx_24100029,  imm_12i
+`rs1_dist_reg_ysyx_24100029,    rs1_value,
+`rs1_dist_pc_ysyx_24100029,     pc,
+`rs1_dist_para_ysyx_24100029,   32'd0
 }
 );
 
-
+/* verilator lint_off PINMISSING */
 ALU #(
     .BW                          (6'd32                     ) 
 ) ALU_i0
 (
     .d1                          (add_1                     ),
     .d2                          (add_2                     ),
-    .choice                      (choice                    ),
-    .res                         (EX_result                 ),
-    .overflow                    (overflow                  ),
-    .compare                     (compare                   ) 
+    .choice                      (alu_opcode                ),
+    .comp_flag                   (comp_flag                 ),
+    .res                         (alu_res                   ),
+    .overflow                    (overflow                  ) 
 
 );
 

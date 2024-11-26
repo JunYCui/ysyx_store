@@ -16,34 +16,46 @@ module cpu_ysyx_24100029
     wire               [   4: 0] rs1                        ;
     wire               [   4: 0] rs2                        ;
     wire               [   4: 0] rd                         ;
+
     wire               [  31: 0] imm                        ;
     wire               [   2: 0] funct3                     ;
     wire               [   6: 0] opcode                     ;
-    wire                         re_wen                     ;
-    wire                         mem_wen                    ;
-    wire                         jump_flag                  ;
+    wire               [   6: 0] oprand                     ;
+
 
     wire               [  31: 0] rs1_value                  ;
     wire               [  31: 0] rs2_value                  ;
     wire               [  31: 0] a0_value                   ;
-
     wire               [  31: 0] rd_value                   ;
+
     wire               [  31: 0] npc                        ;
     wire               [  31: 0] EX_result                  ;
 
     wire               [  31: 0] inst                       ;
+    wire                         Data_mem_valid             ;
     reg                          valid                      ;
 
     wire               [  31: 0] mem_wdata                  ;
-    wire                         mem_ren                    ;
     wire               [  31: 0] mem_rdata                  ;
 
-    assign                       snpc                      = pc + 4;
-    assign                       npc                       = (jump_flag == 1'd1)? dnpc:snpc;
-    assign                       rd_value                  = (jump_flag == 1'd1)? pc+4 : (mem_ren == 1'b1)?  mem_rdata:EX_result;
-    assign                       dnpc                      = (jump_flag == 1'd1)? EX_result: pc+4;
-    assign                       mem_wdata                 = rs2_value;
+    wire               [   3: 0] alu_opcode                 ;
+    wire               [   1: 0] imm_opcode                 ;
+    wire                         re_wen                     ;
+    wire                         mem_wen                    ;
+    wire                         mem_ren                    ;
+    wire                         jump_flag                  ;
+    wire                         comp_flag                  ;
+    wire               [   1: 0] rs1_flag                   ;
+    wire                         rs2_flag                   ;
+    wire                         inv_flag                   ;
+    wire                         branch_flag                ;
 
+    assign                       snpc                      = pc + 4;
+    assign                       npc                       = (jump_flag == 1'd1 || branch_flag == 1'd1)? dnpc:snpc;
+    assign                       rd_value                  = (jump_flag == 1'd1)? pc+4 : (mem_ren == 1'b1)?  mem_rdata:EX_result;
+    assign                       dnpc                      = (jump_flag == 1'd1)? EX_result: (branch_flag == 1'b0)? pc+4:(EX_result == 32'd1)? pc+{ {20{imm[11]}},imm[11:0] } :pc+4;
+    assign                       mem_wdata                 = rs2_value;
+    assign                       Data_mem_valid            = mem_ren|mem_wen;
 
 
 
@@ -97,9 +109,13 @@ EXU EXU_inst0
     .rst                         (rst_n                     ),
     .pc                          (pc                        ),
 
-    .funct3                      (funct3                    ),
-    .opcode                      (opcode                    ),
     .imm                         (imm                       ),
+    .imm_opcode                  (imm_opcode                ),
+    .alu_opcode                  (alu_opcode                ),
+    .comp_flag                   (comp_flag                 ),
+    .rs1_flag                    (rs1_flag                  ),
+    .rs2_flag                    (rs2_flag                  ),
+    .inv_flag                    (inv_flag                  ),
 
     .rs1_value                   (rs1_value                 ),
     .rs2_value                   (rs2_value                 ),
@@ -132,21 +148,36 @@ IDU IDU_inst0(
     .imm                         (imm                       ),
     .funct3                      (funct3                    ),
     .opcode                      (opcode                    ),
-    .re_wen                      (re_wen                    ),
-
-    .mem_wen                     (mem_wen                   ),
-    .mem_ren                     (mem_ren                   ),
-    .jump_flag                   (jump_flag                 ) 
+    .oprand                      (oprand                    ) 
 );
 
 MEM Data_MEM_inst(
-    .valid                       (mem_ren|mem_wen           ),
+    .valid                       (Data_mem_valid            ),
     .raddr                       (EX_result                 ),
     .wdata                       (mem_wdata                 ),
     .funct3                      (funct3                    ),
     .waddr                       (EX_result                 ),
     .wen                         (mem_wen                   ),
     .rd_data                     (mem_rdata                 ) 
+);
+
+Control Control_inst(
+    .opcode                      (opcode                    ),
+    .funct3                      (funct3                    ),
+    .oprand                      (oprand                    ),
+
+    .re_wen                      (re_wen                    ),
+    .mem_wen                     (mem_wen                   ),
+    .mem_ren                     (mem_ren                   ),
+    .jump_flag                   (jump_flag                 ),
+    .branch_flag                 (branch_flag               ),
+
+    .alu_opcode                  (alu_opcode                ),
+    .imm_opcode                  (imm_opcode                ),
+    .rs1_flag                    (rs1_flag                  ),
+    .rs2_flag                    (rs2_flag                  ),
+    .comp_flag                   (comp_flag                 ),
+    .inv_flag                    (inv_flag                  ) 
 );
 
 
