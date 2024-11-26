@@ -82,7 +82,7 @@ always@(*)
             end
     `alu_equal_ysyx_24100029:begin                                  //是否相等
             choose_add_sub = 1'b1;
-            if(result[3:0] == 4'd0)
+            if(result[3:0] != 4'd0)
                 res =  1;
             else
                 res =  0;
