@@ -37,7 +37,7 @@ extern "C" int npc_pmem_read(int addr)
 extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
 {
 
-  int paddr = addr;
+  int paddr = addr&(~0x03u);
   int data;
   switch (wmask)
   {
@@ -48,7 +48,7 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
     printf("wmask      =    %d \n",wmask);
     assert(0);
   }
-
+  printf("addr 0x%x:\t0x%x is written !   \n",paddr,data);
   *(int  *)guest_to_host(paddr) = data;
   return;
 }
