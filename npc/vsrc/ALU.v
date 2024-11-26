@@ -54,16 +54,16 @@ always@(*)
     `alu_comparator_ysyx_24100029:begin                            // 比较大小
             if(comp_flag == 1'b0)begin
                 choose_add_sub = 1'b1;
-                if(d1[3] != d2[3])
+                if(d1[BW-1] != d2[BW-1])
                     begin
-                        if(d1[3] == 1'b1)
+                        if(d1[BW-1] == 1'b1)
                             res = 1;
                         else
                             res = 0;
                     end
                 else
                     begin
-                        if(result[3] == 1'b1)
+                        if(result[BW-1] == 1'b1)
                             res = 1;
                         else
                             res = 0;
@@ -82,7 +82,7 @@ always@(*)
             end
     `alu_equal_ysyx_24100029:begin                                  //是否相等
             choose_add_sub = 1'b1;
-            if(result[3:0] != 4'd0)
+            if(result != 0)
                 res =  1;
             else
                 res =  0;
@@ -96,12 +96,12 @@ always@(*)
     `alu_srl_ysyx_24100029:begin                                    //逻辑右移
             overflow = 1'b0;
             choose_add_sub = 1'b0;
-            res = {{32{1'b0}},d1>>d2}[31:0];
+            res = {{BW{1'b0}},d1>>d2}[BW-1:0];
     end
     `alu_sra_ysyx_24100029:begin                                    //算术右移
             overflow = 1'b0;
             choose_add_sub = 1'b0;
-            res = {{32{d1[BW-1]}},d1>>d2}[31:0];
+            res = {{BW{d1[BW-1]}},d1>>d2}[BW-1:0];
     end
     default:begin
             overflow = 1'b0;
