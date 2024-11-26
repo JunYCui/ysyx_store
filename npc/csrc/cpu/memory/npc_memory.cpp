@@ -37,7 +37,7 @@ extern "C" int npc_pmem_read(int addr)
 extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
 {
 
-  int paddr = addr&(~0x03u);
+  int paddr = addr;
   int data;
   switch (wmask)
   {
