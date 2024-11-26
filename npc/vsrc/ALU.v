@@ -96,12 +96,12 @@ always@(*)
     `alu_srl_ysyx_24100029:begin                                    //逻辑右移
             overflow = 1'b0;
             choose_add_sub = 1'b0;
-            res = {{BW{1'b0}},d1>>d2}[BW-1:0];
+            res = {{{BW{1'b0}},d1}>>d2}[BW-1:0];
     end
     `alu_sra_ysyx_24100029:begin                                    //算术右移
             overflow = 1'b0;
             choose_add_sub = 1'b0;
-            res = {{BW{d1[BW-1]}},d1>>d2}[BW-1:0];
+            res = {{{BW{d1[BW-1]}},d1}>>d2}[BW-1:0];
     end
     default:begin
             overflow = 1'b0;
