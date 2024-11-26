@@ -7,7 +7,7 @@ void init_ftrace(char* elf_file);
 void npc_cpu_init();
 extern "C" void init_disasm(const char *triple);
 void init_difftest(char *ref_so_file, long img_size, int port) ;
-
+void sdb_set_batch_mode();
 uint8_t *pmem = NULL;
 char *img_file = NULL;
 static char *elf_file = NULL;
@@ -30,6 +30,7 @@ static void init_mem() {
 static int parse_args(int argc, char *argv[]) {
   const struct option table[] = {
     {0          , 0                , NULL,  0 },
+    {"batch"    , no_argument      , NULL, 'b'},
     {"elf"      , required_argument, NULL, 'e'},
     {"diff"     , required_argument, NULL, 'd'},
     {"port"     , required_argument, NULL, 'p'},
@@ -37,6 +38,7 @@ static int parse_args(int argc, char *argv[]) {
   int o;
   while ( (o = getopt_long(argc, argv, "-e:d:p:", table, NULL)) != -1) {
     switch (o) {
+      case 'b': sdb_set_batch_mode();break;
       case 'e': elf_file = optarg;break;
       case 'p': sscanf(optarg, "%d", &difftest_port); break;
       case 'd': diff_so_file = optarg; break;
