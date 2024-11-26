@@ -74,7 +74,7 @@ always@(*)
                 choose_add_sub = 1'b0;
                 overflow = 1'b0;
                 if(d1 < d2)
-                    res = 1;
+                    res = {BW{1'b1}};
                 else 
                     res = 0;
             end 
@@ -83,7 +83,7 @@ always@(*)
     `alu_equal_ysyx_24100029:begin                                  //是否相等
             choose_add_sub = 1'b1;
             if(result != 0)
-                res =  1;
+                res =  {BW{1'b1}};
             else
                 res =  0;
             overflow = 1'b0;
