@@ -28,7 +28,7 @@ word_t paddr_read(paddr_t addr, int len) {
 
 extern "C" int npc_pmem_read(int addr)
 {
-  int paddr = addr&(~0x03u);
+  int paddr = addr;
   int data = *(int*)guest_to_host(paddr);  
   //printf("addr 0x%x:\t0x%x      \n",paddr,data);
   return data;
@@ -37,7 +37,7 @@ extern "C" int npc_pmem_read(int addr)
 extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
 {
 
-  int paddr = addr&(~0x03u);
+  int paddr = addr;
   int data;
   switch (wmask)
   {
