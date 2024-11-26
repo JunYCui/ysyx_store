@@ -37,14 +37,17 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
 {
 
   int paddr = addr&(~0x03u);
-  printf("addr 0x%x : 0x%x is written!    \n",paddr,wdata);
+  int data;
   switch (wmask)
   {
-    case 1: *(int  *)guest_to_host(paddr) = wdata & (0xff); return;
-    case 2: *(int  *)guest_to_host(paddr) = wdata & (0xffff); return;
-    case 4: *(int  *)guest_to_host(paddr) = wdata & (0xffffffff); return;
+    case 1: data = wdata & (0xff); 
+    case 2: data = wdata & (0xffff); 
+    case 4: data = wdata & (0xffffffff); 
+    default: assert(0);
   }
-
+    printf("addr 0x%x : 0x%x is written!    \n",paddr,data);
+  *(int  *)guest_to_host(paddr) = data;
+  return;
 }
 
 
