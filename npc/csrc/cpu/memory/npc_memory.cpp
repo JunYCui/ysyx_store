@@ -38,7 +38,7 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
 {
 
   int paddr = addr;
-  int data;
+  int data = wdata;
   switch (wmask)
   {
     case 1: *(uint8_t  *)guest_to_host(paddr)  = data&(0x000000ff) ; break;
