@@ -36,12 +36,12 @@ always@(*)
             choose_add_sub = 1'b0;
             overflow = 1'b0;
             end
-    `alu_or_ysyx_24100029: begin                                    //与
+    `alu_and_ysyx_24100029: begin                                    //与
             res = d1 & d2;
             overflow = 1'b0;
             choose_add_sub = 1'b0;
             end
-    `alu_and_ysyx_24100029: begin                                   //或
+    `alu_or_ysyx_24100029: begin                                   //或
             res = d1 | d2;
             overflow = 1'b0;
             choose_add_sub = 1'b0;
