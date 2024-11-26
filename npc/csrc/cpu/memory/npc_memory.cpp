@@ -41,15 +41,14 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
   int data;
   switch (wmask)
   {
-    case 1: data = wdata & (0x000000ff); break;
-    case 2: data = wdata & (0x0000ffff); break;
-    case 4: data = wdata & (0xffffffff); break;
+    case 1: *(uint8_t  *)guest_to_host(paddr)  = data&(0x000000ff) ; break;
+    case 2: *(uint16_t  *)guest_to_host(paddr) = data&(0x0000ffff) ; break;
+    case 4: *(uint32_t  *)guest_to_host(paddr) = data&(0xffffffff) ; break;
     default: 
     printf("wmask      =    %d \n",wmask);
     assert(0);
   }
-  printf("addr 0x%x:\t0x%x is written !   \n",paddr,data);
-  *(int  *)guest_to_host(paddr) = data;
+  printf("addr 0x%x:\t0x%x is written ! wmask = %d  \n",paddr,data,wmask);
   return;
 }
 
