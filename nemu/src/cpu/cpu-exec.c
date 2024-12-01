@@ -39,11 +39,33 @@ struct Ring
   char logbuf[128];
 }trace_fifo[MAX_FIFO_BUF];
 static uint8_t fifo_count=0;
+
+void iringbuf_out()
+{
+  int flag = fifo_count-1;
+  if( flag < 0)
+    flag = 63;
+  for(int i=0;i<64;i++)
+  {
+    if(strlen(trace_fifo[i].logbuf)>0)
+    {
+      if(i == flag)
+      {
+        printf("%s  \t%s \n",ANSI_FMT("-->", ANSI_FG_RED),trace_fifo[i].logbuf);
+      }
+      else 
+      {
+        printf("\t%s \n",trace_fifo[i].logbuf);
+      }
+    }
+  }
+}
+
+
+
 #endif
 
 void device_update();
-
-
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
@@ -119,24 +141,7 @@ static void statistic() {
 void assert_fail_msg() {
   isa_reg_display();
 #ifdef CONFIG_IRINGBUF
-  uint8_t i=0;
-  int flag = fifo_count-1;
-  if( flag < 0)
-    flag = 63;
-  for(i=0;i<64;i++)
-  {
-    if(strlen(trace_fifo[i].logbuf)>0)
-    {
-      if(i == flag)
-      {
-        printf("%s  \t%s \n",ANSI_FMT("-->", ANSI_FG_RED),trace_fifo[i].logbuf);
-      }
-      else 
-      {
-        printf("\t%s \n",trace_fifo[i].logbuf);
-      }
-    }
-  }
+  iringbuf_out();
 #endif
   statistic();
 
