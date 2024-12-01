@@ -100,25 +100,27 @@ void *memset(void *s, int c, size_t n) {
 }
 
 void *memmove(void *dst, const void *src, size_t n) {
-  const char *p1=src;
-  char *p2=dst;
-  int i=0;
-  if(p1>p2)
-  {
-    while(n--)
-    {
-      *(p2+i)= *(p1+i);
-      i++;
-    }
+
+	if (dst < src)
+	{
+		for (int i = 0; i < n; i++)
+		{
+			*((char*)dst + i) = *((char*)src + i);
+		}
+		return dst;
+	}
+	else if (dst > src)
+	{
+		for (int i = n-1; i >=0; i--)
+		{
+			*((char*)dst + i) = *((char*)src + i);
+		}
+		return dst;
+	}
+	else
+	{
+		return dst;
   }
-  else 
-  {
-    while(n--)
-    {
-      *(p2+n)= *(p1+n);
-    }
-  }
-  return dst;
 
 }
 
