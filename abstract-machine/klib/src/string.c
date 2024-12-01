@@ -100,20 +100,21 @@ void *memset(void *s, int c, size_t n) {
 }
 
 void *memmove(void *dst, const void *src, size_t n) {
-  char fifo[n];
   const char *p1=src;
   char *p2=dst;
-  size_t i=0;
-  while(i<n)
+  if(p1>p2)
   {
-    *(fifo+i) = *(p1+i);
-    i++;
+    while(n--)
+    {
+      *(p2++)= *(p1++);
+    }
   }
-  i=0;
-  while(i<n)
+  else 
   {
-    *(p2+i) = *(fifo+i);
-    i++;
+    while(n--)
+    {
+      *(p2+n)= *(p1+n);
+    }
   }
   return dst;
 
