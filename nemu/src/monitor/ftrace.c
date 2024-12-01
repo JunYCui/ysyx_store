@@ -1,6 +1,6 @@
 #include "ftrace.h"
 #include "cpu/decode.h"
-
+#ifdef CONFIG_ITRACE
 FUNC_TR func_array[FUNC_MAXNUM];
 void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 
@@ -40,8 +40,8 @@ static void find_strsymtab_32(FILE* fp)
 
  //   printf("[Nr]\t Name \t\t\t Type \t\t\t Addr \t\t Off \t Size  \n");    
  /* 3. 根据name 找到strtab 和 symtab */
-    Elf32_Shdr Esh_strtab;
-    Elf32_Shdr Esh_symtab;
+    Elf32_Shdr Esh_strtab = {};
+    Elf32_Shdr Esh_symtab = {};
 
     for(int i=0;i<section_num;i++)
     {
@@ -271,3 +271,4 @@ void ftrace_exe(Decode* s)
         }
     }
 }
+#endif

@@ -131,7 +131,7 @@ void init_monitor(int argc, char *argv[]) {
   /* Initialize the simple debugger. */
   init_sdb();
   /* Initialize the ftrace*/
-  init_ftrace(elf_file);
+  IFDEF(CONFIG_FTRACE,init_ftrace(elf_file));
 
 #ifndef CONFIG_ISA_loongarch32r
   IFDEF(CONFIG_ITRACE, init_disasm(
