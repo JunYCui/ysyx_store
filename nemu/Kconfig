@@ -230,6 +230,8 @@ config MTRACE
 config FTRACE
   bool "Function Trace"
   default y
-
+config DTRACE
+  bool "Device Trace"
+  default y
 endmenu
 
