@@ -14,8 +14,8 @@ void __am_gpu_init() {
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
-  uint16_t h = inl(VGACTL_ADDR)&0xffff;
-  uint16_t w = inl(VGACTL_ADDR)>>16;
+  uint32_t h = inl(VGACTL_ADDR)&0xffff;
+  uint32_t w = inl(VGACTL_ADDR)>>16;
   *cfg = (AM_GPU_CONFIG_T) {
     .present = true, .has_accel = false,
     .width = w, .height = h,
