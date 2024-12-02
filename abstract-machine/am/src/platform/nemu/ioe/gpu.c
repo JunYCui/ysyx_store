@@ -6,7 +6,7 @@
 
 void __am_gpu_init() {
   int i;
-  int w = 200;  // TODO: get the correct width
+  int w = 300;  // TODO: get the correct width
   int h = 400;  // TODO: get the correct height
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
   for (i = 0; i < w * h; i ++) fb[i] = i/2;
