@@ -4,6 +4,9 @@
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
+#define screen_weight 400
+#define screen_height 300
+
 void __am_gpu_init() {
   int i;
   int w = 400;  // TODO: get the correct width
@@ -23,8 +26,18 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   };
 }
 
-void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
+void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl){
+  uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
+  int x=ctl->x;
+  int y=ctl->y;
+  int*pix = ctl->pixels;
+  int w=ctl->w;
+  int h=ctl->h;
+  int k=0;
   if (ctl->sync) {
+    for(int i=y;i<y+h;i++)
+      for(int j=x;i<x+w;j++)
+        fb[i*screen_weight+j] = pix[k++];
     outl(SYNC_ADDR, 1);
   }
 }
