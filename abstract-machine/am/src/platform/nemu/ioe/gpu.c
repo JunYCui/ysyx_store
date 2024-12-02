@@ -4,8 +4,7 @@
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
-#define screen_weight 400
-#define screen_height 300
+
 
 void __am_gpu_init() {
 }
@@ -28,9 +27,10 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl){
   int w=ctl->w;
   int h=ctl->h;
   int k=0;
-    for(int i=y;i<y+h;i++)
+  uint16_t sw = inl(VGACTL_ADDR)>>16;
+  for(int i=y;i<y+h;i++)
       for(int j=x;i<x+w;j++)
-        fb[i*screen_weight+j] = pix[k++];
+        fb[i*sw+j] = pix[k++];
   if (ctl->sync) {
     outl(SYNC_ADDR, 1);
   }
