@@ -30,7 +30,7 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
   if(ref_r->pc != cpu.pc)
   {
     printf("\n 0x%x: %d value is error \n",pc, cpu.pc);
-    printf("right value:%d \t wrong value:%d \n",ref_r->pc ,cpu.pc );
+    printf("right value:0x%x \t wrong value:0x%x \n",ref_r->pc ,cpu.pc );
     return false;
   }
   return true;
