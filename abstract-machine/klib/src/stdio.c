@@ -355,6 +355,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           p1++;
           break;
           */
+         case 'c':assert(0);break;
+         case 'x':assert(0);break;
          default:assert(0);
           }
           
