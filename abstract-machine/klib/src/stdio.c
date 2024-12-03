@@ -6,6 +6,38 @@
 enum{FLAG_LEFT=1, FLAG_RIGHT =2,FLAG_ZERO =4, FLAG_NUM =8};
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
+
+int int2hex(char*str, int val)
+{
+  int count=0;
+  while(val!=0)
+  {
+  switch (val%16)
+  {
+  case 0:case 1: case 2:
+  case 3:case 4: case 5:
+  case 6:case 7: case 8:
+  case 9:
+   str[count++] = val%16 + 0x30;break;
+  case 10:   
+    str[count++] = 'a';break;
+  case 11:
+    str[count++] = 'b';break;
+  case 12:
+    str[count++] = 'c';break;
+  case 13:
+    str[count++] = 'd';break;
+  case 14:
+    str[count++] = 'e';break;
+  case 15:
+    str[count++] = 'f';break;
+  }
+   val = val/16;
+  }
+  return count;
+}
+
+
 int int2str(char* str, int val)
 {
   int count =0;
@@ -355,10 +387,104 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           p1++;
           break;
           */
-         case 'c':assert(0);break;
-         case 'x':assert(0);break;
-         default:assert(0);
+         case 'c':assert(0);break;//Todo
+         case 'x':
+          flag_neg = 0;
+          Argintval = va_arg(ap,int);
+          if(Argintval <0)
+          {
+            Argintval = -Argintval;
+            flag_neg = 1;
           }
+          num_count = int2hex(num_store,Argintval);
+          if(flag & FLAG_NUM)
+          {
+            if(flag & FLAG_LEFT)
+            {
+              if(flag_neg == 1)
+              {
+                *(p2++) = '-';
+                strl--;
+              }
+              if(flag & FLAG_ZERO)
+              {
+                while(num_count!=0)
+                {
+                  *(p2++) = num_store[--num_count];
+                  strl--;
+                } 
+                while(strl>0)
+                {
+                  *(p2++) = ' ';
+					        strl--;
+                }
+              }
+              else 
+              {
+                while(num_count!=0)
+                {
+                  *(p2++) = num_store[--num_count];
+                  strl--;
+                } 
+                while(strl>0)
+                {
+                  *(p2++) = ' ';
+                  strl--;
+				        }
+              }
+            }
+            else 
+            {
+                if(flag & FLAG_ZERO)
+                {
+                  if(flag_neg == 1)
+                  {
+                    *(p2++) = '-';
+                    strl--;
+                  }
+                  while(strl > num_count)
+                  {
+                    *(p2++) = '0';
+                    strl--;
+                  }
+                  while(num_count!=0)
+                  {
+                  *(p2++) = num_store[--num_count];
+                  }
+                }
+                else 
+                {
+                  while(strl > num_count)
+                  {
+                    *(p2++) = ' ';
+                    strl--;
+                  }
+                  if(flag_neg == 1)
+                  {
+                    *(p2++) = '-';
+                  }
+                  while(num_count!=0)
+                  {
+                  *(p2++) = num_store[--num_count];
+                  }
+                }
+            }
+          }
+          else 
+          {
+            if(flag_neg == 1)
+              {
+                *(p2++) = '-';
+              }
+            while(num_count!=0)
+              {
+                *(p2++) = num_store[--num_count];
+              }
+          }
+          p1++;
+          break;
+         default:assert(0);
+        }
           
       default: 
       *(p2++) =*(p1++);//将fmt赋值给out
@@ -675,7 +801,103 @@ int sprintf(char *out, const char *fmt, ...) {
           p1++;
           break;
           */
-          default:assert(0);
+         case 'c':assert(0);break;//Todo
+         case 'x':
+          flag_neg = 0;
+          Argintval = va_arg(pArgs,int);
+          if(Argintval <0)
+          {
+            Argintval = -Argintval;
+            flag_neg = 1;
+          }
+          num_count = int2hex(num_store,Argintval);
+          if(flag & FLAG_NUM)
+          {
+            if(flag & FLAG_LEFT)
+            {
+              if(flag_neg == 1)
+              {
+                *(p2++) = '-';
+                strl--;
+              }
+              if(flag & FLAG_ZERO)
+              {
+                while(num_count!=0)
+                {
+                  *(p2++) = num_store[--num_count];
+                  strl--;
+                } 
+                while(strl>0)
+                {
+                  *(p2++) = ' ';
+					        strl--;
+                }
+              }
+              else 
+              {
+                while(num_count!=0)
+                {
+                  *(p2++) = num_store[--num_count];
+                  strl--;
+                } 
+                while(strl>0)
+                {
+                  *(p2++) = ' ';
+                  strl--;
+				        }
+              }
+            }
+            else 
+            {
+                if(flag & FLAG_ZERO)
+                {
+                  if(flag_neg == 1)
+                  {
+                    *(p2++) = '-';
+                    strl--;
+                  }
+                  while(strl > num_count)
+                  {
+                    *(p2++) = '0';
+                    strl--;
+                  }
+                  while(num_count!=0)
+                  {
+                  *(p2++) = num_store[--num_count];
+                  }
+                }
+                else 
+                {
+                  while(strl > num_count)
+                  {
+                    *(p2++) = ' ';
+                    strl--;
+                  }
+                  if(flag_neg == 1)
+                  {
+                    *(p2++) = '-';
+                  }
+                  while(num_count!=0)
+                  {
+                  *(p2++) = num_store[--num_count];
+                  }
+                }
+            }
+          }
+          else 
+          {
+            if(flag_neg == 1)
+              {
+                *(p2++) = '-';
+              }
+            while(num_count!=0)
+              {
+                *(p2++) = num_store[--num_count];
+              }
+          }
+          p1++;
+          break;
+         default:assert(0);
           }
       default: 
       *(p2++) =*(p1++);//将fmt赋值给out
