@@ -10,6 +10,11 @@ enum{FLAG_LEFT=1, FLAG_RIGHT =2,FLAG_ZERO =4, FLAG_NUM =8};
 int int2hex(char*str, int val)
 {
   int count=0;
+  if(val == 0)
+  {
+     str[count++] = val%10 + 0x30;
+     return  count;
+  }
   while(val!=0)
   {
   switch (val%16)
@@ -41,6 +46,11 @@ int int2hex(char*str, int val)
 int int2str(char* str, int val)
 {
   int count =0;
+  if(val == 0)
+  {
+     str[count++] = val%10 + 0x30;
+     return  count;
+  }
   while(val != 0)
   {
     str[count++] = val%10 + 0x30;
