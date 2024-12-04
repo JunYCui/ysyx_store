@@ -82,9 +82,10 @@ int float2str(char* str, double val)
   return count;
 }
 
+int vsprintf(char *out, const char *fmt, va_list ap);
 
 int printf(const char *fmt, ...) {
-  char strout[100];
+  char strout[200];
   va_list pArgs;
   va_start(pArgs, fmt);
   int num = vsprintf(strout,fmt, pArgs);
@@ -94,11 +95,12 @@ int printf(const char *fmt, ...) {
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
+  const char *p1=fmt;
   char *p2 = out;
   char *Argstrval; // 字符串参数
   int Argintval; // 整数参数
   int num=0; // 返回字符串长度
-  char num_store[20]; // 用来保存变量
+  char num_store[50]; // 用来保存变量
   int num_count=0;
   int flag;
   int flag_neg; //判断正负
@@ -106,30 +108,30 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
   int i;
   //double ArgFloVal = 0.0; // 接受浮点型
 
- while(*fmt !='\0')
+ while(*p1 !='\0')
   {
-    switch(*fmt)
+    switch(*p1)
     {
       case '%':
-          fmt++;
+          p1++;
           flag=0;
           strl=0;
-          switch(*fmt)
+          switch(*p1)
           {
-            case '+':flag |= FLAG_RIGHT;fmt++;  break;
-            case '-':flag |= FLAG_LEFT;fmt++; break;
+            case '+':flag |= FLAG_RIGHT;p1++;  break;
+            case '-':flag |= FLAG_LEFT;p1++; break;
           }
-          if(*fmt == '0')
+          if(*p1 == '0')
           { 
-            flag |= FLAG_ZERO;fmt++; 
+            flag |= FLAG_ZERO;p1++; 
           }
-			    while(*fmt>='0'&& *fmt <='9')
+			    while(*p1>='0'&& *p1 <='9')
 			    {
 			      flag |= FLAG_NUM;
-			      strl =*fmt - 0x30 + strl*10;
-			      fmt++;
+			      strl =*p1 - 0x30 + strl*10;
+			      p1++;
 			    }
-          switch (*fmt)
+          switch (*p1)
           {
           case 'd':
           flag_neg = 0;
@@ -224,7 +226,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                 *(p2++) = num_store[--num_count];
               }
           }
-          fmt++;
+          p1++;
           break;
           case 's':
           i=0;
@@ -296,7 +298,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                 *(p2++) = Argstrval[i++];
               }
           }
-          fmt++;
+          p1++;
           break;
           case 'f': 
           /*
@@ -489,13 +491,13 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                 *(p2++) = num_store[--num_count];
               }
           }
-          fmt++;
+          p1++;
           break;
          default:assert(0);
         }
           
       default: 
-      *(p2++) =*(fmt++);//将fmt赋值给out
+      *(p2++) =*(p1++);//将fmt赋值给out
     
     }
 }
@@ -505,12 +507,12 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 }
 
 int sprintf(char *out, const char *fmt, ...) {
-  const char *p1=fmt;
-  char *p2 = out;
+  volatile const char *p1=fmt;
+  volatile char *p2 = out;
   char *Argstrval; // 字符串参数
   int Argintval; // 整数参数
   int num=0; // 返回字符串长度
-  char num_store[20]; // 用来保存变量
+  char num_store[50]; // 用来保存变量
   int num_count=0;
   int flag;
   int flag_neg; //判断正负
@@ -905,7 +907,7 @@ int sprintf(char *out, const char *fmt, ...) {
           }
           p1++;
           break;
-          default:assert(0);
+         default:assert(0);
           }
       default: 
       *(p2++) =*(p1++);//将fmt赋值给out
