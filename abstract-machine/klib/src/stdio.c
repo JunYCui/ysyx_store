@@ -153,7 +153,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
               }
               if(flag & FLAG_ZERO)
               {
-                while(num_count!=0)
+                while(num_count>0)
                 {
                   *(p2++) = num_store[--num_count];
                   strl--;
@@ -166,7 +166,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
               }
               else 
               {
-                while(num_count!=0)
+                while(num_count>0)
                 {
                   *(p2++) = num_store[--num_count];
                   strl--;
@@ -192,7 +192,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                     *(p2++) = '0';
                     strl--;
                   }
-                  while(num_count!=0)
+                  while(num_count>0)
                   {
                   *(p2++) = num_store[--num_count];
                   }
@@ -208,7 +208,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                   {
                     *(p2++) = '-';
                   }
-                  while(num_count!=0)
+                  while(num_count>0)
                   {
                   *(p2++) = num_store[--num_count];
                   }
@@ -221,7 +221,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
               {
                 *(p2++) = '-';
               }
-            while(num_count!=0)
+            while(num_count>0)
               {
                 *(p2++) = num_store[--num_count];
               }
@@ -418,7 +418,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
               }
               if(flag & FLAG_ZERO)
               {
-                while(num_count!=0)
+                while(num_count>0)
                 {
                   *(p2++) = num_store[--num_count];
                   strl--;
@@ -431,7 +431,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
               }
               else 
               {
-                while(num_count!=0)
+                while(num_count>0)
                 {
                   *(p2++) = num_store[--num_count];
                   strl--;
@@ -457,7 +457,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                     *(p2++) = '0';
                     strl--;
                   }
-                  while(num_count!=0)
+                  while(num_count>0)
                   {
                   *(p2++) = num_store[--num_count];
                   }
@@ -473,7 +473,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                   {
                     *(p2++) = '-';
                   }
-                  while(num_count!=0)
+                  while(num_count>0)
                   {
                   *(p2++) = num_store[--num_count];
                   }
@@ -486,7 +486,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
               {
                 *(p2++) = '-';
               }
-            while(num_count!=0)
+            while(num_count>0)
               {
                 *(p2++) = num_store[--num_count];
               }
