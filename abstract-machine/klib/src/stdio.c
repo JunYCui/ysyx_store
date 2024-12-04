@@ -82,7 +82,6 @@ int float2str(char* str, double val)
   return count;
 }
 
-int vsprintf(char *out, const char *fmt, va_list ap);
 
 int printf(const char *fmt, ...) {
   char strout[100];
