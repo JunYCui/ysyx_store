@@ -94,7 +94,6 @@ int printf(const char *fmt, ...) {
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
-  const char *p1=fmt;
   char *p2 = out;
   char *Argstrval; // 字符串参数
   int Argintval; // 整数参数
@@ -107,30 +106,30 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
   int i;
   //double ArgFloVal = 0.0; // 接受浮点型
 
- while(*p1 !='\0')
+ while(*fmt !='\0')
   {
-    switch(*p1)
+    switch(*fmt)
     {
       case '%':
-          p1++;
+          fmt++;
           flag=0;
           strl=0;
-          switch(*p1)
+          switch(*fmt)
           {
-            case '+':flag |= FLAG_RIGHT;p1++;  break;
-            case '-':flag |= FLAG_LEFT;p1++; break;
+            case '+':flag |= FLAG_RIGHT;fmt++;  break;
+            case '-':flag |= FLAG_LEFT;fmt++; break;
           }
-          if(*p1 == '0')
+          if(*fmt == '0')
           { 
-            flag |= FLAG_ZERO;p1++; 
+            flag |= FLAG_ZERO;fmt++; 
           }
-			    while(*p1>='0'&& *p1 <='9')
+			    while(*fmt>='0'&& *fmt <='9')
 			    {
 			      flag |= FLAG_NUM;
-			      strl =*p1 - 0x30 + strl*10;
-			      p1++;
+			      strl =*fmt - 0x30 + strl*10;
+			      fmt++;
 			    }
-          switch (*p1)
+          switch (*fmt)
           {
           case 'd':
           flag_neg = 0;
@@ -225,7 +224,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                 *(p2++) = num_store[--num_count];
               }
           }
-          p1++;
+          fmt++;
           break;
           case 's':
           i=0;
@@ -297,7 +296,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                 *(p2++) = Argstrval[i++];
               }
           }
-          p1++;
+          fmt++;
           break;
           case 'f': 
           /*
@@ -490,13 +489,13 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                 *(p2++) = num_store[--num_count];
               }
           }
-          p1++;
+          fmt++;
           break;
          default:assert(0);
         }
           
       default: 
-      *(p2++) =*(p1++);//将fmt赋值给out
+      *(p2++) =*(fmt++);//将fmt赋值给out
     
     }
 }
