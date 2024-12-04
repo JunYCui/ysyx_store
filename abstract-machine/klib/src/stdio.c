@@ -89,6 +89,7 @@ int printf(const char *fmt, ...) {
   va_list pArgs;
   va_start(pArgs, fmt);
   int num = vsprintf(strout,fmt, pArgs);
+  va_end(pArgs);
   putstr(strout);
   return num;
 }
@@ -498,7 +499,6 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
     
     }
 }
-  va_end(ap);
   *p2 = '\0';
   num = strlen(out);
   return num;
