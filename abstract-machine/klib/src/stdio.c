@@ -89,7 +89,7 @@ int printf(const char *fmt, ...) {
   va_list pArgs;
   va_start(pArgs, fmt);
   int num = vsprintf(strout,fmt, pArgs);
-  assert(num<100);
+  assert(num<=100);
   va_end(pArgs);
   putstr(strout);
   return num;
