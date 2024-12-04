@@ -85,7 +85,7 @@ int float2str(char* str, double val)
 int vsprintf(char *out, const char *fmt, va_list ap);
 
 int printf(const char *fmt, ...) {
-  char *strout = (char *)malloc(70*sizeof(char));
+  char *strout = (char *)malloc(50*sizeof(char));
   va_list pArgs;
   va_start(pArgs, fmt);
   int num = vsprintf(strout,fmt, pArgs);
