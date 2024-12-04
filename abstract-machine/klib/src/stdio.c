@@ -493,7 +493,6 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           break;
          default:assert(0);
         }
-          
       default: 
       *(p2++) =*(p1++);//将fmt赋值给out
     
@@ -913,7 +912,6 @@ int sprintf(char *out, const char *fmt, ...) {
     
     }
 }
-  va_end(pArgs);
   *p2 = '\0';
   num = strlen(out);
   return num;
