@@ -85,10 +85,10 @@ int float2str(char* str, double val)
 int vsprintf(char *out, const char *fmt, va_list ap);
 
 int printf(const char *fmt, ...) {
-  char strout[10]={};
+  char strout[200];
   va_list pArgs;
   va_start(pArgs, fmt);
-  int num =  0;//vsprintf(strout,fmt, pArgs);
+  int num = vsprintf(strout,fmt, pArgs);
   va_end(pArgs);
   putstr(strout);
   return num;
