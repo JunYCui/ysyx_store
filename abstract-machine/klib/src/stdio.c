@@ -507,8 +507,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 }
 
 int sprintf(char *out, const char *fmt, ...) {
-  volatile const char *p1=fmt;
-   char *p2 = out;
+  const char *p1=fmt;
+  char *p2 = out;
   char *Argstrval; // 字符串参数
   int Argintval; // 整数参数
   int num=0; // 返回字符串长度
