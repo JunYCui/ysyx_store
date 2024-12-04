@@ -107,6 +107,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
   int strl;
   int i;
   //double ArgFloVal = 0.0; // 接受浮点型
+
  while(*p1 !='\0')
   {
     switch(*p1)
@@ -494,6 +495,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           break;
          default:assert(0);
         }
+          
       default: 
       *(p2++) =*(p1++);//将fmt赋值给out
     
@@ -506,7 +508,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 
 int sprintf(char *out, const char *fmt, ...) {
   volatile const char *p1=fmt;
-  volatile char *p2 = out;
+   char *p2 = out;
   char *Argstrval; // 字符串参数
   int Argintval; // 整数参数
   int num=0; // 返回字符串长度
@@ -912,6 +914,7 @@ int sprintf(char *out, const char *fmt, ...) {
     
     }
 }
+  va_end(pArgs);
   *p2 = '\0';
   num = strlen(out);
   return num;
