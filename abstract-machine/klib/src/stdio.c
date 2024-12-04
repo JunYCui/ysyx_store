@@ -89,7 +89,6 @@ int printf(const char *fmt, ...) {
   va_list pArgs;
   va_start(pArgs, fmt);
   int num = vsprintf(strout,fmt, pArgs);
-  va_end(pArgs);
   putstr(strout);
   return num;
 }
@@ -107,7 +106,6 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
   int strl;
   int i;
   //double ArgFloVal = 0.0; // 接受浮点型
-
  while(*p1 !='\0')
   {
     switch(*p1)
@@ -501,6 +499,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
     
     }
 }
+  va_end(ap);
   *p2 = '\0';
   num = strlen(out);
   return num;
