@@ -907,7 +907,7 @@ int sprintf(char *out, const char *fmt, ...) {
           }
           p1++;
           break;
-         default:assert(0);
+          default:assert(0);
           }
       default: 
       *(p2++) =*(p1++);//将fmt赋值给out
