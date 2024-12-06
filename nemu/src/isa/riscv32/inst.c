@@ -107,7 +107,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("0100000 ????? ????? 000 ????? 01100 11", sub    , RE, R(rd) = src1 - src2);
   INSTPAT("0000000 ????? ????? 001 ????? 01100 11", sll    , RE, R(rd) = src1 << src2); // shift left logical 
   INSTPAT("0000001 ????? ????? 000 ????? 01100 11", mul    , RE, R(rd) = (int64_t)(int32_t)src1 * (int64_t)(int32_t)src2);
-  INSTPAT("0000001 ????? ????? 100 ????? 01100 11", div1   , RE, if((int32_t)src2 == -1){R(rd) = 0x80000001;}else if(src2!=0) {R(rd) = (int32_t)src1 / (int32_t)src2 ;} else {R(rd) = -1;} );
+  INSTPAT("0000001 ????? ????? 100 ????? 01100 11", div1   , RE, if((int32_t)src2 == -1){R(rd) = 0x80000000;}else if(src2!=0) {R(rd) = (int32_t)src1 / (int32_t)src2 ;} else {R(rd) = -1;} );
   INSTPAT("0000001 ????? ????? 101 ????? 01100 11", divu   , RE, if(src2!=0) {R(rd) = (uint64_t)src1 / (uint64_t)src2;} else {R(rd) = 0xffffffff;});
   INSTPAT("0000001 ????? ????? 110 ????? 01100 11", rem    , RE, if((int32_t)src2 == -1){R(rd) = 0;}else if(src2 !=0){R(rd) = (int32_t)src1 % (int32_t)src2 ;} else {R(rd)=(int32_t)src1;});
   INSTPAT("0000001 ????? ????? 111 ????? 01100 11", remu   , RE, if(src2 !=0){R(rd) = (uint32_t)src1 % (uint32_t)src2;} else {R(rd)=(uint32_t)src1;} );
