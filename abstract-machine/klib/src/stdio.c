@@ -397,7 +397,12 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           p1++;
           break;
           */
-         case 'c':assert(0);break;//Todo
+         case 'c':
+          Argintval = va_arg(ap,int);
+          *(p2++) = Argintval;
+          p1++;
+          break;
+         break;//Todo
          case 'x':
           flag_neg = 0;
           Argintval = va_arg(ap,int);
