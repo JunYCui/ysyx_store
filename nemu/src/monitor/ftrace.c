@@ -138,7 +138,6 @@ static void find_strsymtab_32(FILE* fp)
     printf("\t%d\t%-10x \t%d \t%-8s \t%s \t %d \n",i,Esym[i].st_value,Esym[i].st_size,symtype_str,symbind_str,Esym[i].st_name);
 */    
 }
-
     free(strtable);
     free(Esym);
     free(shstrtable);

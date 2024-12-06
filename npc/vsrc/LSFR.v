@@ -1,4 +1,7 @@
+<<<<<<< HEAD
+=======
 `timescale 1ns/1ps
+>>>>>>> 3e8efcc
 module LSFR (
     input clk,
     input load,
