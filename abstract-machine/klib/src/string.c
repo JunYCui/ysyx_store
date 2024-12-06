@@ -127,28 +127,9 @@ void *memmove(void *dst, const void *src, size_t n) {
 void *memcpy(void *out, const void *in, size_t n) {
   char *p0=out;
   const char*p1 = in;
-  size_t i=0;
-  size_t len = strlen(p1);
-  if(len<n)
+  while(n--)
   {
-    while(i<len)
-    {
-      p0[i] = p1[i];
-      i++;
-    }  
-    while(i<n)
-    {
-      p0[i] = 0x00;
-      i++;
-    }
-  }
-  else 
-  {
-    while(i<n)
-  {
-    p0[i]=p1[i];
-    i++;
-  }
+    *(p0++) = *(p1++);
   }
   return out;
 }
@@ -162,11 +143,6 @@ int memcmp(const void *s1, const void *s2, size_t n) {
     i++;    
     if(i==n)
       return 0;
-    else 
-    {
-      if(*(p1+i) == '\0')
-      return 0;
-    }
   }
   return *(p1+i)-*(p2+i);
 }
