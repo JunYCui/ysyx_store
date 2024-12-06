@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 #ifndef __FTRACE_H__
 #define __FTRACE_H__
+=======
+#ifndef __NPC_FTRACE_H__
+#define __NPC_FTRACE_H__
+>>>>>>> 3e8efcc
 
 #include "common.h"
 #include "elf.h"

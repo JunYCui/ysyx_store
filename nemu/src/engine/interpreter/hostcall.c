@@ -18,6 +18,10 @@
 #include <isa.h>
 #include <cpu/difftest.h>
 
+#ifdef CONFIG_IRINGBUF
+void iringbuf_out();
+#endif
+
 void set_nemu_state(int state, vaddr_t pc, int halt_ret) {
   difftest_skip_ref();
   nemu_state.state = state;
@@ -46,6 +50,8 @@ void invalid_inst(vaddr_t thispc) {
         "If it is the second case, remember:\n"
         "* The machine is always right!\n"
         "* Every line of untested code is always wrong!\n\n", ANSI_FG_RED), isa_logo);
-
+#ifdef CONFIG_IRINGBUF
+  iringbuf_out();
+#endif
   set_nemu_state(NEMU_ABORT, thispc, -1);
 }

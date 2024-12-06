@@ -18,7 +18,22 @@
 #include "../local-include/reg.h"
 
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
-  return false;
+  for(int i=0;i<MUXDEF(CONFIG_RVE, 16, 32);i++)
+  {
+    if(ref_r->gpr[i] != gpr(i))
+    {
+      printf(" \n 0x%x: %s value is error \n",pc,reg_name(i));
+      printf("right value:%d \t wrong value:%d \n",ref_r->gpr[i] ,gpr(i) );
+      return false;
+    }
+  }
+  if(ref_r->pc != cpu.pc)
+  {
+    printf("\n 0x%x: %d value is error \n",pc, cpu.pc);
+    printf("right value:0x%x \t wrong value:0x%x \n",ref_r->pc ,cpu.pc );
+    return false;
+  }
+  return true;
 }
 
 void isa_difftest_attach() {

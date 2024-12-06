@@ -100,6 +100,7 @@ void *memset(void *s, int c, size_t n) {
 }
 
 void *memmove(void *dst, const void *src, size_t n) {
+<<<<<<< HEAD
   char fifo[n];
   const char *p1=src;
   char *p2=dst;
@@ -116,11 +117,40 @@ void *memmove(void *dst, const void *src, size_t n) {
     i++;
   }
   return dst;
+=======
+
+	if (dst < src)
+	{
+		for (int i = 0; i < n; i++)
+		{
+			*((char*)dst + i) = *((char*)src + i);
+		}
+		return dst;
+	}
+	else if (dst > src)
+	{
+		for (int i = n-1; i >=0; i--)
+		{
+			*((char*)dst + i) = *((char*)src + i);
+		}
+		return dst;
+	}
+	else
+	{
+		return dst;
+  }
+>>>>>>> 3e8efcc
 
 }
 
 void *memcpy(void *out, const void *in, size_t n) {
-  panic("Not implemented");
+  char *p0=out;
+  const char*p1 = in;
+  while(n--)
+  {
+    *(p0++) = *(p1++);
+  }
+  return out;
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {
@@ -132,11 +162,14 @@ int memcmp(const void *s1, const void *s2, size_t n) {
     i++;    
     if(i==n)
       return 0;
+<<<<<<< HEAD
     else 
     {
       if(*(p1+i) == '\0')
       return 0;
     }
+=======
+>>>>>>> 3e8efcc
   }
   return *(p1+i)-*(p2+i);
 }
