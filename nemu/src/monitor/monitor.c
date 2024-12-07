@@ -124,7 +124,7 @@ void init_monitor(int argc, char *argv[]) {
 
   /* Load the image to memory. This will overwrite the built-in image. */
   long img_size = load_img();
-      assert(0);
+
   /* Initialize differential testing. */
   init_difftest(diff_so_file, img_size, difftest_port);
 
@@ -132,7 +132,7 @@ void init_monitor(int argc, char *argv[]) {
   init_sdb();
   /* Initialize the ftrace*/
   IFDEF(CONFIG_FTRACE,init_ftrace(elf_file));
-
+        assert(0);
 #ifndef CONFIG_ISA_loongarch32r
   IFDEF(CONFIG_ITRACE, init_disasm(
     MUXDEF(CONFIG_ISA_x86,     "i686",
