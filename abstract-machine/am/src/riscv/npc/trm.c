@@ -1,5 +1,9 @@
 #include <am.h>
 #include <klib-macros.h>
+#include <stdint.h>
+# define DEVICE_BASE 0xa0000000
+
+#define SERIAL_PORT     (DEVICE_BASE + 0x00003f8)
 
 extern char _heap_start;
 int main(const char *args);
@@ -15,6 +19,8 @@ Area heap = RANGE(&_heap_start, PMEM_END);
 static const char mainargs[] = MAINARGS;
 
 void putch(char ch) {
+    uint8_t *SR = (uint8_t *)(uintptr_t)SERIAL_PORT;
+    *SR = ch;
 }
 
 void halt(int code) {
