@@ -4,6 +4,8 @@ extern uint8_t* pmem;
 
 uint8_t* guest_to_host(uint32_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 
+#define UART_ADDRESS 0xa00003f8
+
 
 static inline uint32_t host_read(void *addr, int len) {
   switch (len) {
@@ -39,6 +41,10 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
 
   int paddr = addr;
   int data = wdata;
+  if(addr == UART_ADDRESS)
+  {
+    printf("%c",wdata);
+  }
   switch (wmask)
   {
     case 1: *(uint8_t  *)guest_to_host(paddr)  = data&(0x000000ff) ; break;
@@ -48,7 +54,7 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
     printf("wmask      =    %d \n",wmask);
     assert(0);
   }
-  printf("addr 0x%x:\t0x%x is written ! wmask = %d  \n",paddr,data,wmask);
+ // printf("addr 0x%x:\t0x%x is written ! wmask = %d  \n",paddr,data,wmask);
   return;
 }
 
