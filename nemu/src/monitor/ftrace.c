@@ -150,7 +150,7 @@ static void find_strsymtab_32(FILE* fp)
 {
     if(elf_file == NULL)
         return;
-    char str[200];
+    char str[20];
     size_t num;
     char osType;
     FILE* fp= fopen(elf_file,"rb");// 读取二进制elf_file的二进制的文件
@@ -165,6 +165,7 @@ static void find_strsymtab_32(FILE* fp)
         printf("file is not elf-file\n");
         assert(0);
     }
+    assert(0);
     if(str[4] == ELFCLASS32)
     {
         osType = 32;
