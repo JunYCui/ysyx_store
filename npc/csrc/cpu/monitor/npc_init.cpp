@@ -88,7 +88,7 @@ void init_monitor(int argc, char *argv[])
 
   long img_size = load_img();
 
-  init_ftrace(elf_file);
+ // init_ftrace(elf_file);
 
   init_sdb();
 
