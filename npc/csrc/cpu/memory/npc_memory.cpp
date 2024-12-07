@@ -30,16 +30,13 @@ word_t paddr_read(paddr_t addr, int len) {
 extern "C" int npc_pmem_read(int addr)
 {
   int paddr = addr;
+  uint64_t time;
   int data;
-  if(paddr == RTC_ADDR)
+ if(paddr == RTC_ADDR + 4)
   {
-    data = get_time()&0xffff; 
-    return data;
-  }
-  else if(paddr == RTC_ADDR + 4)
-  {
-    data = get_time() >> 32; 
-    return data;
+    time = get_time(); 
+    npc_pmem_write(RTC_ADDR,time&0xffffffff,4);
+    npc_pmem_write(RTC_ADDR+4,time>>32,4);
   }
   data = *(int*)guest_to_host(paddr);  
 #ifdef MTRACE
