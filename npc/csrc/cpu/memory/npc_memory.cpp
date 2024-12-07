@@ -32,7 +32,7 @@ extern "C" int npc_pmem_read(int addr)
 {
   int paddr = addr;
   int data = *(int*)guest_to_host(paddr);  
-  //printf("addr 0x%x:\t0x%x      \n",paddr,data);
+  printf("addr 0x%x:\t0x%x      \n",paddr,data);
   return data;
 }
 
