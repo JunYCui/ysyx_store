@@ -1,6 +1,7 @@
 #include "npc_cpu_exec.h"
 #include "npc_isa.h"
-
+#include "npc_macro.h"
+#include "npc_define.h"
 
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 extern void ReadReg(int reg_num, svBitVecVal* reg_value);
@@ -53,10 +54,12 @@ static void exec_once()
 static void trace_and_difftest(Decode *s)
 {
     Cpu_Wp();
+#ifdef ITRACE
     if(g_print_step)
     itrace(s);
-   // ftrace_exe(s);
-   // difftest_step(s->pc,s->dnpc);
+#endif
+    IFDEF(FTRACE,ftrace_exe(s);)
+    IFDEF(DIFFTEST,fdifftest_step(s->pc,s->dnpc);) 
 }
 
 
