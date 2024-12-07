@@ -225,9 +225,6 @@ config IRINGBUF
   bool "Enable iringbuf for execute"
   default y
 config MTRACE
-<<<<<<< HEAD
-  bool "memory trace"
-=======
   bool "Memory Trace"
   default y
 config FTRACE
@@ -235,7 +232,6 @@ config FTRACE
   default y
 config DTRACE
   bool "Device Trace"
->>>>>>> 3e8efcc
   default y
 endmenu
 

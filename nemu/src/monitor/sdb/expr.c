@@ -25,11 +25,7 @@
 enum {
   TK_NOTYPE = 256,TK_int,TK_HEX,
   TK_AND,TK_NEQ,TK_EQ,
-<<<<<<< HEAD
-  TK_DEREF,TK_NEG,TK_REG
-=======
   TK_DEREF,TK_NEG,TK_REG,TK_LESS
->>>>>>> 3e8efcc
   /* TODO: Add more token types */
 
 };
@@ -54,12 +50,8 @@ static struct rule {
   {"\\)", ')'},          // right bracket
   {"&&", TK_AND},         //AND
   {"!=", TK_NEQ},          // not equal
-<<<<<<< HEAD
-  {"\\$[0-9a-zA-Z]+", TK_REG} // regsiter
-=======
   {"\\$[0-9a-zA-Z]+", TK_REG}, // regsiter
   {"<", TK_LESS}
->>>>>>> 3e8efcc
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -127,10 +119,7 @@ static bool make_token(char *e) {
           case TK_AND:tokens[nr_token++].type = TK_AND;break;
           case TK_NEQ:tokens[nr_token++].type = TK_NEQ; break;
           case TK_EQ:tokens[nr_token++].type = TK_EQ; break;
-<<<<<<< HEAD
-=======
           case TK_LESS:tokens[nr_token++].type = TK_LESS; break;
->>>>>>> 3e8efcc
           case TK_REG:tokens[nr_token].type = TK_REG;strncpy(tokens[nr_token].str,substr_start+1,substr_len-1);nr_token++; break;
 
           default: TODO();
@@ -152,11 +141,7 @@ static bool make_token(char *e) {
 static word_t eval(uint32_t p ,uint32_t q);
 
 word_t expr(char *e, bool *success) {
-<<<<<<< HEAD
-  uint32_t i = 0;
-=======
   int i = 0;
->>>>>>> 3e8efcc
   if (!make_token(e)) {
     *success = false;
     return 0;
@@ -302,10 +287,7 @@ static word_t eval(uint32_t p ,uint32_t q)
         case TK_AND:flag_and=1;position_and = i;break;
         case TK_EQ:flag_eq = 1;position_eq = i;break;
         case TK_NEQ:flag_eq = 1;position_eq = i;break;
-<<<<<<< HEAD
-=======
         case TK_LESS:flag_eq = 1;position_eq = i;break;
->>>>>>> 3e8efcc
         case '*':flag_mut=1;position_mut = i;break;
         case '/':flag_mut=1;position_mut = i;break;
         case '+':flag_add=1;position_add=i;break;
@@ -351,10 +333,7 @@ static word_t eval(uint32_t p ,uint32_t q)
     case '*':return val1*val2;break;
     case '+':return val1+val2;break;
     case '-':return val1-val2;break;
-<<<<<<< HEAD
-=======
     case TK_LESS: return val1<val2;break;
->>>>>>> 3e8efcc
     case TK_EQ:return val1==val2;break;
     case TK_NEQ:return val1!=val2;break;
     case TK_AND:return val1&&val2;break;

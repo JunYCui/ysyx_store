@@ -100,24 +100,6 @@ void *memset(void *s, int c, size_t n) {
 }
 
 void *memmove(void *dst, const void *src, size_t n) {
-<<<<<<< HEAD
-  char fifo[n];
-  const char *p1=src;
-  char *p2=dst;
-  size_t i=0;
-  while(i<n)
-  {
-    *(fifo+i) = *(p1+i);
-    i++;
-  }
-  i=0;
-  while(i<n)
-  {
-    *(p2+i) = *(fifo+i);
-    i++;
-  }
-  return dst;
-=======
 
 	if (dst < src)
 	{
@@ -139,7 +121,6 @@ void *memmove(void *dst, const void *src, size_t n) {
 	{
 		return dst;
   }
->>>>>>> 3e8efcc
 
 }
 
@@ -162,14 +143,6 @@ int memcmp(const void *s1, const void *s2, size_t n) {
     i++;    
     if(i==n)
       return 0;
-<<<<<<< HEAD
-    else 
-    {
-      if(*(p1+i) == '\0')
-      return 0;
-    }
-=======
->>>>>>> 3e8efcc
   }
   return *(p1+i)-*(p2+i);
 }

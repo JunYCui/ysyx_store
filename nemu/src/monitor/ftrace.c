@@ -1,12 +1,4 @@
 #include "ftrace.h"
-<<<<<<< HEAD
-
-FUNC_TR func_array[FUNC_MAXNUM];
-
-static void find_strsymtab_32(FILE* fp)
-{
-    Elf32_Ehdr* Ehdr= malloc(sizeof(Elf32_Ehdr)); 
-=======
 #include "cpu/decode.h"
 #ifdef CONFIG_ITRACE
 FUNC_TR func_array[FUNC_MAXNUM];
@@ -15,12 +7,11 @@ void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 static void find_strsymtab_32(FILE* fp)
 {
     Elf32_Ehdr* Ehdr= (Elf32_Ehdr*)malloc(sizeof(Elf32_Ehdr)); 
->>>>>>> 3e8efcc
     Elf32_Off section_off;
     Elf32_Half section_num;
     Elf32_Half shstrindex;
    // char type[20];
-    char name[50];
+    char name[100];
     size_t num;
 
 /* 1. 读取表头信息，找到section偏移地址 */
@@ -36,13 +27,8 @@ static void find_strsymtab_32(FILE* fp)
     }
 
 /* 2. 读取section，并根据shstr表头索引，找到shstr表里面有name信息 */
-<<<<<<< HEAD
-    Elf32_Shdr *Eshdr = malloc(sizeof(Elf32_Shdr[section_num]));
-    char *shstrtable= malloc(Eshdr[shstrindex].sh_size);
-=======
     Elf32_Shdr *Eshdr = ( Elf32_Shdr *)malloc(sizeof(Elf32_Shdr[section_num]));
     char *shstrtable= (char*)malloc(Eshdr[shstrindex].sh_size);
->>>>>>> 3e8efcc
 
     fseek(fp,section_off,SEEK_SET);
     num = fread(Eshdr,sizeof(Elf32_Shdr),section_num,fp);
@@ -54,13 +40,8 @@ static void find_strsymtab_32(FILE* fp)
 
  //   printf("[Nr]\t Name \t\t\t Type \t\t\t Addr \t\t Off \t Size  \n");    
  /* 3. 根据name 找到strtab 和 symtab */
-<<<<<<< HEAD
-    Elf32_Shdr Esh_strtab;
-    Elf32_Shdr Esh_symtab;
-=======
     Elf32_Shdr Esh_strtab = {};
     Elf32_Shdr Esh_symtab = {};
->>>>>>> 3e8efcc
 
     for(int i=0;i<section_num;i++)
     {
@@ -107,18 +88,13 @@ static void find_strsymtab_32(FILE* fp)
     }
  /* 4. 对于 symtab 进行解析 */
     Elf32_Word symnum = Esh_symtab.sh_size/sizeof(Elf32_Sym);
-<<<<<<< HEAD
-    Elf32_Sym *Esym = malloc(sizeof(Elf32_Sym[symnum]));
-    char *strtable= malloc(Esh_strtab.sh_size);
-=======
     Elf32_Sym *Esym = (Elf32_Sym *)malloc(sizeof(Elf32_Sym[symnum]));
     char *strtable= (char *)malloc(Esh_strtab.sh_size);
->>>>>>> 3e8efcc
     //char symbind;
     char symtype;
     //char symbind_str[20];
     //char symtype_str[20];
-    char symname[20];
+    char symname[100];
     unsigned char func_num=0;
 
     fseek(fp,Esh_symtab.sh_offset,SEEK_SET);
@@ -129,11 +105,7 @@ static void find_strsymtab_32(FILE* fp)
     assert(num == 1);
 
 //    printf("\tNum \tValue \t\tSize \tType \t\t Bind\tName \n");
-<<<<<<< HEAD
-    for(int i=0;i<symnum;i++)
-=======
     for(unsigned int i=0;i<symnum;i++)
->>>>>>> 3e8efcc
     {
     strcpy(symname,&strtable[Esym[i].st_name]);
    // symbind = ELF32_ST_BIND(Esym[i].st_info);
@@ -166,21 +138,6 @@ static void find_strsymtab_32(FILE* fp)
     printf("\t%d\t%-10x \t%d \t%-8s \t%s \t %d \n",i,Esym[i].st_value,Esym[i].st_size,symtype_str,symbind_str,Esym[i].st_name);
 */    
 }
-<<<<<<< HEAD
-    for(int i=0;i<FUNC_MAXNUM;i++)
-    {
-        if(func_array[i].state == true)
-        {
-            printf("%x: \t%10s\t%d\n",func_array[i].addr,func_array[i].name,func_array[i].size);
-        }
-        else 
-        {
-            break;
-        }
-    }
-=======
-
->>>>>>> 3e8efcc
     free(strtable);
     free(Esym);
     free(shstrtable);
@@ -189,15 +146,10 @@ static void find_strsymtab_32(FILE* fp)
 }
 
 
-<<<<<<< HEAD
-void init_ftrace(char* elf_file)
-{
-=======
  void init_ftrace(char* elf_file)
 {
     if(elf_file == NULL)
         return;
->>>>>>> 3e8efcc
     char str[20];
     size_t num;
     char osType;
@@ -224,12 +176,6 @@ void init_ftrace(char* elf_file)
     if(osType == 32)
       find_strsymtab_32(fp);
 
-<<<<<<< HEAD
-
-}
-
-
-=======
 }
 uint32_t count;
 void ftrace_exe(Decode* s)
@@ -325,4 +271,3 @@ void ftrace_exe(Decode* s)
     }
 }
 #endif
->>>>>>> 3e8efcc

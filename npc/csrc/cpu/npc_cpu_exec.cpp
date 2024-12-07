@@ -55,8 +55,8 @@ static void trace_and_difftest(Decode *s)
     Cpu_Wp();
     if(g_print_step)
     itrace(s);
-    ftrace_exe(s);
-    difftest_step(s->pc,s->dnpc);
+   // ftrace_exe(s);
+   // difftest_step(s->pc,s->dnpc);
 }
 
 

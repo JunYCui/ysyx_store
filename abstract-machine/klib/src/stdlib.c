@@ -3,10 +3,11 @@
 #include <klib-macros.h>
 
 extern Area heap;
-char *hbrk = NULL;
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 static unsigned long int next = 1;
+static char *hbrk = NULL;
+static bool init_flag=0;
 
 int rand(void) {
   // RAND_MAX assumed to be 32767
@@ -35,18 +36,16 @@ int atoi(const char* nptr) {
 void *malloc(size_t size) {
   // On native, malloc() will be called during initializaion of C runtime.
   // Therefore do not call panic() here, else it will yield a dead recursion:
-  //   panic() -> putchar() -> (glibc) -> malloc() -> panic()
-#if !(defined(__ISA_NATIVE__) && defined(__NATIVE_USE_KLIB__))
-  if(hbrk == NULL)
+  //   panic() -> putchar() -> (glibc) -> malloc() -> panic(
+ if(!init_flag)
   {
   hbrk = (void *)ROUNDUP(heap.start,8);
+  init_flag = 1;
   }
   char* old = hbrk;
   size = (size_t)ROUNDUP(size,8); 
   hbrk +=size; 
   return old;
-#endif
-  return NULL;
 }
 
 void free(void *ptr) {

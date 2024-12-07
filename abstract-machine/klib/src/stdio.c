@@ -514,13 +514,6 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 int sprintf(char *out, const char *fmt, ...) {
   const char *p1=fmt;
   char *p2 = out;
-<<<<<<< HEAD
-  char *Argstrval;
-  int Argintval;
-  int num=0;
-  int store[50];
-  int count=0;
-=======
   char *Argstrval; // 字符串参数
   int Argintval; // 整数参数
   int num=0; // 返回字符串长度
@@ -531,7 +524,6 @@ int sprintf(char *out, const char *fmt, ...) {
   int strl;
   int i;
  // double ArgFloVal = 0.0; // 接受浮点型
->>>>>>> 3e8efcc
   va_list pArgs; //创建pArgs变量，用于参数地址
   va_start(pArgs, fmt); 
 
@@ -541,50 +533,6 @@ int sprintf(char *out, const char *fmt, ...) {
     {
       case '%':
           p1++;
-<<<<<<< HEAD
-          switch(*p1)
-          {
-            case 'd':
-              Argintval = va_arg(pArgs, int);
-              while(Argintval)
-              {
-                store[count++]=Argintval%10;
-                Argintval = Argintval/10;
-                if(count>50)
-                  panic("int is too big");
-              }
-              while(count)
-              {
-                *(p2++) = store[--count]+48;
-                num++;
-              }
-              p1++;
-              memset(store,0,sizeof(store));
-              break;
-            case 's':
-              Argstrval = va_arg(pArgs, char*);
-              while(*Argstrval != '\0')
-              {
-                *(p2++) = *(Argstrval++);
-                num++;
-              }
-              p1++;
-              break;
-
-            default:
-                  panic("parameter is error");
-                  assert(0);  
-          }
-          break;
-      default: 
-      *(p2++) =*(p1++);//将fmt赋值给out
-      num++;//打印的字符串长度+1
-    
-    }
-  }
-  va_end(pArgs);
-  *p2 = '\0';
-=======
           flag=0;
           strl=0;
           switch(*p1)
@@ -974,7 +922,6 @@ int sprintf(char *out, const char *fmt, ...) {
   va_end(pArgs);
   *p2 = '\0';
   num = strlen(out);
->>>>>>> 3e8efcc
   return num;
 }
 

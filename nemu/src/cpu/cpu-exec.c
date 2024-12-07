@@ -18,10 +18,7 @@
 #include <cpu/difftest.h>
 #include <locale.h>
 
-<<<<<<< HEAD
-=======
 void ftrace_exe(Decode* s);
->>>>>>> 3e8efcc
 void Cpu_Wp(void);
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
@@ -42,8 +39,6 @@ struct Ring
   char logbuf[128];
 }trace_fifo[MAX_FIFO_BUF];
 static uint8_t fifo_count=0;
-<<<<<<< HEAD
-=======
 
 void iringbuf_out()
 {
@@ -68,16 +63,10 @@ void iringbuf_out()
 
 
 
->>>>>>> 3e8efcc
 #endif
 
 void device_update();
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 3e8efcc
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
   
@@ -87,10 +76,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   IFDEF(CONFIG_WATCHPOINT, Cpu_Wp());
-<<<<<<< HEAD
-=======
   IFDEF(CONFIG_FTRACE,ftrace_exe(_this));
->>>>>>> 3e8efcc
 #ifdef CONFIG_IRINGBUF
   strcpy(trace_fifo[fifo_count++].logbuf,_this->logbuf);if(fifo_count == MAX_FIFO_BUF){fifo_count = 0;}
 #endif
@@ -155,28 +141,7 @@ static void statistic() {
 void assert_fail_msg() {
   isa_reg_display();
 #ifdef CONFIG_IRINGBUF
-<<<<<<< HEAD
-  uint8_t i=0;
-  int flag = fifo_count-1;
-  if( flag < 0)
-    flag = 63;
-  for(i=0;i<64;i++)
-  {
-    if(strlen(trace_fifo[i].logbuf)>0)
-    {
-      if(i == flag)
-      {
-        printf("%s  \t%s \n",ANSI_FMT("-->", ANSI_FG_RED),trace_fifo[i].logbuf);
-      }
-      else 
-      {
-        printf("\t%s \n",trace_fifo[i].logbuf);
-      }
-    }
-  }
-=======
   iringbuf_out();
->>>>>>> 3e8efcc
 #endif
   statistic();
 
