@@ -4,7 +4,7 @@
 #include "npc_common.h"
 #include "elf.h"
 
-#define FUNC_MAXNUM 100
+#define FUNC_MAXNUM 1000
 
 typedef struct{
     Elf32_Addr addr;

@@ -153,7 +153,7 @@ void init_ftrace(char* elf_file)
         printf("elf file is NULL ! \n");
         return;
     }
-    char str[20];
+    char str[100];
     size_t num;
     char osType;
     FILE* fp= fopen(elf_file,"rb");// 读取二进制elf_file的二进制的文件
