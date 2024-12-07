@@ -150,7 +150,7 @@ static void find_strsymtab_32(FILE* fp)
 {
     if(elf_file == NULL)
         return;
-    char str[20];
+    char str[200];
     size_t num;
     char osType;
     FILE* fp= fopen(elf_file,"rb");// 读取二进制elf_file的二进制的文件
