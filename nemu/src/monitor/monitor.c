@@ -124,7 +124,7 @@ void init_monitor(int argc, char *argv[]) {
 
   /* Load the image to memory. This will overwrite the built-in image. */
   long img_size = load_img();
-
+      assert(0);
   /* Initialize differential testing. */
   init_difftest(diff_so_file, img_size, difftest_port);
 
@@ -146,7 +146,6 @@ void init_monitor(int argc, char *argv[]) {
 
   /* Display welcome message. */
   welcome();
-      assert(0);
 }
 #else // CONFIG_TARGET_AM
 static long load_img() {
