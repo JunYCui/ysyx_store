@@ -94,7 +94,7 @@ void init_monitor(int argc, char *argv[])
 
   npc_cpu_init();
 
- // init_difftest(diff_so_file, img_size, difftest_port);
+  init_difftest(diff_so_file, img_size, difftest_port);
   
- // init_disasm("riscv32""-pc-linux-gnu");
+  init_disasm("riscv32""-pc-linux-gnu");
 }
