@@ -92,6 +92,7 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   ref_difftest_init(port);
   ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
   ref_difftest_regcpy(&cpu, DIFFTEST_TO_REF);
+  assert(0);
 }
 
 static void checkregs(CPU_state *ref, vaddr_t pc) {
