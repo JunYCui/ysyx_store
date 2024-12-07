@@ -93,7 +93,7 @@ static void find_strsymtab_32(FILE* fp)
     char symtype;
     //char symbind_str[20];
     //char symtype_str[20];
-    char symname[20];
+    char symname[100];
     unsigned char func_num=0;
 
     fseek(fp,Esh_symtab.sh_offset,SEEK_SET);
