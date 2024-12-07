@@ -13,7 +13,7 @@ static void find_strsymtab_32(FILE* fp)
    // char type[20];
     char name[100];
     size_t num;
-            assert(0);
+
 /* 1. 读取表头信息，找到section偏移地址 */
     fseek(fp,0,SEEK_SET);
     num = fread(Ehdr,sizeof(Elf32_Ehdr),1,fp);
@@ -37,7 +37,7 @@ static void find_strsymtab_32(FILE* fp)
     fseek(fp,Eshdr[shstrindex].sh_offset,SEEK_SET);
     num = fread(shstrtable,Eshdr[shstrindex].sh_size,1,fp);
     assert(num == 1);
-
+                assert(0);
  //   printf("[Nr]\t Name \t\t\t Type \t\t\t Addr \t\t Off \t Size  \n");    
  /* 3. 根据name 找到strtab 和 symtab */
     Elf32_Shdr Esh_strtab = {};
