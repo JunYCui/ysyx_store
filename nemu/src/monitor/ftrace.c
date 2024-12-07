@@ -11,7 +11,7 @@ static void find_strsymtab_32(FILE* fp)
     Elf32_Half section_num;
     Elf32_Half shstrindex;
    // char type[20];
-    char name[50];
+    char name[100];
     size_t num;
 
 /* 1. 读取表头信息，找到section偏移地址 */
