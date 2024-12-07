@@ -165,7 +165,6 @@ static void find_strsymtab_32(FILE* fp)
         printf("file is not elf-file\n");
         assert(0);
     }
-    assert(0);
     if(str[4] == ELFCLASS32)
     {
         osType = 32;
