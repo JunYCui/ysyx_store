@@ -3,11 +3,11 @@
 #include <klib-macros.h>
 
 extern Area heap;
-static char *hbrk = NULL;
-static bool init_flag=0;
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 static unsigned long int next = 1;
+static char *hbrk = NULL;
+static bool init_flag=0;
 
 int rand(void) {
   // RAND_MAX assumed to be 32767
