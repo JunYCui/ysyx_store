@@ -9,7 +9,7 @@
 typedef struct{
     Elf32_Addr addr;
     Elf32_Word size;
-    char name[50];
+    char name[100];
     bool state;
 }FUNC_TR;
 
