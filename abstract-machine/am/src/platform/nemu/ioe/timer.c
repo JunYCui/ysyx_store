@@ -2,8 +2,6 @@
 #include <nemu.h>
 #include <riscv/riscv.h>
 
-static uint64_t boot_time = 0;
-
 static uint64_t read_time() {
   uint32_t hi = inl(RTC_ADDR+4);
   uint32_t lo = inl(RTC_ADDR);
@@ -14,11 +12,10 @@ static uint64_t read_time() {
 void __am_timer_init() {
   outl(RTC_ADDR, 0);        
   outl(RTC_ADDR + 4, 0);
-  boot_time = 0;
-}
 
+}
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
-  uptime->us = read_time() - boot_time;
+  uptime->us = read_time();
 }
 
 void __am_timer_rtc(AM_TIMER_RTC_T *rtc) {
