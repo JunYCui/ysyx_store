@@ -54,7 +54,7 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
     printf("wmask      =    %d \n",wmask);
     assert(0);
   }
- // printf("addr 0x%x:\t0x%x is written ! wmask = %d  \n",paddr,data,wmask);
+  printf("addr 0x%x:\t0x%x is written ! wmask = %d  \n",paddr,data,wmask);
   return;
 }
 
