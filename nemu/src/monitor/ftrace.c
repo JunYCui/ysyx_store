@@ -37,7 +37,7 @@ static void find_strsymtab_32(FILE* fp)
     fseek(fp,Eshdr[shstrindex].sh_offset,SEEK_SET);
     num = fread(shstrtable,Eshdr[shstrindex].sh_size,1,fp);
     assert(num == 1);
-                assert(0);
+
  //   printf("[Nr]\t Name \t\t\t Type \t\t\t Addr \t\t Off \t Size  \n");    
  /* 3. 根据name 找到strtab 和 symtab */
     Elf32_Shdr Esh_strtab = {};
@@ -96,7 +96,7 @@ static void find_strsymtab_32(FILE* fp)
     //char symtype_str[20];
     char symname[20];
     unsigned char func_num=0;
-
+                assert(0);
     fseek(fp,Esh_symtab.sh_offset,SEEK_SET);
     num = fread(Esym,sizeof(Elf32_Sym),symnum,fp);
     assert(num == symnum);
