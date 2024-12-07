@@ -54,7 +54,7 @@ static void exec_once()
 static void trace_and_difftest(Decode *s)
 {
     Cpu_Wp();
-#ifdef ITRACE
+#ifdef ITARCE
     if(g_print_step)
     itrace(s);
 #endif
