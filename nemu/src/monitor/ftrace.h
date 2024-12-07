@@ -4,7 +4,7 @@
 #include "common.h"
 #include "elf.h"
 
-#define FUNC_MAXNUM 10000
+#define FUNC_MAXNUM 100000
 
 typedef struct{
     Elf32_Addr addr;
