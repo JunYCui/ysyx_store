@@ -44,6 +44,7 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
   if(addr == UART_ADDRESS)
   {
     printf("%c",wdata);
+    return;
   }
   switch (wmask)
   {
