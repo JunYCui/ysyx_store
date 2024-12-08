@@ -26,6 +26,8 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl){
   int k=0;
   uint32_t *pix = ctl->pixels;
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
+  uint32_t wh = inl(VGACTL_ADDR);
+  uint16_t sw = wh>>16;
   if (ctl->sync) {
     outl(SYNC_ADDR, 1);
   }
@@ -33,7 +35,7 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl){
   {
     for (int i = y; i < y+h; i++) {
       for (int j = x; j < x+w; j++) {
-        fb[w*i+j] = pix[k++]; 
+        fb[sw*i+j] = pix[k++]; 
         if(j == 1)
         printf("w*i+j = %d \n",j);
     }
