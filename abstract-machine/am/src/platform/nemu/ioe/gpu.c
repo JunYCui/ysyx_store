@@ -23,7 +23,18 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl){
    int y = ctl->y;
    int w = ctl->w; 
    int h = ctl->h;
-   int k=0;
+   static int x_old = -1;
+   static int y_old = -1;
+  if(x != x_old || y != y_old)
+  {
+    x_old = x;
+    y_old = y;
+  }
+  else 
+  {
+    return;
+  }
+  int k=0;
   uint32_t *pix = ctl->pixels;
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
   if (ctl->sync) {
