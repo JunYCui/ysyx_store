@@ -1,11 +1,10 @@
 #include "npc_memory.h"
-
+#include "npc_define.h"
+#include "npc_device.h"
 extern uint8_t* pmem;
 
 uint8_t* guest_to_host(uint32_t paddr) { return pmem + paddr - CONFIG_MBASE; }
-
-#define UART_ADDRESS 0xa00003f8
-
+uint64_t get_time() ;
 
 static inline uint32_t host_read(void *addr, int len) {
   switch (len) {
@@ -31,8 +30,18 @@ word_t paddr_read(paddr_t addr, int len) {
 extern "C" int npc_pmem_read(int addr)
 {
   int paddr = addr;
-  int data = *(int*)guest_to_host(paddr);  
-  //printf("addr 0x%x:\t0x%x      \n",paddr,data);
+  uint64_t time;
+  int data;
+ if(paddr == RTC_ADDR + 4)
+  {
+    time = get_time(); 
+    npc_pmem_write(RTC_ADDR,time&0xffffffff,4);
+    npc_pmem_write(RTC_ADDR+4,time>>32,4);
+  }
+  data = *(int*)guest_to_host(paddr);  
+#ifdef MTRACE
+  printf("addr 0x%x:\t0x%x      \n",paddr,data);
+#endif  
   return data;
 }
 
@@ -41,7 +50,7 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
 
   int paddr = addr;
   int data = wdata;
-  if(addr == UART_ADDRESS)
+  if(addr == UART_ADDR)
   {
     printf("%c",wdata);
     return;
@@ -55,8 +64,10 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
     printf("wmask      =    %d \n",wmask);
     assert(0);
   }
-  printf("addr 0x%x:\t0x%x is written ! wmask = %d  \n",paddr,data,wmask);
-  return;
+  #ifdef MTRACE
+    printf("addr 0x%x:\t0x%x is written ! wmask = %d  \n",paddr,data,wmask);
+  #endif
+    return;
 }
 
 

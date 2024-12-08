@@ -11,7 +11,7 @@ static void find_strsymtab_32(FILE* fp)
     Elf32_Half section_num;
     Elf32_Half shstrindex;
    // char type[20];
-    char name[50];
+    char name[100];
     size_t num;
 
 /* 1. 读取表头信息，找到section偏移地址 */
@@ -93,7 +93,7 @@ static void find_strsymtab_32(FILE* fp)
     char symtype;
     //char symbind_str[20];
     //char symtype_str[20];
-    char symname[20];
+    char symname[100];
     unsigned char func_num=0;
 
     fseek(fp,Esh_symtab.sh_offset,SEEK_SET);
@@ -153,7 +153,7 @@ void init_ftrace(char* elf_file)
         printf("elf file is NULL ! \n");
         return;
     }
-    char str[20];
+    char str[100];
     size_t num;
     char osType;
     FILE* fp= fopen(elf_file,"rb");// 读取二进制elf_file的二进制的文件

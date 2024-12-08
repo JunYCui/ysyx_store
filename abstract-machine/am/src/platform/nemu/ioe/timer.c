@@ -8,14 +8,12 @@ static uint64_t read_time() {
   uint64_t time = ((uint64_t)hi << 32) + lo;
   return time;
 }
-
+static uint64_t time =0;
 void __am_timer_init() {
-  outl(RTC_ADDR, 0);        
-  outl(RTC_ADDR + 4, 0);
-
+  time = 0;
 }
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
-  uptime->us = read_time();
+  uptime->us = read_time() - time;
 }
 
 void __am_timer_rtc(AM_TIMER_RTC_T *rtc) {
