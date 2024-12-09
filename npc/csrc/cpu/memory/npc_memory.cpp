@@ -5,6 +5,7 @@ extern uint8_t* pmem;
 
 uint8_t* guest_to_host(uint32_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 uint64_t get_time() ;
+void vga_update_screen();
 
 static inline uint32_t host_read(void *addr, int len) {
   switch (len) {
@@ -32,13 +33,18 @@ extern "C" int npc_pmem_read(int addr)
   int paddr = addr;
   uint64_t time;
   int data;
+   data = *(int*)guest_to_host(paddr);
  if(paddr == RTC_ADDR + 4)
   {
     time = get_time(); 
     npc_pmem_write(RTC_ADDR,time&0xffffffff,4);
     npc_pmem_write(RTC_ADDR+4,time>>32,4);
   }
-  data = *(int*)guest_to_host(paddr);  
+  else if(paddr == VGA_ADDR + 4 && data == 1)
+  {
+    vga_update_screen();
+    npc_pmem_write(VGA_ADDR+4,0,4);
+  }  
 #ifdef MTRACE
   printf("addr 0x%x:\t0x%x      \n",paddr,data);
 #endif  

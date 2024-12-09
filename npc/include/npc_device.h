@@ -6,6 +6,6 @@
 #define UART_ADDR (DEVICE_BASE + 0x00003f8)
 #define RTC_ADDR  (DEVICE_BASE + 0x0000048)
 #define VGA_ADDR  (DEVICE_BASE + 0x0000100)
-
+#define FB_ADDR   (DEVICE_BASE + 0x1000000)
 
 #endif
