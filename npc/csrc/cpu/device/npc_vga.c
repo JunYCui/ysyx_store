@@ -52,7 +52,7 @@ void vga_update_screen() {
   // TODO: call `update_screen()` when the sync register is non-zero,
   // then zero out the sync register
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
-  for(int i=0;i<SCREEN_W*SCREEN_H;i++)
+  for(int i=0;i<SCREEN_W;i++)
   {
     vmem[i] = fb[i];
   }
