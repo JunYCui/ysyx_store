@@ -32,8 +32,8 @@ void init_screen() {
   sprintf(title, "NPC-NEMU");
   SDL_Init(SDL_INIT_VIDEO);
   SDL_CreateWindowAndRenderer(
-      SCREEN_W * 1,
-      SCREEN_H * 1,
+      SCREEN_W * 2,
+      SCREEN_H * 2,
       0, &window, &renderer);
   SDL_SetWindowTitle(window, title);
   texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
