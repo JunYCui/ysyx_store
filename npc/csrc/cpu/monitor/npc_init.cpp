@@ -1,7 +1,7 @@
 #include "npc_init.h"
 #include "npc_memory.h"
 
-
+void init_map();
 void init_sdb();
 void init_ftrace(char* elf_file);
 void npc_cpu_init();
@@ -86,6 +86,8 @@ static long load_img() {
 void init_monitor(int argc, char *argv[])
 {
   init_mem();
+
+  init_map();
 
   parse_args(argc, argv);
 
