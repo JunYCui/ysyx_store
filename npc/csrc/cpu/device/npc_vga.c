@@ -40,6 +40,7 @@ void init_screen() {
       SDL_TEXTUREACCESS_STATIC, SCREEN_W, SCREEN_H);
   SDL_RenderPresent(renderer);
 
+  memset(vmem,0,screen_size());
 }
 
 inline void update_screen() {
