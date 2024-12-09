@@ -1,7 +1,7 @@
 #include <am.h>
 #include <nemu.h>
 #include <stdint.h>
-
+#include <stdio.h>
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
 void __am_gpu_init() {
@@ -24,17 +24,17 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl){
    int w = ctl->w; 
    int h = ctl->h;
    int k=0;
+  if (!ctl->sync && (w == 0 || h == 0)) return;
   uint32_t *pix = ctl->pixels;
-  if (!ctl->sync && (w == 0 || h == 0))
-    return;
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
-  uint32_t screen_w = inl(VGACTL_ADDR) >> 16;
-  for (int i = y; i < y+h; i++) {
-    for (int j = x; j < x+w; j++) {
-      fb[screen_w*i+j] = pix[k++]; //缓冲区是一个像素块
+  uint32_t wh = inl(VGACTL_ADDR);
+  uint16_t sw = wh>>16;
+    for (int i = y; i < y+h; i++) {
+      for (int j = x; j < x+w; j++) {
+        fb[sw*i+j] = pix[k++]; 
     }
   }
-  if (ctl->sync) {
+    if (ctl->sync) {
     outl(SYNC_ADDR, 1);
   }
 }
