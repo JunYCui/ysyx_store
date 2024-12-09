@@ -71,7 +71,7 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
     printf("%c",wdata);
     return;
   }
-  else if(addr >=FB_ADDR && addr <FB_ADDR+ screen_size())
+  else if(addr >=FB_ADDR && addr <FB_ADDR + screen_size())
   {
     vmem[addr-FB_ADDR] = wdata;
     return;
