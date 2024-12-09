@@ -85,6 +85,7 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
   }
   else if(addr == VGA_ADDR +4)
   {
+        printf("0x%x",addr);
     vga_flag = wdata;
     if(vga_flag == 1)
     {
