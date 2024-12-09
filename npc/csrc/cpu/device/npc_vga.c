@@ -52,6 +52,5 @@ inline void update_screen() {
 }
 
 void vga_update_screen() {
-
   update_screen();
 }
