@@ -1,6 +1,4 @@
 
-
-
 void init_screen();
 
 void device_init()
