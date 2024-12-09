@@ -3,11 +3,15 @@
 #include <stdio.h>
 #include <riscv/riscv.h>
 
+#define SCREEN_W 400
+#define SCREEN_H 300
+
 #define VGACTL_ADDR 0xa0000100
 #define FB_ADDR     0xa1000000
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
 void __am_gpu_init() {
+    outl(VGACTL_ADDR,SCREEN_W<<16|SCREEN_H);
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
