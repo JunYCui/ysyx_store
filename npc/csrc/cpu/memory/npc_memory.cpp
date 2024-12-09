@@ -74,7 +74,6 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
   else if(addr >=FB_ADDR && addr <FB_ADDR+ screen_size())
   {
     vmem[addr-FB_ADDR] = wdata;
-    printf("0x%x  \n",addr);
     return;
   }
   else if(addr == VGA_ADDR)
