@@ -1,7 +1,7 @@
 #include <npc_common.h>
 #include <npc_memory.h>
 #include <npc_device.h>
-
+uint8_t* new_space(int size) ;
 
 #define SCREEN_W 400
 #define SCREEN_H 300
@@ -40,6 +40,7 @@ void init_screen() {
       SDL_TEXTUREACCESS_STATIC, SCREEN_W, SCREEN_H);
   SDL_RenderPresent(renderer);
 
+  vmem = new_space(screen_size());
   memset(vmem,0,screen_size());
 }
 
