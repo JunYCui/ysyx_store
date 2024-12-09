@@ -23,7 +23,7 @@ static uint32_t screen_size() {
 static SDL_Renderer *renderer = NULL;
 static SDL_Texture *texture = NULL;
 
-static uint32_t *vmem = NULL;
+static void *vmem = NULL;
 
 
 void init_screen() {
@@ -40,7 +40,6 @@ void init_screen() {
       SDL_TEXTUREACCESS_STATIC, SCREEN_W, SCREEN_H);
   SDL_RenderPresent(renderer);
 
-  memset((void*)vmem,0,screen_size());
 }
 
 inline void update_screen() {
@@ -53,10 +52,5 @@ inline void update_screen() {
 void vga_update_screen() {
   // TODO: call `update_screen()` when the sync register is non-zero,
   // then zero out the sync register
-  uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
-  for(int i=0;i<SCREEN_W*SCREEN_H;i++)
-  {
-    vmem[i] = fb[i];
-  }
   update_screen();
 }
