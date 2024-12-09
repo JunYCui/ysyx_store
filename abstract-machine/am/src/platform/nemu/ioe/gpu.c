@@ -31,13 +31,10 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl){
   if (ctl->sync) {
     outl(SYNC_ADDR, 1);
   }
-  else 
-  {
     for (int i = y; i < y+h; i++) {
       for (int j = x; j < x+w; j++) {
         fb[sw*i+j] = pix[k++]; 
     }
-  }
   }
 }
 
