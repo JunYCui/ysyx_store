@@ -1,6 +1,6 @@
 #include <am.h>
 #include <klib-macros.h>
-#include "gpu.c"
+
 void __am_timer_init();
 void __am_gpu_init();
 
