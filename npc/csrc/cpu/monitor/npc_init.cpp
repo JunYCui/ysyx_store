@@ -1,13 +1,16 @@
 #include "npc_init.h"
 #include "npc_memory.h"
 
-
+void init_map();
 void init_sdb();
 void init_ftrace(char* elf_file);
 void npc_cpu_init();
 extern "C" void init_disasm(const char *triple);
 void init_difftest(char *ref_so_file, long img_size, int port) ;
 void sdb_set_batch_mode();
+
+void device_init();
+
 uint8_t *pmem = NULL;
 char *img_file = NULL;
 static char *elf_file = NULL;
@@ -84,6 +87,8 @@ void init_monitor(int argc, char *argv[])
 {
   init_mem();
 
+  init_map();
+
   parse_args(argc, argv);
 
   long img_size = load_img();
@@ -97,4 +102,6 @@ void init_monitor(int argc, char *argv[])
   init_difftest(diff_so_file, img_size, difftest_port);
   
   init_disasm("riscv32""-pc-linux-gnu");
+
+  device_init();
 }

@@ -1,10 +1,16 @@
 #include "npc_memory.h"
 #include "npc_define.h"
 #include "npc_device.h"
-extern uint8_t* pmem;
 
+uint64_t npc_time;
+extern uint8_t* pmem;
+extern uint32_t *vmem ;
 uint8_t* guest_to_host(uint32_t paddr) { return pmem + paddr - CONFIG_MBASE; }
 uint64_t get_time() ;
+void vga_update_screen();
+uint32_t screen_size();
+uint16_t height,weight;
+bool vga_flag;
 
 static inline uint32_t host_read(void *addr, int len) {
   switch (len) {
@@ -30,15 +36,25 @@ word_t paddr_read(paddr_t addr, int len) {
 extern "C" int npc_pmem_read(int addr)
 {
   int paddr = addr;
-  uint64_t time;
   int data;
  if(paddr == RTC_ADDR + 4)
   {
-    time = get_time(); 
-    npc_pmem_write(RTC_ADDR,time&0xffffffff,4);
-    npc_pmem_write(RTC_ADDR+4,time>>32,4);
+    npc_time = get_time(); 
+    return npc_time>>32;
   }
-  data = *(int*)guest_to_host(paddr);  
+  else if(paddr == RTC_ADDR)
+  {
+    return (uint32_t)(npc_time & 0xffffffff);
+  }
+  else if(addr == VGA_ADDR +4)
+  {
+    return vga_flag;
+  }
+  else if(paddr == VGA_ADDR)
+  {
+    return (weight<<16)|height ;
+  }  
+   data = *(int*)guest_to_host(paddr);
 #ifdef MTRACE
   printf("addr 0x%x:\t0x%x      \n",paddr,data);
 #endif  
@@ -53,6 +69,27 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
   if(addr == UART_ADDR)
   {
     printf("%c",wdata);
+    return;
+  }
+  else if(addr >=FB_ADDR && addr <FB_ADDR + screen_size())
+  {
+    vmem[(addr-FB_ADDR)/4] = wdata;
+    return;
+  }
+  else if(addr == VGA_ADDR)
+  {
+    height = wdata&0xffff;
+    weight = wdata>>16;
+    return;
+  }
+  else if(addr == VGA_ADDR +4)
+  {
+    vga_flag = wdata;
+    if(vga_flag == 1)
+    {
+      vga_update_screen();
+      vga_flag = 0;
+    }
     return;
   }
   switch (wmask)
