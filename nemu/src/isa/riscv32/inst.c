@@ -18,6 +18,8 @@
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
 
+word_t isa_raise_intr(word_t NO, vaddr_t epc);
+
 #define R(i) gpr(i)
 #define Mr vaddr_read
 #define Mw vaddr_write
@@ -25,7 +27,7 @@
 enum {
   TYPE_I, TYPE_U, TYPE_S,
   TYPE_N, TYPE_J, TYPE_RE,
-  TYPE_B// none
+  TYPE_B,TYPE_M// none
 };
 
 #define src1R() do { *src1 = R(rs1); } while (0)
@@ -35,7 +37,7 @@ enum {
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
 #define immJ() do { *imm = SEXT(BITS(i, 31, 31)<<19 | (BITS(i, 19, 12)<<11 | BITS(i, 20, 20)<<10 | BITS(i, 30, 21)) , 20)<<1;}while (0)
 #define immB() do { *imm = SEXT(BITS(i, 31, 31)<<11 | (BITS(i, 7, 7)<<10 | BITS(i, 30, 25)<<4 | BITS(i, 11, 8)) , 12)<<1;}while (0)
-
+#define immM() do { *imm = (word_t)BITS(i, 31, 20); } while(0)
 int compare(word_t in1, word_t in2);
 
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type) {
@@ -50,6 +52,7 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
     case TYPE_J:                   immJ(); break;
     case TYPE_RE: src1R(); src2R();        break;
     case TYPE_B:src1R(); src2R();  immB(); break;
+    case TYPE_M:src1R(); immM();          break;
   }
 }
 
@@ -94,7 +97,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("0000000 ????? ????? 001 ????? 00100 11", slli   , I, R(rd) = src1 << BITS(imm,4,0)  ); //立即数逻辑左移
   INSTPAT("??????? ????? ????? 010 ????? 00100 11", slti   , I, R(rd) = ((int32_t)src1 < (int32_t)imm) ); 
 
-  //INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, if(rd == 0) );
+  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , M, if(rd == 0){csr_reg[imm] = src1; } else {rd = csr_reg[imm]; csr_reg[imm] = src1;} );
 
 
   INSTPAT("??????? ????? ????? 010 ????? 01000 11", sw     , S, Mw((src1 + imm), 4, src2));
@@ -120,6 +123,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("0100000 ????? ????? 101 ????? 01100 11", sra    , RE, R(rd) = (int32_t)src1 >> src2); 
   INSTPAT("0000000 ????? ????? 101 ????? 01100 11", srl    , RE, R(rd) = (uint32_t)src1 >> src2); 
 
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, isa_raise_intr(EVENT_YIELD,s->pc);); 
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is a$a0 q
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
 

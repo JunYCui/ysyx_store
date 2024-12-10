@@ -18,7 +18,17 @@
 
 #include <common.h>
 
+enum {
+    EVENT_NULL = 0,
+    EVENT_YIELD, EVENT_SYSCALL, EVENT_PAGEFAULT, EVENT_ERROR,
+    EVENT_IRQ_TIMER, EVENT_IRQ_IODEV,
+}; 
 
+#define MCAUSE 0X342
+#define MEPC 0X341
+#define MTVEC 0x305
+
+extern word_t csr_reg[4096];
 
 typedef struct {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
