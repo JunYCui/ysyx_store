@@ -123,7 +123,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("0100000 ????? ????? 101 ????? 01100 11", sra    , RE, R(rd) = (int32_t)src1 >> src2); 
   INSTPAT("0000000 ????? ????? 101 ????? 01100 11", srl    , RE, R(rd) = (uint32_t)src1 >> src2); 
 
-  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, isa_raise_intr(EVENT_YIELD,s->pc);); 
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc = isa_raise_intr(EVENT_YIELD,s->pc);); 
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is a$a0 q
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
 
