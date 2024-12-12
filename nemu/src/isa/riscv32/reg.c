@@ -29,9 +29,9 @@ void isa_reg_display()
   for(i = 0;i<MUXDEF(CONFIG_RVE, 16, 32);i++)
   printf("%s: \t 0x%-10x \t %-10d \n",reg_name(i),gpr(i),gpr(i));
 
-  printf("mcause: \t 0x%-10x \t %-10d \n",csr_reg[MCAUSE],csr_reg[MCAUSE]);
+  printf("mcau: \t 0x%-10x \t %-10d \n",csr_reg[MCAUSE],csr_reg[MCAUSE]);
   printf("mepc: \t 0x%-10x \t %-10d \n",csr_reg[MEPC],csr_reg[MEPC]);
-  printf("mstatus: \t 0x%-10x \t %-10d \n",csr_reg[Mstatus],csr_reg[Mstatus]);    
+  printf("msta: \t 0x%-10x \t %-10d \n",csr_reg[Mstatus],csr_reg[Mstatus]);    
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) 
