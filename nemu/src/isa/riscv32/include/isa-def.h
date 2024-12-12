@@ -27,7 +27,7 @@ enum {
 #define MCAUSE 0X342
 #define MEPC 0X341
 #define MTVEC 0x305
-
+#define Mstatus 0x300
 extern word_t csr_reg[4096];
 
 typedef struct {

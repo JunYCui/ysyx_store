@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include <isa.h>
+#include <isa-def.h>
 #include <memory/paddr.h>
 
 // this is not consistent with uint8_t
@@ -40,4 +41,7 @@ void init_isa() {
 
   /* Initialize this virtual computer system. */
   restart();
+
+    /* Init mstatus*/
+  csr_reg[Mstatus] = 0x1800;
 }
