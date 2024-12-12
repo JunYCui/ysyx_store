@@ -33,9 +33,9 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   Context* cp = (Context *)kstack.end;
   cp =cp - 1;
-  int *argp = (int *)cp;
+  uint32_t *argp = (uint32_t *)cp;
   argp = argp -1 ;
-  argp[0] = (int)arg;
+  argp[0] = (uint32_t)arg;
   printf("argp[0] = %d",argp);
   cp->mepc = (uintptr_t)entry;
   return cp;
