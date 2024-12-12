@@ -36,7 +36,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   uint32_t *argp = (uint32_t *)cp;
   argp = argp -1 ;
   argp[0] = (uint32_t)arg;
-  printf("argp[0] = %d",argp);
+  printf("argp[0] = %u",argp);
   cp->mepc = (uintptr_t)entry;
   return cp;
 }
