@@ -409,7 +409,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           if(Argintval <0)
           {
             Argintval = -Argintval;
-            flag_neg = 1;
+            flag_neg = 0;
           }
           num_count = int2hex(num_store,Argintval);
           if(flag & FLAG_NUM)

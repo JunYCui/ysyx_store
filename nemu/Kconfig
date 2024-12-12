@@ -233,5 +233,8 @@ config FTRACE
 config DTRACE
   bool "Device Trace"
   default y
+config ETRACE
+  bool "Event Trace"
+  default y
 endmenu
 
