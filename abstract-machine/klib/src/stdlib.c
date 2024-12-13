@@ -39,11 +39,11 @@ void *malloc(size_t size) {
   //   panic() -> putchar() -> (glibc) -> malloc() -> panic(
  if(!init_flag)
   {
-  hbrk = (void *)ROUNDUP(heap.start,4);
+  hbrk = (void *)ROUNDUP(heap.start,8);
   init_flag = 1;
   }
   char* old = hbrk;
-  size = (size_t)ROUNDUP(size,4); 
+  size = (size_t)ROUNDUP(size,8); 
   hbrk +=size; 
   return old;
 }
