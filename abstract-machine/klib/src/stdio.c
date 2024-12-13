@@ -131,6 +131,10 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 			      strl =*p1 - 0x30 + strl*10;
 			      p1++;
 			    }
+          if(*p1 == 'l')
+          {
+            p1++;
+          }
           switch (*p1)
           {
           case 'd':
@@ -498,7 +502,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           }
           p1++;
           break;
-         default:assert(0);
+         default:
         }
           
       default: 
