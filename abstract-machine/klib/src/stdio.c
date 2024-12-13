@@ -81,11 +81,10 @@ int float2str(char* str, double val)
     }
   return count;
 }
-
+  char strout[100];
 int vsprintf(char *out, const char *fmt, va_list ap);
 
 int printf(const char *fmt, ...) {
-  char strout[100];
   va_list pArgs;
   va_start(pArgs, fmt);
   int num = vsprintf(strout,fmt, pArgs);
