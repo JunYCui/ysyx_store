@@ -34,7 +34,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   Context* cp = (Context *)kstack.end;
   cp =cp - 1;
   cp->gpr[10] = (int)arg;
-  cp->mepc = (uintptr_t)entry -4;
+  cp->mepc = (uintptr_t)entry;
   return cp;
 }
 
