@@ -193,14 +193,13 @@ void ftrace_exe(Decode* s)
         rs1 =strtok(NULL," ");
         if((strcmp(inst,"jal") == 0 ))
         {
-            
             for(int i=0;i<FUNC_MAXNUM;i++)
             {
                 if(func_array[i].state == true)
                 {
                    if(func_array[i].addr == s->dnpc) 
                    {
-                    for(unsigned int j=0;j<count;j++)
+                    for(int j=0;j<count;j++)
                     {
                         printf(" ");
                     }
@@ -228,7 +227,7 @@ void ftrace_exe(Decode* s)
                    if(s->dnpc>=func_array[i].addr && s->dnpc<func_array[i].addr+func_array[i].size) 
                    {
                      count--;
-                        for(unsigned int j=0;j<count;j++)
+                        for(int j=0;j<count;j++)
                     {
                         printf(" ");
                     }    
@@ -236,10 +235,6 @@ void ftrace_exe(Decode* s)
                     printf("rt   [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
                     break;
                    }
-                }
-                else 
-                {
-                    break;
                 }
                 }
              }
@@ -267,6 +262,50 @@ void ftrace_exe(Decode* s)
                 }
                 }
              }
+        }
+        else if(strcmp(inst, "ecall") == 0)
+        {
+            for(int i=0;i<FUNC_MAXNUM;i++)
+            {
+                if(func_array[i].state == true)
+                {
+                   if(func_array[i].addr == s->dnpc) 
+                   {
+                    for(int j=0;j<count;j++)
+                    {
+                        printf(" ");
+                    }
+                    printf("0x%x:",s->pc);
+                    printf("call [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
+                    count++;
+                    break;
+                   }
+                }
+                else 
+                {
+                    break;
+                }
+            }
+        }
+        else if(strcmp(inst, "mret") == 0)
+        {
+            for(unsigned int i=0;i<FUNC_MAXNUM;i++)
+                {
+                    if(func_array[i].state == true)
+                    {
+                     if(s->dnpc>=func_array[i].addr && s->dnpc<func_array[i].addr+func_array[i].size) 
+                        {    
+                        count--;
+                        for(int j=0;j<count;j++)
+                        {
+                        printf(" ");
+                        }    
+                         printf("0x%x:",s->pc);
+                        printf("rt   [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
+                        break;
+                        }
+                    }
+                }
         }
     }
 }
