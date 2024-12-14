@@ -44,7 +44,7 @@ static debug_module_config_t difftest_dm_config = {
 struct diff_context_t {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
   word_t pc;
-  word_t csr_reg[4096];
+  word_t csr[4096];
 };
 
 static sim_t* s = NULL;
@@ -66,10 +66,10 @@ void sim_t::diff_get_regs(void* diff_context) {
     ctx->gpr[i] = state->XPR[i];
   }
   ctx->pc = state->pc;
-  ctx->csr_reg[MTVEC] = state->mtvec->read();
-  ctx->csr_reg[MEPC] = state->mepc->read();
-  ctx->csr_reg[Mstatus] = state->mstatus->read();
-  ctx->csr_reg[MCAUSE] = state->mcause->read();
+  ctx->csr[MTVEC] = state->mtvec->read();
+  ctx->csr[MEPC] = state->mepc->read();
+  ctx->csr[Mstatus] = state->mstatus->read();
+  ctx->csr[MCAUSE] = state->mcause->read();
 }
 
 void sim_t::diff_set_regs(void* diff_context) {
@@ -78,10 +78,10 @@ void sim_t::diff_set_regs(void* diff_context) {
     state->XPR.write(i, (sword_t)ctx->gpr[i]);
   }
   state->pc = ctx->pc;
-  state->mtvec->write(ctx->csr_reg[MTVEC]); 
-  state->mepc->write(ctx->csr_reg[MEPC]); 
-  state->mstatus->write(ctx->csr_reg[Mstatus]); 
-  state->mcause->write(ctx->csr_reg[MCAUSE]); 
+  state->mtvec->write(ctx->csr[MTVEC]); 
+  state->mepc->write(ctx->csr[MEPC]); 
+  state->mstatus->write(ctx->csr[Mstatus]); 
+  state->mcause->write(ctx->csr[MCAUSE]); 
   
 }
 
