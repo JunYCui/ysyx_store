@@ -81,7 +81,7 @@ void cpu_exec(uint32_t n)
         GetInst(&s.inst);    
         exec_once();
         cpu.pc = top->pc;
-    svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.io"));
+    svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.Reg_inst"));
     for(int j=0;j<32;j++)
     {
         //ReadReg(j,&cpu.gpr[j]);
