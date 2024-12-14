@@ -84,7 +84,7 @@ void cpu_exec(uint32_t n)
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.io"));
     for(int j=0;j<32;j++)
     {
-        ReadReg(j,&cpu.gpr[j]);
+        //ReadReg(j,&cpu.gpr[j]);
     }
         trace_and_difftest(&s);
         if(npc_state.state !=NPC_RUNNING)
