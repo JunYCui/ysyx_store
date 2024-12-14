@@ -73,7 +73,7 @@ module Control(
                         || opcode == `J_opcode_ysyx_24100029 || opcode == `I2_opcode_ysyx_24100029  
                         || (opcode ==`I1_opcode_ysyx_24100029  &&  funct3 == 3'b000)  || (opcode == `R_opcode_ysyx_24100029      &&
                         funct3 == 3'b000 && oprand == 7'b0000000) || (opcode == `B_opcode_ysyx_24100029                          && 
-                        (funct3 == 3'b010 ||funct3 == 3'b011)))                                                                  ?   
+                        funct3[2:1] == 2'b01                 ))                                                                  ?   
                         `alu_add_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3[2:1] == 2'b01)                     ||
                         (opcode == `R_opcode_ysyx_24100029 && funct3[2:1] == 2'b01)                                              || 
                         (opcode == `B_opcode_ysyx_24100029 && funct3[2] == 1'b1)                                                 ?
@@ -89,7 +89,8 @@ module Control(
                         (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand == 7'b0000000)                          ?
                         `alu_srl_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand != 7'b0000000) ||
                         (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand != 7'b0000000)                          ?
-                        `alu_sra_ysyx_24100029 : `alu_add_ysyx_24100029                                                          ;
+                        `alu_sra_ysyx_24100029 : (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b000 && oprand != 7'b0000000) ?
+                        `alu_sub_ysyx_24100029 : `alu_add_ysyx_24100029;
 /*   alu_opcode     
 always@(*)begin
     if(opcode == `S_opcode_ysyx_24100029 ||  opcode == `I0_opcode_ysyx_24100029 || opcode == `U0_opcode_ysyx_24100029
