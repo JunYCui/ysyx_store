@@ -39,7 +39,7 @@ module Control(
     output reg         [   1: 0] imm_opcode                 ,
     output                       rs2_flag                   ,
     output reg         [   1: 0] rs1_flag                   ,
-    output reg                   comp_flag                  ,
+    output                       comp_flag                  ,
     output                       inv_flag                    
 );
 
@@ -47,8 +47,8 @@ module Control(
 
 
     assign                       re_wen                    = (opcode == `S_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029 )? 1'b0:1'b1;
-    assign                       mem_wen                   = (opcode == `S_opcode_ysyx_24100029)? 1'b1:1'b0;
-    assign                       mem_ren                   = (opcode == `I0_opcode_ysyx_24100029)? 1'b1:1'b0;
+    assign                       mem_wen                   = (opcode == `S_opcode_ysyx_24100029);
+    assign                       mem_ren                   = (opcode == `I0_opcode_ysyx_24100029);
 
     assign                       jump_flag                 = (opcode == `I2_opcode_ysyx_24100029 || opcode == `J_opcode_ysyx_24100029)? 1'b1:1'b0;
     assign                       rs2_flag                  = (opcode == `R_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029)? 1'b1:1'b0;
@@ -56,18 +56,9 @@ module Control(
     assign                       branch_flag               = (opcode == `B_opcode_ysyx_24100029)? 1'b1:1'b0;
 
 
-/* comp_flag */
-    always@(*)begin
-        if(opcode == `B_opcode_ysyx_24100029 && (funct3 == 3'b110 || funct3 == 3'b111) )
-            comp_flag = 1'b1;
-        else if(opcode == `I1_opcode_ysyx_24100029 && (funct3 == 3'b011))
-            comp_flag = 1'b1;
-        else if(opcode == `R_opcode_ysyx_24100029 && (funct3 ==  3'b011))
-            comp_flag = 1'b1;
-        else 
-            comp_flag = 1'b0;
-    end
-
+    assign comp_flag = (opcode == `B_opcode_ysyx_24100029 && (funct3 == 3'b110 || funct3 == 3'b111)) |
+                       (opcode == `I1_opcode_ysyx_24100029 && (funct3 == 3'b011))                    |
+                       (opcode == `R_opcode_ysyx_24100029 && (funct3 ==  3'b011))                    ;
 
 /* imm_opcode        */
     always@(*)begin
@@ -147,7 +138,7 @@ always@(*)begin
                 default: alu_opcode = `alu_add_ysyx_24100029;
              endcase
         end
-    else 
+    else
         alu_opcode = `alu_add_ysyx_24100029;
 end
 
