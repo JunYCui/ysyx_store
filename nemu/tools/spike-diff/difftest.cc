@@ -20,6 +20,10 @@
 
 #define NR_GPR MUXDEF(CONFIG_RVE, 16, 32)
 #define CSR_NUM 4096
+#define MCAUSE 0X342
+#define MEPC 0X341
+#define MTVEC 0x305
+#define Mstatus 0x300
 
 static std::vector<std::pair<reg_t, abstract_device_t*>> difftest_plugin_devices;
 static std::vector<std::string> difftest_htif_args;
@@ -40,7 +44,7 @@ static debug_module_config_t difftest_dm_config = {
 struct diff_context_t {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
   word_t pc;
-  word_t mtvec,mepc,mstatus,mcause;  
+  word_t csr_reg[4096];
 };
 
 static sim_t* s = NULL;
@@ -62,10 +66,10 @@ void sim_t::diff_get_regs(void* diff_context) {
     ctx->gpr[i] = state->XPR[i];
   }
   ctx->pc = state->pc;
-  ctx->mtvec = state->mtvec->read();
-  ctx->mepc = state->mepc->read();
-  ctx->mstatus = state->mstatus->read();
-  ctx->mcause = state->mcause->read();
+  ctx->csr_reg[MTVEC] = state->mtvec->read();
+  ctx->csr_reg[MEPC] = state->mepc->read();
+  ctx->csr_reg[Mstatus] = state->mstatus->read();
+  ctx->csr_reg[MCAUSE] = state->mcause->read();
 }
 
 void sim_t::diff_set_regs(void* diff_context) {
@@ -74,10 +78,10 @@ void sim_t::diff_set_regs(void* diff_context) {
     state->XPR.write(i, (sword_t)ctx->gpr[i]);
   }
   state->pc = ctx->pc;
-  state->mtvec->write(ctx->mtvec); 
-  state->mepc->write(ctx->mepc); 
-  state->mstatus->write(ctx->mstatus); 
-  state->mcause->write(ctx->mcause); 
+  state->mtvec->write(ctx->csr_reg[MTVEC]); 
+  state->mepc->write(ctx->csr_reg[MEPC]); 
+  state->mstatus->write(ctx->csr_reg[Mstatus]); 
+  state->mcause->write(ctx->csr_reg[MCAUSE]); 
   
 }
 
