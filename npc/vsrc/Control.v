@@ -63,18 +63,11 @@ module Control(
     assign imm_opcode = (opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )                            ?
                         `imm_20u_ysyx_24100029:(opcode == `J_opcode_ysyx_24100029)                                             ?
                         `imm_20i_ysyx_24100029:(opcode == `I1_opcode_ysyx_24100029 && (funct3 == 3'b001 || funct3 == 3'b101))  ?
-                        `imm_5u_ysyx_24100029 : `imm_12i_ysyx_24100029;
+                        `imm_5u_ysyx_24100029 : `imm_12i_ysyx_24100029                                                         ;
+    assign rs1_flag  =  (opcode == `U0_opcode_ysyx_24100029)                                                                   ?
+                        `rs1_dist_para_ysyx_24100029:(opcode == `J_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )?
+                        `rs1_dist_pc_ysyx_24100029   : `rs1_dist_reg_ysyx_24100029                                             ;
 
-
-/*   rs1_flag     */
-    always@(*)begin
-        if(opcode == `U0_opcode_ysyx_24100029)
-            rs1_flag = `rs1_dist_para_ysyx_24100029 ;
-        else if (opcode == `J_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )
-            rs1_flag = `rs1_dist_pc_ysyx_24100029 ;
-        else
-            rs1_flag = `rs1_dist_reg_ysyx_24100029 ;
-    end
 
 /*   alu_opcode     */
 always@(*)begin
