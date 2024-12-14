@@ -35,10 +35,10 @@ module Control(
     output                       jump_flag                  ,
     output                       branch_flag                ,
 
-    output reg         [   3: 0] alu_opcode                 ,
-    output reg         [   1: 0] imm_opcode                 ,
+    output             [   3: 0] alu_opcode                 ,
+    output             [   1: 0] imm_opcode                 ,
     output                       rs2_flag                   ,
-    output reg         [   1: 0] rs1_flag                   ,
+    output             [   1: 0] rs1_flag                   ,
     output                       comp_flag                  ,
     output                       inv_flag                    
 );
@@ -68,8 +68,29 @@ module Control(
                         `rs1_dist_para_ysyx_24100029:(opcode == `J_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )?
                         `rs1_dist_pc_ysyx_24100029   : `rs1_dist_reg_ysyx_24100029                                             ;
 
-
-/*   alu_opcode     */
+    assign alu_opcode = (opcode == `S_opcode_ysyx_24100029 ||  opcode == `I0_opcode_ysyx_24100029 
+                        || opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 
+                        || opcode == `J_opcode_ysyx_24100029 || opcode == `I2_opcode_ysyx_24100029  
+                        || (opcode ==`I1_opcode_ysyx_24100029  &&  funct3 == 3'b000)  || (opcode == `R_opcode_ysyx_24100029      &&
+                        funct3 == 3'b000 && oprand == 7'b0000000) || (opcode == `B_opcode_ysyx_24100029                          && 
+                        (funct3 == 3'b010 ||funct3 == 3'b011)))                                                                  ?   
+                        `alu_add_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3[2:1] == 2'b01)                     ||
+                        (opcode == `R_opcode_ysyx_24100029 && funct3[2:1] == 2'b01)                                              || 
+                        (opcode == `B_opcode_ysyx_24100029 && funct3[2] == 1'b1)                                                 ?
+                        `alu_comparator_ysyx_24100029:(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b100 )                  ||
+                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b100 )                                                 ?
+                        `alu_xor_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b110 )                        ||
+                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b110 )                                                 ?
+                        `alu_or_ysyx_24100029  : (opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b111 )                       ||
+                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b111 )                                                 ?
+                        `alu_and_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b001  )                       ||
+                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b001 )                                                 ?
+                        `alu_sll_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand == 7'b0000000) ||
+                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand == 7'b0000000)                          ?
+                        `alu_srl_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand != 7'b0000000) ||
+                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand != 7'b0000000)                          ?
+                        `alu_sra_ysyx_24100029 : `alu_add_ysyx_24100029                                                          ;
+/*   alu_opcode     
 always@(*)begin
     if(opcode == `S_opcode_ysyx_24100029 ||  opcode == `I0_opcode_ysyx_24100029 || opcode == `U0_opcode_ysyx_24100029
     || opcode == `U1_opcode_ysyx_24100029 || opcode == `J_opcode_ysyx_24100029 || opcode == `I2_opcode_ysyx_24100029)
@@ -129,7 +150,7 @@ always@(*)begin
         alu_opcode = `alu_add_ysyx_24100029;
 end
 
-
+*/
 
 endmodule
 
