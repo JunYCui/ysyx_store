@@ -56,21 +56,15 @@ module Control(
     assign                       branch_flag               = (opcode == `B_opcode_ysyx_24100029)? 1'b1:1'b0;
 
 
-    assign comp_flag = (opcode == `B_opcode_ysyx_24100029 && (funct3 == 3'b110 || funct3 == 3'b111)) |
-                       (opcode == `I1_opcode_ysyx_24100029 && (funct3 == 3'b011))                    |
-                       (opcode == `R_opcode_ysyx_24100029 && (funct3 ==  3'b011))                    ;
+    assign comp_flag = (opcode == `B_opcode_ysyx_24100029 && (funct3 == 3'b110 || funct3 == 3'b111))                           |
+                       (opcode == `I1_opcode_ysyx_24100029 && (funct3 == 3'b011))                                              |
+                       (opcode == `R_opcode_ysyx_24100029 && (funct3 ==  3'b011))                                              ;
 
-/* imm_opcode        */
-    always@(*)begin
-        if(opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )
-            imm_opcode = `imm_20u_ysyx_24100029;
-        else if( opcode == `J_opcode_ysyx_24100029)
-            imm_opcode = `imm_20i_ysyx_24100029;
-        else if(opcode == `I1_opcode_ysyx_24100029 && (funct3 == 3'b001 || funct3 == 3'b101) )
-            imm_opcode = `imm_5u_ysyx_24100029 ;
-        else
-            imm_opcode = `imm_12i_ysyx_24100029;
-    end
+    assign imm_opcode = (opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )                            ?
+                        `imm_20u_ysyx_24100029:(opcode == `J_opcode_ysyx_24100029)                                             ?
+                        `imm_20i_ysyx_24100029:(opcode == `I1_opcode_ysyx_24100029 && (funct3 == 3'b001 || funct3 == 3'b101))  ?
+                        `imm_5u_ysyx_24100029 : `imm_12i_ysyx_24100029;
+
 
 /*   rs1_flag     */
     always@(*)begin
