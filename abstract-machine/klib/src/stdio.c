@@ -81,11 +81,10 @@ int float2str(char* str, double val)
     }
   return count;
 }
-
+char strout[100];
 int vsprintf(char *out, const char *fmt, va_list ap);
 
 int printf(const char *fmt, ...) {
-  char strout[1000];
   va_list pArgs;
   va_start(pArgs, fmt);
   int num = vsprintf(strout,fmt, pArgs);
@@ -100,7 +99,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
   char *Argstrval; // 字符串参数
   int Argintval; // 整数参数
   int num=0; // 返回字符串长度
-  char num_store[500]; // 用来保存变量
+  char num_store[100]; // 用来保存变量
   int num_count=0;
   int flag;
   int flag_neg; //判断正负
@@ -131,6 +130,10 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 			      strl =*p1 - 0x30 + strl*10;
 			      p1++;
 			    }
+          if(*p1 == 'l')
+          {
+            p1++;
+          }
           switch (*p1)
           {
           case 'd':
@@ -498,7 +501,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           }
           p1++;
           break;
-         default:assert(0);
+         default:
         }
           
       default: 

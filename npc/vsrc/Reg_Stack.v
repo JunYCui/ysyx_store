@@ -17,7 +17,7 @@ module Reg_Stack(
 
     assign                       wdata                     = (rd == 5'd0)? 32'd0:rd_value;
 
-RegisterFile #(5, 32) io(
+RegisterFile #(5, 32) Reg_inst(
     .clk                         (clk                       ),
     .wdata                       (wdata                     ),
     .waddr                       (rd                        ),

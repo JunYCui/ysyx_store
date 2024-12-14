@@ -16,21 +16,33 @@
 #include <isa.h>
 #include <cpu/difftest.h>
 #include "../local-include/reg.h"
-
+#include <isa-def.h>
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
   for(int i=0;i<MUXDEF(CONFIG_RVE, 16, 32);i++)
   {
     if(ref_r->gpr[i] != gpr(i))
     {
-      printf(" \n 0x%x: %s value is error \n",pc,reg_name(i));
-      printf("right value:%d \t wrong value:%d \n",ref_r->gpr[i] ,gpr(i) );
+      printf(" \n 0x%x: %s value is error! \n",pc,reg_name(i));
+      printf("ref value:%d \t dut value:%d \n",ref_r->gpr[i] ,gpr(i) );
       return false;
     }
   }
   if(ref_r->pc != cpu.pc)
   {
-    printf("\n 0x%x: %d value is error \n",pc, cpu.pc);
-    printf("right value:0x%x \t wrong value:0x%x \n",ref_r->pc ,cpu.pc );
+    printf("\n 0x%x: pc value is error \n",pc);
+    printf("ref value:0x%x \t dut value:0x%x \n",ref_r->pc ,cpu.pc );
+    return false;
+  }
+  if(ref_r->csr[MCAUSE] != cpu.csr[MCAUSE])
+  {
+    printf("\n 0x%x: mcause value is error \n",pc);
+    printf("ref value:0x%x \t dut value:0x%x \n",ref_r->csr[MCAUSE] ,cpu.csr[MCAUSE] );
+    return false;
+  }
+  if(ref_r->csr[MEPC] != cpu.csr[MEPC])
+  {
+    printf("\n 0x%x: mepc value is error \n",pc);
+    printf("ref value:0x%x \t dut value:0x%x \n",ref_r->csr[MEPC] ,cpu.csr[MEPC] );
     return false;
   }
   return true;

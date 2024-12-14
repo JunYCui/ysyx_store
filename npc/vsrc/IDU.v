@@ -29,15 +29,15 @@ module IDU(
 
 /* imm 处理*/
 MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, opcode, {i1_DATA_LEN{1'b0}},
-{`R_opcode_ysyx_24100029,     {25'd0,inst[31:25]},
+{`R_opcode_ysyx_24100029 ,    {25'd0,inst[31:25]},
  `I0_opcode_ysyx_24100029,    {20'd0,inst[31:20]},
  `I1_opcode_ysyx_24100029,    {20'd0,inst[31:20]},
  `I2_opcode_ysyx_24100029,    {20'd0,inst[31:20]},
  `U0_opcode_ysyx_24100029,    {12'd0,inst[31:12]},
  `U1_opcode_ysyx_24100029,    {12'd0,inst[31:12]},
- `J_opcode_ysyx_24100029,     {12'd0,inst[31],inst[19:12],inst[20],inst[30:21]},
- `B_opcode_ysyx_24100029,     {20'd0,inst[31],inst[7],inst[30:25],inst[11:8]},
- `S_opcode_ysyx_24100029,     {20'd0,inst[31:25],inst[11:7]}
+ `J_opcode_ysyx_24100029 ,    {12'd0,inst[31],inst[19:12],inst[20],inst[30:21]},
+ `B_opcode_ysyx_24100029 ,    {20'd0,inst[31],inst[7],inst[30:25],inst[11:8]},
+ `S_opcode_ysyx_24100029 ,    {20'd0,inst[31:25],inst[11:7]}
  });
 
 
