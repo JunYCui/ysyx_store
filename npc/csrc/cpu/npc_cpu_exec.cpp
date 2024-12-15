@@ -59,7 +59,7 @@ static void trace_and_difftest(Decode *s)
     itrace(s);
 #endif
     IFDEF(FTRACE,ftrace_exe(s);)
-    IFDEF(DIFFTEST,fdifftest_step(s->pc,s->dnpc);) 
+    IFDEF(DIFFTEST,difftest_step(s->pc,s->dnpc);) 
 }
 
 
