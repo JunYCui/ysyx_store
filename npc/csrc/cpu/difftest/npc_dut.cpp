@@ -39,7 +39,6 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
 // this is used to let ref skip instructions which
 // can not produce consistent behavior with NEMU
 void difftest_skip_ref() {
-  assert(0);
   is_skip_ref = true;
   // If such an instruction is one of the instruction packing in QEMU
   // (see below), we end the process of catching up with QEMU's pc to
