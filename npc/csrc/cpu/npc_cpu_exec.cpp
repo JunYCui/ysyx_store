@@ -90,7 +90,7 @@ void cpu_exec(uint32_t n)
         skip_flag =0;
     }    
         exec_once();
-    printf("top->pc = 0x%x, top->dnpc = 0x%x, top->snpc = 0x%x \n",top->pc,top->dnpc,top->snpc);
+   // printf("top->pc = 0x%x, top->dnpc = 0x%x, top->snpc = 0x%x \n",top->pc,top->dnpc,top->snpc);
         cpu.pc = top->pc;
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.Reg_inst"));
     for(int j=0;j<32;j++)
