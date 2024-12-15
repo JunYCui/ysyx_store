@@ -7,13 +7,14 @@ extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int
 extern void ReadReg(int reg_num, svBitVecVal* reg_value);
 void difftest_step(vaddr_t pc, vaddr_t npc);
 void ftrace_exe(Decode* s);
-
+void difftest_skip_ref();
 /* DPI-C*/
 extern void GetInst(svBitVecVal* inst_exec);
 
 extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
+extern bool skip_flag;
 
 CPU_state cpu={};
 
@@ -84,8 +85,12 @@ void cpu_exec(uint32_t n)
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
         GetInst(&s.inst);    
         exec_once();
+    if(skip_flag)
+    {
+        difftest_skip_ref();
+        skip_flag =0;
+    }
         cpu.pc = top->pc;
-        printf("cpu.pc = 0x%x \tsnpc = 0x%x \t dnpc =0x%x \n",cpu.pc,top->snpc, top->dnpc);
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.Reg_inst"));
     for(int j=0;j<32;j++)
     {

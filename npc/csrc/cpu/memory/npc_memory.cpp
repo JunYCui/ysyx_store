@@ -1,7 +1,6 @@
 #include "npc_memory.h"
 #include "npc_define.h"
 #include "npc_device.h"
-void difftest_skip_ref();
 uint64_t npc_time;
 extern uint8_t* pmem;
 extern uint32_t *vmem ;
@@ -11,6 +10,7 @@ void vga_update_screen();
 uint32_t screen_size();
 uint16_t height,weight;
 bool vga_flag;
+bool skip_flag;
 
 static inline uint32_t host_read(void *addr, int len) {
   switch (len) {
@@ -39,23 +39,23 @@ extern "C" int npc_pmem_read(int addr)
   int data;
  if(paddr == RTC_ADDR + 4)
   {
-    difftest_skip_ref();
+    skip_flag = 1;
     npc_time = get_time(); 
     return npc_time>>32;
   }
   else if(paddr == RTC_ADDR)
   {
-    difftest_skip_ref();
+    skip_flag = 1;
     return (uint32_t)(npc_time & 0xffffffff);
   }
   else if(addr == VGA_ADDR +4)
   {
-    difftest_skip_ref();
+    skip_flag = 1;
     return vga_flag;
   }
   else if(paddr == VGA_ADDR)
   {
-    difftest_skip_ref();
+    skip_flag = 1;
     return (weight<<16)|height ;
   }  
    data = *(int*)guest_to_host(paddr);
@@ -72,26 +72,26 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
   int data = wdata;
   if(addr == UART_ADDR)
   {
-    difftest_skip_ref();
+    skip_flag = 1;
     printf("%c",wdata);
     return;
   }
   else if(addr >=FB_ADDR && addr <FB_ADDR + screen_size())
   {
-    difftest_skip_ref();
+    skip_flag = 1;
     vmem[(addr-FB_ADDR)/4] = wdata;
     return;
   }
   else if(addr == VGA_ADDR)
   {
-    difftest_skip_ref();
+    skip_flag = 1;
     height = wdata&0xffff;
     weight = wdata>>16;
     return;
   }
   else if(addr == VGA_ADDR +4)
   {
-    difftest_skip_ref();
+    skip_flag = 1;
     vga_flag = wdata;
     if(vga_flag == 1)
     {
