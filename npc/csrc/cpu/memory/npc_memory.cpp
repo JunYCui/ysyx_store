@@ -75,7 +75,7 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
   if(addr == UART_ADDR)
   {
     skip_flag = 1;
-    printf("%c",wdata);
+    printf("%d",wdata);
     return;
   }
   else if(addr >=FB_ADDR && addr <FB_ADDR + screen_size())
