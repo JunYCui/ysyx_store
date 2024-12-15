@@ -60,7 +60,7 @@ static void trace_and_difftest(Decode *s)
     itrace(s);
 #endif
 #ifdef FTRACE
-    ftrace_exe(s);
+    //ftrace_exe(s);
 #endif
 #ifdef DIFFTEST
     difftest_step(s->pc,s->dnpc);
