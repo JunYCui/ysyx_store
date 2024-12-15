@@ -11,7 +11,7 @@ uint32_t screen_size();
 uint16_t height,weight;
 bool vga_flag;
 bool skip_flag;
-
+extern Vcpu_ysyx_24100029 *top; 
 static inline uint32_t host_read(void *addr, int len) {
   switch (len) {
     case 1: return *(uint8_t  *)addr;
@@ -60,7 +60,7 @@ extern "C" int npc_pmem_read(int addr)
   }  
    data = *(int*)guest_to_host(paddr);
 #ifdef MTRACE
-  printf("addr 0x%x:\t0x%x      \n",paddr,data);
+  printf("Read addr 0x%x:\t0x%x  at pc: 0x%x    \n",paddr,data,top->pc);
 #endif  
   return data;
 }
@@ -110,7 +110,7 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
     assert(0);
   }
   #ifdef MTRACE
-    printf("addr 0x%x:\t0x%x is written ! wmask = %d  \n",paddr,data,wmask);
+    printf("addr 0x%x:\t0x%x is written ! wmask = %d  at pc: 0x%x  \n",paddr,data,wmask,top->pc);
   #endif
     return;
 }
