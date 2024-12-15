@@ -81,7 +81,7 @@ module cpu_ysyx_24100029
     assign                       ecall_flag                = (inst == 32'b00000000000000000000000001110011);//ecall
     assign                       mret_flag                 = (inst == 32'b00110000001000000000000001110011);// mret
     assign                       mcause_in                 = (ecall_flag)? 32'd11:EX_result;// 11 means trigger environment from machine
-    assign                       mepc_in                   = (ecall_flag)? npc:EX_result;// save the trigger pc
+    assign                       mepc_in                   = (ecall_flag)? pc + 4:EX_result;// save the trigger pc
     assign                       mstatus_in                = EX_result;
     assign                       mtvec_in                  = EX_result;
 
