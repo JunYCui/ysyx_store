@@ -82,16 +82,15 @@ void cpu_exec(uint32_t n)
         cpu.pc = top->pc;
         s.dnpc=top->dnpc;
         s.snpc=top->snpc;
+        for(int j=0;j<32;j++)
+        {
+            ReadReg(j,&cpu.gpr[j]);
+        }
+        trace_and_difftest(&s);
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
         GetInst(&s.inst);    
         exec_once();
-
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.Reg_inst"));
-    for(int j=0;j<32;j++)
-    {
-        ReadReg(j,&cpu.gpr[j]);
-    }
-        trace_and_difftest(&s);
         if(npc_state.state !=NPC_RUNNING)
             break;
     }
