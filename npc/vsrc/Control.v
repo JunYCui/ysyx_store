@@ -29,7 +29,11 @@ module Control(
     input              [   6: 0] opcode                     ,
     input              [   2: 0] funct3                     ,
     input              [   6: 0] oprand                     ,
-    output                       re_wen                     ,
+    input              [  31: 0] imm                        ,
+    input                        ecall_flag                 ,
+    
+    output                       R_wen                      ,
+    output             [   3: 0] csr_wen                    ,
     output                       mem_wen                    ,
     output                       mem_ren                    ,
     output                       jump_flag                  ,
@@ -37,7 +41,7 @@ module Control(
 
     output             [   3: 0] alu_opcode                 ,
     output             [   1: 0] imm_opcode                 ,
-    output                       rs2_flag                   ,
+    output             [   1: 0] rs2_flag                   ,
     output             [   1: 0] rs1_flag                   ,
     output                       comp_flag                  ,
     output                       inv_flag                    
@@ -45,13 +49,19 @@ module Control(
 
     
 
+    assign                       csr_wen[0]                = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h341) || ecall_flag;
+    assign                       csr_wen[1]                = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h342) || ecall_flag;
+    assign                       csr_wen[2]                = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h300) ;
+    assign                       csr_wen[3]                = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h305) ;
 
-    assign                       re_wen                    = (opcode == `S_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029 )? 1'b0:1'b1;
+    assign                       R_wen                     = (opcode == `S_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029)? 1'b0:1'b1;
     assign                       mem_wen                   = (opcode == `S_opcode_ysyx_24100029);
     assign                       mem_ren                   = (opcode == `I0_opcode_ysyx_24100029);
 
     assign                       jump_flag                 = (opcode == `I2_opcode_ysyx_24100029 || opcode == `J_opcode_ysyx_24100029)? 1'b1:1'b0;
-    assign                       rs2_flag                  = (opcode == `R_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029)? 1'b1:1'b0;
+    assign                       rs2_flag                  = (opcode == `R_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029)? 2'd1:
+                                                             (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b010)? 2'd2:
+                                                             (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b001)? 2'd3:2'd0;
     assign                       inv_flag                  = (opcode == `B_opcode_ysyx_24100029 && (funct3 == 3'b101 || funct3 == 3'b111 || funct3 == 3'b000 ))? 1'b1:1'b0;
     assign                       branch_flag               = (opcode == `B_opcode_ysyx_24100029)? 1'b1:1'b0;
 
@@ -69,18 +79,19 @@ module Control(
                         `rs1_dist_pc_ysyx_24100029   : `rs1_dist_reg_ysyx_24100029                                             ;
 
     assign alu_opcode = (opcode == `S_opcode_ysyx_24100029 ||  opcode == `I0_opcode_ysyx_24100029 
-                        || opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 
-                        || opcode == `J_opcode_ysyx_24100029 || opcode == `I2_opcode_ysyx_24100029  
+                        || opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029
+                        || opcode == `J_opcode_ysyx_24100029 || opcode == `I2_opcode_ysyx_24100029
                         || (opcode ==`I1_opcode_ysyx_24100029  &&  funct3 == 3'b000)  || (opcode == `R_opcode_ysyx_24100029      &&
-                        funct3 == 3'b000 && oprand == 7'b0000000) || (opcode == `B_opcode_ysyx_24100029                          && 
-                        funct3[2:1] == 2'b01                 ))                                                                  ?   
+                        funct3 == 3'b000 && oprand == 7'b0000000) || (opcode == `B_opcode_ysyx_24100029                          &&
+                        funct3[2:1] == 2'b01                 ))                                                                  ?
                         `alu_add_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3[2:1] == 2'b01)                     ||
-                        (opcode == `R_opcode_ysyx_24100029 && funct3[2:1] == 2'b01)                                              || 
+                        (opcode == `R_opcode_ysyx_24100029 && funct3[2:1] == 2'b01)                                              ||
                         (opcode == `B_opcode_ysyx_24100029 && funct3[2] == 1'b1)                                                 ?
                         `alu_comparator_ysyx_24100029:(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b100 )                  ||
                         (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b100 )                                                 ?
                         `alu_xor_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b110 )                        ||
-                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b110 )                                                 ?
+                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b110 )                                                 ||
+                        (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b010 )                                                                      ?
                         `alu_or_ysyx_24100029  : (opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b111 )                       ||
                         (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b111 )                                                 ?
                         `alu_and_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b001  )                       ||
@@ -90,9 +101,9 @@ module Control(
                         `alu_srl_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand != 7'b0000000) ||
                         (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand != 7'b0000000)                          ?
                         `alu_sra_ysyx_24100029 : (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b000 && oprand != 7'b0000000) ?
-                        `alu_sub_ysyx_24100029 : (opcode == `B_opcode_ysyx_24100029 && funct3[2:1] == 2'b00)                     ?                            
+                        `alu_sub_ysyx_24100029 : (opcode == `B_opcode_ysyx_24100029 && funct3[2:1] == 2'b00)                     ?
                         `alu_equal_ysyx_24100029:`alu_add_ysyx_24100029;
-/*   alu_opcode     
+/*   alu_opcode
 always@(*)begin
     if(opcode == `S_opcode_ysyx_24100029 ||  opcode == `I0_opcode_ysyx_24100029 || opcode == `U0_opcode_ysyx_24100029
     || opcode == `U1_opcode_ysyx_24100029 || opcode == `J_opcode_ysyx_24100029 || opcode == `I2_opcode_ysyx_24100029)

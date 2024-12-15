@@ -1,7 +1,7 @@
 `include "./vsrc/para.v"
 /* verilator lint_off UNUSEDPARAM */
 
-    localparam                   i1_NR_KEY                 = 9     ;
+    localparam                   i1_NR_KEY                 = 10     ;
     localparam                   i1_KEY_LEN                = 7     ;
     localparam                   i1_DATA_LEN               = 32    ;
 
@@ -37,7 +37,8 @@ MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, opcode, {i1_DAT
  `U1_opcode_ysyx_24100029,    {12'd0,inst[31:12]},
  `J_opcode_ysyx_24100029 ,    {12'd0,inst[31],inst[19:12],inst[20],inst[30:21]},
  `B_opcode_ysyx_24100029 ,    {20'd0,inst[31],inst[7],inst[30:25],inst[11:8]},
- `S_opcode_ysyx_24100029 ,    {20'd0,inst[31:25],inst[11:7]}
+ `S_opcode_ysyx_24100029 ,    {20'd0,inst[31:25],inst[11:7]},
+ `M_opcode_ysyx_24100029 ,    {20'd0,inst[31:20]}
  });
 
 
