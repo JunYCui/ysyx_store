@@ -1,9 +1,9 @@
 #ifndef __NPC_DEFINE_H__ 
 #define __NPC_DEFINE_H__
 
-#define FTRACE
+//#define FTRACE
 #define DIFFTEST
-#define MTRACE
+//#define MTRACE
 #define ITARCE
 
 
