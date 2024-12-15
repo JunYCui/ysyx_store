@@ -124,7 +124,7 @@ void difftest_step(vaddr_t pc, vaddr_t npc) {
     // printf("cpu.pc = 0x%x \n",cpu.pc);
     ref_difftest_regcpy(&cpu, DIFFTEST_TO_REF);
     is_skip_ref = false;
-    printf("ref.pc = 0x%x \n",pc);   
+    printf("ref.pc = 0x%x \n",cpu.pc);   
     return;
   }
 
