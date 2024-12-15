@@ -79,18 +79,19 @@ void cpu_exec(uint32_t n)
     for(int i=0;i<n;i++)
     {
         s.pc=top->pc;
-        cpu.pc = top->pc;
         s.dnpc=top->dnpc;
         s.snpc=top->snpc;
-    svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.Reg_inst"));
-        for(int j=0;j<32;j++)
-        {
-            ReadReg(j,&cpu.gpr[j]);
-        }
-        trace_and_difftest(&s);
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
         GetInst(&s.inst);    
         exec_once();
+        cpu.pc = top->pc;
+        printf("cpu.pc = 0x%x \n",cpu.pc);
+    svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.Reg_Stack_inst0.Reg_inst"));
+    for(int j=0;j<32;j++)
+    {
+        ReadReg(j,&cpu.gpr[j]);
+    }
+        trace_and_difftest(&s);
         if(npc_state.state !=NPC_RUNNING)
             break;
     }
