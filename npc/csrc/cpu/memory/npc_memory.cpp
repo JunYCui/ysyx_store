@@ -1,7 +1,7 @@
 #include "npc_memory.h"
 #include "npc_define.h"
 #include "npc_device.h"
-
+void difftest_skip_ref();
 uint64_t npc_time;
 extern uint8_t* pmem;
 extern uint32_t *vmem ;
@@ -39,19 +39,23 @@ extern "C" int npc_pmem_read(int addr)
   int data;
  if(paddr == RTC_ADDR + 4)
   {
+    difftest_skip_ref();
     npc_time = get_time(); 
     return npc_time>>32;
   }
   else if(paddr == RTC_ADDR)
   {
+    difftest_skip_ref();
     return (uint32_t)(npc_time & 0xffffffff);
   }
   else if(addr == VGA_ADDR +4)
   {
+    difftest_skip_ref();
     return vga_flag;
   }
   else if(paddr == VGA_ADDR)
   {
+    difftest_skip_ref();
     return (weight<<16)|height ;
   }  
    data = *(int*)guest_to_host(paddr);
@@ -68,22 +72,26 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
   int data = wdata;
   if(addr == UART_ADDR)
   {
+    difftest_skip_ref();
     printf("%c",wdata);
     return;
   }
   else if(addr >=FB_ADDR && addr <FB_ADDR + screen_size())
   {
+    difftest_skip_ref();
     vmem[(addr-FB_ADDR)/4] = wdata;
     return;
   }
   else if(addr == VGA_ADDR)
   {
+    difftest_skip_ref();
     height = wdata&0xffff;
     weight = wdata>>16;
     return;
   }
   else if(addr == VGA_ADDR +4)
   {
+    difftest_skip_ref();
     vga_flag = wdata;
     if(vga_flag == 1)
     {
