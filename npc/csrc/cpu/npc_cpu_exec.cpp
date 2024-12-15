@@ -58,7 +58,6 @@ static void trace_and_difftest(Decode *s)
     if(g_print_step)
     itrace(s);
 #endif
-    assert(0);
 #ifdef FTRACE
     ftrace_exe(s);
 #endif
