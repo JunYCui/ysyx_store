@@ -188,7 +188,7 @@ void ftrace_exe(Decode* s)
     char* rd;
     char* rs1;
     int ilen = s->snpc - s->pc;//指令长度  
-    assert(0);
+    
     disassemble(str,sizeof(str),s->pc,(uint8_t *)&s->inst, ilen);
     inst = strtok(str,"\t");
     if(inst!= NULL)
