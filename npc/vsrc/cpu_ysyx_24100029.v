@@ -67,7 +67,9 @@ module cpu_ysyx_24100029
     wire                         mret_flag                  ;
 
     assign                       snpc                      = pc + 4;
-    assign                       npc                       = (mret_flag)? mepc_out:(jump_flag == 1'd1 || branch_flag == 1'd1)? dnpc:snpc;
+    assign                       npc                       = (mret_flag) ?   mepc_out:
+                                                             (ecall_flag)?  mtvec_out:
+                                                             (jump_flag == 1'd1 || branch_flag == 1'd1)? dnpc:snpc;
     assign                       rd_value                  = (jump_flag == 1'd1)? pc+4 : (mem_ren == 1'b1)?  mem_rdata:(opcode == `M_opcode_ysyx_24100029)? csr_value:EX_result;
     assign                       dnpc                      = (jump_flag == 1'd1)? EX_result: (branch_flag == 1'b0)? pc+4:(EX_result != 32'd0)? pc+({{20{imm[11]}},imm[11:0]}<<1) :pc+4;
     assign                       mem_wdata                 = rs2_value;
