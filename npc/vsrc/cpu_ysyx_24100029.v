@@ -145,7 +145,7 @@ Reg #(
 
 Reg #(
     .WIDTH                       (32                        ),
-    .RESET_VAL                   (0                         ) 
+    .RESET_VAL                   (32'h1800                  ) 
 ) CSR_MSTATUS(
     .clk                         (clk                       ),
     .rst                         (rst_n                     ),
