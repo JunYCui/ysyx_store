@@ -58,11 +58,12 @@ extern "C" int npc_pmem_read(int addr)
     skip_flag = 1;
     return (weight<<16)|height ;
   }  
-   data = *(int*)guest_to_host(paddr);
+
 #ifdef MTRACE
   if(paddr != top->pc)
   printf("Read addr 0x%x:\t0x%x  at pc: 0x%x    \n",paddr,data,top->pc);
 #endif  
+   data = *(int*)guest_to_host(paddr);
   return data;
 }
 
@@ -101,7 +102,10 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
     }
     return;
   }
-  switch (wmask)
+  #ifdef MTRACE
+    printf("addr 0x%x:\t0x%x is written ! wmask = %d  at pc: 0x%x  \n",paddr,data,wmask,top->pc);
+  #endif
+    switch (wmask)
   {
     case 1: *(uint8_t  *)guest_to_host(paddr)  = data&(0x000000ff) ; break;
     case 2: *(uint16_t  *)guest_to_host(paddr) = data&(0x0000ffff) ; break;
@@ -110,9 +114,6 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
     printf("wmask      =    %d \n",wmask);
     assert(0);
   }
-  #ifdef MTRACE
-    printf("addr 0x%x:\t0x%x is written ! wmask = %d  at pc: 0x%x  \n",paddr,data,wmask,top->pc);
-  #endif
     return;
 }
 
