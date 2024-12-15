@@ -78,7 +78,7 @@ module cpu_ysyx_24100029
                                                              (opcode == `M_opcode_ysyx_24100029 && imm == 32'h342)? mcause_out :
                                                              (opcode == `M_opcode_ysyx_24100029 && imm == 32'h300)? mstatus_out:
                                                              (opcode == `M_opcode_ysyx_24100029 && imm == 32'h305)? mtvec_out:32'd0;
-    assign                       ecall_flag                = (inst == 32'b0000000000000000000000001110011);//ecall
+    assign                       ecall_flag                = (inst == 32'b00000000000000000000000001110011);//ecall
     assign                       mret_flag                 = (inst == 32'b00110000001000000000000001110011);// mret
     assign                       mcause_in                 = (ecall_flag)? 32'd11:EX_result;// 11 means trigger environment from machine
     assign                       mepc_in                   = (ecall_flag)? npc:EX_result;// save the trigger pc
