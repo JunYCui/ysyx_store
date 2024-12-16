@@ -12,10 +12,11 @@ module EXU (
     input                        inv_flag                   ,
     
     input              [   1: 0] rs1_flag                   ,
-    input                        rs2_flag                   ,
+    input              [   1: 0] rs2_flag                   ,
 
     input              [  31: 0] rs1_value                  ,
     input              [  31: 0] rs2_value                  ,
+    input              [  31: 0] csr_value                  ,
 
     output             [  31: 0] EX_result                   
 );
@@ -24,8 +25,8 @@ module EXU (
     localparam                   KEY_LEN_add1              = 2     ;
     localparam                   DATA_LEN_add1             = 32    ;
 
-    localparam                   NR_KEY_add2               = 2     ;
-    localparam                   KEY_LEN_add2              = 1     ;
+    localparam                   NR_KEY_add2               = 4     ;
+    localparam                   KEY_LEN_add2              = 2     ;
     localparam                   DATA_LEN_add2             = 32    ;
 
 
@@ -50,6 +51,7 @@ module EXU (
         `imm_20u_ysyx_24100029: imm_add = {imm[19:0] , 12'd0} ;
         `imm_20i_ysyx_24100029: imm_add = imm_20i << 1;
         `imm_5u_ysyx_24100029:  imm_add = {27'd0,imm[4:0]};
+        default: imm_add = 32'd0;
         endcase
     end
 
@@ -60,8 +62,10 @@ module EXU (
 
 MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, rs2_flag, {DATA_LEN_add2{1'b0}},
 {
-1'b1, rs2_value,
-1'b0, imm_add
+2'd0, imm_add   ,
+2'd1, rs2_value ,
+2'd2, csr_value ,
+2'd3, 32'd0
 }
 );
 

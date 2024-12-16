@@ -9,6 +9,7 @@
 `define U0_opcode_ysyx_24100029 7'b0110111
 `define U1_opcode_ysyx_24100029 7'b0010111
 `define J_opcode_ysyx_24100029  7'b1101111
+`define M_opcode_ysyx_24100029  7'b1110011
 
 // alu
 `define alu_add_ysyx_24100029           4'b0000
