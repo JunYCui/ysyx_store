@@ -74,10 +74,10 @@ module cpu_ysyx_24100029
     assign                       dnpc                      = (jump_flag == 1'd1)? EX_result: (branch_flag == 1'b1 && EX_result != 32'd0)?  pc+({{20{imm[11]}},imm[11:0]}<<1) :pc+4;
     assign                       mem_wdata                 = rs2_value;
     assign                       Data_mem_valid            = mem_ren|mem_wen;
-    assign                       csr_value                 = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h341)? mepc_out   :
-                                                             (opcode == `M_opcode_ysyx_24100029 && imm == 32'h342)? mcause_out :
-                                                             (opcode == `M_opcode_ysyx_24100029 && imm == 32'h300)? mstatus_out:
-                                                             (opcode == `M_opcode_ysyx_24100029 && imm == 32'h305)? mtvec_out:32'd0;
+    assign                       csr_value                 = (csr_wen[0])? mepc_out   :
+                                                             (csr_wen[1])? mcause_out :
+                                                             (csr_wen[2])? mstatus_out:
+                                                             (csr_wen[3])? mtvec_out:32'd0;
     assign                       ecall_flag                = (inst == 32'b00000000000000000000000001110011);//ecall
     assign                       mret_flag                 = (inst == 32'b00110000001000000000000001110011);// mret
     assign                       mcause_in                 = (ecall_flag)? 32'd11:EX_result;// 11 means trigger environment from machine
