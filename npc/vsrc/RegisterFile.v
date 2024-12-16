@@ -3,7 +3,7 @@ module RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
   input [DATA_WIDTH-1:0] wdata,
   input [ADDR_WIDTH-1:0] waddr,
   input wen,
-  input rst,
+  input rst_n,
   input [ADDR_WIDTH-1:0]  rs1_addr,
   input [ADDR_WIDTH-1:0]  rs2_addr,
 
@@ -18,7 +18,7 @@ module RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
   end
 
   always @(posedge clk)begin
-      if(!rst)
+      if(!rst_n)
       rf[0] <= 32'd0;
   end
 

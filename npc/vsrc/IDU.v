@@ -1,7 +1,7 @@
 `include "./vsrc/para.v"
 /* verilator lint_off UNUSEDPARAM */
 
-    localparam                   i1_NR_KEY                 = 10     ;
+    localparam                   i1_NR_KEY                 = 10    ;
     localparam                   i1_KEY_LEN                = 7     ;
     localparam                   i1_DATA_LEN               = 32    ;
 
@@ -14,7 +14,9 @@ module IDU(
     output             [  31: 0] imm                        ,
     output             [   2: 0] funct3                     ,
     output             [   6: 0] oprand                     ,
-    output             [   6: 0] opcode                      
+    output             [   6: 0] opcode                     ,
+    output                       mret_flag                  ,
+    output                       ecall_flag                  
 );
 
 
@@ -24,6 +26,9 @@ module IDU(
     assign                       rs2                       = inst[24:20];
     assign                       funct3                    = inst[14:12];
     assign                       rd                        = inst[11:7];
+
+    assign                       ecall_flag                = (inst == 32'b00000000000000000000000001110011);//ecall
+    assign                       mret_flag                 = (inst == 32'b00110000001000000000000001110011);// mret
 
 /* verilator lint_off IMPLICIT */
 
