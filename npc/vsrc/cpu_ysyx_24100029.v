@@ -78,8 +78,6 @@ module cpu_ysyx_24100029
                                                              (csr_wen[1])? mcause_out :
                                                              (csr_wen[2])? mstatus_out:
                                                              (csr_wen[3])? mtvec_out:32'd0;
-    assign                       ecall_flag                = (inst == 32'b00000000000000000000000001110011);//ecall
-    assign                       mret_flag                 = (inst == 32'b00110000001000000000000001110011);// mret
     assign                       mcause_in                 = (ecall_flag)? 32'd11:EX_result;// 11 means trigger environment from machine
     assign                       mepc_in                   = (ecall_flag)? snpc:EX_result;// save the trigger pc
     assign                       mstatus_in                = EX_result;
@@ -220,7 +218,9 @@ IDU IDU_inst0(
     .imm                         (imm                       ),
     .funct3                      (funct3                    ),
     .opcode                      (opcode                    ),
-    .oprand                      (oprand                    ) 
+    .oprand                      (oprand                    ),
+    .mret_flag                   (mret_flag                 ),
+    .ecall_flag                  (ecall_flag                ) 
 );
 
 MEM Data_MEM_inst(
