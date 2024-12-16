@@ -71,7 +71,7 @@ module cpu_ysyx_24100029
                                                              (ecall_flag)?  mtvec_out:
                                                              (jump_flag == 1'd1 || branch_flag == 1'd1)? dnpc:snpc;
     assign                       rd_value                  = (jump_flag == 1'd1)? pc+4 : (mem_ren == 1'b1)?  mem_rdata:(opcode == `M_opcode_ysyx_24100029)? csr_value:EX_result;
-    assign                       dnpc                      = (jump_flag == 1'd1)? EX_result: (branch_flag == 1'b0)? pc+4:(EX_result != 32'd0)? pc+({{20{imm[11]}},imm[11:0]}<<1) :pc+4;
+    assign                       dnpc                      = (jump_flag == 1'd1)? EX_result: (branch_flag == 1'b1 && EX_result != 32'd0)?  pc+({{20{imm[11]}},imm[11:0]}<<1) :pc+4;
     assign                       mem_wdata                 = rs2_value;
     assign                       Data_mem_valid            = mem_ren|mem_wen;
     assign                       csr_value                 = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h341)? mepc_out   :
@@ -81,7 +81,7 @@ module cpu_ysyx_24100029
     assign                       ecall_flag                = (inst == 32'b00000000000000000000000001110011);//ecall
     assign                       mret_flag                 = (inst == 32'b00110000001000000000000001110011);// mret
     assign                       mcause_in                 = (ecall_flag)? 32'd11:EX_result;// 11 means trigger environment from machine
-    assign                       mepc_in                   = (ecall_flag)? pc + 4:EX_result;// save the trigger pc
+    assign                       mepc_in                   = (ecall_flag)? snpc:EX_result;// save the trigger pc
     assign                       mstatus_in                = EX_result;
     assign                       mtvec_in                  = EX_result;
 
