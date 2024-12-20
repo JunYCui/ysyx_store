@@ -12,17 +12,18 @@
 `define M_opcode_ysyx_24100029  7'b1110011
 
 // alu
-`define alu_add_ysyx_24100029           4'b0000
-`define alu_sub_ysyx_24100029           4'b0001
-`define alu_not_ysyx_24100029           4'b0010
-`define alu_or_ysyx_24100029            4'b0011
-`define alu_and_ysyx_24100029           4'b0100
-`define alu_xor_ysyx_24100029           4'b0101
-`define alu_comparator_ysyx_24100029    4'b0110
-`define alu_equal_ysyx_24100029         4'b0111
-`define alu_sll_ysyx_24100029           4'b1000
-`define alu_srl_ysyx_24100029           4'b1001
-`define alu_sra_ysyx_24100029           4'b1010
+`define alu_add_ysyx_24100029                   4'b0000
+`define alu_sub_ysyx_24100029                   4'b0001
+`define alu_not_ysyx_24100029                   4'b0010
+`define alu_or_ysyx_24100029                    4'b0011
+`define alu_and_ysyx_24100029                   4'b0100
+`define alu_xor_ysyx_24100029                   4'b0101
+`define alu_signed_comparator_ysyx_24100029     4'b0110
+`define alu_unsigned_comparator_ysyx_24100029   4'b0111
+`define alu_equal_ysyx_24100029                 4'b1000
+`define alu_sll_ysyx_24100029                   4'b1001
+`define alu_srl_ysyx_24100029                   4'b1010
+`define alu_sra_ysyx_24100029                   4'b1011
 
 // rs1_dist
 `define rs1_dist_reg_ysyx_24100029       2'b00

@@ -8,7 +8,6 @@ module EXU (
     input              [  31: 0] imm                        ,
     input              [   1: 0] imm_opcode                 ,
     input              [   3: 0] alu_opcode                 ,
-    input                        comp_flag                  ,
     input                        inv_flag                   ,
     
     input              [   1: 0] rs1_flag                   ,
@@ -85,7 +84,6 @@ ALU #(
     .d1                          (add_1                     ),
     .d2                          (add_2                     ),
     .choice                      (alu_opcode                ),
-    .comp_flag                   (comp_flag                 ),
     .res                         (alu_res                   ),
     .overflow                    (overflow                  ) 
 

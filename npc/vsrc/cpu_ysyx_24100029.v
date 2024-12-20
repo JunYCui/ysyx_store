@@ -47,7 +47,6 @@ module cpu_ysyx_24100029
     wire                         mem_wen                    ;
     wire                         mem_ren                    ;
     wire                         jump_flag                  ;
-    wire                         comp_flag                  ;
     wire               [   1: 0] rs1_flag                   ;
     wire               [   1: 0] rs2_flag                   ;
     wire                         inv_flag                   ;
@@ -132,7 +131,6 @@ EXU EXU_inst0
     .imm                         (imm                       ),
     .imm_opcode                  (imm_opcode                ),
     .alu_opcode                  (alu_opcode                ),
-    .comp_flag                   (comp_flag                 ),
     .rs1_flag                    (rs1_flag                  ),
     .rs2_flag                    (rs2_flag                  ),
     .inv_flag                    (inv_flag                  ),
@@ -212,7 +210,6 @@ Control Control_inst(
     .imm_opcode                  (imm_opcode                ),
     .rs1_flag                    (rs1_flag                  ),
     .rs2_flag                    (rs2_flag                  ),
-    .comp_flag                   (comp_flag                 ),
     .inv_flag                    (inv_flag                  ) 
 );
 
