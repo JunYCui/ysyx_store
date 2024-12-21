@@ -25,15 +25,31 @@
 //****************************************************************************************//
 
 module IFU(
-    input              [  31: 0] pc                         ,
-    input                        valid                      ,
+    input                        clk                        ,
+    input                        rst_n                      ,
+    input              [  31: 0] npc                        ,
+    output reg         [  31: 0] pc                         ,
     output reg         [  31: 0] inst                        
 );
 
+    reg                          valid                      ;
 
 
-MEM MEM_inst(
-    .valid                       (valid                     ),
+always @(posedge clk) begin
+        if(!rst_n)
+            begin
+                pc <= 32'h80000000;
+                valid <= 1'b1;
+            end
+        else
+            begin
+                pc <= npc;
+                valid <= valid;
+            end
+end
+
+AM AM_inst(
+    .valid                       (valid                    ),
     .raddr                       (pc                        ),
     .wdata                       (32'd0                     ),
     .funct3                      (3'b010                    ),
