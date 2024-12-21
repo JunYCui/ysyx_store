@@ -5,11 +5,11 @@ module CSR #(
 (
     input                        clk                        ,
     input                        rst_n                      ,
-    input              [  31: 0] mepc_in                    ,
-    input              [  31: 0] mcause_in                  ,
-    input              [  31: 0] mstatus_in                 ,
-    input              [  31: 0] mtvec_in                   ,
+    input              [  31: 0] pc                         ,
+    input                        ecall_flag                 ,
+    input              [  31: 0] csrd                       ,
     input              [   3: 0] csr_wen                    ,
+
 
     output             [  31: 0] mepc_out                   ,
     output             [  31: 0] mcause_out                 ,
@@ -17,6 +17,16 @@ module CSR #(
     output             [  31: 0] mtvec_out                   
 );
 
+
+    wire               [  31: 0] mepc_in                    ;
+    wire               [  31: 0] mcause_in                  ;
+    wire               [  31: 0] mstatus_in                 ;
+    wire               [  31: 0] mtvec_in                   ;
+
+    assign                       mepc_in                   = (ecall_flag)? pc+4 : csrd;
+    assign                       mcause_in                 = (ecall_flag)? 11 : csrd;
+    assign                       mstatus_in                = csrd;
+    assign                       mstvec_in                 = csrd;
 
 Reg #(
     .WIDTH                       (CSR_WIDTH                 ),

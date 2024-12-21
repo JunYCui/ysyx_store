@@ -26,7 +26,7 @@ module RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
 task ReadReg;
     input                        int reg_num                ;
     output                       bit[31:0] reg_value        ;
-    reg_value=rf[reg_num];
+    reg_value = rf[reg_num];
 endtask
 
     assign                       rs1_value                 = rf[rs1_addr];

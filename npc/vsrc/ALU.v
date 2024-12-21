@@ -7,8 +7,7 @@ module ALU
 (
     input              [BW-1: 0] d1                         ,
     input              [BW-1: 0] d2                         ,
-    input              [   3: 0] choice                     ,
-    input                        comp_flag                  , 
+    input              [   3: 0] choice                     , 
     output reg         [BW-1: 0] res                        ,
     output reg                   overflow                    
 );
@@ -51,34 +50,31 @@ always@(*)
             overflow = 1'b0;
             choose_add_sub = 1'b0;
             end
-    `alu_comparator_ysyx_24100029:begin                            // 比较大小
-            if(comp_flag == 1'b0)begin
-                choose_add_sub = 1'b1;
-                if(d1[BW-1] != d2[BW-1])
-                    begin
-                        if(d1[BW-1] == 1'b1)
-                            res = 1;
-                        else
-                            res = 0;
-                    end
-                else
-                    begin
-                        if(result[BW-1] == 1'b1)
-                            res = 1;
-                        else
-                            res = 0;
-                    end
+    `alu_signed_comparator_ysyx_24100029:begin                            // 比较大小
+            choose_add_sub = 1'b1;
+            if(d1[BW-1] != d2[BW-1])
+                 begin
+                     if(d1[BW-1] == 1'b1)
+                         res = 1;
+                     else
+                         res = 0;
+                 end
+            else
+                 begin
+                     if(result[BW-1] == 1'b1)
+                         res = 1;
+                     else
+                         res = 0;
+                 end
                 overflow = 1'b0;
             end
-            else begin
+    `alu_unsigned_comparator_ysyx_24100029:begin
                 choose_add_sub = 1'b0;
                 overflow = 1'b0;
                 if(d1 < d2)
                     res = 1;
                 else 
                     res = 0;
-            end 
-
             end
     `alu_equal_ysyx_24100029:begin                                  //是否相等
             choose_add_sub = 1'b1;

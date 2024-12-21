@@ -4,11 +4,15 @@ module EXU (
     input                        clk                        ,
     input                        rst                        ,
     input              [  31: 0] pc                         ,
+    input              [   3: 0] csr_wen                    ,
+    input                        R_wen                      ,
+    input                        mem_wen                    ,
+    input                        mem_ren                    ,
+    input              [   4: 0] rd                         ,
 
     input              [  31: 0] imm                        ,
     input              [   1: 0] imm_opcode                 ,
     input              [   3: 0] alu_opcode                 ,
-    input                        comp_flag                  ,
     input                        inv_flag                   ,
     
     input              [   1: 0] rs1_flag                   ,
@@ -16,8 +20,16 @@ module EXU (
 
     input              [  31: 0] rs1_value                  ,
     input              [  31: 0] rs2_value                  ,
-    input              [  31: 0] csr_value                  ,
+    input              [  31: 0] csrs                       ,
 
+    output             [  31: 0] rs2_value_next             ,
+    output             [   4: 0] rd_next                    ,
+    output             [  31: 0] csrs_next                  ,
+    output             [   3: 0] csr_wen_next               ,
+    output                       R_wen_next                 ,
+    output                       mem_wen_next               ,
+    output                       mem_ren_next               ,
+    output             [  31: 0] pc_next                    ,
     output             [  31: 0] EX_result                   
 );
 
@@ -42,8 +54,16 @@ module EXU (
 
     reg                [  31: 0] imm_add                    ;
     
-    assign                       EX_result                 = alu_res ^{31'd0,inv_flag};
 
+    assign                       pc_next                   = pc;
+    assign                       rd_next                   = rd;
+    assign                       csrs_next                 = csrs;
+    assign                       csr_wen_next              = csr_wen;
+    assign                       R_wen_next                = R_wen;
+    assign                       mem_wen_next              = mem_wen;
+    assign                       mem_ren_next              = mem_ren;
+    assign                       EX_result                 = alu_res ^{31'd0,inv_flag};
+    assign                       rs2_value_next            = rs2_value;
 
     always@(*)begin
         case(imm_opcode)
@@ -64,7 +84,7 @@ MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, rs2_fla
 {
 2'd0, imm_add   ,
 2'd1, rs2_value ,
-2'd2, csr_value ,
+2'd2, csrs      ,
 2'd3, 32'd0
 }
 );
@@ -85,7 +105,6 @@ ALU #(
     .d1                          (add_1                     ),
     .d2                          (add_2                     ),
     .choice                      (alu_opcode                ),
-    .comp_flag                   (comp_flag                 ),
     .res                         (alu_res                   ),
     .overflow                    (overflow                  ) 
 

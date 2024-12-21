@@ -47,7 +47,6 @@ module cpu_ysyx_24100029
     wire                         mem_wen                    ;
     wire                         mem_ren                    ;
     wire                         jump_flag                  ;
-    wire                         comp_flag                  ;
     wire               [   1: 0] rs1_flag                   ;
     wire               [   1: 0] rs2_flag                   ;
     wire                         inv_flag                   ;
@@ -68,30 +67,10 @@ module cpu_ysyx_24100029
     assign                       npc                       = (mret_flag) ?   mepc_out:
                                                              (ecall_flag)?  mtvec_out:
                                                              (jump_flag == 1'd1 || branch_flag == 1'd1)? dnpc:snpc;
-    assign                       rd_value                  = (jump_flag == 1'd1)? pc+4 : (mem_ren == 1'b1)?  mem_rdata:(opcode == `M_opcode_ysyx_24100029)? csr_value:EX_result;
     assign                       dnpc                      = (jump_flag == 1'd1)? EX_result: (branch_flag == 1'b1 && EX_result != 32'd0)?  pc+({{20{imm[11]}},imm[11:0]}<<1) :pc+4;
-    assign                       mem_wdata                 = rs2_value;
-    assign                       Data_mem_valid            = mem_ren|mem_wen;
-
-    assign                       mcause_in                 = (ecall_flag)? 32'd11:EX_result;// 11 means trigger environment from machine
-    assign                       mepc_in                   = (ecall_flag)? snpc:EX_result;// save the trigger pc
-    assign                       mstatus_in                = EX_result;
-    assign                       mtvec_in                  = EX_result;
 
 
 
-    always @(posedge clk) begin
-        if(!rst_n)
-            begin
-                pc <= 32'h80000000;
-                valid <= 1'b1;
-            end
-        else
-            begin
-                pc <= npc;
-                valid <= valid;
-            end
-    end
 
     always @(*)begin
         if(inst == 32'h00100073)begin
@@ -132,7 +111,6 @@ EXU EXU_inst0
     .imm                         (imm                       ),
     .imm_opcode                  (imm_opcode                ),
     .alu_opcode                  (alu_opcode                ),
-    .comp_flag                   (comp_flag                 ),
     .rs1_flag                    (rs1_flag                  ),
     .rs2_flag                    (rs2_flag                  ),
     .inv_flag                    (inv_flag                  ),
@@ -142,31 +120,6 @@ EXU EXU_inst0
     .csr_value                   (csr_value                 ),
 
     .EX_result                   (EX_result                 ) 
-);
-
-
-Reg_Stack Reg_Stack_inst0(
-    .rst_n                       (rst_n                     ),
-    .clk                         (clk                       ),
-    .rs1                         (rs1                       ),
-    .rs2                         (rs2                       ),
-    .rd                          (rd                        ),
-    .rd_value                    (rd_value                  ),
-
-    .R_wen                       (R_wen                     ),
-    .csr_wen                     (csr_wen                   ),
-
-    .mepc_in                     (mepc_in                   ),
-    .mcause_in                   (mcause_in                 ),
-    .mstatus_in                  (mstatus_in                ),
-    .mtvec_in                    (mtvec_in                  ),
-
-    .rs1_value                   (rs1_value                 ),
-    .rs2_value                   (rs2_value                 ),
-    .a0_value                    (a0_value                  ),
-    .csr_value                   (csr_value                 ),
-    .mepc_out                    (mepc_out                  ),
-    .mtvec_out                   (mtvec_out                 ) 
 );
 
 
@@ -184,15 +137,6 @@ IDU IDU_inst0(
     .ecall_flag                  (ecall_flag                ) 
 );
 
-MEM Data_MEM_inst(
-    .valid                       (Data_mem_valid            ),
-    .raddr                       (EX_result                 ),
-    .wdata                       (mem_wdata                 ),
-    .funct3                      (funct3                    ),
-    .waddr                       (EX_result                 ),
-    .wen                         (mem_wen                   ),
-    .rd_data                     (mem_rdata                 ) 
-);
 
 Control Control_inst(
     .opcode                      (opcode                    ),
@@ -212,7 +156,6 @@ Control Control_inst(
     .imm_opcode                  (imm_opcode                ),
     .rs1_flag                    (rs1_flag                  ),
     .rs2_flag                    (rs2_flag                  ),
-    .comp_flag                   (comp_flag                 ),
     .inv_flag                    (inv_flag                  ) 
 );
 
