@@ -7,12 +7,17 @@
 
 
 module IDU(
+    input                        clk                        ,
+    input                        rst_n                      ,
     input              [  31: 0] inst                       ,
     input              [  31: 0] pc                         ,
+    input              [  31: 0] rd_value                   ,
+    input              [  31: 0] csrd                       ,
+    input              [   4: 0] rd                         ,
     input                        R_wen                      ,
     input              [   3: 0] csr_wen                    ,
-    input              [   4: 0] rd                         ,
 
+    output             [  31: 0] pc_next                    ,
     output             [   4: 0] rd_next                    ,
     output             [  31: 0] imm                        ,
     output             [   2: 0] funct3                     ,
@@ -32,8 +37,9 @@ module IDU(
     output                       inv_flag                   ,
     output                       branch_flag                ,
     output                       jump_flag                  ,
-    output                       imm_opcode                 ,
-    output                       alu_opcode                 ,
+    output                       jump_choice                ,
+    output             [   1: 0] imm_opcode                 ,
+    output             [   3: 0] alu_opcode                 ,
 
     output             [  31: 0] a0_value                   ,
     output             [  31: 0] mepc_out                   ,
@@ -45,15 +51,16 @@ module IDU(
     wire               [  31: 0] csr_addr                   ;
     wire               [   6: 0] oprand                     ;
     wire               [   6: 0] opcode                     ;
-    wire               [  31: 0] rs1                        ;
-    wire               [  31: 0] rs2                        ;
+    wire               [   4: 0] rs1                        ;
+    wire               [   4: 0] rs2                        ;
  
     assign                       oprand                    = inst[31:25];
     assign                       opcode                    = inst[6:0];
     assign                       rs1                       = inst[19:15];
     assign                       rs2                       = inst[24:20];
     assign                       funct3                    = inst[14:12];
-    assign                       rd                        = inst[11:7];
+    assign                       rd_next                   = inst[11:7];
+    assign                       pc_next                   = pc;
 
     assign                       ecall_flag                = (inst == 32'b00000000000000000000000001110011);//ecall
     assign                       mret_flag                 = (inst == 32'b00110000001000000000000001110011);// mret
@@ -68,6 +75,7 @@ module IDU(
     assign                       mem_ren                   = (opcode == `I0_opcode_ysyx_24100029);
 
     assign                       jump_flag                 = (opcode == `I2_opcode_ysyx_24100029 || opcode == `J_opcode_ysyx_24100029)? 1'b1:1'b0;
+    assign                       jump_choice               = (opcode == `I2_opcode_ysyx_24100029);
     assign                       add2_choice               = (opcode == `R_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029)? 2'd1:
                                                              (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b010)? 2'd2:
                                                              (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b001)? 2'd3:2'd0;
@@ -129,11 +137,11 @@ MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, opcode, {i1_DAT
 {`R_opcode_ysyx_24100029 ,    {25'd0,inst[31:25]},
  `I0_opcode_ysyx_24100029,    {20'd0,inst[31:20]},
  `I1_opcode_ysyx_24100029,    {20'd0,inst[31:20]},
- `I2_opcode_ysyx_24100029,    {20'd0,inst[31:20]},
+ `I2_opcode_ysyx_24100029,    {{20{inst[31]}},inst[31:20]},
  `U0_opcode_ysyx_24100029,    {12'd0,inst[31:12]},
  `U1_opcode_ysyx_24100029,    {12'd0,inst[31:12]},
- `J_opcode_ysyx_24100029 ,    {12'd0,inst[31],inst[19:12],inst[20],inst[30:21]},
- `B_opcode_ysyx_24100029 ,    {20'd0,inst[31],inst[7],inst[30:25],inst[11:8]},
+ `J_opcode_ysyx_24100029 ,    {{12{inst[31]}},inst[31],inst[19:12],inst[20],inst[30:21]}<<1,
+ `B_opcode_ysyx_24100029 ,    {{20{inst[31]}},inst[31],inst[7],inst[30:25],inst[11:8]}<<1,
  `S_opcode_ysyx_24100029 ,    {20'd0,inst[31:25],inst[11:7]},
  `M_opcode_ysyx_24100029 ,    {20'd0,inst[31:20]}
  });

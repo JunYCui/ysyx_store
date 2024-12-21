@@ -26,7 +26,7 @@ module CSR #(
     assign                       mepc_in                   = (ecall_flag)? pc+4 : csrd;
     assign                       mcause_in                 = (ecall_flag)? 11 : csrd;
     assign                       mstatus_in                = csrd;
-    assign                       mstvec_in                 = csrd;
+    assign                       mtvec_in                  = csrd;
 
 Reg #(
     .WIDTH                       (CSR_WIDTH                 ),

@@ -2,26 +2,31 @@
 /* verilator lint_off UNUSEDSIGNAL */
 module EXU (
     input                        clk                        ,
-    input                        rst                        ,
+    input                        rst_n                      ,
+
     input              [  31: 0] pc                         ,
     input              [   3: 0] csr_wen                    ,
     input                        R_wen                      ,
     input                        mem_wen                    ,
     input                        mem_ren                    ,
     input              [   4: 0] rd                         ,
+    input              [   2: 0] funct3                     ,
 
     input              [  31: 0] imm                        ,
     input              [   1: 0] imm_opcode                 ,
     input              [   3: 0] alu_opcode                 ,
     input                        inv_flag                   ,
-    
-    input              [   1: 0] rs1_flag                   ,
-    input              [   1: 0] rs2_flag                   ,
+    input                        jump_flag                  ,
+
+    input              [   1: 0] add1_choice                ,
+    input              [   1: 0] add2_choice                ,
 
     input              [  31: 0] rs1_value                  ,
     input              [  31: 0] rs2_value                  ,
     input              [  31: 0] csrs                       ,
 
+    output                       jump_flag_next             ,
+    output             [   2: 0] funct3_next                ,
     output             [  31: 0] rs2_value_next             ,
     output             [   4: 0] rd_next                    ,
     output             [  31: 0] csrs_next                  ,
@@ -55,6 +60,8 @@ module EXU (
     reg                [  31: 0] imm_add                    ;
     
 
+    assign                       jump_flag_next            = jump_flag;
+    assign                       funct3_next               = funct3;
     assign                       pc_next                   = pc;
     assign                       rd_next                   = rd;
     assign                       csrs_next                 = csrs;
@@ -80,7 +87,7 @@ module EXU (
 
 /* verilator lint_off IMPLICIT */
 
-MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, rs2_flag, {DATA_LEN_add2{1'b0}},
+MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, add2_choice, {DATA_LEN_add2{1'b0}},
 {
 2'd0, imm_add   ,
 2'd1, rs2_value ,
@@ -89,7 +96,7 @@ MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, rs2_fla
 }
 );
 
-MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (add_1, rs1_flag, {DATA_LEN_add1{1'b0}},
+MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (add_1, add1_choice, {DATA_LEN_add1{1'b0}},
 {
 `rs1_dist_reg_ysyx_24100029,    rs1_value,
 `rs1_dist_pc_ysyx_24100029,     pc,
