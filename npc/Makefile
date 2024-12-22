@@ -3,7 +3,7 @@ INC_PATH = $(NPC_HOME)/include
 
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
-VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )
+VSOURCES=$(shell find $(abspath ./vsrc/CPU) -name "*.v" )
 CSOURCES=$(shell find $(abspath ./csrc/cpu) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
 
 
