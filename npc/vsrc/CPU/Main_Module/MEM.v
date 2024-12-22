@@ -25,7 +25,7 @@ module MEM (
     output                       mem_ren_next               ,
     output                       jump_flag_next              
 );
-
+ 
     wire               [  31: 0] mem_wdata                  ;
     wire                         Data_mem_valid             ;
 

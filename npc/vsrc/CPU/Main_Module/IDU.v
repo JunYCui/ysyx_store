@@ -1,4 +1,4 @@
-`include "./vsrc/para.v"
+`include "./vsrc/CPU/define/para.v"
 /* verilator lint_off UNUSEDPARAM */
 
     localparam                   i1_NR_KEY                 = 10    ;
@@ -9,6 +9,7 @@
 module IDU(
     input                        clk                        ,
     input                        rst_n                      ,
+
     input              [  31: 0] inst                       ,
     input              [  31: 0] pc                         ,
     input              [  31: 0] rd_value                   ,
@@ -53,7 +54,9 @@ module IDU(
     wire               [   6: 0] opcode                     ;
     wire               [   4: 0] rs1                        ;
     wire               [   4: 0] rs2                        ;
- 
+
+
+
     assign                       oprand                    = inst[31:25];
     assign                       opcode                    = inst[6:0];
     assign                       rs1                       = inst[19:15];
