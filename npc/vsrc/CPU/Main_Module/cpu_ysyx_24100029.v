@@ -68,16 +68,6 @@ module cpu_ysyx_24100029
     wire                         MEM_mem_ren                ;
 
 
-
-    assign                       snpc                      = pc + 4;
-    assign                       npc                       = (IDU_mret_flag ||IDU_ecall_flag ||IDU_jump_flag || IDU_branch_flag)? dnpc:snpc;
-    assign                       dnpc                      = (IDU_jump_flag )                                                 ? 
-                                                            ((IDU_jump_choice)? IDU_rs1_value + IDU_imm                       :
-                                                            (IDU_pc + IDU_imm)):(IDU_branch_flag == 1'b1 && EXU_result != 32'd0)?
-                                                            pc+IDU_imm:(IDU_mret_flag)                                        ?
-                                                            IDU_mepc_out:(IDU_ecall_flag)                                         ?
-                                                            IDU_mtvec_out:pc+4;
-
     assign                       pc                        = IFU_pc;
 
     always @(*)begin
@@ -99,7 +89,7 @@ task  GetInst;
     inst_exec = IFU_inst;
 endtask
 
-    export "DPI-C" task GetInst;
+export "DPI-C" task GetInst;
 
 
 

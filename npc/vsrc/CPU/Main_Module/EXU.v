@@ -17,6 +17,7 @@ module EXU (
     input              [   3: 0] alu_opcode                 ,
     input                        inv_flag                   ,
     input                        jump_flag                  ,
+    input                        branch_flag                ,
 
     input              [   1: 0] add1_choice                ,
     input              [   1: 0] add2_choice                ,
@@ -25,6 +26,7 @@ module EXU (
     input              [  31: 0] rs2_value                  ,
     input              [  31: 0] csrs                       ,
 
+    output                       branch_flag_next           ,
     output                       jump_flag_next             ,
     output             [   2: 0] funct3_next                ,
     output             [  31: 0] rs2_value_next             ,
@@ -46,6 +48,79 @@ module EXU (
     localparam                   KEY_LEN_add2              = 2     ;
     localparam                   DATA_LEN_add2             = 32    ;
 
+    reg                [  31: 0] pc_reg                     ;
+    reg                [   3: 0] csr_wen_reg                ;
+    reg                          R_wen_reg                  ;
+    reg                          mem_wen_reg                ;
+    reg                          mem_ren_reg                ;
+    reg                [   4: 0] rd_reg                     ;
+    reg                [   2: 0] funct3_reg                 ;
+
+    reg                [  31: 0] imm_reg                    ;
+    reg                [   1: 0] imm_opcode_reg             ;
+    reg                [   3: 0] alu_opcode_reg             ;
+    reg                          inv_flag_reg               ;
+    reg                          jump_flag_reg              ;
+    reg                          branch_flag_reg            ;
+
+    reg                [   1: 0] add1_choice_reg            ;
+    reg                [   1: 0] add2_choice_reg            ;
+    reg                [  31: 0] rs1_value_reg              ;
+    reg                [  31: 0] rs2_value_reg              ;
+    reg                [  31: 0] csrs_reg                   ;
+
+
+
+    always @(posedge clk) begin
+        if(!rst_n)begin
+            pc_reg          <= 0;
+            csr_wen_reg     <= 0;
+            R_wen_reg       <= 0;
+            mem_wen_reg     <= 0;
+            mem_ren_reg     <= 0;
+            rd_reg          <= 0;
+            funct3_reg      <= 0;
+
+            imm_reg         <= 0;
+            imm_opcode_reg  <= 0;
+            alu_opcode_reg  <= 0;
+            inv_flag_reg    <= 0;
+            jump_flag_reg   <= 0;
+            branch_flag_reg <= 0;
+
+            add1_choice_reg <= 0;
+            add2_choice_reg <= 0;
+            rs1_value_reg   <= 0;
+            rs2_value_reg   <= 0;
+            csrs_reg        <= 0;
+
+        end
+        else
+        begin
+            pc_reg          <= pc           ;
+            csr_wen_reg     <= csr_wen      ;
+            R_wen_reg       <= R_wen        ;
+            mem_wen_reg     <= mem_wen      ;
+            mem_ren_reg     <= mem_ren      ;
+            rd_reg          <= rd           ;
+            funct3_reg      <= funct3       ;
+
+            imm_reg         <= imm          ;
+            imm_opcode_reg  <= imm_opcode   ;
+            alu_opcode_reg  <= alu_opcode   ;
+            inv_flag_reg    <= inv_flag     ;
+            jump_flag_reg   <= jump_flag    ;
+            branch_flag_reg <= branch_flag  ;
+
+            add1_choice_reg <= add1_choice  ;
+            add2_choice_reg <= add2_choice  ;
+            rs1_value_reg   <= rs1_value    ;
+            rs2_value_reg   <= rs2_value    ;
+            csrs_reg        <= csrs         ;
+        end
+    end
+
+
 
     wire               [  31: 0] add_1                      ;
     wire               [  31: 0] add_2                      ;
@@ -60,24 +135,24 @@ module EXU (
     reg                [  31: 0] imm_add                    ;
     
 
-    assign                       jump_flag_next            = jump_flag;
-    assign                       funct3_next               = funct3;
-    assign                       pc_next                   = pc;
-    assign                       rd_next                   = rd;
-    assign                       csrs_next                 = csrs;
-    assign                       csr_wen_next              = csr_wen;
-    assign                       R_wen_next                = R_wen;
-    assign                       mem_wen_next              = mem_wen;
-    assign                       mem_ren_next              = mem_ren;
-    assign                       EX_result                 = alu_res ^{31'd0,inv_flag};
-    assign                       rs2_value_next            = rs2_value;
+    assign                       jump_flag_next            = jump_flag_reg;
+    assign                       funct3_next               = funct3_reg;
+    assign                       pc_next                   = pc_reg;
+    assign                       rd_next                   = rd_reg;
+    assign                       csrs_next                 = csrs_reg;
+    assign                       csr_wen_next              = csr_wen_reg;
+    assign                       R_wen_next                = R_wen_reg;
+    assign                       mem_wen_next              = mem_wen_reg;
+    assign                       mem_ren_next              = mem_ren_reg;
+    assign                       EX_result                 = alu_res ^{31'd0,inv_flag_reg};
+    assign                       rs2_value_next            = rs2_value_reg;
 
     always@(*)begin
-        case(imm_opcode)
+        case(imm_opcode_reg)
         `imm_12i_ysyx_24100029: imm_add = imm_12i;
-        `imm_20u_ysyx_24100029: imm_add = {imm[19:0] , 12'd0} ;
+        `imm_20u_ysyx_24100029: imm_add = {imm_reg[19:0] , 12'd0} ;
         `imm_20i_ysyx_24100029: imm_add = imm_20i << 1;
-        `imm_5u_ysyx_24100029:  imm_add = {27'd0,imm[4:0]};
+        `imm_5u_ysyx_24100029:  imm_add = {27'd0,imm_reg[4:0]};
         default: imm_add = 32'd0;
         endcase
     end
@@ -87,19 +162,19 @@ module EXU (
 
 /* verilator lint_off IMPLICIT */
 
-MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, add2_choice, {DATA_LEN_add2{1'b0}},
+MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, add2_choice_reg, {DATA_LEN_add2{1'b0}},
 {
 2'd0, imm_add   ,
-2'd1, rs2_value ,
-2'd2, csrs      ,
+2'd1, rs2_value_reg ,
+2'd2, csrs_reg      ,
 2'd3, 32'd0
 }
 );
 
-MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (add_1, add1_choice, {DATA_LEN_add1{1'b0}},
+MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (add_1, add1_choice_reg, {DATA_LEN_add1{1'b0}},
 {
-`rs1_dist_reg_ysyx_24100029,    rs1_value,
-`rs1_dist_pc_ysyx_24100029,     pc,
+`rs1_dist_reg_ysyx_24100029,    rs1_value_reg,
+`rs1_dist_pc_ysyx_24100029,     pc_reg,
 `rs1_dist_para_ysyx_24100029,   32'd0
 }
 );
@@ -122,7 +197,7 @@ sext #(
     .OUT_WIDTH                   (32                        ) 
 ) sext_i12
 (
-    .data                        (imm[11:0]                 ),
+    .data                        (imm_reg[11:0]             ),
     .sext_data                   (imm_12i                   ) 
 );
 
@@ -131,7 +206,7 @@ sext #(
     .OUT_WIDTH                   (32                        ) 
 ) sext_i20
 (
-    .data                        (imm[19:0]                 ),
+    .data                        (imm_reg[19:0]             ),
     .sext_data                   (imm_20i                   ) 
 );
 

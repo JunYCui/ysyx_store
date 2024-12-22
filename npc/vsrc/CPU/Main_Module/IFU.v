@@ -28,23 +28,22 @@ module IFU(
     input                        clk                        ,
     input                        rst_n                      ,
     input              [  31: 0] npc                        ,
+    input                        valid                      ,
     output reg         [  31: 0] pc                         ,
     output reg         [  31: 0] inst                        
 );
 
-    reg                          valid                      ;
 
 
-always @(posedge clk) begin
+
+always @(posedge clk or negedge rst_n) begin
         if(!rst_n)
             begin
                 pc <= 32'h80000000;
-                valid <= 1'b1;
             end
-        else
+        else 
             begin
                 pc <= npc;
-                valid <= valid;
             end
 end
 
