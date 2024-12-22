@@ -1,4 +1,4 @@
-`include "./vsrc/CPU/para.v"
+`include "./vsrc/CPU/define/para.v"
 /* verilator lint_off UNUSEDSIGNAL */
 module EXU (
     input                        clk                        ,
