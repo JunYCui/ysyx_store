@@ -12,6 +12,7 @@ module IDU(
 
     input              [  31: 0] inst                       ,
     input              [  31: 0] pc                         ,
+
     input              [  31: 0] rd_value                   ,
     input              [  31: 0] csrd                       ,
     input              [   4: 0] rd                         ,
@@ -55,18 +56,61 @@ module IDU(
     wire               [   4: 0] rs1                        ;
     wire               [   4: 0] rs2                        ;
 
+    reg                [  31: 0] inst_reg                   ;
+    reg                [  31: 0] pc_reg                     ;
+
+    reg                [  31: 0] rd_value_reg               ;
+    reg                [  31: 0] csrd_reg                   ;
+    reg                [   4: 0] rd_reg                     ;
+    reg                          R_wen_reg                  ;
+    reg                [   3: 0] csr_wen_reg                ;
 
 
-    assign                       oprand                    = inst[31:25];
-    assign                       opcode                    = inst[6:0];
-    assign                       rs1                       = inst[19:15];
-    assign                       rs2                       = inst[24:20];
-    assign                       funct3                    = inst[14:12];
-    assign                       rd_next                   = inst[11:7];
-    assign                       pc_next                   = pc;
+always @(posedge clk ) begin
+    if(!rst_n)begin
+        rd_value_reg <= 0;
+        csrd_reg     <= 0;
+        rd_reg       <= 0;
+        R_wen_reg    <= 0;
+        csr_wen_reg  <= 0;
+    end
+    else
+        begin
+        rd_value_reg <= rd_value;
+        csrd_reg     <= csrd    ;
+        rd_reg       <= rd      ;
+        R_wen_reg    <= R_wen   ;
+        csr_wen_reg  <= csr_wen ;
+    end
+end
 
-    assign                       ecall_flag                = (inst == 32'b00000000000000000000000001110011);//ecall
-    assign                       mret_flag                 = (inst == 32'b00110000001000000000000001110011);// mret
+
+    always@(posedge clk)begin
+        if(!rst_n)
+            inst_reg <= 0;
+        else if(ecall_flag || mret_flag || jump_flag || branch_flag)
+            inst_reg <= 0;
+        else
+            inst_reg <= inst;
+    end
+    always@(posedge clk)begin
+        if(!rst_n)
+            pc_reg <= 0;
+        else
+            pc_reg <= pc;
+    end
+
+
+    assign                       oprand                    = inst_reg[31:25];
+    assign                       opcode                    = inst_reg[6:0];
+    assign                       rs1                       = inst_reg[19:15];
+    assign                       rs2                       = inst_reg[24:20];
+    assign                       funct3                    = inst_reg[14:12];
+    assign                       rd_next                   = inst_reg[11:7];
+    assign                       pc_next                   = pc_reg;
+
+    assign                       ecall_flag                = (inst_reg == 32'b00000000000000000000000001110011);//ecall
+    assign                       mret_flag                 = (inst_reg == 32'b00110000001000000000000001110011);// mret
 
     assign                       csr_wen_next[0]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h341) || ecall_flag;
     assign                       csr_wen_next[1]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h342) || ecall_flag;
@@ -84,6 +128,7 @@ module IDU(
                                                              (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b001)? 2'd3:2'd0;
     assign                       inv_flag                  = (opcode == `B_opcode_ysyx_24100029 && (funct3 == 3'b101 || funct3 == 3'b111 || funct3 == 3'b000 ))? 1'b1:1'b0;
     assign                       branch_flag               = (opcode == `B_opcode_ysyx_24100029)? 1'b1:1'b0;
+ 
     assign                       csr_addr                  = imm;
 
 
@@ -137,16 +182,16 @@ module IDU(
 
 /* imm 处理*/
 MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, opcode, {i1_DATA_LEN{1'b0}},
-{`R_opcode_ysyx_24100029 ,    {25'd0,inst[31:25]},
- `I0_opcode_ysyx_24100029,    {20'd0,inst[31:20]},
- `I1_opcode_ysyx_24100029,    {20'd0,inst[31:20]},
- `I2_opcode_ysyx_24100029,    {{20{inst[31]}},inst[31:20]},
- `U0_opcode_ysyx_24100029,    {12'd0,inst[31:12]},
- `U1_opcode_ysyx_24100029,    {12'd0,inst[31:12]},
- `J_opcode_ysyx_24100029 ,    {{12{inst[31]}},inst[31],inst[19:12],inst[20],inst[30:21]}<<1,
- `B_opcode_ysyx_24100029 ,    {{20{inst[31]}},inst[31],inst[7],inst[30:25],inst[11:8]}<<1,
- `S_opcode_ysyx_24100029 ,    {20'd0,inst[31:25],inst[11:7]},
- `M_opcode_ysyx_24100029 ,    {20'd0,inst[31:20]}
+{`R_opcode_ysyx_24100029 ,    {25'd0,inst_reg[31:25]},
+ `I0_opcode_ysyx_24100029,    {20'd0,inst_reg[31:20]},
+ `I1_opcode_ysyx_24100029,    {20'd0,inst_reg[31:20]},
+ `I2_opcode_ysyx_24100029,    {{20{inst_reg[31]}},inst_reg[31:20]},
+ `U0_opcode_ysyx_24100029,    {12'd0,inst_reg[31:12]},
+ `U1_opcode_ysyx_24100029,    {12'd0,inst_reg[31:12]},
+ `J_opcode_ysyx_24100029 ,    {{12{inst_reg[31]}},inst_reg[31],inst_reg[19:12],inst_reg[20],inst_reg[30:21]}<<1,
+ `B_opcode_ysyx_24100029 ,    {{20{inst_reg[31]}},inst_reg[31],inst_reg[7],inst_reg[30:25],inst_reg[11:8]}<<1,
+ `S_opcode_ysyx_24100029 ,    {20'd0,inst_reg[31:25],inst_reg[11:7]},
+ `M_opcode_ysyx_24100029 ,    {20'd0,inst_reg[31:20]}
  });
 
 Reg_Stack Reg_Stack_inst0(
@@ -157,13 +202,13 @@ Reg_Stack Reg_Stack_inst0(
 
     .rs1                         (rs1                       ),
     .rs2                         (rs2                       ),
-    .rd                          (rd                        ),
-    .rd_value                    (rd_value                  ),
+    .rd                          (rd_reg                    ),
+    .rd_value                    (rd_value_reg              ),
 
     .csr_addr                    (csr_addr                  ),
-    .R_wen                       (R_wen                     ),
-    .csr_wen                     (csr_wen                   ),
-    .csrd                        (csrd                      ),
+    .R_wen                       (R_wen_reg                 ),
+    .csr_wen                     (csr_wen_reg               ),
+    .csrd                        (csrd_reg                  ),
 
     .rs1_value                   (rs1_value                 ),
     .rs2_value                   (rs2_value                 ),

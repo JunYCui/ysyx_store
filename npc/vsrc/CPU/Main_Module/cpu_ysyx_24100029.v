@@ -10,15 +10,11 @@ module cpu_ysyx_24100029
     output             [  31: 0] dnpc                        
 );
 
-    wire               [  31: 0] npc                        ;
+
     wire               [  31: 0] IFU_pc                     ;
     wire               [  31: 0] IFU_inst                   ;
 
-    wire               [  31: 0] WBU_rd_value               ;
-    wire               [  31: 0] WBU_csrd                   ;
-    wire               [   4: 0] WBU_rd                     ;
-    wire                         WBU_R_wen                  ;
-    wire               [   3: 0] WBU_csr_wen                ;
+/************************* IDU ********************/
 
     wire               [  31: 0] IDU_pc                     ;
     wire               [   4: 0] IDU_rd                     ;
@@ -44,7 +40,8 @@ module cpu_ysyx_24100029
     wire               [  31: 0] IDU_a0_value               ;
     wire               [  31: 0] IDU_mepc_out               ;
     wire               [  31: 0] IDU_mtvec_out              ;
-
+    
+/************************* EXU ********************/
     wire                         EXU_jump_flag              ;
     wire               [   2: 0] EXU_funct3                 ;
     wire               [  31: 0] EXU_rs2_value              ;
@@ -55,8 +52,9 @@ module cpu_ysyx_24100029
     wire                         EXU_mem_wen                ;
     wire                         EXU_mem_ren                ;
     wire               [  31: 0] EXU_pc                     ;
-    wire               [  31: 0] EXU_result                  ;
-
+    wire               [  31: 0] EXU_result                 ;
+    wire                         EXU_branch_flag            ;
+/************************* MEM ********************/
     wire                         MEM_jump_flag              ;
     wire                         MEM_R_wen                  ;
     wire               [  31: 0] MEM_Rdata                  ;
@@ -66,19 +64,24 @@ module cpu_ysyx_24100029
     wire               [  31: 0] MEM_pc                     ;
     wire               [   4: 0] MEM_rd                     ;
     wire                         MEM_mem_ren                ;
+    wire                         MEM_branch_flag            ;
 
+/************************* WBU ********************/
+    wire               [  31: 0] WBU_Ex_result              ;
+    wire               [  31: 0] WBU_pc                     ;
+    wire               [  31: 0] WBU_rd_value               ;
+    wire               [  31: 0] WBU_csrd                   ;
+    wire               [   4: 0] WBU_rd                     ;
+    wire                         WBU_R_wen                  ;
+    wire               [   3: 0] WBU_csr_wen                ;
+    wire                         WBU_branch_flag            ;
 
-
-    assign                       snpc                      = pc + 4;
-    assign                       npc                       = (IDU_mret_flag ||IDU_ecall_flag ||IDU_jump_flag || IDU_branch_flag)? dnpc:snpc;
-    assign                       dnpc                      = (IDU_jump_flag )                                                 ? 
-                                                            ((IDU_jump_choice)? IDU_rs1_value + IDU_imm                       :
-                                                            (IDU_pc + IDU_imm)):(IDU_branch_flag == 1'b1 && EXU_result != 32'd0)?
-                                                            pc+IDU_imm:(IDU_mret_flag)                                        ?
-                                                            IDU_mepc_out:(IDU_ecall_flag)                                         ?
-                                                            IDU_mtvec_out:pc+4;
+/* PERSONAL */
+    wire                         valid                      ;
+    wire                         dnpc_flag                  ;
 
     assign                       pc                        = IFU_pc;
+    assign                       snpc                      = pc + 4;
 
     always @(*)begin
         if(IFU_inst == 32'h00100073) begin
@@ -99,16 +102,44 @@ task  GetInst;
     inst_exec = IFU_inst;
 endtask
 
-    export "DPI-C" task GetInst;
+export "DPI-C" task GetInst;
 
 
 
 IFU IFU_Inst0(
     .clk                         (clk                       ),
     .rst_n                       (rst_n                     ),
-    .npc                         (npc                       ),
+    .dnpc                        (dnpc                      ),
+    .dnpc_flag                   (dnpc_flag                 ),
+    .valid                       (valid                     ),
     .pc                          (IFU_pc                    ),
     .inst                        (IFU_inst                  ) 
+);
+
+PC_Control PC_Control_inst0(
+    .clk                         (clk                       ),
+    .rst_n                       (rst_n                     ),
+
+    .rs1_value                   (IDU_rs1_value             ),
+    .imm                         (IDU_imm                   ),
+    .mtvec_out                   (IDU_mtvec_out             ),
+    .mepc_out                    (IDU_mepc_out              ),
+    .Ex_result                   (WBU_Ex_result             ),
+    
+    .IDU_pc                      (IDU_pc                    ),
+    .IDU_branch_flag             (IDU_branch_flag           ),
+    .WBU_pc                      (WBU_pc                    ),
+    .WBU_branch_flag             (WBU_branch_flag           ),
+
+    .jump_flag                   (IDU_jump_flag             ),
+    .jump_choice                 (IDU_jump_choice           ),
+    .mret_flag                   (IDU_mret_flag             ),
+    .mecall_flag                 (IDU_ecall_flag            ),
+    .dnpc                        (dnpc                      ),
+    .dnpc_flag                   (dnpc_flag                 ),
+    .valid                       (valid                     ) 
+    
+    
 );
 
 IDU IDU_Inst0(
@@ -169,6 +200,7 @@ EXU EXU_Inst0(
     .alu_opcode                  (IDU_alu_opcode            ),
     .inv_flag                    (IDU_inv_flag              ),
     .jump_flag                   (IDU_jump_flag             ),
+    .branch_flag                 (IDU_branch_flag           ),
 
     .add1_choice                 (IDU_add1_choice           ),
     .add2_choice                 (IDU_add2_choice           ),
@@ -176,6 +208,7 @@ EXU EXU_Inst0(
     .rs2_value                   (IDU_rs2_value             ),
     .csrs                        (IDU_csrs                  ),
 
+    .branch_flag_next            (EXU_branch_flag           ),
     .jump_flag_next              (EXU_jump_flag             ),
     .funct3_next                 (EXU_funct3                ),
     .rs2_value_next              (EXU_rs2_value             ),
@@ -186,7 +219,7 @@ EXU EXU_Inst0(
     .mem_wen_next                (EXU_mem_wen               ),
     .mem_ren_next                (EXU_mem_ren               ),
     .pc_next                     (EXU_pc                    ),
-    .EX_result                   (EXU_result                 ) 
+    .EX_result                   (EXU_result                ) 
 );
 
 MEM MEM_Inst0(
@@ -198,14 +231,14 @@ MEM MEM_Inst0(
     .mem_wen                     (EXU_mem_wen               ),
     .R_wen                       (EXU_R_wen                 ),
     .csr_wen                     (EXU_csr_wen               ),
-    .Ex_result                   (EXU_result                 ),
+    .Ex_result                   (EXU_result                ),
     .csrs                        (EXU_csrs                  ),
     .rd                          (EXU_rd                    ),
     .funct3                      (EXU_funct3                ),
     .rs2_value                   (EXU_rs2_value             ),
     .jump_flag                   (EXU_jump_flag             ),
+    .branch_flag                 (EXU_branch_flag           ),
 
-    .jump_flag_next              (MEM_jump_flag             ),
     .R_wen_next                  (MEM_R_wen                 ),
     .MEM_Rdata                   (MEM_Rdata                 ),
     .csr_wen_next                (MEM_csr_wen               ),
@@ -213,7 +246,9 @@ MEM MEM_Inst0(
     .csrs_next                   (MEM_csrs                  ),
     .pc_next                     (MEM_pc                    ),
     .rd_next                     (MEM_rd                    ),
-    .mem_ren_next                (MEM_mem_ren               ) 
+    .mem_ren_next                (MEM_mem_ren               ),
+    .jump_flag_next              (MEM_jump_flag             ),
+    .branch_flag_next            (MEM_branch_flag           ) 
 );
 
 WBU WBU_inst0(
@@ -229,15 +264,17 @@ WBU WBU_inst0(
     .R_wen                       (MEM_R_wen                 ),
     .mem_ren                     (MEM_mem_ren               ),
     .jump_flag                   (MEM_jump_flag             ),
+    .branch_flag                 (MEM_branch_flag           ),
 
+    .pc_next                     (WBU_pc                    ),
     .R_wen_next                  (WBU_R_wen                 ),
     .csr_wen_next                (WBU_csr_wen               ),
     .csrd                        (WBU_csrd                  ),
     .rd_value                    (WBU_rd_value              ),
-    .rd_next                     (WBU_rd                    ) 
-
+    .rd_next                     (WBU_rd                    ),
+    .branch_flag_next            (WBU_branch_flag           ),
+    .Ex_result_next              (WBU_Ex_result             ) 
 );
-
 
 
 endmodule
