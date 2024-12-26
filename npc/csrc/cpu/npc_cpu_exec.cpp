@@ -41,6 +41,7 @@ static void itrace(Decode *s)
     inst = strtok(str,"\t");
     if(strcmp(inst,"jal") == 0 || strcmp(inst,"jalr") == 0 || inst[0] == 'b')
     {
+        assert(0);
         skip_flag = 2;
     }
 }
@@ -90,18 +91,18 @@ void cpu_exec(uint32_t n)
         s.snpc=top->snpc;
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
         GetInst(&s.inst);
-    if(skip_flag-- > 0)
-    {
-        difftest_skip_ref();
-    }    
+        if(skip_flag-- > 0)
+        {
+            difftest_skip_ref();
+        }    
         exec_once();
    // printf("top->pc = 0x%x, top->dnpc = 0x%x, top->snpc = 0x%x \n",top->pc,top->dnpc,top->snpc);
         cpu.pc = top->pc;
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
-    for(int j=0;j<32;j++)
-    {
-        ReadReg(j,&cpu.gpr[j]);
-    }
+        for(int j=0;j<32;j++)
+        {
+            ReadReg(j,&cpu.gpr[j]);
+        }
         trace_and_difftest(&s);
         if(npc_state.state !=NPC_RUNNING)
             break;
