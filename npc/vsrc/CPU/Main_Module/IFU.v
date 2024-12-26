@@ -29,27 +29,24 @@ module IFU(
     input                        rst_n                      ,
     input              [  31: 0] dnpc                       ,
     input                        dnpc_flag                  ,
-    input                        valid                      ,
+    input                        pipe_stop                  ,
     output reg         [  31: 0] pc                         ,
     output reg         [  31: 0] inst                        
 );
 
-
-
-
-always @(posedge clk ) begin
+always @(posedge clk) begin
         if(!rst_n)
             pc <= 32'h80000000;
+        else if(pipe_stop)
+            pc <= pc ;
         else if(dnpc_flag)
             pc <= dnpc;
-        else if(valid)
-            pc <= pc + 4;
         else
-            pc <= pc;
+            pc <= pc + 4;
 end
 
 AM AM_inst(
-    .valid                       (valid                     ),
+    .valid                       (1'b1                      ),
     .raddr                       (pc                        ),
     .wdata                       (32'd0                     ),
     .funct3                      (3'b010                    ),

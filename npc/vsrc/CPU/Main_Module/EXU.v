@@ -4,6 +4,9 @@ module EXU (
     input                        clk                        ,
     input                        rst_n                      ,
 
+    /* control signal */
+    input                        inst_clear                 ,
+
     input              [  31: 0] pc                         ,
     input              [   3: 0] csr_wen                    ,
     input                        R_wen                      ,
@@ -30,6 +33,7 @@ module EXU (
     output                       jump_flag_next             ,
     output             [   2: 0] funct3_next                ,
     output             [  31: 0] rs2_value_next             ,
+    output             [  31: 0] imm_next                   ,
     output             [   4: 0] rd_next                    ,
     output             [  31: 0] csrs_next                  ,
     output             [   3: 0] csr_wen_next               ,
@@ -74,9 +78,6 @@ module EXU (
     always @(posedge clk) begin
         if(!rst_n)begin
             pc_reg          <= 0;
-            csr_wen_reg     <= 0;
-            R_wen_reg       <= 0;
-            mem_wen_reg     <= 0;
             mem_ren_reg     <= 0;
             rd_reg          <= 0;
             funct3_reg      <= 0;
@@ -98,9 +99,6 @@ module EXU (
         else
         begin
             pc_reg          <= pc           ;
-            csr_wen_reg     <= csr_wen      ;
-            R_wen_reg       <= R_wen        ;
-            mem_wen_reg     <= mem_wen      ;
             mem_ren_reg     <= mem_ren      ;
             rd_reg          <= rd           ;
             funct3_reg      <= funct3       ;
@@ -109,8 +107,6 @@ module EXU (
             imm_opcode_reg  <= imm_opcode   ;
             alu_opcode_reg  <= alu_opcode   ;
             inv_flag_reg    <= inv_flag     ;
-            jump_flag_reg   <= jump_flag    ;
-            branch_flag_reg <= branch_flag  ;
 
             add1_choice_reg <= add1_choice  ;
             add2_choice_reg <= add2_choice  ;
@@ -120,6 +116,29 @@ module EXU (
         end
     end
 
+always @(posedge clk) begin
+    if(!rst_n)begin
+        csr_wen_reg     <= 0;
+        R_wen_reg       <= 0;
+        mem_wen_reg     <= 0;
+        jump_flag_reg   <= 0;
+        branch_flag_reg <= 0;
+    end
+    else if(inst_clear)begin
+        csr_wen_reg     <= 0;
+        R_wen_reg       <= 0;
+        mem_wen_reg     <= 0;
+        jump_flag_reg   <= 0;
+        branch_flag_reg <= 0;
+    end
+    else begin
+        csr_wen_reg     <= csr_wen;
+        R_wen_reg       <= R_wen;
+        mem_wen_reg     <= mem_wen;
+        jump_flag_reg   <= jump_flag;
+        branch_flag_reg <= branch_flag;
+    end
+end
 
 
     wire               [  31: 0] add_1                      ;
@@ -147,6 +166,7 @@ module EXU (
     assign                       EX_result                 = alu_res ^{31'd0,inv_flag_reg};
     assign                       rs2_value_next            = rs2_value_reg;
     assign                       branch_flag_next          = branch_flag_reg;
+    assign                       imm_next                  = imm_reg;
 
     always@(*)begin
         case(imm_opcode_reg)
