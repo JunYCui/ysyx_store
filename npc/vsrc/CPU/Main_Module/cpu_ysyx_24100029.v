@@ -39,6 +39,7 @@ module cpu_ysyx_24100029
 
     wire               [   4: 0] IDU_rs1                    ;
     wire               [   4: 0] IDU_rs2                    ;
+/* verilator lint_off UNUSEDSIGNAL */
     wire               [  31: 0] IDU_a0_value               ;
     wire               [  31: 0] IDU_mepc_out               ;
     wire               [  31: 0] IDU_mtvec_out              ;
@@ -91,7 +92,7 @@ module cpu_ysyx_24100029
 
     assign                       pc                        = IFU_pc;
     assign                       snpc                      = pc + 4;
-
+/*
     always @(*)begin
         if(IFU_inst == 32'h00100073) begin
             if(IDU_a0_value == 0)
@@ -101,7 +102,7 @@ module cpu_ysyx_24100029
             fi();
         end
     end
-
+*/
 
 
 
