@@ -39,12 +39,11 @@ module cpu_ysyx_24100029
 
     wire               [   4: 0] IDU_rs1                    ;
     wire               [   4: 0] IDU_rs2                    ;
-/* verilator lint_off UNUSEDSIGNAL */
     wire               [  31: 0] IDU_a0_value               ;
     wire               [  31: 0] IDU_mepc_out               ;
     wire               [  31: 0] IDU_mtvec_out              ;
     
-
+    wire               [  31: 0] IDU_inst                   ;//debug
 /************************* EXU ********************/
     wire                         EXU_jump_flag              ;
     wire               [   2: 0] EXU_funct3                 ;
@@ -62,6 +61,7 @@ module cpu_ysyx_24100029
     wire               [  31: 0] EXU_rs2_in                 ;
     wire               [  31: 0] EXU_imm                    ;
 
+    wire               [  31: 0] EXU_inst                   ;
 /************************* MEM ********************/
     wire                         MEM_jump_flag              ;
     wire                         MEM_R_wen                  ;
@@ -74,6 +74,7 @@ module cpu_ysyx_24100029
     wire                         MEM_mem_ren                ;
     wire                         MEM_branch_flag            ;
 
+    wire               [  31: 0] MEM_inst                   ;
 /************************* WBU ********************/
     wire               [  31: 0] WBU_rd_value               ;
     wire               [  31: 0] WBU_csrd                   ;
@@ -92,9 +93,9 @@ module cpu_ysyx_24100029
 
     assign                       pc                        = IFU_pc;
     assign                       snpc                      = pc + 4;
-/*
+
     always @(*)begin
-        if(IFU_inst == 32'h00100073) begin
+        if(MEM_inst == 32'h00100073) begin
             if(IDU_a0_value == 0)
                 $display("\033[32;42m Hit The Good TRAP \033[0m");
             else
@@ -102,7 +103,7 @@ module cpu_ysyx_24100029
             fi();
         end
     end
-*/
+
 
 
 
@@ -202,6 +203,7 @@ IDU IDU_Inst0(
     .imm_opcode                  (IDU_imm_opcode            ),
     .alu_opcode                  (IDU_alu_opcode            ),
 
+    .inst_next                   (IDU_inst                  ),
     .rs1                         (IDU_rs1                   ),
     .rs2                         (IDU_rs2                   ),
     .a0_value                    (IDU_a0_value              ),
@@ -248,7 +250,10 @@ EXU EXU_Inst0(
     .mem_wen_next                (EXU_mem_wen               ),
     .mem_ren_next                (EXU_mem_ren               ),
     .pc_next                     (EXU_pc                    ),
-    .EX_result                   (EXU_Ex_result             ) 
+    .EX_result                   (EXU_Ex_result             ),
+
+    .inst                        (IDU_inst                  ),
+    .inst_next                   (EXU_inst                  ) 
 );
 
 MEM MEM_Inst0(
@@ -277,7 +282,10 @@ MEM MEM_Inst0(
     .rd_next                     (MEM_rd                    ),
     .mem_ren_next                (MEM_mem_ren               ),
     .jump_flag_next              (MEM_jump_flag             ),
-    .branch_flag_next            (MEM_branch_flag           ) 
+    .branch_flag_next            (MEM_branch_flag           ), 
+
+    .inst                        (EXU_inst                  ),
+    .inst_next                   (MEM_inst                  ) 
 );
 
 WBU WBU_inst0(
@@ -299,7 +307,7 @@ WBU WBU_inst0(
     .csr_wen_next                (WBU_csr_wen               ),
     .csrd                        (WBU_csrd                  ),
     .rd_value                    (WBU_rd_value              ),
-    .rd_next                     (WBU_rd                    )
+    .rd_next                     (WBU_rd                    ) 
 );
 
 

@@ -26,7 +26,10 @@ module MEM (
     output             [   4: 0] rd_next                    ,
     output                       mem_ren_next               ,
     output                       jump_flag_next             ,
-    output                       branch_flag_next            
+    output                       branch_flag_next           ,
+
+    input              [  31: 0] inst                       ,
+    output reg         [  31: 0] inst_next                  
 );
  
     wire               [  31: 0] mem_wdata                  ;
@@ -45,6 +48,14 @@ module MEM (
     reg                [  31: 0] rs2_value_reg              ;
     reg                          jump_flag_reg              ;
     reg                          branch_flag_reg            ;
+
+always @(posedge clk) begin
+    if(!rst_n)
+        inst_next <=0;
+    else
+        inst_next <= inst;
+end
+
 
     always @(posedge clk) begin
         if(!rst_n)begin

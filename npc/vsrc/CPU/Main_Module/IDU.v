@@ -45,6 +45,7 @@ module IDU(
     output             [   1: 0] imm_opcode                 ,
     output             [   3: 0] alu_opcode                 ,
 
+    output             [  31: 0] inst_next                  ,
     output             [   4: 0] rs1                        ,
     output             [   4: 0] rs2                        ,
     output             [  31: 0] a0_value                   ,
@@ -116,7 +117,7 @@ module IDU(
     assign                       branch_flag               = (opcode == `B_opcode_ysyx_24100029)? 1'b1:1'b0;
  
     assign                       csr_addr                  = imm;
-
+    assign                       inst_next                 = inst_reg;
 
 
     assign imm_opcode = (opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )                            ?

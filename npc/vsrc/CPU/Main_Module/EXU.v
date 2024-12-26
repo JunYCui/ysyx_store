@@ -41,7 +41,10 @@ module EXU (
     output                       mem_wen_next               ,
     output                       mem_ren_next               ,
     output             [  31: 0] pc_next                    ,
-    output             [  31: 0] EX_result                   
+    output             [  31: 0] EX_result                  ,
+
+    input              [  31: 0] inst                       ,
+    output reg         [  31: 0] inst_next                   
 );
 
     localparam                   NR_KEY_add1               = 3     ;
@@ -94,7 +97,6 @@ module EXU (
             rs1_value_reg   <= 0;
             rs2_value_reg   <= 0;
             csrs_reg        <= 0;
-
         end
         else
         begin
@@ -113,6 +115,7 @@ module EXU (
             rs1_value_reg   <= rs1_value    ;
             rs2_value_reg   <= rs2_value    ;
             csrs_reg        <= csrs         ;
+
         end
     end
 
@@ -140,6 +143,12 @@ always @(posedge clk) begin
     end
 end
 
+always @(posedge clk) begin
+    if(!rst_n)
+        inst_next <=0;
+    else
+        inst_next <= inst;
+end
 
     wire               [  31: 0] add_1                      ;
     wire               [  31: 0] add_2                      ;
@@ -147,7 +156,7 @@ end
 
     wire               [  31: 0] imm_12i                    ;
     wire               [  31: 0] imm_20i                    ;
-/* verilator lint_off UNUSEDSIGNAL */ 
+/* verilator lint_off UNUSEDSIGNAL */
     wire                         overflow                   ;
     wire               [  31: 0] alu_res                    ;
 
@@ -207,7 +216,7 @@ ALU #(
 (
     .d1                          (add_1                     ),
     .d2                          (add_2                     ),
-    .choice                      (alu_opcode_reg                ),
+    .choice                      (alu_opcode_reg            ),
     .res                         (alu_res                   ),
     .overflow                    (overflow                  ) 
 
