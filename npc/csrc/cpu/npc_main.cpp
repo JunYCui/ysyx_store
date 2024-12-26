@@ -59,7 +59,12 @@ int main(int argc,char* argv[])
    m_trace->open("waveform.vcd");
 
     cpu_reset();
-
+    for(int i=0;i<6;i++)
+    {
+    top->clk ^=1;
+    top->eval();
+    wave_record();
+    }
     sdb_mainloop();
     
     m_trace->close();
