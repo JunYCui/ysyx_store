@@ -104,7 +104,7 @@ module IDU(
     assign                       csr_wen_next[2]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h300);
     assign                       csr_wen_next[3]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h305);
 
-    assign                       R_wen_next                = (opcode == `S_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029)? 1'b0:1'b1;
+    assign                       R_wen_next                = (opcode == `S_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029 || opcode == 0)? 1'b0:1'b1;
     assign                       mem_wen                   = (opcode == `S_opcode_ysyx_24100029);
     assign                       mem_ren                   = (opcode == `I0_opcode_ysyx_24100029);
 
