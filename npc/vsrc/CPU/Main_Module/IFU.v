@@ -33,6 +33,7 @@ module IFU(
     output reg         [  31: 0] pc                         ,
     output reg         [  31: 0] inst                        
 );
+    reg                          valid                      ;
 
 always @(posedge clk) begin
         if(!rst_n)
@@ -45,8 +46,16 @@ always @(posedge clk) begin
             pc <= pc + 4;
 end
 
+always@(posedge clk)begin
+    if(!rst_n)
+        valid <= 1'b1;
+    else 
+        valid <= valid;
+end
+
+
 AM AM_inst(
-    .valid                       (1'b1                      ),
+    .valid                       (valid                     ),
     .raddr                       (pc                        ),
     .wdata                       (32'd0                     ),
     .funct3                      (3'b010                    ),
