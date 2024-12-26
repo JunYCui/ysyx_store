@@ -91,7 +91,7 @@ module cpu_ysyx_24100029
     wire                         EXU_inst_clear             ;
 
 
-    assign                       pc                        = IFU_pc;
+    assign                       pc                        = MEM_pc;
     assign                       snpc                      = pc + 4;
 
     always @(*)begin
@@ -110,7 +110,7 @@ module cpu_ysyx_24100029
 
 task  GetInst;
     output                       bit[31:0]inst_exec         ;
-    inst_exec = IFU_inst;
+    inst_exec = MEM_inst;
 endtask
 
 export "DPI-C" task GetInst;
