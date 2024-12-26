@@ -39,7 +39,7 @@ static void itrace(Decode *s)
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
     inst = strtok(str,"\t");
-    if(strcmp(str,"jal") == 0 || strcmp(str,"jalr") == 0)
+    if(strcmp(str,"jal") == 0 || strcmp(str,"jalr") == 0 || str[0] == 'b')
     {
         skip_flag = 2;
     }
