@@ -41,8 +41,8 @@ static void itrace(Decode *s)
     inst = strtok(str,"\t");
     if(strcmp(inst,"jal") == 0 || strcmp(inst,"jalr") == 0 || inst[0] == 'b')
     {
-        assert(0);
         skip_flag = 2;
+        difftest_skip_ref();
     }
 }
 
