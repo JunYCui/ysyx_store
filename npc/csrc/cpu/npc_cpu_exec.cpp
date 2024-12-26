@@ -14,7 +14,7 @@ extern void GetInst(svBitVecVal* inst_exec);
 extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
-extern bool skip_flag;
+extern uint8_t skip_flag;
 
 CPU_state cpu={};
 
@@ -35,8 +35,14 @@ extern Vcpu_ysyx_24100029 *top;
 static void itrace(Decode *s)
 {
     char str[50];
+    char* inst;
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
+    inst = strtok(str,"\t");
+    if(strcmp(str,"jal") == 0 || strcmp(str,"jalr") == 0)
+    {
+        skip_flag = 2;
+    }
 }
 
 static void exec_once()
@@ -84,10 +90,9 @@ void cpu_exec(uint32_t n)
         s.snpc=top->snpc;
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
         GetInst(&s.inst);
-    if(skip_flag)
+    if(skip_flag--)
     {
         difftest_skip_ref();
-        skip_flag =0;
     }    
         exec_once();
    // printf("top->pc = 0x%x, top->dnpc = 0x%x, top->snpc = 0x%x \n",top->pc,top->dnpc,top->snpc);
