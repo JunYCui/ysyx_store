@@ -82,7 +82,6 @@ module EXU (
         if(!rst_n)begin
             pc_reg          <= 0;
             mem_ren_reg     <= 0;
-            rd_reg          <= 0;
             funct3_reg      <= 0;
 
             imm_reg         <= 0;
@@ -102,7 +101,6 @@ module EXU (
         begin
             pc_reg          <= pc           ;
             mem_ren_reg     <= mem_ren      ;
-            rd_reg          <= rd           ;
             funct3_reg      <= funct3       ;
 
             imm_reg         <= imm          ;
@@ -121,6 +119,7 @@ module EXU (
 
 always @(posedge clk) begin
     if(!rst_n)begin
+        rd_reg          <= 0;
         csr_wen_reg     <= 0;
         R_wen_reg       <= 0;
         mem_wen_reg     <= 0;
@@ -128,6 +127,7 @@ always @(posedge clk) begin
         branch_flag_reg <= 0;
     end
     else if(inst_clear)begin
+        rd_reg          <= 0;
         csr_wen_reg     <= 0;
         R_wen_reg       <= 0;
         mem_wen_reg     <= 0;
@@ -135,6 +135,7 @@ always @(posedge clk) begin
         branch_flag_reg <= 0;
     end
     else begin
+        rd_reg          <= rd;
         csr_wen_reg     <= csr_wen;
         R_wen_reg       <= R_wen;
         mem_wen_reg     <= mem_wen;
