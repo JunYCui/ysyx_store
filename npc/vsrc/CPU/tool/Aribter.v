@@ -13,11 +13,11 @@ module Aribter(
     output             [   1: 0] IDU_rs2_choice              
 );
 
-assign IDU_rs1_choice = (EXU_R_Wen && (EXU_rd == IDU_rs1))? 
+assign IDU_rs1_choice = (EXU_R_Wen && (EXU_rd == IDU_rs1 && EXU_rd != 0))? 
                         2'b01:(WBU_R_Wen && (WBU_rd == IDU_rs1))?
                         2'b10:2'b00                         ;
 
-assign IDU_rs2_choice = (EXU_R_Wen && (EXU_rd == IDU_rs2))? 
+assign IDU_rs2_choice = (EXU_R_Wen && (EXU_rd == IDU_rs2 && EXU_rd != 0))? 
                         2'b01:(WBU_R_Wen && (WBU_rd == IDU_rs2))?
                         2'b10:2'b00                         ;
 
