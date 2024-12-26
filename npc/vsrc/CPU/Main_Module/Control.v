@@ -46,9 +46,9 @@ module Control (
     assign                       EXU_inst_clear            = (jump_flag || branch_flag || pipe_stop);
 
 
-    assign                       dnpc                      = (jump_flag)                                                   ?                                                                         
-                                                            Ex_result:(branch_flag)                                    ?
-                                                            ((Ex_result != 32'd0)? EXU_pc+EXU_imm:EXU_pc+4):(mret_flag)        ?
+    assign                       dnpc                      = (jump_flag)                                                  ?                                                                         
+                                                            Ex_result:(branch_flag)                                       ?
+                                                            ((Ex_result != 32'd0)? EXU_pc+EXU_imm:EXU_pc+4):(mret_flag)   ?
                                                             mepc_out:(ecall_flag)                                         ?
                                                             mtvec_out:0;
 
