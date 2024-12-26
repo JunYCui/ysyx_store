@@ -91,7 +91,7 @@ module cpu_ysyx_24100029
     wire                         EXU_inst_clear             ;
 
 
-    assign                       pc                        = MEM_pc;
+    assign                       pc                        = IFU_pc;
     assign                       snpc                      = pc + 4;
 
     always @(*)begin
