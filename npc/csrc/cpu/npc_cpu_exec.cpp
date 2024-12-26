@@ -41,7 +41,7 @@ static void itrace(Decode *s)
 
 static void exec_once()
 {
-    for(int i=0;i<2;i++)
+    for(int i=0;i<8;i++)
     {
     top->clk ^=1;
     top->eval();
