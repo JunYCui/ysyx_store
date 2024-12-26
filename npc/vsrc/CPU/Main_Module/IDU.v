@@ -1,5 +1,4 @@
 `include "./vsrc/CPU/define/para.v"
-/* verilator lint_off UNUSEDPARAM */
 
     localparam                   i1_NR_KEY                 = 10    ;
     localparam                   i1_KEY_LEN                = 7     ;

@@ -1,5 +1,5 @@
 `include "./vsrc/CPU/define/para.v"
-/* verilator lint_off UNUSEDSIGNAL */
+
 module EXU (
     input                        clk                        ,
     input                        rst_n                      ,
@@ -147,7 +147,7 @@ end
 
     wire               [  31: 0] imm_12i                    ;
     wire               [  31: 0] imm_20i                    ;
- 
+/* verilator lint_off UNUSEDSIGNAL */ 
     wire                         overflow                   ;
     wire               [  31: 0] alu_res                    ;
 
@@ -207,7 +207,7 @@ ALU #(
 (
     .d1                          (add_1                     ),
     .d2                          (add_2                     ),
-    .choice                      (alu_opcode                ),
+    .choice                      (alu_opcode_reg                ),
     .res                         (alu_res                   ),
     .overflow                    (overflow                  ) 
 
