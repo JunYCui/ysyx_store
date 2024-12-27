@@ -59,22 +59,21 @@ static void itrace(Decode *s)
 
     if(strcmp(inst,"jal") == 0 || strcmp(inst,"jalr") == 0 || inst[0] == 'b')
     {
-        skip_flag = 2;
+        skip_flag = 1;
         cpu.pc = top->IDU_pc;
     }
     if(rs1 != NULL)
     {
         if(inst_old[0]== 'l' && (strcmp(rs1,rd_old) == 0))
       {
-        skip_flag = 1;
+        skip_flag = 0;
       }
     }
     else if(rs2 != NULL)
     {
         if(inst_old[0]== 'l' && (strcmp(rs2,rd_old) == 0))
       {
-        skip_flag = 1;
-        assert(0);
+        skip_flag = 0;
       }
     }
 
