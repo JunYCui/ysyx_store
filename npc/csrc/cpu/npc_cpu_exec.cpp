@@ -39,7 +39,7 @@ static void itrace(Decode *s)
     static char inst_old[50];
     static char rd_old[20];
     char* rs2;
-    char *rs1; 
+    char* rs1; 
     char* inst;
     char* rd;
 
@@ -52,11 +52,11 @@ static void itrace(Decode *s)
         return;
     }
     */
-        printf("0x%x: %x \t %s  \n",s->pc,s->inst,str1);
+    printf("0x%x: %x \t %s  \n",s->pc,s->inst,str1);
     rd = strtok(NULL,",");
-        if(rd != NULL)
+    if(rd != NULL)
     rs1 = strtok(NULL,",");
-        if(rs1 != NULL)
+    if(rs1 != NULL)
     rs2 = strtok(NULL," ");
 
     if(strcmp(inst,"jal") == 0 || strcmp(inst,"jalr") == 0 || inst[0] == 'b')
