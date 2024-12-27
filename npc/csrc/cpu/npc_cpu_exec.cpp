@@ -53,14 +53,14 @@ static void itrace(Decode *s)
     }
     */
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str1);
-    rd = strtok(NULL,",");
+    rd = strtok(NULL,"\t");
     if(rd != NULL)
     {
-    rs1 = strtok(NULL,",");
+    rs1 = strtok(NULL,"\t");
     }
     if(rs1 != NULL)
     {
-    rs2 = strtok(NULL," ");
+    rs2 = strtok(NULL,"\t");
     }
 
     if(strcmp(inst,"jal") == 0 || strcmp(inst,"jalr") == 0 || inst[0] == 'b')
