@@ -53,6 +53,10 @@ static void itrace(Decode *s)
         skip_flag = 2;
         //difftest_skip_ref();
     }
+    else if(inst_old[0]== 'l' && (strcmp(rs1,rd_old) == 0 || strcmp(rs2,rd_old) == 0) )
+    {
+        skip_flag = 1;
+    }
     strcpy(inst_old,inst);
     strcpy(rd_old, rd);
 }
