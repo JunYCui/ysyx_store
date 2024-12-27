@@ -35,15 +35,26 @@ extern Vcpu_ysyx_24100029 *top;
 static void itrace(Decode *s)
 {
     char str[50];
+    static char inst_old[50];
+    static char rd_old[20];
+    char* rs2;
+    char *rs1; 
     char* inst;
+    char* rd;
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
     inst = strtok(str,"\t");
+    rd = strtok(NULL,",");
+    rs1 = strtok(NULL,",");
+    rs2 = strtok(NULL," ");
+    printf("%s: %s %s %s \n",inst,rd,rs1,rs2);
     if(strcmp(inst,"jal") == 0 || strcmp(inst,"jalr") == 0 || inst[0] == 'b')
     {
         skip_flag = 2;
         //difftest_skip_ref();
     }
+    strcpy(inst_old,inst);
+    strcpy(rd_old, rd);
 }
 
 static void exec_once()
