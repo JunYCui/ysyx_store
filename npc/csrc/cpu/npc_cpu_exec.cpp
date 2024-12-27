@@ -46,8 +46,7 @@ static void itrace(Decode *s)
     inst = strtok(str,"\t");
     rd = strtok(NULL,",");
     rs1 = strtok(NULL,",");
-    rs2 = strtok(NULL," ");
-    printf("%s: %s %s %s \n",inst,rd,rs1,rs2);
+    rs2 = strtok(NULL,"");
     if(strcmp(inst,"jal") == 0 || strcmp(inst,"jalr") == 0 || inst[0] == 'b')
     {
         skip_flag = 2;
