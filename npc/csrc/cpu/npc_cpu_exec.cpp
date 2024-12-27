@@ -71,6 +71,7 @@ static void itrace(Decode *s)
         if(inst_old[0]== 'l' && (strcmp(rs2,rd_old) == 0))
       {
         skip_flag = 1;
+        assert(0);
       }
     }
 
