@@ -146,7 +146,9 @@ end
 always @(posedge clk) begin
     if(!rst_n)
         inst_next <=0;
-    else
+    else if(inst_clear)
+        inst_next <=0;
+    else 
         inst_next <= inst;
 end
 
