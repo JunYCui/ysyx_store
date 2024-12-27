@@ -1,8 +1,11 @@
 `include "./vsrc/CPU/define/para.v"
-/* verilator lint_off UNUSEDSIGNAL */
+
 module EXU (
     input                        clk                        ,
     input                        rst_n                      ,
+
+    /* control signal */
+    input                        inst_clear                 ,
 
     input              [  31: 0] pc                         ,
     input              [   3: 0] csr_wen                    ,
@@ -30,6 +33,7 @@ module EXU (
     output                       jump_flag_next             ,
     output             [   2: 0] funct3_next                ,
     output             [  31: 0] rs2_value_next             ,
+    output             [  31: 0] imm_next                   ,
     output             [   4: 0] rd_next                    ,
     output             [  31: 0] csrs_next                  ,
     output             [   3: 0] csr_wen_next               ,
@@ -37,7 +41,10 @@ module EXU (
     output                       mem_wen_next               ,
     output                       mem_ren_next               ,
     output             [  31: 0] pc_next                    ,
-    output             [  31: 0] EX_result                   
+    output             [  31: 0] EX_result                  ,
+
+    input              [  31: 0] inst                       ,
+    output reg         [  31: 0] inst_next                   
 );
 
     localparam                   NR_KEY_add1               = 3     ;
@@ -74,13 +81,8 @@ module EXU (
     always @(posedge clk) begin
         if(!rst_n)begin
             pc_reg          <= 0;
-            csr_wen_reg     <= 0;
-            R_wen_reg       <= 0;
-            mem_wen_reg     <= 0;
-            mem_ren_reg     <= 0;
-            rd_reg          <= 0;
             funct3_reg      <= 0;
-
+            rd_reg          <= 0;
             imm_reg         <= 0;
             imm_opcode_reg  <= 0;
             alu_opcode_reg  <= 0;
@@ -93,34 +95,62 @@ module EXU (
             rs1_value_reg   <= 0;
             rs2_value_reg   <= 0;
             csrs_reg        <= 0;
-
         end
         else
         begin
             pc_reg          <= pc           ;
-            csr_wen_reg     <= csr_wen      ;
-            R_wen_reg       <= R_wen        ;
-            mem_wen_reg     <= mem_wen      ;
-            mem_ren_reg     <= mem_ren      ;
-            rd_reg          <= rd           ;
             funct3_reg      <= funct3       ;
+            rd_reg          <= rd;
 
             imm_reg         <= imm          ;
             imm_opcode_reg  <= imm_opcode   ;
             alu_opcode_reg  <= alu_opcode   ;
             inv_flag_reg    <= inv_flag     ;
-            jump_flag_reg   <= jump_flag    ;
-            branch_flag_reg <= branch_flag  ;
 
             add1_choice_reg <= add1_choice  ;
             add2_choice_reg <= add2_choice  ;
             rs1_value_reg   <= rs1_value    ;
             rs2_value_reg   <= rs2_value    ;
             csrs_reg        <= csrs         ;
+
         end
     end
 
+always @(posedge clk) begin
+    if(!rst_n)begin
+        mem_ren_reg     <= 0;
+        csr_wen_reg     <= 0;
+        R_wen_reg       <= 0;
+        mem_wen_reg     <= 0;
+        jump_flag_reg   <= 0;
+        branch_flag_reg <= 0;
+    end
+    else if(inst_clear)begin
+        mem_ren_reg     <= 0;
+        csr_wen_reg     <= 0;
+        R_wen_reg       <= 0;
+        mem_wen_reg     <= 0;
+        jump_flag_reg   <= 0;
+        branch_flag_reg <= 0;
+    end
+    else begin
+        mem_ren_reg     <= mem_ren;
+        csr_wen_reg     <= csr_wen;
+        R_wen_reg       <= R_wen;
+        mem_wen_reg     <= mem_wen;
+        jump_flag_reg   <= jump_flag;
+        branch_flag_reg <= branch_flag;
+    end
+end
 
+always @(posedge clk) begin
+    if(!rst_n)
+        inst_next <=0;
+    else if(inst_clear)
+        inst_next <=0;
+    else 
+        inst_next <= inst;
+end
 
     wire               [  31: 0] add_1                      ;
     wire               [  31: 0] add_2                      ;
@@ -128,7 +158,7 @@ module EXU (
 
     wire               [  31: 0] imm_12i                    ;
     wire               [  31: 0] imm_20i                    ;
- 
+/* verilator lint_off UNUSEDSIGNAL */
     wire                         overflow                   ;
     wire               [  31: 0] alu_res                    ;
 
@@ -146,6 +176,8 @@ module EXU (
     assign                       mem_ren_next              = mem_ren_reg;
     assign                       EX_result                 = alu_res ^{31'd0,inv_flag_reg};
     assign                       rs2_value_next            = rs2_value_reg;
+    assign                       branch_flag_next          = branch_flag_reg;
+    assign                       imm_next                  = imm_reg;
 
     always@(*)begin
         case(imm_opcode_reg)
@@ -186,7 +218,7 @@ ALU #(
 (
     .d1                          (add_1                     ),
     .d2                          (add_2                     ),
-    .choice                      (alu_opcode                ),
+    .choice                      (alu_opcode_reg            ),
     .res                         (alu_res                   ),
     .overflow                    (overflow                  ) 
 

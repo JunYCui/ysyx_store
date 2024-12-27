@@ -1,5 +1,4 @@
 `include "./vsrc/CPU/define/para.v"
-/* verilator lint_off UNUSEDPARAM */
 
     localparam                   i1_NR_KEY                 = 10    ;
     localparam                   i1_KEY_LEN                = 7     ;
@@ -9,6 +8,10 @@
 module IDU(
     input                        clk                        ,
     input                        rst_n                      ,
+
+    /* contorl signal */
+    input                        inst_clear                 ,
+    input                        pipe_stop                  ,
 
     input              [  31: 0] inst                       ,
     input              [  31: 0] pc                         ,
@@ -39,10 +42,12 @@ module IDU(
     output                       inv_flag                   ,
     output                       branch_flag                ,
     output                       jump_flag                  ,
-    output                       jump_choice                ,
     output             [   1: 0] imm_opcode                 ,
     output             [   3: 0] alu_opcode                 ,
 
+    output             [  31: 0] inst_next                  ,
+    output             [   4: 0] rs1                        ,
+    output             [   4: 0] rs2                        ,
     output             [  31: 0] a0_value                   ,
     output             [  31: 0] mepc_out                   ,
     output             [  31: 0] mtvec_out                   
@@ -53,47 +58,29 @@ module IDU(
     wire               [  31: 0] csr_addr                   ;
     wire               [   6: 0] oprand                     ;
     wire               [   6: 0] opcode                     ;
-    wire               [   4: 0] rs1                        ;
-    wire               [   4: 0] rs2                        ;
+
 
     reg                [  31: 0] inst_reg                   ;
     reg                [  31: 0] pc_reg                     ;
 
-    reg                [  31: 0] rd_value_reg               ;
-    reg                [  31: 0] csrd_reg                   ;
-    reg                [   4: 0] rd_reg                     ;
-    reg                          R_wen_reg                  ;
-    reg                [   3: 0] csr_wen_reg                ;
 
-
-always @(posedge clk ) begin
-    if(!rst_n)begin
-        rd_value_reg <= 0;
-        csrd_reg     <= 0;
-        rd_reg       <= 0;
-        R_wen_reg    <= 0;
-        csr_wen_reg  <= 0;
-    end
-    else
-        begin
-        rd_value_reg <= rd_value;
-        csrd_reg     <= csrd    ;
-        rd_reg       <= rd      ;
-        R_wen_reg    <= R_wen   ;
-        csr_wen_reg  <= csr_wen ;
-    end
-end
 
 
     always@(posedge clk)begin
         if(!rst_n)
             inst_reg <= 0;
+        else if(inst_clear)
+            inst_reg <= 0;
+        else if(pipe_stop)
+            inst_reg <= inst_reg;
         else
             inst_reg <= inst;
     end
     always@(posedge clk)begin
         if(!rst_n)
             pc_reg <= 0;
+        else if(pipe_stop)
+            pc_reg <= pc_reg;
         else
             pc_reg <= pc;
     end
@@ -110,17 +97,17 @@ end
     assign                       ecall_flag                = (inst_reg == 32'b00000000000000000000000001110011);//ecall
     assign                       mret_flag                 = (inst_reg == 32'b00110000001000000000000001110011);// mret
 
-    assign                       csr_wen_next[0]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h341) || ecall_flag;
-    assign                       csr_wen_next[1]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h342) || ecall_flag;
+    assign                       csr_wen_next[0]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h341);
+    assign                       csr_wen_next[1]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h342);
     assign                       csr_wen_next[2]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h300);
     assign                       csr_wen_next[3]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h305);
 
-    assign                       R_wen_next                = (opcode == `S_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029)? 1'b0:1'b1;
+    assign                       R_wen_next                = (opcode == `S_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029 || opcode == 0)? 1'b0:1'b1;
     assign                       mem_wen                   = (opcode == `S_opcode_ysyx_24100029);
     assign                       mem_ren                   = (opcode == `I0_opcode_ysyx_24100029);
 
     assign                       jump_flag                 = (opcode == `I2_opcode_ysyx_24100029 || opcode == `J_opcode_ysyx_24100029)? 1'b1:1'b0;
-    assign                       jump_choice               = (opcode == `I2_opcode_ysyx_24100029);
+
     assign                       add2_choice               = (opcode == `R_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029)? 2'd1:
                                                              (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b010)? 2'd2:
                                                              (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b001)? 2'd3:2'd0;
@@ -128,7 +115,7 @@ end
     assign                       branch_flag               = (opcode == `B_opcode_ysyx_24100029)? 1'b1:1'b0;
  
     assign                       csr_addr                  = imm;
-
+    assign                       inst_next                 = inst_reg;
 
 
     assign imm_opcode = (opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )                            ?
@@ -183,10 +170,10 @@ MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, opcode, {i1_DAT
 {`R_opcode_ysyx_24100029 ,    {25'd0,inst_reg[31:25]},
  `I0_opcode_ysyx_24100029,    {20'd0,inst_reg[31:20]},
  `I1_opcode_ysyx_24100029,    {20'd0,inst_reg[31:20]},
- `I2_opcode_ysyx_24100029,    {{20{inst_reg[31]}},inst_reg[31:20]},
+ `I2_opcode_ysyx_24100029,    {20'd0,inst_reg[31:20]},
  `U0_opcode_ysyx_24100029,    {12'd0,inst_reg[31:12]},
  `U1_opcode_ysyx_24100029,    {12'd0,inst_reg[31:12]},
- `J_opcode_ysyx_24100029 ,    {{12{inst_reg[31]}},inst_reg[31],inst_reg[19:12],inst_reg[20],inst_reg[30:21]}<<1,
+ `J_opcode_ysyx_24100029 ,    {12'd0,inst_reg[31],inst_reg[19:12],inst_reg[20],inst_reg[30:21]},
  `B_opcode_ysyx_24100029 ,    {{20{inst_reg[31]}},inst_reg[31],inst_reg[7],inst_reg[30:25],inst_reg[11:8]}<<1,
  `S_opcode_ysyx_24100029 ,    {20'd0,inst_reg[31:25],inst_reg[11:7]},
  `M_opcode_ysyx_24100029 ,    {20'd0,inst_reg[31:20]}
@@ -195,18 +182,18 @@ MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, opcode, {i1_DAT
 Reg_Stack Reg_Stack_inst0(
     .rst_n                       (rst_n                     ),
     .clk                         (clk                       ),
-    .pc                          (pc                        ),
+    .pc                          (pc_reg                    ),
     .ecall_flag                  (ecall_flag                ),
 
     .rs1                         (rs1                       ),
     .rs2                         (rs2                       ),
-    .rd                          (rd_reg                    ),
-    .rd_value                    (rd_value_reg              ),
+    .rd                          (rd                        ),
+    .rd_value                    (rd_value                  ),
 
     .csr_addr                    (csr_addr                  ),
-    .R_wen                       (R_wen_reg                 ),
-    .csr_wen                     (csr_wen_reg               ),
-    .csrd                        (csrd_reg                  ),
+    .R_wen                       (R_wen                     ),
+    .csr_wen                     (csr_wen                   ),
+    .csrd                        (csrd                      ),
 
     .rs1_value                   (rs1_value                 ),
     .rs2_value                   (rs2_value                 ),
