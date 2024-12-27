@@ -41,12 +41,10 @@ static void itrace(Decode *s)
     char *rs1; 
     char* inst;
     char* rd;
-    /*
-    if(skip_flag >0)
+    if(skip_flag !=0)
     {
         return;
     }
-    */
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
     inst = strtok(str,"\t");
