@@ -7,7 +7,8 @@ module cpu_ysyx_24100029
     input                        rst_n                      ,
     output reg         [  31: 0] pc                         ,
     output             [  31: 0] snpc                       ,
-    output             [  31: 0] dnpc                        
+    output             [  31: 0] dnpc                       ,
+    output             [  31: 0] IDU_pc                      
 );
 
 
@@ -15,8 +16,6 @@ module cpu_ysyx_24100029
     wire               [  31: 0] IFU_inst                   ;
 
 /************************* IDU ********************/
-
-    wire               [  31: 0] IDU_pc                     ;
     wire               [   4: 0] IDU_rd                     ;
     wire               [  31: 0] IDU_imm                    ;
     wire               [   2: 0] IDU_funct3                 ;
@@ -89,7 +88,6 @@ module cpu_ysyx_24100029
     wire                         IFU_pipe_s                 ;
     wire                         IDU_inst_clear             ;
     wire                         EXU_inst_clear             ;
-
 
     assign                       pc                        = MEM_pc;
     assign                       snpc                      = pc + 4;
@@ -282,7 +280,7 @@ MEM MEM_Inst0(
     .rd_next                     (MEM_rd                    ),
     .mem_ren_next                (MEM_mem_ren               ),
     .jump_flag_next              (MEM_jump_flag             ),
-    .branch_flag_next            (MEM_branch_flag           ), 
+    .branch_flag_next            (MEM_branch_flag           ),
 
     .inst                        (EXU_inst                  ),
     .inst_next                   (MEM_inst                  ) 
