@@ -68,7 +68,7 @@ static void itrace(Decode *s)
         skip_flag = 2;
         cpu.pc = top->IDU_pc;
     }
-    if(rs1 != NULL)
+    else if(rs1 != NULL)
     {
         if(inst_old[0]== 'l' && (strcmp(rs1,rd_old) == 0))
       {
