@@ -97,8 +97,8 @@ module IDU(
     assign                       ecall_flag                = (inst_reg == 32'b00000000000000000000000001110011);//ecall
     assign                       mret_flag                 = (inst_reg == 32'b00110000001000000000000001110011);// mret
 
-    assign                       csr_wen_next[0]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h341) || ecall_flag;
-    assign                       csr_wen_next[1]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h342) || ecall_flag;
+    assign                       csr_wen_next[0]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h341);
+    assign                       csr_wen_next[1]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h342);
     assign                       csr_wen_next[2]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h300);
     assign                       csr_wen_next[3]           = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h305);
 
