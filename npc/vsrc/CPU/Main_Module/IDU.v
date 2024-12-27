@@ -182,7 +182,7 @@ MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, opcode, {i1_DAT
 Reg_Stack Reg_Stack_inst0(
     .rst_n                       (rst_n                     ),
     .clk                         (clk                       ),
-    .pc                          (pc                        ),
+    .pc                          (pc_reg                    ),
     .ecall_flag                  (ecall_flag                ),
 
     .rs1                         (rs1                       ),
