@@ -35,16 +35,10 @@ extern Vcpu_ysyx_24100029 *top;
 static void itrace(Decode *s)
 {
     char str[50];
-    char str1[50];
-    static char inst_old[50];
-    static char rd_old[20];
-    char* rs2;
-    char* rs1; 
-    char* inst;
-    char* rd;
+    char *inst;
 
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
-    strcpy(str1,str);
+    printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
     inst = strtok(str,"\t");
     /*
     if(strcmp(inst,"c.unimp") == 0)
@@ -52,39 +46,12 @@ static void itrace(Decode *s)
         return;
     }
     */
-    printf("0x%x: %x \t %s  \n",s->pc,s->inst,str1);
-    rd = strtok(NULL,"\t");
-    if(rd != NULL)
-    {
-    rs1 = strtok(NULL,"\t");
-    }
-    if(rs1 != NULL)
-    {
-    rs2 = strtok(NULL,"\t");
-    }
 
     if(strcmp(inst,"jal") == 0 || strcmp(inst,"jalr") == 0 || inst[0] == 'b')
     {
         skip_flag = 2;
         cpu.pc = top->IDU_pc;
     }
-    else if(rs1 != NULL)
-    {
-        if(inst_old[0]== 'l' && (strcmp(rs1,rd_old) == 0))
-      {
-        skip_flag = 0;
-      }
-    }
-    else if(rs2 != NULL)
-    {
-        if(inst_old[0]== 'l' && (strcmp(rs2,rd_old) == 0))
-      {
-        skip_flag = 0;
-      }
-    }
-
-    strcpy(inst_old,inst);
-    strcpy(rd_old, rd);
 }
 
 static void exec_once()
