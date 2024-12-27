@@ -79,8 +79,6 @@ module IDU(
     always@(posedge clk)begin
         if(!rst_n)
             pc_reg <= 0;
-        else if(inst_clear)
-            pc_reg <= 0;
         else if(pipe_stop)
             pc_reg <= pc_reg;
         else
