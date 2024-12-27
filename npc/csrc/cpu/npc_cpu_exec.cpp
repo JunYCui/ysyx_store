@@ -53,7 +53,7 @@ static void itrace(Decode *s)
     rs1 = strtok(NULL,",");
         if(rs1 != NULL)
     rs2 = strtok(NULL," ");
-    printf("%s: %s %s %s \n",inst,rd,rs1,rs2);
+
     if(strcmp(inst,"jal") == 0 || strcmp(inst,"jalr") == 0 || inst[0] == 'b')
     {
         skip_flag = 2;
