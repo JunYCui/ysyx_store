@@ -46,10 +46,12 @@ static void itrace(Decode *s)
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     strcpy(str1,str);
     inst = strtok(str,"\t");
+    /*
     if(strcmp(inst,"c.unimp") == 0)
     {
         return;
     }
+    */
         printf("0x%x: %x \t %s  \n",s->pc,s->inst,str1);
     rd = strtok(NULL,",");
         if(rd != NULL)
