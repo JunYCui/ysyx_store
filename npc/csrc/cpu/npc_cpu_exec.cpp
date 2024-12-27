@@ -44,6 +44,10 @@ static void itrace(Decode *s)
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
     inst = strtok(str,"\t");
+    if(strcmp(inst,"c.unimp") == 0)
+    {
+        return;
+    }
     rd = strtok(NULL,",");
         if(rd != NULL)
     rs1 = strtok(NULL,",");
@@ -55,10 +59,21 @@ static void itrace(Decode *s)
         skip_flag = 2;
         //difftest_skip_ref();
     }
-    else if(inst_old[0]== 'l' && (strcmp(rs1,rd_old) == 0 || strcmp(rs2,rd_old) == 0) )
+    if(rs1 != NULL)
     {
+        if(inst_old[0]== 'l' && (strcmp(rs1,rd_old) == 0))
+      {
         skip_flag = 1;
+      }
     }
+    else if(rs2 != NULL)
+    {
+        if(inst_old[0]== 'l' && (strcmp(rs2,rd_old) == 0))
+      {
+        skip_flag = 1;
+      }
+    }
+
     strcpy(inst_old,inst);
     strcpy(rd_old, rd);
 }
