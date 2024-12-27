@@ -42,7 +42,7 @@ static void itrace(Decode *s)
     if(strcmp(inst,"jal") == 0 || strcmp(inst,"jalr") == 0 || inst[0] == 'b')
     {
         skip_flag = 2;
-        difftest_skip_ref();
+        //difftest_skip_ref();
     }
 }
 
