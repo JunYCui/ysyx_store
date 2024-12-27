@@ -35,6 +35,7 @@ extern Vcpu_ysyx_24100029 *top;
 static void itrace(Decode *s)
 {
     char str[50];
+    char str1[50];
     static char inst_old[50];
     static char rd_old[20];
     char* rs2;
@@ -43,12 +44,13 @@ static void itrace(Decode *s)
     char* rd;
 
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
+    strcpy(str1,str);
     inst = strtok(str,"\t");
     if(strcmp(inst,"c.unimp") == 0)
     {
         return;
     }
-        printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
+        printf("0x%x: %x \t %s  \n",s->pc,s->inst,str1);
     rd = strtok(NULL,",");
         if(rd != NULL)
     rs1 = strtok(NULL,",");
