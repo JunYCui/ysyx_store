@@ -17,9 +17,9 @@ Vcpu_ysyx_24100029 *top = new Vcpu_ysyx_24100029{contextp};
 #define MAX_SIM_TIME 100 //定义模拟的时钟边沿数（包括上下边沿）
 uint64_t sim_time = 0;
 
+extern uint32_t cycle;
 
-
-void fi() { exit(0); }
+void fi() { printf("cycle = %d \n",cycle);exit(0); }
 
 void cpu_reset(void)
 {
