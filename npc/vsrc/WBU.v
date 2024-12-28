@@ -13,13 +13,12 @@ module WBU (
     input                        R_wen                      ,
     input                        mem_ren                    ,
     input                        jump_flag                  ,
-    input                        branch_flag                ,
 
     output                       R_wen_next                 ,
     output             [   3: 0] csr_wen_next               ,
     output             [  31: 0] csrd                       ,
     output             [  31: 0] rd_value                   ,
-    output             [   4: 0] rd_next                      
+    output             [   4: 0] rd_next                     
 );
 
     assign                       rd_value                  = (jump_flag == 1'd1)        ? 
@@ -30,5 +29,6 @@ module WBU (
     assign                       csr_wen_next              = csr_wen;
     assign                       R_wen_next                = R_wen;
     assign                       rd_next                   = rd;
+
 
 endmodule                                                           //WBU

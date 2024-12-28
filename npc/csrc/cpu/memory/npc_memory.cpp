@@ -10,7 +10,7 @@ void vga_update_screen();
 uint32_t screen_size();
 uint16_t height,weight;
 bool vga_flag;
-uint8_t skip_flag;
+bool skip_flag;
 extern Vcpu_ysyx_24100029 *top; 
 static inline uint32_t host_read(void *addr, int len) {
   switch (len) {

@@ -1,4 +1,4 @@
-`include "./vsrc/CPU/define/para.v"
+`include "./vsrc/para.v"
 
 module ALU
 #(
