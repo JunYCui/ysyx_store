@@ -97,7 +97,7 @@ always@(*)
     `alu_sra_ysyx_24100029:begin                                    //算术右移
             overflow = 1'b0;
             choose_add_sub = 1'b0;
-            res = {{{BW{d1[BW-1]}},d1}>>d2}[31:0];
+            res = {{{BW{d1[BW-1]}},d1}>>d2[4:0]}[31:0];
     end
     default:begin
             overflow = 1'b0;
