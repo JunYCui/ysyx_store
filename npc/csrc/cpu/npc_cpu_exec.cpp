@@ -21,7 +21,7 @@ CPU_state cpu={};
 Decode s;
 
 uint8_t g_print_step;
-
+uint32_t cycle=0;
 
 void Cpu_Wp(void);
 static void wave_record(void)
@@ -47,7 +47,7 @@ static void exec_once()
     top->eval();
     wave_record();
     }
-
+    printf("cycle = %d \n",cycle++);
 
 }
 
