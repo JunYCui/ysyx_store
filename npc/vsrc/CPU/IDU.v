@@ -1,4 +1,4 @@
-`include "./vsrc/para.v"
+`include "./vsrc/CPU/para.v"
 /* verilator lint_off UNUSEDPARAM */
 
     localparam                   i1_NR_KEY                 = 10    ;

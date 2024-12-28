@@ -49,7 +49,9 @@ always @(posedge clk) begin
 end
 
 AM AM_inst(
-    .valid                       (valid                    ),
+    .clk                         (clk                       ),
+    .rst_n                       (rst_n                     ),
+    .valid                       (valid                     ),
     .raddr                       (pc                        ),
     .wdata                       (32'd0                     ),
     .funct3                      (3'b010                    ),

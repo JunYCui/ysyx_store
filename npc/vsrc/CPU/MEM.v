@@ -42,6 +42,8 @@ module MEM (
     assign                       csr_wen_next              = csr_wen;
 
 AM Data_MEM_inst(
+    .clk                         (clk                       ),
+    .rst_n                       (rst_n                     ),
     .valid                       (Data_mem_valid            ),
     .raddr                       (Ex_result                 ),
     .wdata                       (mem_wdata                 ),

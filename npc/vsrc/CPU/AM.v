@@ -35,8 +35,10 @@ import "DPI-C" function void npc_pmem_write(input int waddr, input int wdata, in
     localparam                   i5_KEY_LEN                = 3     ; //键值的长度
     localparam                   i5_DATA_LEN               = 8     ; //数据的长度
 
-
+/* verilator lint_off UNUSEDSIGNAL */
 module AM(
+    input                        rst_n                      ,
+    input                        clk                        ,
     input                        valid                      ,
     input              [  31: 0] raddr                      ,
     input              [  31: 0] wdata                      ,
@@ -72,7 +74,7 @@ MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wmask, funct3, {i5_DATA
 
     assign                       rdata_8u                  = {24'd0,rdata[7:0]};
     assign                       rdata_16u                 = {16'd0,rdata[15:0]};
-
+/*
 always @(*) begin
   if (valid) begin                                                  // 有读写请求时
     rdata = npc_pmem_read(raddr);
@@ -84,7 +86,17 @@ always @(*) begin
     rdata = 0;
   end
 end
+*/
 
+    reg                [32-1: 0] rf                 [2**8-1:0]  ;
+  always @(posedge clk) begin
+    if(!rst_n)
+      rf[waddr] <=0;
+    else if (wen) rf[waddr[7:0]] <= wdata;
+  end
+
+
+    assign                       rdata                     = rf[raddr[7:0]];
 
 sext #(
     .DATA_WIDTH                  (8                         ),
