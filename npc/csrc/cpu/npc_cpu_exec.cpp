@@ -40,13 +40,10 @@ static void itrace(Decode *s)
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
     inst = strtok(str,"\t");
-    /*
     if(strcmp(inst,"c.unimp") == 0)
     {
         return;
     }
-    */
-
     if(strcmp(inst,"jal") == 0 || strcmp(inst,"jalr") == 0 || inst[0] == 'b')
     {
         skip_flag = 2;
@@ -62,8 +59,6 @@ static void exec_once()
     top->eval();
     wave_record();
     }
-
-
 }
 
 
@@ -71,11 +66,11 @@ static void trace_and_difftest(Decode *s)
 {
     Cpu_Wp();
 #ifdef ITARCE
-    //if(g_print_step)
+    if(g_print_step)
     itrace(s);
 #endif
 #ifdef FTRACE
-    //ftrace_exe(s);
+    ftrace_exe(s);
 #endif
 #ifdef DIFFTEST
     difftest_step(s->pc,s->dnpc);

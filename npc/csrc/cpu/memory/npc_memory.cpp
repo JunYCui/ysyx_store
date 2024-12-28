@@ -61,8 +61,7 @@ extern "C" int npc_pmem_read(int addr)
    data = *(int*)guest_to_host(paddr);
 #ifdef MTRACE
   if(paddr != top->pc)
-  ;
-  //printf("Read addr 0x%x:\t0x%x  at pc: 0x%x    \n",paddr,data,top->pc);
+  printf("Read addr 0x%x:\t0x%x  at pc: 0x%x    \n",paddr,data,top->pc);
 #endif    
   return data;
 }
