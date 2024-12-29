@@ -7,20 +7,15 @@ module cpu_ysyx_24100029
     input                        rst_n                      ,
     output reg         [  31: 0] pc                         ,
     output             [  31: 0] snpc                       ,
-    output             [  31: 0] dnpc                        
+    output             [  31: 0] dnpc                       ,
+    output             [  31: 0] IDU_pc                      
 );
 
-    wire               [  31: 0] npc                        ;
+
     wire               [  31: 0] IFU_pc                     ;
     wire               [  31: 0] IFU_inst                   ;
 
-    wire               [  31: 0] WBU_rd_value               ;
-    wire               [  31: 0] WBU_csrd                   ;
-    wire               [   4: 0] WBU_rd                     ;
-    wire                         WBU_R_wen                  ;
-    wire               [   3: 0] WBU_csr_wen                ;
-
-    wire               [  31: 0] IDU_pc                     ;
+/************************* IDU ********************/
     wire               [   4: 0] IDU_rd                     ;
     wire               [  31: 0] IDU_imm                    ;
     wire               [   2: 0] IDU_funct3                 ;
@@ -38,13 +33,17 @@ module cpu_ysyx_24100029
     wire                         IDU_inv_flag               ;
     wire                         IDU_branch_flag            ;
     wire                         IDU_jump_flag              ;
-    wire                         IDU_jump_choice            ;
     wire               [   1: 0] IDU_imm_opcode             ;
     wire               [   3: 0] IDU_alu_opcode             ;
+
+    wire               [   4: 0] IDU_rs1                    ;
+    wire               [   4: 0] IDU_rs2                    ;
     wire               [  31: 0] IDU_a0_value               ;
     wire               [  31: 0] IDU_mepc_out               ;
     wire               [  31: 0] IDU_mtvec_out              ;
-
+    
+    wire               [  31: 0] IDU_inst                   ;//debug
+/************************* EXU ********************/
     wire                         EXU_jump_flag              ;
     wire               [   2: 0] EXU_funct3                 ;
     wire               [  31: 0] EXU_rs2_value              ;
@@ -55,8 +54,14 @@ module cpu_ysyx_24100029
     wire                         EXU_mem_wen                ;
     wire                         EXU_mem_ren                ;
     wire               [  31: 0] EXU_pc                     ;
-    wire               [  31: 0] EXU_result                  ;
+    wire               [  31: 0] EXU_Ex_result              ;
+    wire                         EXU_branch_flag            ;
+    wire               [  31: 0] EXU_rs1_in                 ;
+    wire               [  31: 0] EXU_rs2_in                 ;
+    wire               [  31: 0] EXU_imm                    ;
 
+    wire               [  31: 0] EXU_inst                   ;
+/************************* MEM ********************/
     wire                         MEM_jump_flag              ;
     wire                         MEM_R_wen                  ;
     wire               [  31: 0] MEM_Rdata                  ;
@@ -66,22 +71,29 @@ module cpu_ysyx_24100029
     wire               [  31: 0] MEM_pc                     ;
     wire               [   4: 0] MEM_rd                     ;
     wire                         MEM_mem_ren                ;
+    wire                         MEM_branch_flag            ;
 
+    wire               [  31: 0] MEM_inst                   ;
+/************************* WBU ********************/
+    wire               [  31: 0] WBU_rd_value               ;
+    wire               [  31: 0] WBU_csrd                   ;
+    wire               [   4: 0] WBU_rd                     ;
+    wire                         WBU_R_wen                  ;
+    wire               [   3: 0] WBU_csr_wen                ;
 
+/* PERSONAL */
 
+    wire                         dnpc_flag                  ;
+    wire                         IDU_pipe_s                 ;
+    wire                         IFU_pipe_s                 ;
+    wire                         IDU_inst_clear             ;
+    wire                         EXU_inst_clear             ;
+
+    assign                       pc                        = MEM_pc;
     assign                       snpc                      = pc + 4;
-    assign                       npc                       = (IDU_mret_flag ||IDU_ecall_flag ||IDU_jump_flag || IDU_branch_flag)? dnpc:snpc;
-    assign                       dnpc                      = (IDU_jump_flag )                                                 ? 
-                                                            ((IDU_jump_choice)? IDU_rs1_value + IDU_imm                       :
-                                                            (IDU_pc + IDU_imm)):(IDU_branch_flag == 1'b1 && EXU_result != 32'd0)?
-                                                            pc+IDU_imm:(IDU_mret_flag)                                        ?
-                                                            IDU_mepc_out:(IDU_ecall_flag)                                         ?
-                                                            IDU_mtvec_out:pc+4;
-
-    assign                       pc                        = IFU_pc;
 
     always @(*)begin
-        if(IFU_inst == 32'h00100073) begin
+        if(MEM_inst == 32'h00100073) begin
             if(IDU_a0_value == 0)
                 $display("\033[32;42m Hit The Good TRAP \033[0m");
             else
@@ -96,17 +108,57 @@ module cpu_ysyx_24100029
 
 task  GetInst;
     output                       bit[31:0]inst_exec         ;
-    inst_exec = IFU_inst;
+    inst_exec = MEM_inst;
 endtask
 
-    export "DPI-C" task GetInst;
+export "DPI-C" task GetInst;
+
+Control Control_inst0(
+    .mtvec_out                   (IDU_mtvec_out             ),
+    .mepc_out                    (IDU_mepc_out              ),
+
+    .EXU_imm                     (EXU_imm                   ),
+    .EXU_pc                      (EXU_pc                    ),
+    .Ex_result                   (EXU_Ex_result             ),
+    .WBU_rd_value                (WBU_rd_value              ),
+    .IDU_rs1_value               (IDU_rs1_value             ),
+    .IDU_rs2_value               (IDU_rs2_value             ),
+
+    .branch_flag                 (EXU_branch_flag           ),
+    .jump_flag                   (EXU_jump_flag             ),
+    .mret_flag                   (IDU_mret_flag             ),
+    .ecall_flag                  (IDU_ecall_flag            ),
+    .EXU_mem_ren                 (EXU_mem_ren               ),
+
+    .IDU_rs1                     (IDU_rs1                   ),
+    .IDU_rs2                     (IDU_rs2                   ),
+    .EXU_rd                      (EXU_rd                    ),
+    .WBU_rd                      (WBU_rd                    ),
+
+    .EXU_R_Wen                   (EXU_R_wen                 ),
+    .WBU_R_Wen                   (WBU_R_wen                 ),
+
+    .EXU_rs1_in                  (EXU_rs1_in                ),
+    .EXU_rs2_in                  (EXU_rs2_in                ),
+    .IFU_pipe_s                  (IFU_pipe_s                ),
+    .IDU_pipe_s                  (IDU_pipe_s                ),
+    .IDU_inst_clear              (IDU_inst_clear            ),
+    .EXU_inst_clear              (EXU_inst_clear            ),
+    .dnpc                        (dnpc                      ),
+    .dnpc_flag                   (dnpc_flag                 ) 
+);
+
+
+
 
 
 
 IFU IFU_Inst0(
     .clk                         (clk                       ),
     .rst_n                       (rst_n                     ),
-    .npc                         (npc                       ),
+    .dnpc                        (dnpc                      ),
+    .dnpc_flag                   (dnpc_flag                 ),
+    .pipe_stop                   (IFU_pipe_s                ),
     .pc                          (IFU_pc                    ),
     .inst                        (IFU_inst                  ) 
 );
@@ -114,6 +166,9 @@ IFU IFU_Inst0(
 IDU IDU_Inst0(
     .clk                         (clk                       ),
     .rst_n                       (rst_n                     ),
+
+    .inst_clear                  (IDU_inst_clear            ),
+    .pipe_stop                   (IDU_pipe_s                ),
 
     .inst                        (IFU_inst                  ),
     .pc                          (IFU_pc                    ),
@@ -143,10 +198,12 @@ IDU IDU_Inst0(
     .inv_flag                    (IDU_inv_flag              ),
     .branch_flag                 (IDU_branch_flag           ),
     .jump_flag                   (IDU_jump_flag             ),
-    .jump_choice                 (IDU_jump_choice           ),
     .imm_opcode                  (IDU_imm_opcode            ),
     .alu_opcode                  (IDU_alu_opcode            ),
 
+    .inst_next                   (IDU_inst                  ),
+    .rs1                         (IDU_rs1                   ),
+    .rs2                         (IDU_rs2                   ),
     .a0_value                    (IDU_a0_value              ),
     .mepc_out                    (IDU_mepc_out              ),
     .mtvec_out                   (IDU_mtvec_out             ) 
@@ -156,6 +213,8 @@ IDU IDU_Inst0(
 EXU EXU_Inst0(
     .clk                         (clk                       ),
     .rst_n                       (rst_n                     ),
+
+    .inst_clear                  (EXU_inst_clear            ),
 
     .funct3                      (IDU_funct3                ),
     .pc                          (IDU_pc                    ),
@@ -169,13 +228,16 @@ EXU EXU_Inst0(
     .alu_opcode                  (IDU_alu_opcode            ),
     .inv_flag                    (IDU_inv_flag              ),
     .jump_flag                   (IDU_jump_flag             ),
+    .branch_flag                 (IDU_branch_flag           ),
 
     .add1_choice                 (IDU_add1_choice           ),
     .add2_choice                 (IDU_add2_choice           ),
-    .rs1_value                   (IDU_rs1_value             ),
-    .rs2_value                   (IDU_rs2_value             ),
+    .rs1_value                   (EXU_rs1_in                ),
+    .rs2_value                   (EXU_rs2_in                ),
     .csrs                        (IDU_csrs                  ),
 
+    .imm_next                    (EXU_imm                   ),
+    .branch_flag_next            (EXU_branch_flag           ),
     .jump_flag_next              (EXU_jump_flag             ),
     .funct3_next                 (EXU_funct3                ),
     .rs2_value_next              (EXU_rs2_value             ),
@@ -186,7 +248,10 @@ EXU EXU_Inst0(
     .mem_wen_next                (EXU_mem_wen               ),
     .mem_ren_next                (EXU_mem_ren               ),
     .pc_next                     (EXU_pc                    ),
-    .EX_result                   (EXU_result                 ) 
+    .EX_result                   (EXU_Ex_result             ),
+
+    .inst                        (IDU_inst                  ),
+    .inst_next                   (EXU_inst                  ) 
 );
 
 MEM MEM_Inst0(
@@ -198,14 +263,14 @@ MEM MEM_Inst0(
     .mem_wen                     (EXU_mem_wen               ),
     .R_wen                       (EXU_R_wen                 ),
     .csr_wen                     (EXU_csr_wen               ),
-    .Ex_result                   (EXU_result                 ),
+    .Ex_result                   (EXU_Ex_result             ),
     .csrs                        (EXU_csrs                  ),
     .rd                          (EXU_rd                    ),
     .funct3                      (EXU_funct3                ),
     .rs2_value                   (EXU_rs2_value             ),
     .jump_flag                   (EXU_jump_flag             ),
+    .branch_flag                 (EXU_branch_flag           ),
 
-    .jump_flag_next              (MEM_jump_flag             ),
     .R_wen_next                  (MEM_R_wen                 ),
     .MEM_Rdata                   (MEM_Rdata                 ),
     .csr_wen_next                (MEM_csr_wen               ),
@@ -213,7 +278,12 @@ MEM MEM_Inst0(
     .csrs_next                   (MEM_csrs                  ),
     .pc_next                     (MEM_pc                    ),
     .rd_next                     (MEM_rd                    ),
-    .mem_ren_next                (MEM_mem_ren               ) 
+    .mem_ren_next                (MEM_mem_ren               ),
+    .jump_flag_next              (MEM_jump_flag             ),
+    .branch_flag_next            (MEM_branch_flag           ),
+
+    .inst                        (EXU_inst                  ),
+    .inst_next                   (MEM_inst                  ) 
 );
 
 WBU WBU_inst0(
@@ -229,15 +299,14 @@ WBU WBU_inst0(
     .R_wen                       (MEM_R_wen                 ),
     .mem_ren                     (MEM_mem_ren               ),
     .jump_flag                   (MEM_jump_flag             ),
+    .branch_flag                 (MEM_branch_flag           ),
 
     .R_wen_next                  (WBU_R_wen                 ),
     .csr_wen_next                (WBU_csr_wen               ),
     .csrd                        (WBU_csrd                  ),
     .rd_value                    (WBU_rd_value              ),
     .rd_next                     (WBU_rd                    ) 
-
 );
-
 
 
 endmodule

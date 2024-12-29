@@ -36,7 +36,7 @@ Reg #(
     .rst                         (rst_n                     ),
     .din                         (mepc_in                   ),
     .dout                        (mepc_out                  ),
-    .wen                         (csr_wen[0]                ) 
+    .wen                         (csr_wen[0] | ecall_flag   ) 
 );
 
 Reg #(
@@ -47,7 +47,7 @@ Reg #(
     .rst                         (rst_n                     ),
     .din                         (mcause_in                 ),
     .dout                        (mcause_out                ),
-    .wen                         (csr_wen[1]                ) 
+    .wen                         (csr_wen[1] | ecall_flag   ) 
 );
 
 Reg #(
