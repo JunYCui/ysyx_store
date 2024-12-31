@@ -4,7 +4,7 @@
 //#define FTRACE
 // #define DIFFTEST
 //#define MTRACE
-//#define ITARCE
+#define ITARCE
 
 
 #endif
