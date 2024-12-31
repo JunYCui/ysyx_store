@@ -46,7 +46,7 @@ always @(posedge clk) begin
             pc <= pc ;
         else if(dnpc_flag)
             pc <= dnpc;
-        else
+        else if(valid)
             pc <= pc + 4;
 end
 
