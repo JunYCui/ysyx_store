@@ -84,7 +84,13 @@ module EXU (
 
 
     assign                       ready_last                = ready_next;
-    assign                       valid_next                = 1'b1;
+
+    always @(posedge clk) begin
+        if(!rst_n)
+            valid_next <= 1'b1;
+        else 
+            valid_next <= valid_last;
+    end
 
 
 

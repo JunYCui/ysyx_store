@@ -50,13 +50,13 @@ module IDU(
     output             [   4: 0] rs2                        ,
     output             [  31: 0] a0_value                   ,
     output             [  31: 0] mepc_out                   ,
-    output             [  31: 0] mtvec_out                  , 
+    output             [  31: 0] mtvec_out                  ,
 
     input                        valid_last                 ,
     output                       ready_last                 ,
 
     input                        ready_next                 ,
-    output                       valid_next                  
+    output reg                   valid_next                  
 );
 
 
@@ -71,7 +71,12 @@ module IDU(
 
     assign                       ready_last                = ready_next;
 
-    assign                       valid_next                = 1'b1;
+    always @(posedge clk) begin
+        if(!rst_n)
+            valid_next <= 1'b1;
+        else 
+            valid_next <= valid_last;
+    end
 
     always@(posedge clk)begin
         if(!rst_n)
