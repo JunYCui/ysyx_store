@@ -55,18 +55,18 @@ int main(int argc,char* argv[])
     init_monitor(argc, argv);
     
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
-  // top->trace(m_trace, 5);
-  //  m_trace->open("waveform.vcd");
+   top->trace(m_trace, 5);
+   m_trace->open("waveform.vcd");
 
     cpu_reset();
-/*
+
     for(int i=0;i<6;i++)
     {
     top->clk ^=1;
     top->eval();
     wave_record();
     }
-*/
+
     sdb_mainloop();
     
     m_trace->close();
