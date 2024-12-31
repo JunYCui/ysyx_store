@@ -87,7 +87,7 @@ module EXU (
 
     always @(posedge clk) begin
         if(!rst_n)
-            valid_next <= 1'b1;
+            valid_next <= 1'b0;
         else 
             valid_next <= valid_last;
     end
