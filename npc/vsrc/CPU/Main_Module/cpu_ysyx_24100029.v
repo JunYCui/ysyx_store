@@ -82,6 +82,7 @@ module cpu_ysyx_24100029
     wire                         MEM_ready                  ;
     wire               [  31: 0] MEM_inst                   ;
 /************************* WBU ********************/
+    wire               [  31: 0] WBU_inst                   ;
     wire               [  31: 0] WBU_rd_value               ;
     wire               [  31: 0] WBU_csrd                   ;
     wire               [   4: 0] WBU_rd                     ;
@@ -101,7 +102,7 @@ module cpu_ysyx_24100029
     assign                       snpc                      = pc + 4;
 
     always @(*)begin
-        if(MEM_inst == 32'h00100073) begin
+        if(WBU_inst == 32'h00100073) begin
             if(IDU_a0_value == 0)
                 $display("\033[32;42m Hit The Good TRAP \033[0m");
             else
@@ -116,7 +117,7 @@ module cpu_ysyx_24100029
 
 task  GetInst;
     output                       bit[31:0]inst_exec         ;
-    inst_exec = MEM_inst;
+    inst_exec = WBU_inst;
 endtask
 
 export "DPI-C" task GetInst;
@@ -217,7 +218,7 @@ IDU IDU_Inst0(
     .rs2                         (IDU_rs2                   ),
     .a0_value                    (IDU_a0_value              ),
     .mepc_out                    (IDU_mepc_out              ),
-    .mtvec_out                   (IDU_mtvec_out             ), 
+    .mtvec_out                   (IDU_mtvec_out             ),
 
     .valid_last                  (IFU_valid                 ),
     .ready_last                  (IDU_ready                 ),
@@ -327,11 +328,13 @@ WBU WBU_inst0(
     .R_wen                       (MEM_R_wen                 ),
     .mem_ren                     (MEM_mem_ren               ),
     .jump_flag                   (MEM_jump_flag             ),
+    .inst                        (MEM_inst                  ),
 
     .R_wen_next                  (WBU_R_wen                 ),
     .csr_wen_next                (WBU_csr_wen               ),
     .csrd                        (WBU_csrd                  ),
     .rd_value                    (WBU_rd_value              ),
+    .inst_next                   (WBU_inst                  ),
 
     .valid                       (MEM_valid                 ),
     .ready                       (WBU_ready                 ),
