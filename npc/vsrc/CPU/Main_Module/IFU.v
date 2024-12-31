@@ -30,10 +30,14 @@ module IFU(
     input              [  31: 0] dnpc                       ,
     input                        dnpc_flag                  ,
     input                        pipe_stop                  ,
+
     output reg         [  31: 0] pc                         ,
-    output reg         [  31: 0] inst                        
+    output reg         [  31: 0] inst                       ,
+
+    input                        ready                      ,
+    output                       valid                       
 );
-    reg                          valid                      ;
+
 
 always @(posedge clk) begin
         if(!rst_n)
@@ -46,22 +50,35 @@ always @(posedge clk) begin
             pc <= pc + 4;
 end
 
-always@(posedge clk)begin
-    if(!rst_n)
-        valid <= 1'b1;
-    else 
-        valid <= valid;
-end
 
 
-AM AM_inst(
-    .valid                       (valid                     ),
-    .raddr                       (pc                        ),
-    .wdata                       (32'd0                     ),
-    .funct3                      (3'b010                    ),
-    .waddr                       (32'd0                     ),
-    .wen                         (1'd0                      ),
-    .rd_data                     (inst                      ) 
+/* verilator lint_off PINMISSING */
+SRAM
+#(
+    .DATA_WIDTH                  (32                        ),
+    .ADDR_WIDTH                  (32                        ) 
+) SRAM_inst0
+(
+    .rst_n                       (rst_n                     ),
+    .clk                         (clk                       ),
+  
+    .araddr                      (pc                        ),
+    .arvalid                     (1'b1                      ),
+
+    .rready                      (ready                     ),
+    .rdata                       (inst                      ),
+
+    .rvalid                      (valid                     ),
+
+    .awaddr                      (0                         ),
+    .awvalid                     (0                         ),
+
+
+    .wdata                       (0                         ),
+    .wstrb                       (0                         ),
+    .wvalid                      (0                         ),
+
+    .bready                      (0                         ) 
 );
                                                                    
 endmodule

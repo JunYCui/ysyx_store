@@ -3,7 +3,7 @@
     localparam                   i1_NR_KEY                 = 10    ;
     localparam                   i1_KEY_LEN                = 7     ;
     localparam                   i1_DATA_LEN               = 32    ;
-
+    
 
 module IDU(
     input                        clk                        ,
@@ -50,8 +50,13 @@ module IDU(
     output             [   4: 0] rs2                        ,
     output             [  31: 0] a0_value                   ,
     output             [  31: 0] mepc_out                   ,
-    output             [  31: 0] mtvec_out                   
+    output             [  31: 0] mtvec_out                  , 
 
+    input                        valid_last                 ,
+    output                       ready_last                 ,
+
+    input                        ready_next                 ,
+    output                       valid_next                  
 );
 
 
@@ -64,7 +69,9 @@ module IDU(
     reg                [  31: 0] pc_reg                     ;
 
 
+    assign                       ready_last                = ready_next;
 
+    assign                       valid_next                = 1'b1;
 
     always@(posedge clk)begin
         if(!rst_n)
@@ -73,7 +80,7 @@ module IDU(
             inst_reg <= 0;
         else if(pipe_stop)
             inst_reg <= inst_reg;
-        else
+        else if(valid_last & ready_last)
             inst_reg <= inst;
     end
     always@(posedge clk)begin
@@ -81,7 +88,7 @@ module IDU(
             pc_reg <= 0;
         else if(pipe_stop)
             pc_reg <= pc_reg;
-        else
+        else if(valid_last & ready_last)
             pc_reg <= pc;
     end
 
@@ -116,13 +123,12 @@ module IDU(
  
     assign                       csr_addr                  = imm;
     assign                       inst_next                 = inst_reg;
-
-
+    
     assign imm_opcode = (opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )                            ?
                         `imm_20u_ysyx_24100029:(opcode == `J_opcode_ysyx_24100029)                                             ?
                         `imm_20i_ysyx_24100029:(opcode == `I1_opcode_ysyx_24100029 && (funct3 == 3'b001 || funct3 == 3'b101))  ?
                         `imm_5u_ysyx_24100029 : `imm_12i_ysyx_24100029                                                         ;
-    assign add1_choice  =  (opcode == `U0_opcode_ysyx_24100029)                                                                   ?
+    assign add1_choice  =  (opcode == `U0_opcode_ysyx_24100029)                                                                ?
                         `rs1_dist_para_ysyx_24100029:(opcode == `J_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )?
                         `rs1_dist_pc_ysyx_24100029   : `rs1_dist_reg_ysyx_24100029                                             ;
 
@@ -156,9 +162,6 @@ module IDU(
                         `alu_sra_ysyx_24100029 : (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b000 && oprand != 7'b0000000)    ?
                         `alu_sub_ysyx_24100029 : (opcode == `B_opcode_ysyx_24100029 && funct3[2:1] == 2'b00)                        ?
                         `alu_equal_ysyx_24100029:`alu_add_ysyx_24100029;
-
-
-
 
 
 

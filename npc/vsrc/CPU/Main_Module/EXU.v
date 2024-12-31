@@ -43,6 +43,12 @@ module EXU (
     output             [  31: 0] pc_next                    ,
     output             [  31: 0] EX_result                  ,
 
+    input                        valid_last                 ,
+    output                       ready_last                 ,
+
+    input                        ready_next                 ,
+    output reg                   valid_next                 ,
+
     input              [  31: 0] inst                       ,
     output reg         [  31: 0] inst_next                   
 );
@@ -77,11 +83,15 @@ module EXU (
     reg                [  31: 0] csrs_reg                   ;
 
 
+    assign                       ready_last                = ready_next;
+    assign                       valid_next                = 1'b1;
+
+
 
     always @(posedge clk) begin
         if(!rst_n)begin
             pc_reg          <= 0;
-            funct3_reg      <= 0;
+            funct3_reg       <= 0;
             rd_reg          <= 0;
             imm_reg         <= 0;
             imm_opcode_reg  <= 0;
@@ -96,7 +106,7 @@ module EXU (
             rs2_value_reg   <= 0;
             csrs_reg        <= 0;
         end
-        else
+        else if(valid_last & ready_next)
         begin
             pc_reg          <= pc           ;
             funct3_reg      <= funct3       ;
@@ -133,7 +143,7 @@ always @(posedge clk) begin
         jump_flag_reg   <= 0;
         branch_flag_reg <= 0;
     end
-    else begin
+    else if(valid_last) begin
         mem_ren_reg     <= mem_ren;
         csr_wen_reg     <= csr_wen;
         R_wen_reg       <= R_wen;
@@ -148,9 +158,17 @@ always @(posedge clk) begin
         inst_next <=0;
     else if(inst_clear)
         inst_next <=0;
-    else 
+    else if(valid_last)
         inst_next <= inst;
 end
+
+always @(posedge clk) begin
+    if(!rst_n)
+        valid_next <=0;
+    else if(valid_last)
+        valid_next <= valid_last;
+end
+
 
     wire               [  31: 0] add_1                      ;
     wire               [  31: 0] add_2                      ;
