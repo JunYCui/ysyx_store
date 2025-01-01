@@ -83,9 +83,9 @@ module IDU(
     always@(posedge clk)begin
         if(!rst_n)
             inst_reg <= 0;
-        else if(inst_clear)
+        else if(inst_clear & valid_last & ready_last)
             inst_reg <= 0;
-        else if(pipe_stop)
+        else if(pipe_stop & valid_last & ready_last)
             inst_reg <= inst_reg;
         else if(valid_last & ready_last)
             inst_reg <= inst;

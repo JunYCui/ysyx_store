@@ -143,7 +143,7 @@ always @(posedge clk) begin
         jump_flag_reg   <= 0;
         branch_flag_reg <= 0;
     end
-    else if(inst_clear)begin
+    else if(inst_clear&valid_last&ready_last)begin
         mem_ren_reg     <= 0;
         csr_wen_reg     <= 0;
         R_wen_reg       <= 0;
