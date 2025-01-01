@@ -129,23 +129,29 @@ Control Control_inst0(
     .EXU_imm                     (EXU_imm                   ),
     .EXU_pc                      (EXU_pc                    ),
     .Ex_result                   (EXU_Ex_result             ),
+    .MEM_Ex_result               (MEM_Ex_result             ),
     .WBU_rd_value                (WBU_rd_value              ),
     .IDU_rs1_value               (IDU_rs1_value             ),
     .IDU_rs2_value               (IDU_rs2_value             ),
+    .MEM_Rdata                   (MEM_Rdata                 ),
 
     .branch_flag                 (EXU_branch_flag           ),
     .jump_flag                   (EXU_jump_flag             ),
     .mret_flag                   (IDU_mret_flag             ),
     .ecall_flag                  (IDU_ecall_flag            ),
     .EXU_mem_ren                 (EXU_mem_ren               ),
+    .MEM_mem_ren                 (MEM_mem_ren               ),
 
     .IDU_rs1                     (IDU_rs1                   ),
     .IDU_rs2                     (IDU_rs2                   ),
+
     .EXU_rd                      (EXU_rd                    ),
     .WBU_rd                      (WBU_rd                    ),
+    .MEM_rd                      (MEM_rd                    ),
 
     .EXU_R_Wen                   (EXU_R_wen                 ),
     .WBU_R_Wen                   (WBU_R_wen                 ),
+    .MEM_R_Wen                   (MEM_R_wen                 ),
 
     .EXU_rs1_in                  (EXU_rs1_in                ),
     .EXU_rs2_in                  (EXU_rs2_in                ),
