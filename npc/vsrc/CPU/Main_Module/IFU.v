@@ -42,9 +42,9 @@ module IFU(
 always @(posedge clk) begin
         if(!rst_n)
             pc <= 32'h80000000;
-        else if(pipe_stop)
+        else if(pipe_stop&valid&ready)
             pc <= pc ;
-        else if(dnpc_flag)
+        else if(dnpc_flag&valid&ready)
             pc <= dnpc;
         else if(valid & ready)
             pc <= pc + 4;
