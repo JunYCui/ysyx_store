@@ -46,7 +46,7 @@ always @(posedge clk) begin
             pc <= pc ;
         else if(dnpc_flag)
             pc <= dnpc;
-        else if(valid)
+        else if(valid & ready)
             pc <= pc + 4;
 end
 
@@ -65,7 +65,7 @@ SRAM
     .araddr                      (pc                        ),
     .arvalid                     (1'b1                      ),
 
-    .rready                      (ready                     ),
+    .rready                      (1'b1                      ),
     .rdata                       (inst                      ),
 
     .rvalid                      (valid                     ),
