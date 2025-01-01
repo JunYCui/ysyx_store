@@ -83,15 +83,15 @@ module EXU (
     reg                [  31: 0] csrs_reg                   ;
 
 
-    assign                       ready_last                = ready_next;
+    assign ready_last = ready_next;
 
     always @(posedge clk) begin
         if(!rst_n)
             valid_next <= 1'b0;
-        else if(valid_last & ready_last)
-            valid_next <= 1'b1;
+        else if(ready_last)
+            valid_next <= valid_last ;
         else 
-            valid_next <= 1'b0;
+            valid_next <= valid_next;
     end
 
 
