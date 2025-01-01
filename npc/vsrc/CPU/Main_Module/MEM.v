@@ -106,7 +106,7 @@ module MEM (
         end
     end
 
-    assign                       ready_last                = (~mem_ren_reg & ready_next) & arready;
+    assign                       ready_last                = (~mem_ren_reg & ready_next) | rvalid;
     assign                       valid_next                = valid_last_reg&(~mem_ren_reg) | rvalid;
    always @(posedge clk) begin
        if(!rst_n)
