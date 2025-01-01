@@ -88,8 +88,10 @@ module EXU (
     always @(posedge clk) begin
         if(!rst_n)
             valid_next <= 1'b0;
+        else if(valid_last & ready_last)
+            valid_next <= 1'b1;
         else 
-            valid_next <= valid_last;
+            valid_next <= 1'b0;
     end
 
 
@@ -97,7 +99,7 @@ module EXU (
     always @(posedge clk) begin
         if(!rst_n)begin
             pc_reg          <= 0;
-            funct3_reg       <= 0;
+            funct3_reg      <= 0;
             rd_reg          <= 0;
             imm_reg         <= 0;
             imm_opcode_reg  <= 0;

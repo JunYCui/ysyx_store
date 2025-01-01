@@ -90,7 +90,7 @@ module MEM (
             jump_flag_reg   <=  0         ;
 
         end
-        else if(valid_last & ready_next)
+        else if(valid_last & ready_last)
             begin
             pc_reg          <=  pc          ;
             mem_ren_reg     <=  mem_ren     ;
@@ -116,13 +116,14 @@ module MEM (
     end
    always @(posedge clk) begin
        if(!rst_n)
-            valid_last_reg <= 0;
-        else
-            valid_last_reg <= valid_last;
+            valid_next <= 0;
+        else if(rvalid)
+            valid_next <= 1'b1;
+        else if(valid_last & ready_next & !mem_ren)
+            valid_next <= 1'b1;
+        else 
+            valid_next <= 0;
    end
-
-    assign                       valid_next                = (valid_last_reg & ~mem_ren_reg) | rvalid ;
-
     assign                       Ex_result_next            = Ex_result_reg;
     assign                       csrs_next                 = csrs_reg;
     assign                       pc_next                   = pc_reg;
@@ -142,7 +143,7 @@ module MEM (
     always @(posedge clk) begin
         if(!rst_n)
             inst_next <=0;
-        else if(valid_last & ready_next)
+        else if(valid_last & ready_last)
             inst_next <= inst;
     end
 

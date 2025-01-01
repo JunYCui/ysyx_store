@@ -74,8 +74,10 @@ module IDU(
     always @(posedge clk) begin
         if(!rst_n)
             valid_next <= 1'b0;
+        else if(valid_last & ready_last)
+            valid_next <= 1'b1;
         else 
-            valid_next <= valid_last;
+            valid_next <= 1'b0;
     end
 
     always@(posedge clk)begin
@@ -85,7 +87,7 @@ module IDU(
             inst_reg <= 0;
         else if(pipe_stop)
             inst_reg <= inst_reg;
-        else if(valid_last & ready_next)
+        else if(valid_last & ready_last)
             inst_reg <= inst;
     end
     always@(posedge clk)begin
@@ -93,7 +95,7 @@ module IDU(
             pc_reg <= 0;
         else if(pipe_stop)
             pc_reg <= pc_reg;
-        else if(valid_last & ready_next)
+        else if(valid_last & ready_last)
             pc_reg <= pc;
     end
 
