@@ -40,7 +40,7 @@ module MEM (
     output                       ready_last                 ,
 
     input                        ready_next                 ,
-    output                       valid_next                 ,
+    output reg                   valid_next                 ,
 
     input              [  31: 0] inst                       ,
     output reg         [  31: 0] inst_next                   
@@ -69,6 +69,7 @@ module MEM (
     reg                [   2: 0] funct3_reg                 ;
     reg                [  31: 0] rs2_value_reg              ;
     reg                          jump_flag_reg              ;
+    reg                          valid_last_reg             ;
 
     reg                          arvalid                    ;
 
@@ -105,9 +106,14 @@ module MEM (
         end
     end
 
-    assign                       ready_last                = arready & ready_next;
-    assign                       valid_next                = (mem_ren_reg & rvalid) | (~mem_ren_reg);
-
+    assign                       ready_last                = (~mem_ren_reg & ready_next) & arready;
+    assign                       valid_next                = valid_last_reg&(~mem_ren_reg) | rvalid;
+   always @(posedge clk) begin
+       if(!rst_n)
+            valid_last_reg <= 0;
+        else
+            valid_last_reg <= valid_last;
+   end
 
     assign                       Ex_result_next            = Ex_result_reg;
     assign                       csrs_next                 = csrs_reg;
