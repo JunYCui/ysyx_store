@@ -19,6 +19,7 @@ module WBU (
     input                        valid                      ,
     output                       ready                      ,
 
+    output reg         [  31: 0] pc_next                    ,
     output reg         [  31: 0] inst_next                  ,
     output                       R_wen_next                 ,
     output             [   3: 0] csr_wen_next               ,
@@ -37,13 +38,16 @@ module WBU (
     reg                          mem_ren_reg                ;
     reg                          jump_flag_reg              ;
 
-always @(posedge clk) begin
-    if(!rst_n)begin
-       inst_next <= 0; 
+    always @(posedge clk) begin
+        if(!rst_n)begin
+            inst_next <= 0;
+            pc_next <= 0;
+        end
+        else if(valid & ready)begin
+            inst_next <= inst;
+            pc_next <= pc;
+        end
     end
-    else if(valid & ready)
-        inst_next <= inst;
-end
 
 
 always @(posedge clk) begin

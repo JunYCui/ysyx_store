@@ -82,6 +82,7 @@ module cpu_ysyx_24100029
     wire                         MEM_ready                  ;
     wire               [  31: 0] MEM_inst                   ;
 /************************* WBU ********************/
+    wire               [  31: 0] WBU_pc                     ;
     wire               [  31: 0] WBU_inst                   ;
     wire               [  31: 0] WBU_rd_value               ;
     wire               [  31: 0] WBU_csrd                   ;
@@ -98,7 +99,7 @@ module cpu_ysyx_24100029
     wire                         IDU_inst_clear             ;
     wire                         EXU_inst_clear             ;
 
-    assign                       pc                        = MEM_pc;
+    assign                       pc                        = WBU_pc;
     assign                       snpc                      = pc + 4;
 
     always @(*)begin
@@ -336,6 +337,7 @@ WBU WBU_inst0(
     .jump_flag                   (MEM_jump_flag             ),
     .inst                        (MEM_inst                  ),
 
+    .pc_next                     (WBU_pc                    ),
     .R_wen_next                  (WBU_R_wen                 ),
     .csr_wen_next                (WBU_csr_wen               ),
     .csrd                        (WBU_csrd                  ),
