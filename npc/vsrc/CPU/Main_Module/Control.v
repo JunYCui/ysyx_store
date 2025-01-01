@@ -22,10 +22,15 @@ module Control (
     input              [   4: 0] IDU_rs1                    ,
     input              [   4: 0] IDU_rs2                    ,
 
+    input                        IDU_valid                  ,
+    input                        EXU_valid                  ,
+    input                        MEM_valid                  ,
+    input                        WBU_valid                  ,
+
     input              [   4: 0] EXU_rd                     ,
     input              [   4: 0] MEM_rd                     ,
     input              [   4: 0] WBU_rd                     ,
-    
+
     input                        EXU_R_Wen                  ,
     input                        MEM_R_Wen                  ,
     input                        WBU_R_Wen                  ,
@@ -60,7 +65,7 @@ module Control (
                                                             mtvec_out:0;
 
     // lw 
-    assign                       pipe_stop                 = (EXU_mem_ren && (IDU_rs1 == EXU_rd || IDU_rs2 == EXU_rd));
+    assign                       pipe_stop                 = (EXU_mem_ren && (IDU_rs1 == EXU_rd || IDU_rs2 == EXU_rd) && EXU_valid && IDU_valid);
     assign                       IFU_pipe_s                = pipe_stop;
     assign                       IDU_pipe_s                = pipe_stop;
 
@@ -86,6 +91,10 @@ Aribter Aribter_inst(
     .MEM_rd                      (MEM_rd                    ),
     .WBU_rd                      (WBU_rd                    ),
 
+    .MEM_valid                   (MEM_valid                 ),
+    .EXU_valid                   (EXU_valid                 ),
+    .WBU_valid                   (WBU_valid                 ),
+    .IDU_valid                   (IDU_valid                 ),
 
     .MEM_mem_ren                 (MEM_mem_ren               ),
     .EXU_R_Wen                   (EXU_R_Wen                 ),

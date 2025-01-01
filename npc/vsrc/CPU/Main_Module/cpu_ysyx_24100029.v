@@ -90,7 +90,7 @@ module cpu_ysyx_24100029
     wire                         WBU_R_wen                  ;
     wire               [   3: 0] WBU_csr_wen                ;
     wire                         WBU_ready                  ;
-
+    wire                         WBU_valid                  ;
 /* PERSONAL */
 
     wire                         dnpc_flag                  ;
@@ -145,6 +145,11 @@ Control Control_inst0(
 
     .IDU_rs1                     (IDU_rs1                   ),
     .IDU_rs2                     (IDU_rs2                   ),
+
+    .IDU_valid                   (IDU_valid                 ),
+    .EXU_valid                   (EXU_valid                 ),
+    .MEM_valid                   (MEM_valid                 ),
+    .WBU_valid                   (WBU_valid                 ),
 
     .EXU_rd                      (EXU_rd                    ),
     .WBU_rd                      (WBU_rd                    ),
@@ -347,7 +352,8 @@ WBU WBU_inst0(
     .valid                       (MEM_valid                 ),
     .ready                       (WBU_ready                 ),
 
-    .rd_next                     (WBU_rd                    ) 
+    .rd_next                     (WBU_rd                    ),
+    .valid_next                  (WBU_valid                 )
 );
 
 
