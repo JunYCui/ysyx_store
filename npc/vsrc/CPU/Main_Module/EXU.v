@@ -149,7 +149,7 @@ always @(posedge clk) begin
         jump_flag_reg   <= 0;
         branch_flag_reg <= 0;
     end
-    else if(valid_last) begin
+    else if(valid_last & ready_next) begin
         mem_ren_reg     <= mem_ren;
         csr_wen_reg     <= csr_wen;
         R_wen_reg       <= R_wen;
@@ -164,15 +164,8 @@ always @(posedge clk) begin
         inst_next <=0;
     else if(inst_clear)
         inst_next <=0;
-    else if(valid_last)
+    else if(valid_last & ready_next)
         inst_next <= inst;
-end
-
-always @(posedge clk) begin
-    if(!rst_n)
-        valid_next <=0;
-    else if(valid_last)
-        valid_next <= valid_last;
 end
 
 
