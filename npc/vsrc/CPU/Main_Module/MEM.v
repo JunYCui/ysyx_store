@@ -111,7 +111,7 @@ module MEM (
             ready_last <= 1'b1;
         else if(rvalid)
             ready_last <= 1'b1;
-        else if(mem_ren)
+        else if(mem_ren & ready_last & valid_last)
             ready_last <= 1'b0;
     end
    always @(posedge clk) begin
