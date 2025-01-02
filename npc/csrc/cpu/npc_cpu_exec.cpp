@@ -70,7 +70,7 @@ static void trace_and_difftest(Decode *s)
 
 void cpu_exec(uint32_t n)
 {
-    bool valid;
+    bool valid ;
     g_print_step = (n < MAX_INST_TO_PRINT);
     switch (npc_state.state) {
     case NPC_END: case NPC_ABORT:
@@ -92,8 +92,14 @@ void cpu_exec(uint32_t n)
         }
         if(valid)
         {
+            exec_once();
+            valid = top->WBU_valid;
+        }
+        while(~valid)
+        {
         exec_once();
         cpu.pc = top->pc;
+        valid = top->WBU_valid;
         }
         printf("valid=%d cpu.cp = 0x%x\n",valid,cpu.pc);
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
