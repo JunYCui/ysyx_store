@@ -19,7 +19,7 @@ uint64_t sim_time = 0;
 
 
 
-void fi() { exit(0); }
+void fi(int val) { exit(val); }
 
 void cpu_reset(void)
 {
@@ -70,6 +70,5 @@ int main(int argc,char* argv[])
     sdb_mainloop();
     
     m_trace->close();
-
 
 }

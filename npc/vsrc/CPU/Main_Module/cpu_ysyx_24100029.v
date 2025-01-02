@@ -1,4 +1,4 @@
-import "DPI-C" function void fi();
+import "DPI-C" function void fi(int val);
 
 
 module cpu_ysyx_24100029
@@ -107,11 +107,14 @@ module cpu_ysyx_24100029
 
     always @(*)begin
         if(WBU_inst == 32'h00100073) begin
-            if(IDU_a0_value == 0)
+            if(IDU_a0_value == 0)begin
                 $display("\033[32;42m Hit The Good TRAP \033[0m");
-            else
+                fi(0);
+            end
+            else begin
                 $display("\033[31;41m Hit The Bad TRAP \033[0m");
-            fi();
+                fi(1);
+            end
         end
     end
 
