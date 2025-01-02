@@ -8,16 +8,18 @@ module cpu_ysyx_24100029
     output reg         [  31: 0] pc                         ,
     output             [  31: 0] snpc                       ,
     output             [  31: 0] dnpc                       ,
-    output             [  31: 0] IDU_pc                     ,
-    output                       WBU_valid                  
+    output             [  31: 0] IFU_pc                     ,
+    output             [  31: 0] MEM_pc                     ,
+    output                       WBU_valid                   
 );
 
 
-    wire               [  31: 0] IFU_pc                     ;
+ //   wire               [  31: 0] IFU_pc                     ;
     wire               [  31: 0] IFU_inst                   ;
     wire                         IFU_valid                  ;
 
 /************************* IDU ********************/
+    wire               [  31: 0] IDU_pc                     ;
     wire               [   4: 0] IDU_rd                     ;
     wire               [  31: 0] IDU_imm                    ;
     wire               [   2: 0] IDU_funct3                 ;
@@ -74,7 +76,7 @@ module cpu_ysyx_24100029
     wire               [   3: 0] MEM_csr_wen                ;
     wire               [  31: 0] MEM_Ex_result              ;
     wire               [  31: 0] MEM_csrs                   ;
-    wire               [  31: 0] MEM_pc                     ;
+//    wire               [  31: 0] MEM_pc                     ;
     wire               [   4: 0] MEM_rd                     ;
     wire                         MEM_mem_ren                ;
 

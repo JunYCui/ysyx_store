@@ -60,8 +60,8 @@ extern "C" int npc_pmem_read(int addr)
   }  
    data = *(int*)guest_to_host(paddr);
 #ifdef MTRACE
-  if(paddr != top->pc)
-  printf("Read addr 0x%x:\t0x%x  at pc: 0x%x    \n",paddr,data,top->pc);
+  if(paddr != top->IFU_pc)
+  printf("Read addr 0x%x:\t0x%x  at pc: 0x%x    \n",paddr,data,top->MEM_pc);
 #endif    
   return data;
 }
@@ -102,7 +102,7 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
     return;
   }
   #ifdef MTRACE
-    printf("addr 0x%x:\t0x%x is written ! wmask = %d  at pc: 0x%x  \n",paddr,data,wmask,top->pc);
+    printf("addr 0x%x:\t0x%x is written ! wmask = %d  at pc: 0x%x  \n",paddr,data,wmask,top->MEM_pc);
   #endif
     switch (wmask)
   {
