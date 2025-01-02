@@ -85,7 +85,6 @@ module SRAM
             end
         end
         `wait_rdv_ysyx_24100029:begin
-                if(rready)
                 read_state_next = `wait_arv_ysyx_24100029;
                 arready = 1'b0;
         end
