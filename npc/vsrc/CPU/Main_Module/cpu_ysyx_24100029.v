@@ -8,7 +8,8 @@ module cpu_ysyx_24100029
     output reg         [  31: 0] pc                         ,
     output             [  31: 0] snpc                       ,
     output             [  31: 0] dnpc                       ,
-    output             [  31: 0] IDU_pc                      
+    output             [  31: 0] IDU_pc                     ,
+    output                       WBU_valid                  
 );
 
 
@@ -90,7 +91,7 @@ module cpu_ysyx_24100029
     wire                         WBU_R_wen                  ;
     wire               [   3: 0] WBU_csr_wen                ;
     wire                         WBU_ready                  ;
-    wire                         WBU_valid                  ;
+ //   wire                         WBU_valid                  ;
 /* PERSONAL */
 
     wire                         dnpc_flag                  ;
@@ -353,7 +354,7 @@ WBU WBU_inst0(
     .ready                       (WBU_ready                 ),
 
     .rd_next                     (WBU_rd                    ),
-    .valid_next                  (WBU_valid                 )
+    .valid_next                  (WBU_valid                 ) 
 );
 
 
