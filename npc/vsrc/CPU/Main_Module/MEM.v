@@ -116,22 +116,18 @@ module MEM (
     always @(posedge clk) begin
         if(!rst_n)
             ready_last <= 1'b1;
-        else if(rvalid)
+        else if(~mem_ren&valid_last & ready_last)
             ready_last <= 1'b1;
-        else if(mem_ren & ready_last & valid_last)
-            ready_last <= 1'b0;
+        else if(mem_ren & valid_last & ready_last)
+            ready_last <= rvalid;
     end
    always @(posedge clk) begin
        if(!rst_n)
             valid_next <= 0;
-        else if(rvalid)
-            valid_next <= 1'b1;
-        else if(ready_next & !mem_ren)
+        else if(~mem_ren&valid_last & ready_last)
             valid_next <= valid_last;
-        else if(ready_next & mem_ren & valid_last)
-            valid_next <= 0;
-        else
-            valid_next <= valid_next;
+        else if(mem_ren & valid_last & ready_last)
+            valid_next <= rvalid;
    end
     assign                       Ex_result_next            = Ex_result_reg;
     assign                       csrs_next                 = csrs_reg;
