@@ -48,7 +48,7 @@ void wave_record(void)
 
 int main(int argc,char* argv[])
 {
-
+    int valid;
     // 开启波形跟踪
     Verilated::traceEverOn(true);
 
@@ -59,14 +59,17 @@ int main(int argc,char* argv[])
    m_trace->open("waveform.vcd");
 
     cpu_reset();
-
-    for(int i=0;i<10;i++)
+    valid = top->WBU_valid;
+    while(!valid)
+    {
+    for(int i=0;i<2;i++)
     {
     top->clk ^=1;
     top->eval();
     wave_record();
     }
-
+    valid = top->WBU_valid;
+    }
     sdb_mainloop();
     
     m_trace->close();
