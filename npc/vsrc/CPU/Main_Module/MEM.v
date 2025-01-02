@@ -128,7 +128,7 @@ module MEM (
             valid_next <= 1'b1;
         else if(ready_next & !mem_ren)
             valid_next <= valid_last;
-        else if(ready_next & mem_ren)
+        else if(ready_next & mem_ren & valid_last)
             valid_next <= 0;
         else
             valid_next <= valid_next;
