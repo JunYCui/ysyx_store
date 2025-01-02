@@ -91,10 +91,11 @@ void cpu_exec(uint32_t n)
             difftest_skip_ref();
         }
         if(valid)
-        {    
+        {
         exec_once();
         cpu.pc = top->pc;
         }
+        printf("cpu.cp = %d",cpu.pc);
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
         for(int j=0;j<32;j++)
         {
