@@ -127,7 +127,9 @@ module MEM (
         else if(~mem_ren & ready_last)
             valid_next <= valid_last;
         else if(mem_ren & valid_last & ready_last)
-            valid_next <= rvalid;
+            valid_next <= 0;
+        else if(rvalid)
+            valid_next <= 1'b1;
    end
     assign                       Ex_result_next            = Ex_result_reg;
     assign                       csrs_next                 = csrs_reg;
