@@ -108,6 +108,13 @@ module MEM (
 
     always @(posedge clk) begin
         if(!rst_n)
+            valid_last_reg <= 0;
+        else
+            valid_last_reg <= valid_last;
+    end
+
+    always @(posedge clk) begin
+        if(!rst_n)
             ready_last <= 1'b1;
         else if(rvalid)
             ready_last <= 1'b1;
@@ -123,7 +130,7 @@ module MEM (
             valid_next <= valid_last;
         else if(ready_next & mem_ren)
             valid_next <= 0;
-        else 
+        else
             valid_next <= valid_next;
    end
     assign                       Ex_result_next            = Ex_result_reg;
@@ -188,11 +195,11 @@ SRAM
     .rvalid                      (rvalid                    ),
 
     .awaddr                      (awaddr                    ),
-    .awvalid                     (mem_wen_reg               ),
+    .awvalid                     (mem_wen_reg&valid_last_reg),
 
     .wdata                       (mem_wdata                 ),
     .wstrb                       (wmask                     ),
-    .wvalid                      (mem_wen_reg               ) 
+    .wvalid                      (mem_wen_reg&valid_last_reg) 
 
 );
 
