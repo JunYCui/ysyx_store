@@ -72,7 +72,7 @@ module MEM (
     reg                          valid_last_reg             ;
 
     reg                          arvalid                    ;
-
+    reg                          rready                     ;
 
 
     always @(posedge clk) begin
@@ -112,6 +112,21 @@ module MEM (
         else if(ready_last)
             valid_last_reg <= valid_last;
     end
+    always @(posedge clk) begin
+        if(!rst_n)begin
+            arvalid <= 1'b0;
+            rready <= 1'b0;
+        end
+        else if(mem_ren & valid_last &ready_last)begin
+            arvalid <= 1'b1;
+            rready <= 1'b1;
+        end
+        else begin
+            arvalid <= 1'b0;
+            rready <= 1'b0;
+        end 
+
+    end
 /*
     always @(posedge clk) begin
         if(!rst_n)
@@ -134,8 +149,8 @@ module MEM (
             valid_next <= 1'b1;
    end
 */
-    assign valid_next = mem_ren_reg & rvalid | ~mem_ren_reg&valid_last_reg; 
-    assign ready_last = arready;
+    assign                       valid_next                = mem_ren_reg & rvalid | ~mem_ren_reg&valid_last_reg;
+    assign                       ready_last                = arready;
 
     assign                       Ex_result_next            = Ex_result_reg;
     assign                       csrs_next                 = csrs_reg;
@@ -191,10 +206,10 @@ SRAM
     .clk                         (clk                       ),
   
     .araddr                      (araddr                    ),
-    .arvalid                     (mem_ren_reg               ),
+    .arvalid                     (arvalid                   ),
     .arready                     (arready                   ),
 
-    .rready                      (mem_ren_reg               ),
+    .rready                      (rready                    ),
     .rdata                       (rdata                     ),
     .rvalid                      (rvalid                    ),
 
