@@ -83,18 +83,14 @@ void cpu_exec(uint32_t n)
         s.pc=top->pc;
         s.dnpc=top->dnpc;
         s.snpc=top->snpc;
-        valid = top->WBU_valid;
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
         GetInst(&s.inst);
         if(skip_flag-- > 0)
         {
             difftest_skip_ref();
         }
-        if(valid)
-        {
-            exec_once();
-            valid = top->WBU_valid;
-        }
+        exec_once();
+        valid = top->WBU_valid;
         while(~valid)
         {
         exec_once();
