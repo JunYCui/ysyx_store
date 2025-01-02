@@ -91,16 +91,16 @@ void cpu_exec(uint32_t n)
         }
         exec_once();
         valid = top->WBU_valid;
-/*
-        while(~valid)
+        cpu.pc = top->pc;
+        while(!valid)
         {
+        printf("valid = %d",valid);
         exec_once();
         cpu.pc = top->pc;
         valid = top->WBU_valid;
-        printf("valid = %d",valid);
         }
         printf("valid=%d cpu.cp = 0x%x\n",valid,cpu.pc);
-*/
+
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
         for(int j=0;j<32;j++)
         {
