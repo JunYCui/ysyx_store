@@ -38,13 +38,33 @@ module IFU(
     output                       valid                       
 );
 
+    reg                          dnpc_flag_reg              ;
+    reg                          pipe_stop_reg              ;
+
+
+always @(posedge clk) begin
+    if(!rst_n)begin
+        dnpc_flag_reg <= 0;
+        pipe_stop_reg <= 0;
+    end
+    else if(~ready | ~valid)begin
+        dnpc_flag_reg <= dnpc_flag;
+        pipe_stop_reg <= pipe_stop;
+    end
+    else if(ready & valid)begin
+        dnpc_flag_reg <= 0;
+        pipe_stop_reg <= 0; 
+    end
+
+end
+
 
 always @(posedge clk) begin
         if(!rst_n)
             pc <= 32'h80000000;
-        else if(pipe_stop&valid&ready)
+        else if((pipe_stop| pipe_stop_reg) &valid&ready)
             pc <= pc ;
-        else if(dnpc_flag&valid&ready)
+        else if((dnpc_flag | dnpc_flag_reg)&valid&ready)
             pc <= dnpc;
         else if(valid & ready)
             pc <= pc + 4;

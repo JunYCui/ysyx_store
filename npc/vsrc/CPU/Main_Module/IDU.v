@@ -68,13 +68,34 @@ module IDU(
     reg                [  31: 0] inst_reg                   ;
     reg                [  31: 0] pc_reg                     ;
 
+    reg                          inst_clear_reg             ;
+    reg                          pipe_stop_reg              ;
 
     assign                       ready_last                = ready_next;
 
     always @(posedge clk) begin
         if(!rst_n)
+            pipe_stop_reg <= 0;
+        else if((~valid_last | ~ready_last))
+            pipe_stop_reg <= pipe_stop;
+        else if(valid_last & ready_last)
+            pipe_stop_reg <= 0;
+    end
+
+
+    always @(posedge clk) begin
+        if(!rst_n)
+            inst_clear_reg <= 0;
+        else if((~valid_last | ~ready_last))
+            inst_clear_reg <= inst_clear;
+        else if(valid_last & ready_last)
+            inst_clear_reg <= 0;
+    end
+
+    always @(posedge clk) begin
+        if(!rst_n)
             valid_next <= 1'b0;
-        else if(ready_last & valid_last & inst_clear)
+        else if(ready_last & valid_last & (inst_clear | inst_clear_reg))
             valid_next <= 1'b0;
         else if(ready_last)
             valid_next <= valid_last ;
@@ -85,9 +106,9 @@ module IDU(
     always@(posedge clk)begin
         if(!rst_n)
             inst_reg <= 0;
-        else if(inst_clear & valid_last & ready_last)
+        else if((inst_clear | inst_clear_reg) & valid_last & ready_last)
             inst_reg <= 0;
-        else if(pipe_stop & valid_last & ready_last)
+        else if((pipe_stop_reg | pipe_stop) & valid_last & ready_last)
             inst_reg <= inst_reg;
         else if(valid_last & ready_last)
             inst_reg <= inst;
@@ -95,9 +116,9 @@ module IDU(
     always@(posedge clk)begin
         if(!rst_n)
             pc_reg <= 0;
-        else if(pipe_stop)
+        else if((pipe_stop_reg | pipe_stop)& valid_last & ready_last)
             pc_reg <= pc_reg;
-        else if(valid_last & ready_last)
+        else if((inst_clear | inst_clear_reg) & ready_last)
             pc_reg <= pc;
     end
 
