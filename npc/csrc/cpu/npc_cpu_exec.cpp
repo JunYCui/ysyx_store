@@ -85,7 +85,7 @@ void cpu_exec(uint32_t n)
         s.snpc=top->snpc;
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
         GetInst(&s.inst);
-        if(skip_flag-- > 0)
+        if(skip_flag != 0)
         {
             difftest_skip_ref();
         }
