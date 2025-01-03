@@ -58,11 +58,11 @@ extern "C" int npc_pmem_read(int addr)
     skip_flag = 1;
     return (weight<<16)|height ;
   }  
-   data = *(int*)guest_to_host(paddr);
 #ifdef MTRACE
   if(paddr != top->IFU_pc)
-  printf("Read addr 0x%x:\t0x%x  at pc: 0x%x    \n",paddr,data,top->MEM_pc);
-#endif    
+  printf("Read addr 0x%x at pc: 0x%x    \n",paddr,top->MEM_pc);
+#endif 
+   data = *(int*)guest_to_host(paddr);   
   return data;
 }
 
