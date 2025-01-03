@@ -109,11 +109,11 @@ module cpu_ysyx_24100029
         if(WBU_inst == 32'h00100073) begin
             if(IDU_a0_value == 0)begin
                 $display("\033[32;42m Hit The Good TRAP \033[0m");
-                //fi(0);
+                fi(0);
             end
             else begin
                 $display("\033[31;41m Hit The Bad TRAP \033[0m");
-                //fi(1);
+                fi(1);
             end
         end
     end
