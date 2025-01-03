@@ -118,7 +118,7 @@ module IDU(
             pc_reg <= 0;
         else if((pipe_stop_reg | pipe_stop)& valid_last & ready_last)
             pc_reg <= pc_reg;
-        else if((inst_clear | inst_clear_reg) & ready_last)
+        else if((inst_clear | inst_clear_reg) & ready_last & valid_last)
             pc_reg <= pc;
     end
 
