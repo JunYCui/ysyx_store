@@ -1,5 +1,13 @@
 /* verilator lint_off UNUSEDSIGNAL */
 // signal not use
+
+    localparam                   i4_NR_KEY                 = 5     ; //键值的个数
+    localparam                   i4_KEY_LEN                = 3     ; //键值的长度
+    localparam                   i4_DATA_LEN               = 32    ; //数据的长度
+    localparam                   i5_NR_KEY                 = 3     ; //键值的个数
+    localparam                   i5_KEY_LEN                = 3     ; //键值的长度
+    localparam                   i5_DATA_LEN               = 8     ; //数据的长度
+
 module MEM (
     input                        clk                        ,
     input                        rst_n                      ,
@@ -15,7 +23,7 @@ module MEM (
     input              [   2: 0] funct3                     ,
     input              [  31: 0] rs2_value                  ,
     input                        jump_flag                  ,
-    input                        branch_flag                ,
+  
 
     output                       R_wen_next                 ,
     output             [  31: 0] MEM_Rdata                  ,
@@ -26,15 +34,29 @@ module MEM (
     output             [   4: 0] rd_next                    ,
     output                       mem_ren_next               ,
     output                       jump_flag_next             ,
-    output                       branch_flag_next           ,
+
+
+    input                        valid_last                 ,
+    output reg                   ready_last                 ,
+
+    input                        ready_next                 ,
+    output reg                   valid_next                 ,
 
     input              [  31: 0] inst                       ,
-    output reg         [  31: 0] inst_next                  
+    output reg         [  31: 0] inst_next                   
 );
  
     wire               [  31: 0] mem_wdata                  ;
-    wire                         Data_mem_valid             ;
-
+    wire               [  31: 0] rdata_8i                   ;
+    wire               [  31: 0] rdata_16i                  ;
+    wire               [  31: 0] rdata_8u                   ;
+    wire               [  31: 0] rdata_16u                  ;
+    wire               [  31: 0] araddr                     ;
+    wire               [  31: 0] awaddr                     ;
+    wire               [  31: 0] rdata                      ;
+    wire                         rvalid                     ;
+    wire                         arready                    ;
+    wire               [   7: 0] wmask                      ;
 
     reg                [  31: 0] pc_reg                     ;
     reg                          mem_ren_reg                ;
@@ -47,14 +69,10 @@ module MEM (
     reg                [   2: 0] funct3_reg                 ;
     reg                [  31: 0] rs2_value_reg              ;
     reg                          jump_flag_reg              ;
-    reg                          branch_flag_reg            ;
+    reg                          valid_last_reg             ;
 
-always @(posedge clk) begin
-    if(!rst_n)
-        inst_next <=0;
-    else
-        inst_next <= inst;
-end
+    reg                          arvalid                    ;
+    reg                          rready                     ;
 
 
     always @(posedge clk) begin
@@ -70,24 +88,67 @@ end
             funct3_reg      <=  0         ;
             rs2_value_reg   <=  0         ;
             jump_flag_reg   <=  0         ;
-            branch_flag_reg <=  0         ;
+
         end
-        else
+        else if(valid_last & ready_last)
             begin
-            pc_reg          <=  pc        ;
-            mem_ren_reg     <=  mem_ren   ;
-            mem_wen_reg     <=  mem_wen   ;
-            R_wen_reg       <=  R_wen     ;
-            csr_wen_reg     <=  csr_wen   ;
-            Ex_result_reg   <=  Ex_result ;
-            csrs_reg        <=  csrs      ;
-            rd_reg          <=  rd        ;
-            funct3_reg      <=  funct3    ;
-            rs2_value_reg   <=  rs2_value ;
-            jump_flag_reg   <=  jump_flag ;
-            branch_flag_reg <=  branch_flag;
+            pc_reg          <=  pc          ;
+            mem_ren_reg     <=  mem_ren     ;
+            mem_wen_reg     <=  mem_wen     ;
+            R_wen_reg       <=  R_wen       ;
+            csr_wen_reg     <=  csr_wen     ;
+            Ex_result_reg   <=  Ex_result   ;
+            csrs_reg        <=  csrs        ;
+            rd_reg          <=  rd          ;
+            funct3_reg      <=  funct3      ;
+            rs2_value_reg   <=  rs2_value   ;
+            jump_flag_reg   <=  jump_flag   ;
         end
     end
+
+    always @(posedge clk) begin
+        if(!rst_n)
+            valid_last_reg <= 0;
+        else if(ready_last)
+            valid_last_reg <= valid_last;
+    end
+    always @(posedge clk) begin
+        if(!rst_n)begin
+            arvalid <= 1'b0;
+            rready <= 1'b0;
+        end
+        else if(mem_ren & valid_last &ready_last)begin
+            arvalid <= 1'b1;
+            rready <= 1'b1;
+        end
+        else begin
+            arvalid <= 1'b0;
+            rready <= 1'b0;
+        end
+
+    end
+
+    always @(posedge clk) begin
+        if(!rst_n)
+            ready_last <= 1'b1;
+        else if(mem_ren & valid_last & ready_last)
+            ready_last <= 1'b0;
+        else if(rvalid)
+            ready_last <= 1'b1;
+    end
+
+
+   always @(posedge clk) begin
+       if(!rst_n)
+            valid_next <= 0;
+        else if(mem_ren & valid_last & ready_last)
+            valid_next <= 1'b0;
+        else if(rvalid)
+            valid_next <= 1'b1;
+        else if(ready_last)
+            valid_next <= valid_last;
+   end
+
 
 
     assign                       Ex_result_next            = Ex_result_reg;
@@ -97,20 +158,85 @@ end
     assign                       mem_ren_next              = mem_ren_reg;
 
     assign                       mem_wdata                 = rs2_value_reg;
-    assign                       Data_mem_valid            = mem_ren_reg|mem_wen_reg;
     assign                       R_wen_next                = R_wen_reg;
     assign                       jump_flag_next            = jump_flag_reg;
     assign                       csr_wen_next              = csr_wen_reg;
-    assign                       branch_flag_next          = branch_flag_reg;
 
-AM Data_MEM_inst(
-    .valid                       (Data_mem_valid            ),
-    .raddr                       (Ex_result_reg             ),
+
+    assign                       araddr                    = Ex_result_reg;
+    assign                       awaddr                    = Ex_result_reg;
+ 
+ 
+    always @(posedge clk) begin
+        if(!rst_n)
+            inst_next <=0;
+        else if(valid_last & ready_last)
+            inst_next <= inst;
+    end
+
+
+
+MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (MEM_Rdata, funct3_reg, {i4_DATA_LEN{1'b0}},{
+  3'b000,rdata_8i,                                                  // lb
+  3'b001,rdata_16i,                                                 // lh
+  3'b010,rdata,                                                     // lw
+  3'b100,rdata_8u,                                                  // 1bu
+  3'b101,rdata_16u                                                  // 1hu
+});
+
+MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wmask, funct3_reg, {i5_DATA_LEN{1'b0}},{
+  3'b000,8'd1,
+  3'b001,8'd2,
+  3'b010,8'd4
+});
+
+
+    assign                       rdata_8u                  = {24'd0,rdata[7:0]};
+    assign                       rdata_16u                 = {16'd0,rdata[15:0]};
+
+/* verilator lint_off PINMISSING */
+SRAM
+#(
+    .DATA_WIDTH                  (32                        ),
+    .ADDR_WIDTH                  (32                        ) 
+)SRAM_inst1
+(
+    .rst_n                       (rst_n                     ),
+    .clk                         (clk                       ),
+  
+    .araddr                      (araddr                    ),
+    .arvalid                     (arvalid                   ),
+    .arready                     (arready                   ),
+
+    .rready                      (rready                    ),
+    .rdata                       (rdata                     ),
+    .rvalid                      (rvalid                    ),
+
+    .awaddr                      (awaddr                    ),
+    .awvalid                     (mem_wen_reg&valid_last_reg),
+
     .wdata                       (mem_wdata                 ),
-    .funct3                      (funct3_reg                ),
-    .waddr                       (Ex_result_reg             ),
-    .wen                         (mem_wen_reg               ),
-    .rd_data                     (MEM_Rdata                 ) 
+    .wstrb                       (wmask                     ),
+    .wvalid                      (mem_wen_reg&valid_last_reg) 
+
+);
+
+sext #(
+    .DATA_WIDTH                  (8                         ),
+    .OUT_WIDTH                   (32                        ) 
+) sext_i8
+(
+    .data                        (rdata[7:0]                ),
+    .sext_data                   (rdata_8i                  ) 
+);
+
+sext #(
+    .DATA_WIDTH                  (16                        ),
+    .OUT_WIDTH                   (32                        ) 
+) sext_i16
+(
+    .data                        (rdata[15:0]               ),
+    .sext_data                   (rdata_16i                 ) 
 );
 
 

@@ -1,15 +1,15 @@
 // __opcode__
 
 `define R_opcode_ysyx_24100029  7'b0110011
-`define I0_opcode_ysyx_24100029 7'b0000011  //lw
-`define I1_opcode_ysyx_24100029 7'b0010011  //addi
-`define I2_opcode_ysyx_24100029 7'b1100111  //jalr
+`define I0_opcode_ysyx_24100029 7'b0000011                          //lw
+`define I1_opcode_ysyx_24100029 7'b0010011                          //addi
+`define I2_opcode_ysyx_24100029 7'b1100111                          //jalr
 `define S_opcode_ysyx_24100029  7'b0100011
 `define B_opcode_ysyx_24100029  7'b1100011
-`define U0_opcode_ysyx_24100029 7'b0110111  //lui
-`define U1_opcode_ysyx_24100029 7'b0010111  //auipc
-`define J_opcode_ysyx_24100029  7'b1101111  //jal
-`define M_opcode_ysyx_24100029  7'b1110011  
+`define U0_opcode_ysyx_24100029 7'b0110111                          //lui
+`define U1_opcode_ysyx_24100029 7'b0010111                          //auipc
+`define J_opcode_ysyx_24100029  7'b1101111                          //jal
+`define M_opcode_ysyx_24100029  7'b1110011
 
 // alu
 `define alu_add_ysyx_24100029                   4'b0000
@@ -37,4 +37,9 @@
 `define imm_20i_ysyx_24100029            2'b10
 `define imm_5u_ysyx_24100029             2'b11
 
+// slave_read_state 
+`define wait_arv_ysyx_24100029           1'b0
+`define wait_rdv_ysyx_24100029           1'b1   
+// slave_write_state
+`define wait_awv_ysyx_24100029           1'b0
 

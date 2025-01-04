@@ -1,4 +1,4 @@
-import "DPI-C" function void fi();
+import "DPI-C" function void fi(int val);
 
 
 module cpu_ysyx_24100029
@@ -8,14 +8,18 @@ module cpu_ysyx_24100029
     output reg         [  31: 0] pc                         ,
     output             [  31: 0] snpc                       ,
     output             [  31: 0] dnpc                       ,
-    output             [  31: 0] IDU_pc                      
+    output             [  31: 0] IFU_pc                     ,
+    output             [  31: 0] MEM_pc                     ,
+    output                       WBU_valid                   
 );
 
 
-    wire               [  31: 0] IFU_pc                     ;
+ //   wire               [  31: 0] IFU_pc                     ;
     wire               [  31: 0] IFU_inst                   ;
+    wire                         IFU_valid                  ;
 
 /************************* IDU ********************/
+    wire               [  31: 0] IDU_pc                     ;
     wire               [   4: 0] IDU_rd                     ;
     wire               [  31: 0] IDU_imm                    ;
     wire               [   2: 0] IDU_funct3                 ;
@@ -41,7 +45,9 @@ module cpu_ysyx_24100029
     wire               [  31: 0] IDU_a0_value               ;
     wire               [  31: 0] IDU_mepc_out               ;
     wire               [  31: 0] IDU_mtvec_out              ;
-    
+
+    wire                         IDU_valid                  ;
+    wire                         IDU_ready                  ;
     wire               [  31: 0] IDU_inst                   ;//debug
 /************************* EXU ********************/
     wire                         EXU_jump_flag              ;
@@ -60,6 +66,8 @@ module cpu_ysyx_24100029
     wire               [  31: 0] EXU_rs2_in                 ;
     wire               [  31: 0] EXU_imm                    ;
 
+    wire                         EXU_valid                  ;
+    wire                         EXU_ready                  ;
     wire               [  31: 0] EXU_inst                   ;
 /************************* MEM ********************/
     wire                         MEM_jump_flag              ;
@@ -68,19 +76,24 @@ module cpu_ysyx_24100029
     wire               [   3: 0] MEM_csr_wen                ;
     wire               [  31: 0] MEM_Ex_result              ;
     wire               [  31: 0] MEM_csrs                   ;
-    wire               [  31: 0] MEM_pc                     ;
+//    wire               [  31: 0] MEM_pc                     ;
     wire               [   4: 0] MEM_rd                     ;
     wire                         MEM_mem_ren                ;
-    wire                         MEM_branch_flag            ;
 
+
+    wire                         MEM_valid                  ;
+    wire                         MEM_ready                  ;
     wire               [  31: 0] MEM_inst                   ;
 /************************* WBU ********************/
+    wire               [  31: 0] WBU_pc                     ;
+    wire               [  31: 0] WBU_inst                   ;
     wire               [  31: 0] WBU_rd_value               ;
     wire               [  31: 0] WBU_csrd                   ;
     wire               [   4: 0] WBU_rd                     ;
     wire                         WBU_R_wen                  ;
     wire               [   3: 0] WBU_csr_wen                ;
-
+    wire                         WBU_ready                  ;
+ //   wire                         WBU_valid                  ;
 /* PERSONAL */
 
     wire                         dnpc_flag                  ;
@@ -89,16 +102,19 @@ module cpu_ysyx_24100029
     wire                         IDU_inst_clear             ;
     wire                         EXU_inst_clear             ;
 
-    assign                       pc                        = MEM_pc;
+    assign                       pc                        = WBU_pc;
     assign                       snpc                      = pc + 4;
 
     always @(*)begin
-        if(MEM_inst == 32'h00100073) begin
-            if(IDU_a0_value == 0)
+        if(WBU_inst == 32'h00100073) begin
+            if(IDU_a0_value == 0)begin
                 $display("\033[32;42m Hit The Good TRAP \033[0m");
-            else
+                fi(0);
+            end
+            else begin
                 $display("\033[31;41m Hit The Bad TRAP \033[0m");
-            fi();
+                fi(1);
+            end
         end
     end
 
@@ -108,7 +124,7 @@ module cpu_ysyx_24100029
 
 task  GetInst;
     output                       bit[31:0]inst_exec         ;
-    inst_exec = MEM_inst;
+    inst_exec = WBU_inst;
 endtask
 
 export "DPI-C" task GetInst;
@@ -120,23 +136,34 @@ Control Control_inst0(
     .EXU_imm                     (EXU_imm                   ),
     .EXU_pc                      (EXU_pc                    ),
     .Ex_result                   (EXU_Ex_result             ),
+    .MEM_Ex_result               (MEM_Ex_result             ),
     .WBU_rd_value                (WBU_rd_value              ),
     .IDU_rs1_value               (IDU_rs1_value             ),
     .IDU_rs2_value               (IDU_rs2_value             ),
+    .MEM_Rdata                   (MEM_Rdata                 ),
 
     .branch_flag                 (EXU_branch_flag           ),
     .jump_flag                   (EXU_jump_flag             ),
     .mret_flag                   (IDU_mret_flag             ),
     .ecall_flag                  (IDU_ecall_flag            ),
     .EXU_mem_ren                 (EXU_mem_ren               ),
+    .MEM_mem_ren                 (MEM_mem_ren               ),
 
     .IDU_rs1                     (IDU_rs1                   ),
     .IDU_rs2                     (IDU_rs2                   ),
+
+    .IDU_valid                   (IDU_valid                 ),
+    .EXU_valid                   (EXU_valid                 ),
+    .MEM_valid                   (MEM_valid                 ),
+    .WBU_valid                   (WBU_valid                 ),
+
     .EXU_rd                      (EXU_rd                    ),
     .WBU_rd                      (WBU_rd                    ),
+    .MEM_rd                      (MEM_rd                    ),
 
     .EXU_R_Wen                   (EXU_R_wen                 ),
     .WBU_R_Wen                   (WBU_R_wen                 ),
+    .MEM_R_Wen                   (MEM_R_wen                 ),
 
     .EXU_rs1_in                  (EXU_rs1_in                ),
     .EXU_rs2_in                  (EXU_rs2_in                ),
@@ -160,7 +187,10 @@ IFU IFU_Inst0(
     .dnpc_flag                   (dnpc_flag                 ),
     .pipe_stop                   (IFU_pipe_s                ),
     .pc                          (IFU_pc                    ),
-    .inst                        (IFU_inst                  ) 
+    .inst                        (IFU_inst                  ),
+
+    .ready                       (IDU_ready                 ),
+    .valid                       (IFU_valid                 ) 
 );
 
 IDU IDU_Inst0(
@@ -206,7 +236,13 @@ IDU IDU_Inst0(
     .rs2                         (IDU_rs2                   ),
     .a0_value                    (IDU_a0_value              ),
     .mepc_out                    (IDU_mepc_out              ),
-    .mtvec_out                   (IDU_mtvec_out             ) 
+    .mtvec_out                   (IDU_mtvec_out             ),
+
+    .valid_last                  (IFU_valid                 ),
+    .ready_last                  (IDU_ready                 ),
+
+    .ready_next                  (EXU_ready                 ),
+    .valid_next                  (IDU_valid                 ) 
 
 );
 
@@ -250,6 +286,13 @@ EXU EXU_Inst0(
     .pc_next                     (EXU_pc                    ),
     .EX_result                   (EXU_Ex_result             ),
 
+    .valid_last                  (IDU_valid                 ),
+    .ready_last                  (EXU_ready                 ),
+
+    .ready_next                  (MEM_ready                 ),
+    .valid_next                  (EXU_valid                 ),
+
+
     .inst                        (IDU_inst                  ),
     .inst_next                   (EXU_inst                  ) 
 );
@@ -269,7 +312,6 @@ MEM MEM_Inst0(
     .funct3                      (EXU_funct3                ),
     .rs2_value                   (EXU_rs2_value             ),
     .jump_flag                   (EXU_jump_flag             ),
-    .branch_flag                 (EXU_branch_flag           ),
 
     .R_wen_next                  (MEM_R_wen                 ),
     .MEM_Rdata                   (MEM_Rdata                 ),
@@ -280,7 +322,12 @@ MEM MEM_Inst0(
     .rd_next                     (MEM_rd                    ),
     .mem_ren_next                (MEM_mem_ren               ),
     .jump_flag_next              (MEM_jump_flag             ),
-    .branch_flag_next            (MEM_branch_flag           ),
+
+    .valid_last                  (EXU_valid                 ),
+    .ready_last                  (MEM_ready                 ),
+
+    .ready_next                  (WBU_ready                 ),
+    .valid_next                  (MEM_valid                 ),
 
     .inst                        (EXU_inst                  ),
     .inst_next                   (MEM_inst                  ) 
@@ -299,13 +346,20 @@ WBU WBU_inst0(
     .R_wen                       (MEM_R_wen                 ),
     .mem_ren                     (MEM_mem_ren               ),
     .jump_flag                   (MEM_jump_flag             ),
-    .branch_flag                 (MEM_branch_flag           ),
+    .inst                        (MEM_inst                  ),
 
+    .pc_next                     (WBU_pc                    ),
     .R_wen_next                  (WBU_R_wen                 ),
     .csr_wen_next                (WBU_csr_wen               ),
     .csrd                        (WBU_csrd                  ),
     .rd_value                    (WBU_rd_value              ),
-    .rd_next                     (WBU_rd                    ) 
+    .inst_next                   (WBU_inst                  ),
+
+    .valid                       (MEM_valid                 ),
+    .ready                       (WBU_ready                 ),
+
+    .rd_next                     (WBU_rd                    ),
+    .valid_next                  (WBU_valid                 ) 
 );
 
 

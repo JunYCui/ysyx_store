@@ -19,7 +19,7 @@ uint64_t sim_time = 0;
 
 
 
-void fi() { exit(0); }
+void fi(int val) { exit(val); }
 
 void cpu_reset(void)
 {
@@ -48,28 +48,30 @@ void wave_record(void)
 
 int main(int argc,char* argv[])
 {
-
+    int valid;
     // 开启波形跟踪
     Verilated::traceEverOn(true);
 
     init_monitor(argc, argv);
     
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
-  // top->trace(m_trace, 5);
-  //  m_trace->open("waveform.vcd");
+   top->trace(m_trace, 5);
+   m_trace->open("waveform.vcd");
 
     cpu_reset();
-/*
-    for(int i=0;i<6;i++)
+    valid = top->WBU_valid;
+    while(!valid)
+    {
+    for(int i=0;i<2;i++)
     {
     top->clk ^=1;
     top->eval();
     wave_record();
     }
-*/
+    valid = top->WBU_valid;
+    }
     sdb_mainloop();
     
     m_trace->close();
-
 
 }

@@ -43,6 +43,12 @@ module EXU (
     output             [  31: 0] pc_next                    ,
     output             [  31: 0] EX_result                  ,
 
+    input                        valid_last                 ,
+    output                       ready_last                 ,
+
+    input                        ready_next                 ,
+    output reg                   valid_next                 ,
+
     input              [  31: 0] inst                       ,
     output reg         [  31: 0] inst_next                   
 );
@@ -77,6 +83,20 @@ module EXU (
     reg                [  31: 0] csrs_reg                   ;
 
 
+    assign                       ready_last                = ready_next;
+
+    always @(posedge clk) begin
+        if(!rst_n)
+            valid_next <= 1'b0;
+        else if(ready_last & valid_last & inst_clear)
+            valid_next <= 1'b0;
+        else if(ready_last)
+            valid_next <= valid_last ;
+        else
+            valid_next <= valid_next;
+    end
+
+
 
     always @(posedge clk) begin
         if(!rst_n)begin
@@ -96,7 +116,7 @@ module EXU (
             rs2_value_reg   <= 0;
             csrs_reg        <= 0;
         end
-        else
+        else if(valid_last & ready_next)
         begin
             pc_reg          <= pc           ;
             funct3_reg      <= funct3       ;
@@ -125,7 +145,7 @@ always @(posedge clk) begin
         jump_flag_reg   <= 0;
         branch_flag_reg <= 0;
     end
-    else if(inst_clear)begin
+    else if(inst_clear&valid_last&ready_last)begin
         mem_ren_reg     <= 0;
         csr_wen_reg     <= 0;
         R_wen_reg       <= 0;
@@ -133,7 +153,7 @@ always @(posedge clk) begin
         jump_flag_reg   <= 0;
         branch_flag_reg <= 0;
     end
-    else begin
+    else if(valid_last & ready_next) begin
         mem_ren_reg     <= mem_ren;
         csr_wen_reg     <= csr_wen;
         R_wen_reg       <= R_wen;
@@ -148,9 +168,10 @@ always @(posedge clk) begin
         inst_next <=0;
     else if(inst_clear)
         inst_next <=0;
-    else 
+    else if(valid_last & ready_next)
         inst_next <= inst;
 end
+
 
     wire               [  31: 0] add_1                      ;
     wire               [  31: 0] add_2                      ;
