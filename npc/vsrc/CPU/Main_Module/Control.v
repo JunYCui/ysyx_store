@@ -83,7 +83,7 @@ module Control (
                         IDU_rs2_value;
 
 
-Aribter Aribter_inst(
+Data_hazard Data_hazard_inst(
     .IDU_rs1                     (IDU_rs1                   ),
     .IDU_rs2                     (IDU_rs2                   ),
 
