@@ -1,14 +1,15 @@
 /* verilator lint_off UNUSEDSIGNAL */
 // signal not use
-
+`timescale 1ns / 1ps
     localparam                   i4_NR_KEY                 = 5     ; //键值的个数
     localparam                   i4_KEY_LEN                = 3     ; //键值的长度
     localparam                   i4_DATA_LEN               = 32    ; //数据的长度
-    localparam                   i5_NR_KEY                 = 3     ; //键值的个数
-    localparam                   i5_KEY_LEN                = 3     ; //键值的长度
-    localparam                   i5_DATA_LEN               = 8     ; //数据的长度
 
-module MEM (
+    localparam                   i5_NR_KEY                 = 3     ; 
+    localparam                   i5_KEY_LEN                = 3     ; 
+    localparam                   i5_DATA_LEN               = 8     ; 
+
+module LSU (
     input                        clk                        ,
     input                        rst_n                      ,
 
@@ -26,7 +27,7 @@ module MEM (
   
 
     output                       R_wen_next                 ,
-    output             [  31: 0] MEM_Rdata                  ,
+    output reg         [  31: 0] LSU_Rdata                  ,
     output             [   3: 0] csr_wen_next               ,
     output             [  31: 0] Ex_result_next             ,
     output             [  31: 0] csrs_next                  ,
@@ -35,6 +36,25 @@ module MEM (
     output                       mem_ren_next               ,
     output                       jump_flag_next             ,
 
+    output reg         [  31: 0] araddr                     ,
+    output reg                   arvalid                    ,
+
+    output reg                   rready                     ,
+    input              [  31: 0] rdata                      ,
+    input                        rvalid                     ,
+
+    output reg         [  31: 0] awaddr                     ,
+    output reg                   awvalid                    ,
+
+    output             [  31: 0] mem_wdata                  ,
+    output             [   7: 0] wmask                      ,
+    output reg                   wvalid                     ,
+
+    input                        bresp                      ,
+    input                        bvalid                     ,
+    output reg                   bready                     ,
+
+    output reg                   req                        ,
 
     input                        valid_last                 ,
     output reg                   ready_last                 ,
@@ -46,17 +66,13 @@ module MEM (
     output reg         [  31: 0] inst_next                   
 );
  
-    wire               [  31: 0] mem_wdata                  ;
     wire               [  31: 0] rdata_8i                   ;
     wire               [  31: 0] rdata_16i                  ;
     wire               [  31: 0] rdata_8u                   ;
     wire               [  31: 0] rdata_16u                  ;
-    wire               [  31: 0] araddr                     ;
-    wire               [  31: 0] awaddr                     ;
-    wire               [  31: 0] rdata                      ;
-    wire                         rvalid                     ;
-    wire                         arready                    ;
-    wire               [   7: 0] wmask                      ;
+
+    wire               [  31: 0] rdata_ex                   ;
+
 
     reg                [  31: 0] pc_reg                     ;
     reg                          mem_ren_reg                ;
@@ -70,10 +86,6 @@ module MEM (
     reg                [  31: 0] rs2_value_reg              ;
     reg                          jump_flag_reg              ;
     reg                          valid_last_reg             ;
-
-    reg                          arvalid                    ;
-    reg                          rready                     ;
-
 
     always @(posedge clk) begin
         if(!rst_n)begin
@@ -108,10 +120,37 @@ module MEM (
 
     always @(posedge clk) begin
         if(!rst_n)
+            LSU_Rdata <=0;
+        else if(rvalid)
+            LSU_Rdata <= rdata_ex;
+    end
+
+    always @(posedge clk) begin
+        if(!rst_n)
             valid_last_reg <= 0;
         else if(ready_last)
             valid_last_reg <= valid_last;
     end
+
+    always @(posedge clk) begin
+        if(!rst_n)begin
+            bready <= 1'b0;
+            awvalid <= 1'b0;
+            wvalid <= 1'b0;
+        end
+        else if(mem_wen & valid_last & ready_last)begin
+            bready <= 1'b1;
+            awvalid <= 1'b1;
+            wvalid <= 1'b1;
+        end
+        else if(bready & bvalid & bresp)begin
+            bready <= 1'b0;
+            awvalid <= 1'b0;
+            wvalid <= 1'b0;
+        end
+    end
+
+
     always @(posedge clk) begin
         if(!rst_n)begin
             arvalid <= 1'b0;
@@ -121,11 +160,10 @@ module MEM (
             arvalid <= 1'b1;
             rready <= 1'b1;
         end
-        else begin
+        else if(rvalid)begin
             arvalid <= 1'b0;
             rready <= 1'b0;
         end
-
     end
 
     always @(posedge clk) begin
@@ -133,6 +171,10 @@ module MEM (
             ready_last <= 1'b1;
         else if(mem_ren & valid_last & ready_last)
             ready_last <= 1'b0;
+        else if(mem_wen & valid_last & ready_last)
+            ready_last <= 1'b0;
+        else if(bready & bvalid & bresp)
+            ready_last <= 1'b1;
         else if(rvalid)
             ready_last <= 1'b1;
     end
@@ -143,6 +185,10 @@ module MEM (
             valid_next <= 0;
         else if(mem_ren & valid_last & ready_last)
             valid_next <= 1'b0;
+        else if(mem_wen & valid_last & ready_last)
+            valid_next <= 1'b0;
+        else if(bready & bvalid & bresp)
+            valid_next <= 1'b1;
         else if(rvalid)
             valid_next <= 1'b1;
         else if(ready_last)
@@ -165,8 +211,8 @@ module MEM (
 
     assign                       araddr                    = Ex_result_reg;
     assign                       awaddr                    = Ex_result_reg;
- 
- 
+    assign                       req                       = ~ready_last;
+
     always @(posedge clk) begin
         if(!rst_n)
             inst_next <=0;
@@ -176,7 +222,7 @@ module MEM (
 
 
 
-MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (MEM_Rdata, funct3_reg, {i4_DATA_LEN{1'b0}},{
+MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (rdata_ex, funct3_reg, {i4_DATA_LEN{1'b0}},{
   3'b000,rdata_8i,                                                  // lb
   3'b001,rdata_16i,                                                 // lh
   3'b010,rdata,                                                     // lw
@@ -195,32 +241,6 @@ MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wmask, funct3_reg, {i5_
     assign                       rdata_16u                 = {16'd0,rdata[15:0]};
 
 /* verilator lint_off PINMISSING */
-SRAM
-#(
-    .DATA_WIDTH                  (32                        ),
-    .ADDR_WIDTH                  (32                        ) 
-)SRAM_inst1
-(
-    .rst_n                       (rst_n                     ),
-    .clk                         (clk                       ),
-  
-    .araddr                      (araddr                    ),
-    .arvalid                     (arvalid                   ),
-    .arready                     (arready                   ),
-
-    .rready                      (rready                    ),
-    .rdata                       (rdata                     ),
-    .rvalid                      (rvalid                    ),
-
-    .awaddr                      (awaddr                    ),
-    .awvalid                     (mem_wen_reg&valid_last_reg),
-
-    .wdata                       (mem_wdata                 ),
-    .wstrb                       (wmask                     ),
-    .wvalid                      (mem_wen_reg&valid_last_reg) 
-
-);
-
 sext #(
     .DATA_WIDTH                  (8                         ),
     .OUT_WIDTH                   (32                        ) 

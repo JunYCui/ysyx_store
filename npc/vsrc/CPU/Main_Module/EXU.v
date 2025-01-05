@@ -85,15 +85,17 @@ module EXU (
 
     assign                       ready_last                = ready_next;
 
+
+
     always @(posedge clk) begin
         if(!rst_n)
             valid_next <= 1'b0;
         else if(ready_last & valid_last & inst_clear)
             valid_next <= 1'b0;
-        else if(ready_last)
-            valid_next <= valid_last ;
+        else if(ready_last & valid_last)
+            valid_next <= 1'b1;
         else
-            valid_next <= valid_next;
+            valid_next <= 1'b0;
     end
 
 
@@ -145,7 +147,7 @@ always @(posedge clk) begin
         jump_flag_reg   <= 0;
         branch_flag_reg <= 0;
     end
-    else if(inst_clear&valid_last&ready_last)begin
+    else if(inst_clear &valid_last&ready_last)begin
         mem_ren_reg     <= 0;
         csr_wen_reg     <= 0;
         R_wen_reg       <= 0;

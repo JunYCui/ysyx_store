@@ -43,3 +43,7 @@
 // slave_write_state
 `define wait_awv_ysyx_24100029           1'b0
 
+// Aribiter
+`define Aribiter_choice_IDLE_ysyx_24100029 2'b00
+`define Aribiter_choice_IFU_ysyx_24100029  2'b01 
+`define Aribiter_choice_LSU_ysyx_24100029  2'b10

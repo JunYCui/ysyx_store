@@ -76,7 +76,7 @@ module IDU(
     always @(posedge clk) begin
         if(!rst_n)
             pipe_stop_reg <= 0;
-        else if((~valid_last | ~ready_last))
+        else if((~valid_last | ~ready_last) & ~pipe_stop)
             pipe_stop_reg <= pipe_stop;
         else if(valid_last & ready_last)
             pipe_stop_reg <= 0;
@@ -86,7 +86,7 @@ module IDU(
     always @(posedge clk) begin
         if(!rst_n)
             inst_clear_reg <= 0;
-        else if((~valid_last | ~ready_last))
+        else if((~valid_last | ~ready_last) & ~inst_clear_reg)
             inst_clear_reg <= inst_clear;
         else if(valid_last & ready_last)
             inst_clear_reg <= 0;
@@ -97,10 +97,10 @@ module IDU(
             valid_next <= 1'b0;
         else if(ready_last & valid_last & (inst_clear | inst_clear_reg))
             valid_next <= 1'b0;
-        else if(ready_last)
-            valid_next <= valid_last ;
+        else if(ready_last & valid_last)
+            valid_next <= 1'b1 ;
         else
-            valid_next <= valid_next;
+            valid_next <= 1'b0;
     end
 
     always@(posedge clk)begin

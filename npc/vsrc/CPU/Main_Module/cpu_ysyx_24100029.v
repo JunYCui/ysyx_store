@@ -9,7 +9,7 @@ module cpu_ysyx_24100029
     output             [  31: 0] snpc                       ,
     output             [  31: 0] dnpc                       ,
     output             [  31: 0] IFU_pc                     ,
-    output             [  31: 0] MEM_pc                     ,
+    output             [  31: 0] LSU_pc                     ,
     output                       WBU_valid                   
 );
 
@@ -17,6 +17,9 @@ module cpu_ysyx_24100029
  //   wire               [  31: 0] IFU_pc                     ;
     wire               [  31: 0] IFU_inst                   ;
     wire                         IFU_valid                  ;
+    wire                         IFU_rvalid                 ;
+    wire               [  31: 0] IFU_rdata                  ;
+    wire                         IFU_req                    ;
 
 /************************* IDU ********************/
     wire               [  31: 0] IDU_pc                     ;
@@ -69,21 +72,36 @@ module cpu_ysyx_24100029
     wire                         EXU_valid                  ;
     wire                         EXU_ready                  ;
     wire               [  31: 0] EXU_inst                   ;
-/************************* MEM ********************/
-    wire                         MEM_jump_flag              ;
-    wire                         MEM_R_wen                  ;
-    wire               [  31: 0] MEM_Rdata                  ;
-    wire               [   3: 0] MEM_csr_wen                ;
-    wire               [  31: 0] MEM_Ex_result              ;
-    wire               [  31: 0] MEM_csrs                   ;
+/************************* LSU ********************/
+    wire                         LSU_jump_flag              ;
+    wire                         LSU_R_wen                  ;
+    wire               [  31: 0] LSU_Rdata                  ;
+    wire               [   3: 0] LSU_csr_wen                ;
+    wire               [  31: 0] LSU_Ex_result              ;
+    wire               [  31: 0] LSU_csrs                   ;
 //    wire               [  31: 0] MEM_pc                     ;
-    wire               [   4: 0] MEM_rd                     ;
-    wire                         MEM_mem_ren                ;
+    wire               [   4: 0] LSU_rd                     ;
+    wire                         LSU_mem_ren                ;
+
+    wire               [  31: 0] LSU_araddr                 ;
+    wire                         LSU_arvalid                ;
+    wire                         LSU_rready                 ;
+    wire               [  31: 0] LSU_rdata                  ;
+    wire                         LSU_rvalid                 ;
+    wire               [  31: 0] LSU_awaddr                 ;
+    wire                         LSU_awvalid                ;
+    wire               [  31: 0] LSU_mem_wdata              ;
+    wire               [   7: 0] LSU_wmask                  ;
+    wire                         LSU_wvalid                 ;
+    wire                         LSU_bresp                  ;
+    wire                         LSU_bvalid                 ;
+    wire                         LSU_bready                 ;
+    wire                         LSU_req                    ;
 
 
-    wire                         MEM_valid                  ;
-    wire                         MEM_ready                  ;
-    wire               [  31: 0] MEM_inst                   ;
+    wire                         LSU_valid                  ;
+    wire                         LSU_ready                  ;
+    wire               [  31: 0] LSU_inst                   ;
 /************************* WBU ********************/
     wire               [  31: 0] WBU_pc                     ;
     wire               [  31: 0] WBU_inst                   ;
@@ -94,7 +112,33 @@ module cpu_ysyx_24100029
     wire               [   3: 0] WBU_csr_wen                ;
     wire                         WBU_ready                  ;
  //   wire                         WBU_valid                  ;
-/* PERSONAL */
+
+ /************************* SRAM ********************/
+
+    wire               [  31: 0] araddr                     ;
+    wire                         arvalid                    ;
+    wire                         arready                    ;
+
+    wire                         rready                     ;
+    wire               [  31: 0] rdata                      ;
+    wire                         rresp                      ;
+    wire                         rvalid                     ;
+    
+    wire               [  31: 0] awaddr                     ;
+    wire                         awvalid                    ;
+    wire                         awready                    ;
+    
+    wire               [  31: 0] wdata                      ;
+    wire               [   7: 0] wstrb                      ;
+    wire                         wvalid                     ;
+    wire                         wready                     ;
+    
+    wire                         bresp                      ;
+    wire                         bvalid                     ;
+    wire                         bready                     ;
+
+
+/*            PERSONAL              */
 
     wire                         dnpc_flag                  ;
     wire                         IDU_pipe_s                 ;
@@ -136,34 +180,34 @@ Control Control_inst0(
     .EXU_imm                     (EXU_imm                   ),
     .EXU_pc                      (EXU_pc                    ),
     .Ex_result                   (EXU_Ex_result             ),
-    .MEM_Ex_result               (MEM_Ex_result             ),
+    .MEM_Ex_result               (LSU_Ex_result             ),
     .WBU_rd_value                (WBU_rd_value              ),
     .IDU_rs1_value               (IDU_rs1_value             ),
     .IDU_rs2_value               (IDU_rs2_value             ),
-    .MEM_Rdata                   (MEM_Rdata                 ),
+    .MEM_Rdata                   (LSU_Rdata                 ),
 
     .branch_flag                 (EXU_branch_flag           ),
     .jump_flag                   (EXU_jump_flag             ),
     .mret_flag                   (IDU_mret_flag             ),
     .ecall_flag                  (IDU_ecall_flag            ),
     .EXU_mem_ren                 (EXU_mem_ren               ),
-    .MEM_mem_ren                 (MEM_mem_ren               ),
+    .MEM_mem_ren                 (LSU_mem_ren               ),
 
     .IDU_rs1                     (IDU_rs1                   ),
     .IDU_rs2                     (IDU_rs2                   ),
 
     .IDU_valid                   (IDU_valid                 ),
     .EXU_valid                   (EXU_valid                 ),
-    .MEM_valid                   (MEM_valid                 ),
+    .MEM_valid                   (LSU_valid                 ),
     .WBU_valid                   (WBU_valid                 ),
 
     .EXU_rd                      (EXU_rd                    ),
     .WBU_rd                      (WBU_rd                    ),
-    .MEM_rd                      (MEM_rd                    ),
+    .MEM_rd                      (LSU_rd                    ),
 
     .EXU_R_Wen                   (EXU_R_wen                 ),
     .WBU_R_Wen                   (WBU_R_wen                 ),
-    .MEM_R_Wen                   (MEM_R_wen                 ),
+    .MEM_R_Wen                   (LSU_R_wen                 ),
 
     .EXU_rs1_in                  (EXU_rs1_in                ),
     .EXU_rs2_in                  (EXU_rs2_in                ),
@@ -188,6 +232,10 @@ IFU IFU_Inst0(
     .pipe_stop                   (IFU_pipe_s                ),
     .pc                          (IFU_pc                    ),
     .inst                        (IFU_inst                  ),
+
+    .rvalid                      (IFU_rvalid                ),
+    .rdata                       (IFU_rdata                 ),
+    .req                         (IFU_req                   ),
 
     .ready                       (IDU_ready                 ),
     .valid                       (IFU_valid                 ) 
@@ -289,7 +337,7 @@ EXU EXU_Inst0(
     .valid_last                  (IDU_valid                 ),
     .ready_last                  (EXU_ready                 ),
 
-    .ready_next                  (MEM_ready                 ),
+    .ready_next                  (LSU_ready                 ),
     .valid_next                  (EXU_valid                 ),
 
 
@@ -297,7 +345,7 @@ EXU EXU_Inst0(
     .inst_next                   (EXU_inst                  ) 
 );
 
-MEM MEM_Inst0(
+LSU LSU_Inst0(
     .clk                         (clk                       ),
     .rst_n                       (rst_n                     ),
 
@@ -313,40 +361,60 @@ MEM MEM_Inst0(
     .rs2_value                   (EXU_rs2_value             ),
     .jump_flag                   (EXU_jump_flag             ),
 
-    .R_wen_next                  (MEM_R_wen                 ),
-    .MEM_Rdata                   (MEM_Rdata                 ),
-    .csr_wen_next                (MEM_csr_wen               ),
-    .Ex_result_next              (MEM_Ex_result             ),
-    .csrs_next                   (MEM_csrs                  ),
-    .pc_next                     (MEM_pc                    ),
-    .rd_next                     (MEM_rd                    ),
-    .mem_ren_next                (MEM_mem_ren               ),
-    .jump_flag_next              (MEM_jump_flag             ),
+    .R_wen_next                  (LSU_R_wen                 ),
+    .LSU_Rdata                   (LSU_Rdata                 ),
+    .csr_wen_next                (LSU_csr_wen               ),
+    .Ex_result_next              (LSU_Ex_result             ),
+    .csrs_next                   (LSU_csrs                  ),
+    .pc_next                     (LSU_pc                    ),
+    .rd_next                     (LSU_rd                    ),
+    .mem_ren_next                (LSU_mem_ren               ),
+    .jump_flag_next              (LSU_jump_flag             ),
+
+    .araddr                      (LSU_araddr                ),
+    .arvalid                     (LSU_arvalid               ),
+
+    .rready                      (LSU_rready                ),
+    .rdata                       (LSU_rdata                 ),
+    .rvalid                      (LSU_rvalid                ),
+
+    .awaddr                      (LSU_awaddr                ),
+    .awvalid                     (LSU_awvalid               ),
+
+    .mem_wdata                   (LSU_mem_wdata             ),
+    .wmask                       (LSU_wmask                 ),
+    .wvalid                      (LSU_wvalid                ),
+
+    .bresp                       (LSU_bresp                 ),
+    .bvalid                      (LSU_bvalid                ),
+    .bready                      (LSU_bready                ),
+
+    .req                         (LSU_req                   ),
 
     .valid_last                  (EXU_valid                 ),
-    .ready_last                  (MEM_ready                 ),
+    .ready_last                  (LSU_ready                 ),
 
     .ready_next                  (WBU_ready                 ),
-    .valid_next                  (MEM_valid                 ),
+    .valid_next                  (LSU_valid                 ),
 
     .inst                        (EXU_inst                  ),
-    .inst_next                   (MEM_inst                  ) 
+    .inst_next                   (LSU_inst                  ) 
 );
 
 WBU WBU_inst0(
     .clk                         (clk                       ),
     .rst_n                       (rst_n                     ),
 
-    .MEM_Rdata                   (MEM_Rdata                 ),
-    .Ex_result                   (MEM_Ex_result             ),
-    .csrs                        (MEM_csrs                  ),
-    .pc                          (MEM_pc                    ),
-    .rd                          (MEM_rd                    ),
-    .csr_wen                     (MEM_csr_wen               ),
-    .R_wen                       (MEM_R_wen                 ),
-    .mem_ren                     (MEM_mem_ren               ),
-    .jump_flag                   (MEM_jump_flag             ),
-    .inst                        (MEM_inst                  ),
+    .MEM_Rdata                   (LSU_Rdata                 ),
+    .Ex_result                   (LSU_Ex_result             ),
+    .csrs                        (LSU_csrs                  ),
+    .pc                          (LSU_pc                    ),
+    .rd                          (LSU_rd                    ),
+    .csr_wen                     (LSU_csr_wen               ),
+    .R_wen                       (LSU_R_wen                 ),
+    .mem_ren                     (LSU_mem_ren               ),
+    .jump_flag                   (LSU_jump_flag             ),
+    .inst                        (LSU_inst                  ),
 
     .pc_next                     (WBU_pc                    ),
     .R_wen_next                  (WBU_R_wen                 ),
@@ -355,11 +423,113 @@ WBU WBU_inst0(
     .rd_value                    (WBU_rd_value              ),
     .inst_next                   (WBU_inst                  ),
 
-    .valid                       (MEM_valid                 ),
+    .valid                       (LSU_valid                 ),
     .ready                       (WBU_ready                 ),
 
     .rd_next                     (WBU_rd                    ),
     .valid_next                  (WBU_valid                 ) 
+);
+/* verilator lint_off PINMISSING */
+Aribiter #(
+    .DATA_WIDTH                  (32                        ),
+    .ADDR_WIDTH                  (32                        ) 
+)Aribiter_inst(
+    .clk                         (clk                       ),
+    .rst_n                       (rst_n                     ),
+
+    .IFU_req                     (IFU_req                   ),
+    .LSU_req                     (LSU_req                   ),
+
+    .IFU_araddr                  (IFU_pc                    ),
+    .IFU_arvalid                 (1'b1                      ),
+
+    .IFU_rready                  (1'b1                      ),
+    .IFU_rdata                   (IFU_rdata                 ),
+    .IFU_rvalid                  (IFU_rvalid                ),
+
+    .IFU_awaddr                  (0                         ),
+    .IFU_awvalid                 (0                         ),
+
+
+    .IFU_wdata                   (0                         ),
+    .IFU_wstrb                   (0                         ),
+    .IFU_wvalid                  (0                         ),
+
+    .IFU_bready                  (0                         ),
+
+    .LSU_araddr                  (LSU_araddr                ),
+    .LSU_arvalid                 (LSU_arvalid               ),
+
+    .LSU_rready                  (LSU_rready                ),
+    .LSU_rdata                   (LSU_rdata                 ),
+    .LSU_rvalid                  (LSU_rvalid                ),
+
+    .LSU_awaddr                  (LSU_awaddr                ),
+    .LSU_awvalid                 (LSU_awvalid               ),
+
+    .LSU_wdata                   (LSU_mem_wdata             ),
+    .LSU_wstrb                   (LSU_wmask                 ),
+    .LSU_wvalid                  (LSU_wvalid                ),
+
+    .LSU_bresp                   (LSU_bresp                 ),
+    .LSU_bvalid                  (LSU_bvalid                ),
+    .LSU_bready                  (LSU_bready                ),
+
+    .araddr                      (araddr                    ),
+    .arvalid                     (arvalid                   ),
+    .arready                     (arready                   ),
+
+    .rready                      (rready                    ),
+    .rdata                       (rdata                     ),
+    .rresp                       (rresp                     ),
+    .rvalid                      (rvalid                    ),
+
+    .awaddr                      (awaddr                    ),
+    .awvalid                     (awvalid                   ),
+    .awready                     (awready                   ),
+
+    .wdata                       (wdata                     ),
+    .wstrb                       (wstrb                     ),
+    .wvalid                      (wvalid                    ),
+    .wready                      (wready                    ),
+
+    .bresp                       (bresp                     ),
+    .bvalid                      (bvalid                    ),
+    .bready                      (bready                    ) 
+
+
+
+);
+SRAM
+#(
+    .DATA_WIDTH                  (32                        ),
+    .ADDR_WIDTH                  (32                        ) 
+)SRAM_inst0
+(
+    .clk                         (clk                       ),
+    .rst_n                       (rst_n                     ),
+
+    .araddr                      (araddr                    ),
+    .arvalid                     (arvalid                   ),
+    .arready                     (arready                   ),
+
+    .rready                      (rready                    ),
+    .rdata                       (rdata                     ),
+    .rresp                       (rresp                     ),
+    .rvalid                      (rvalid                    ),
+    
+    .awaddr                      (awaddr                    ),
+    .awvalid                     (awvalid                   ),
+    .awready                     (awready                   ),
+    
+    .wdata                       (wdata                     ),
+    .wstrb                       (wstrb                     ),
+    .wvalid                      (wvalid                    ),
+    .wready                      (wready                    ),
+    
+    .bresp                       (bresp                     ),
+    .bvalid                      (bvalid                    ),
+    .bready                      (bready                    ) 
 );
 
 

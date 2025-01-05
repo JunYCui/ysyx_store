@@ -106,7 +106,7 @@ module SRAM
         else begin
             rvalid <= 1'b0;
             rresp <= 0;
-            rdata <= rdata;
+            rdata <= 0;
         end
     end
     always @(posedge clk) begin
@@ -121,9 +121,12 @@ module SRAM
     always @(*) begin
             awready = 1'b1;
             wready  = 1'b1;
-            bvalid  = 1'b1;
+            bvalid  = 1'b0;
+            bresp = 1'b0;
         if(write_state == `wait_awv_ysyx_24100029 && wvalid && awvalid)begin
             npc_pmem_write(awaddr,wdata,wstrb);
+            bresp = 1'b1;
+            bvalid = 1'b1;
         end
     end
 
