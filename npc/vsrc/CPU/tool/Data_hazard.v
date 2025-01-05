@@ -1,6 +1,6 @@
 /* Deal with the Data hazard */
 
-module Aribter(
+module Data_hazard(
     input              [   4: 0] IDU_rs1                    ,
     input              [   4: 0] IDU_rs2                    ,
 
