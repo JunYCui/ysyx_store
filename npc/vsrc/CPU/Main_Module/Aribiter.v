@@ -87,9 +87,9 @@ module Aribiter #(
             ari_choice <= `Aribiter_choice_IDLE_ysyx_24100029;
         else if(ari_choice == `Aribiter_choice_IDLE_ysyx_24100029)begin
             if(LSU_req)
-                ari_choice <= `Aribiter_choice_IFU_ysyx_24100029;
-            else if(IFU_req)
                 ari_choice <= `Aribiter_choice_LSU_ysyx_24100029;
+            else if(IFU_req)
+                ari_choice <= `Aribiter_choice_IFU_ysyx_24100029;
             else    
                 ari_choice <= ari_choice;
         end
