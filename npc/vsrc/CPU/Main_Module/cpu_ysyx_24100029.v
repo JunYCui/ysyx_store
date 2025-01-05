@@ -506,6 +506,9 @@ SRAM
     .ADDR_WIDTH                  (32                        ) 
 )SRAM_inst0
 (
+    .clk                         (clk                       ),
+    .rst_n                       (rst_n                     ),
+
     .araddr                      (araddr                    ),
     .arvalid                     (arvalid                   ),
     .arready                     (arready                   ),
