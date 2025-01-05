@@ -362,7 +362,7 @@ LSU LSU_Inst0(
     .jump_flag                   (EXU_jump_flag             ),
 
     .R_wen_next                  (LSU_R_wen                 ),
-    .MEM_Rdata                   (LSU_Rdata                 ),
+    .LSU_Rdata                   (LSU_Rdata                 ),
     .csr_wen_next                (LSU_csr_wen               ),
     .Ex_result_next              (LSU_Ex_result             ),
     .csrs_next                   (LSU_csrs                  ),

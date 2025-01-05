@@ -27,7 +27,7 @@ module LSU (
   
 
     output                       R_wen_next                 ,
-    output             [  31: 0] MEM_Rdata                  ,
+    output reg         [  31: 0] LSU_Rdata                  ,
     output             [   3: 0] csr_wen_next               ,
     output             [  31: 0] Ex_result_next             ,
     output             [  31: 0] csrs_next                  ,
@@ -71,6 +71,8 @@ module LSU (
     wire               [  31: 0] rdata_8u                   ;
     wire               [  31: 0] rdata_16u                  ;
 
+    wire               [  31: 0] rdata_ex                   ;
+
 
     reg                [  31: 0] pc_reg                     ;
     reg                          mem_ren_reg                ;
@@ -84,7 +86,6 @@ module LSU (
     reg                [  31: 0] rs2_value_reg              ;
     reg                          jump_flag_reg              ;
     reg                          valid_last_reg             ;
-
 
     always @(posedge clk) begin
         if(!rst_n)begin
@@ -115,6 +116,13 @@ module LSU (
             rs2_value_reg   <=  rs2_value   ;
             jump_flag_reg   <=  jump_flag   ;
         end
+    end
+
+    always @(posedge clk) begin
+        if(!rst_n)
+            LSU_Rdata <=0;
+        else if(rvalid)
+            LSU_Rdata <= rdata_ex;
     end
 
     always @(posedge clk) begin
@@ -214,7 +222,7 @@ module LSU (
 
 
 
-MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (MEM_Rdata, funct3_reg, {i4_DATA_LEN{1'b0}},{
+MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (rdata_ex, funct3_reg, {i4_DATA_LEN{1'b0}},{
   3'b000,rdata_8i,                                                  // lb
   3'b001,rdata_16i,                                                 // lh
   3'b010,rdata,                                                     // lw

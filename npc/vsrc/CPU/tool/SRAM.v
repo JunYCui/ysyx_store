@@ -106,7 +106,7 @@ module SRAM
         else begin
             rvalid <= 1'b0;
             rresp <= 0;
-            rdata <= rdata;
+            rdata <= 0;
         end
     end
     always @(posedge clk) begin
