@@ -81,14 +81,25 @@ module EXU (
     reg                [  31: 0] rs1_value_reg              ;
     reg                [  31: 0] rs2_value_reg              ;
     reg                [  31: 0] csrs_reg                   ;
+    reg                          inst_clear_reg             ;
 
 
     assign                       ready_last                = ready_next;
 
+
+    always @(posedge clk) begin
+        if(!rst_n)
+            inst_clear_reg <= 0;
+        else if((~valid_last | ~ready_last) & ~inst_clear_reg)
+            inst_clear_reg <= inst_clear;
+        else if(valid_last & ready_last)
+            inst_clear_reg <= 0;
+    end
+
     always @(posedge clk) begin
         if(!rst_n)
             valid_next <= 1'b0;
-        else if(ready_last & valid_last & inst_clear)
+        else if(ready_last & valid_last & (inst_clear | inst_clear_reg))
             valid_next <= 1'b0;
         else if(ready_last)
             valid_next <= valid_last ;
@@ -145,7 +156,7 @@ always @(posedge clk) begin
         jump_flag_reg   <= 0;
         branch_flag_reg <= 0;
     end
-    else if(inst_clear&valid_last&ready_last)begin
+    else if((inst_clear | inst_clear_reg)&valid_last&ready_last)begin
         mem_ren_reg     <= 0;
         csr_wen_reg     <= 0;
         R_wen_reg       <= 0;

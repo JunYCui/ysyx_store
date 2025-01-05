@@ -56,7 +56,7 @@ always @(posedge clk) begin
         pipe_stop_reg <= 0;
         dnpc_reg <=0;
     end
-    else if(~ready | ~valid)begin
+    else if((~ready | ~valid) & ~dnpc_flag )begin
         dnpc_flag_reg <= dnpc_flag;
         pipe_stop_reg <= pipe_stop;
         dnpc_reg <= dnpc;
