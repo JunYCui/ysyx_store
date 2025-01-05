@@ -97,10 +97,10 @@ module IDU(
             valid_next <= 1'b0;
         else if(ready_last & valid_last & (inst_clear | inst_clear_reg))
             valid_next <= 1'b0;
-        else if(ready_last)
-            valid_next <= valid_last ;
+        else if(ready_last & valid_last)
+            valid_next <= 1'b1 ;
         else
-            valid_next <= valid_next;
+            valid_next <= 1'b0;
     end
 
     always@(posedge clk)begin
