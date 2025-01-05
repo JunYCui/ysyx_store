@@ -96,16 +96,12 @@ module Aribiter #(
         else if(ari_choice == `Aribiter_choice_IFU_ysyx_24100029)begin
             if(LSU_req & (rvalid | bvalid))
                 ari_choice <= `Aribiter_choice_LSU_ysyx_24100029;
-            else if(IFU_req & (rvalid | bvalid))
-                ari_choice <= `Aribiter_choice_IFU_ysyx_24100029;
             else if(rvalid | bvalid)
                 ari_choice <= `Aribiter_choice_IDLE_ysyx_24100029;
         end
         else if(ari_choice == `Aribiter_choice_LSU_ysyx_24100029)begin
             if(IFU_req & (rvalid | bvalid))
                 ari_choice <= `Aribiter_choice_IFU_ysyx_24100029;
-            else if(LSU_req & (rvalid | bvalid))
-                ari_choice <= `Aribiter_choice_LSU_ysyx_24100029;
             else if(rvalid | bvalid)
                 ari_choice <= `Aribiter_choice_IDLE_ysyx_24100029;
         end
