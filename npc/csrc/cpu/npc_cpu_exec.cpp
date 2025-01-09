@@ -84,8 +84,8 @@ void cpu_exec(uint32_t n)
         s.dnpc=top->dnpc;
         s.snpc=top->snpc;
     */
-    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.CPU"));
-        GetInst(&s.inst);
+    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.cpu"));
+     //   GetInst(&s.inst);
         if(skip_flag != 0)
         {
             difftest_skip_ref();
@@ -103,7 +103,7 @@ void cpu_exec(uint32_t n)
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.CPU.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
         for(int j=0;j<32;j++)
         {
-            ReadReg(j,&cpu.gpr[j]);
+    //        ReadReg(j,&cpu.gpr[j]);
         }
         trace_and_difftest(&s);
         if(npc_state.state !=NPC_RUNNING)
