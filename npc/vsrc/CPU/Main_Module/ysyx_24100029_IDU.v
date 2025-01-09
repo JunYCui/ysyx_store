@@ -74,7 +74,7 @@ module ysyx_24100029_IDU(
     assign                       ready_last                = ready_next;
 
     always @(posedge clock) begin
-        if(!reset)
+        if(reset)
             pipe_stop_reg <= 0;
         else if((~valid_last | ~ready_last) & ~pipe_stop)
             pipe_stop_reg <= pipe_stop;
@@ -84,7 +84,7 @@ module ysyx_24100029_IDU(
 
 
     always @(posedge clock) begin
-        if(!reset)
+        if(reset)
             inst_clear_reg <= 0;
         else if((~valid_last | ~ready_last) & ~inst_clear_reg)
             inst_clear_reg <= inst_clear;
@@ -93,7 +93,7 @@ module ysyx_24100029_IDU(
     end
 
     always @(posedge clock) begin
-        if(!reset)
+        if(reset)
             valid_next <= 1'b0;
         else if(ready_last & valid_last & (inst_clear | inst_clear_reg))
             valid_next <= 1'b0;
@@ -104,7 +104,7 @@ module ysyx_24100029_IDU(
     end
 
     always@(posedge clock)begin
-        if(!reset)
+        if(reset)
             inst_reg <= 0;
         else if((inst_clear | inst_clear_reg) & valid_last & ready_last)
             inst_reg <= 0;
@@ -114,7 +114,7 @@ module ysyx_24100029_IDU(
             inst_reg <= inst;
     end
     always@(posedge clock)begin
-        if(!reset)
+        if(reset)
             pc_reg <= 0;
         else if((pipe_stop_reg | pipe_stop)& valid_last & ready_last)
             pc_reg <= pc_reg;

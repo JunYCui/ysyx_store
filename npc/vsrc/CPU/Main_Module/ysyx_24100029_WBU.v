@@ -40,13 +40,13 @@ module ysyx_24100029_WBU (
     reg                          jump_flag_reg              ;
 
     always @(posedge clock) begin
-        if(!reset)
+        if(reset)
             valid_next <= 0;
         else
             valid_next <= valid;
     end
     always @(posedge clock) begin
-        if(!reset)begin
+        if(reset)begin
             inst_next <= 0;
             pc_next <= 0;
         end
@@ -58,7 +58,7 @@ module ysyx_24100029_WBU (
 
 
 always @(posedge clock) begin
-    if(!reset)begin
+    if(reset)begin
         MEM_Rdata_reg <= 0;
         Ex_result_reg <= 0;
         csrs_reg      <= 0;
