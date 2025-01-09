@@ -1,4 +1,4 @@
-module sext#
+module ysyx_24100029_sext#
 (
     parameter DATA_WIDTH=1,
     parameter OUT_WIDTH=2

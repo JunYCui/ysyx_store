@@ -30,7 +30,7 @@ static void wave_record(void)
     m_trace->dump(sim_time);
     sim_time++; // 模拟时钟边沿数加1
 }
-extern Vcpu_ysyx_24100029 *top; 
+extern VysyxSoCFull *top; 
 
 static void itrace(Decode *s)
 {
@@ -45,7 +45,7 @@ static void exec_once()
 {
     for(int i=0;i<2;i++)
     {
-    top->clk ^=1;
+    top->clock ^=1;
     top->eval();
     wave_record();
     }
@@ -70,7 +70,7 @@ static void trace_and_difftest(Decode *s)
 
 void cpu_exec(uint32_t n)
 {
-    bool valid ;
+    bool valid =1;
     g_print_step = (n < MAX_INST_TO_PRINT);
     switch (npc_state.state) {
     case NPC_END: case NPC_ABORT:
@@ -79,10 +79,11 @@ void cpu_exec(uint32_t n)
     default: npc_state.state = NPC_RUNNING;
   }
     for(int i=0;i<n;i++)
-    {
+    {/*
         s.pc=top->pc;
         s.dnpc=top->dnpc;
         s.snpc=top->snpc;
+    */
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
         GetInst(&s.inst);
         if(skip_flag != 0)
@@ -90,13 +91,13 @@ void cpu_exec(uint32_t n)
             difftest_skip_ref();
         }
         exec_once();
-        valid = top->WBU_valid;
-        cpu.pc = top->pc;
+    //    valid = top->WBU_valid;
+    //    cpu.pc = top->pc;
         while(!valid)
         {
         exec_once();
-        cpu.pc = top->pc;
-        valid = top->WBU_valid;
+   //     cpu.pc = top->pc;
+   //     valid = top->WBU_valid;
         }
 
     svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));

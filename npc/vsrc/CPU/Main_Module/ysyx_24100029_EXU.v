@@ -1,8 +1,8 @@
 `include "./vsrc/CPU/define/para.v"
 
-module EXU (
-    input                        clk                        ,
-    input                        rst_n                      ,
+module ysyx_24100029_EXU (
+    input                        clock                      ,
+    input                        reset                      ,
 
     /* control signal */
     input                        inst_clear                 ,
@@ -87,8 +87,8 @@ module EXU (
 
 
 
-    always @(posedge clk) begin
-        if(!rst_n)
+    always @(posedge clock) begin
+        if(reset)
             valid_next <= 1'b0;
         else if(ready_last & valid_last & inst_clear)
             valid_next <= 1'b0;
@@ -100,8 +100,8 @@ module EXU (
 
 
 
-    always @(posedge clk) begin
-        if(!rst_n)begin
+    always @(posedge clock) begin
+        if(reset)begin
             pc_reg          <= 0;
             funct3_reg      <= 0;
             rd_reg          <= 0;
@@ -138,8 +138,8 @@ module EXU (
         end
     end
 
-always @(posedge clk) begin
-    if(!rst_n)begin
+always @(posedge clock) begin
+    if(reset)begin
         mem_ren_reg     <= 0;
         csr_wen_reg     <= 0;
         R_wen_reg       <= 0;
@@ -165,8 +165,8 @@ always @(posedge clk) begin
     end
 end
 
-always @(posedge clk) begin
-    if(!rst_n)
+always @(posedge clock) begin
+    if(reset)
         inst_next <=0;
     else if(inst_clear)
         inst_next <=0;
@@ -217,7 +217,7 @@ end
 
 /* verilator lint_off IMPLICIT */
 
-MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, add2_choice_reg, {DATA_LEN_add2{1'b0}},
+ysyx_24100029_MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, add2_choice_reg, {DATA_LEN_add2{1'b0}},
 {
 2'd0, imm_add   ,
 2'd1, rs2_value_reg ,
@@ -226,7 +226,7 @@ MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, add2_ch
 }
 );
 
-MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (add_1, add1_choice_reg, {DATA_LEN_add1{1'b0}},
+ysyx_24100029_MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (add_1, add1_choice_reg, {DATA_LEN_add1{1'b0}},
 {
 `rs1_dist_reg_ysyx_24100029,    rs1_value_reg,
 `rs1_dist_pc_ysyx_24100029,     pc_reg,
@@ -235,7 +235,7 @@ MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (add_1, add1_ch
 );
 
 /* verilator lint_off PINMISSING */
-ALU #(
+ysyx_24100029_ALU #(
     .BW                          (6'd32                     ) 
 ) ALU_i0
 (
@@ -247,7 +247,7 @@ ALU #(
 
 );
 
-sext #(
+ysyx_24100029_sext #(
     .DATA_WIDTH                  (12                        ),
     .OUT_WIDTH                   (32                        ) 
 ) sext_i12
@@ -256,7 +256,7 @@ sext #(
     .sext_data                   (imm_12i                   ) 
 );
 
-sext #(
+ysyx_24100029_sext #(
     .DATA_WIDTH                  (20                        ),
     .OUT_WIDTH                   (32                        ) 
 ) sext_i20

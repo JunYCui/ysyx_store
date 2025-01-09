@@ -7,11 +7,11 @@
 
     localparam                   i5_NR_KEY                 = 3     ; 
     localparam                   i5_KEY_LEN                = 3     ; 
-    localparam                   i5_DATA_LEN               = 8     ; 
+    localparam                   i5_DATA_LEN               = 4     ; 
 
-module LSU (
-    input                        clk                        ,
-    input                        rst_n                      ,
+module ysyx_24100029_LSU (
+    input                        clock                      ,
+    input                        reset                      ,
 
     input              [  31: 0] pc                         ,
     input                        mem_ren                    ,
@@ -36,23 +36,39 @@ module LSU (
     output                       mem_ren_next               ,
     output                       jump_flag_next             ,
 
-    output reg         [  31: 0] araddr                     ,
-    output reg                   arvalid                    ,
+    input                        awready                    ,
+    output                       awvalid                    ,
+    output             [  31: 0] awaddr                     ,
+    output             [   3: 0] awid                       ,
+    output             [   7: 0] awlen                      ,
+    output             [   2: 0] awsize                     ,
+    output             [   1: 0] awburst                    ,
 
-    output reg                   rready                     ,
-    input              [  31: 0] rdata                      ,
-    input                        rvalid                     ,
+    input                        wready                     ,
+    output                       wvalid                     ,
+    output             [  31: 0] wdata                      ,
+    output             [   3: 0] wstrb                      ,
+    output                       wlast                      ,
 
-    output reg         [  31: 0] awaddr                     ,
-    output reg                   awvalid                    ,
-
-    output             [  31: 0] mem_wdata                  ,
-    output             [   7: 0] wmask                      ,
-    output reg                   wvalid                     ,
-
-    input                        bresp                      ,
+    output                       bready                     ,
     input                        bvalid                     ,
-    output reg                   bready                     ,
+    input              [   1: 0] bresp                      ,
+    input              [   3: 0] bid                        ,
+    
+    input                        arready                    ,
+    output                       arvalid                    ,
+    output             [  31: 0] araddr                     ,
+    output             [   3: 0] arid                       ,
+    output             [   7: 0] arlen                      ,
+    output             [   2: 0] arsize                     ,
+    output             [   1: 0] arburst                    ,
+    
+    output                       rready                     ,
+    input                        rvalid                     ,
+    input              [   1: 0] rresp                      ,
+    input              [  31: 0] rdata                      ,
+    input                        rlast                      ,
+    input              [   3: 0] rid                        ,
 
     output reg                   req                        ,
 
@@ -87,8 +103,8 @@ module LSU (
     reg                          jump_flag_reg              ;
     reg                          valid_last_reg             ;
 
-    always @(posedge clk) begin
-        if(!rst_n)begin
+    always @(posedge clock) begin
+        if(reset)begin
             pc_reg          <=  0         ;
             mem_ren_reg     <=  0         ;
             mem_wen_reg     <=  0         ;
@@ -118,32 +134,37 @@ module LSU (
         end
     end
 
-    always @(posedge clk) begin
-        if(!rst_n)
+    always @(posedge clock) begin
+        if(reset)
             LSU_Rdata <=0;
         else if(rvalid)
             LSU_Rdata <= rdata_ex;
     end
 
-    always @(posedge clk) begin
-        if(!rst_n)
+
+/* **************Axi4 bus**************s */
+    always @(posedge clock) begin
+        if(reset)
             valid_last_reg <= 0;
         else if(ready_last)
             valid_last_reg <= valid_last;
     end
 
-    always @(posedge clk) begin
-        if(!rst_n)begin
+    always @(posedge clock) begin
+        if(reset)begin
             bready <= 1'b0;
             awvalid <= 1'b0;
             wvalid <= 1'b0;
+            wlast <= 1'b0;
         end
         else if(mem_wen & valid_last & ready_last)begin
+            wlast <= 1'b1;
             bready <= 1'b1;
             awvalid <= 1'b1;
             wvalid <= 1'b1;
         end
-        else if(bready & bvalid & bresp)begin
+        else if(bready & bvalid)begin
+            wlast <= 1'b0;
             bready <= 1'b0;
             awvalid <= 1'b0;
             wvalid <= 1'b0;
@@ -151,8 +172,8 @@ module LSU (
     end
 
 
-    always @(posedge clk) begin
-        if(!rst_n)begin
+    always @(posedge clock) begin
+        if(reset)begin
             arvalid <= 1'b0;
             rready <= 1'b0;
         end
@@ -166,28 +187,62 @@ module LSU (
         end
     end
 
-    always @(posedge clk) begin
-        if(!rst_n)
+
+    assign                       araddr                    = Ex_result_reg;
+    
+
+    assign                       awaddr                    = Ex_result_reg;
+    assign                       awid                      = 0;
+    assign                       awlen                     = 0;
+    assign                       awsize                    = 4;
+    assign                       awburst                   = 0;
+
+    assign                       wdata                     = rs2_value_reg;
+
+ysyx_24100029_MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wstrb, funct3_reg, {i5_DATA_LEN{1'b0}},{
+  3'b000,4'b0001,
+  3'b001,4'b0011,
+  3'b010,4'b1111
+});
+
+    assign                       arid                      = 0;
+    assign                       arlen                     = 0;
+    assign                       arsize                    = 4;
+    assign                       arburst                   = 0;
+
+/*
+    assert (rresp == 2'b00)
+    else
+        $display("LSU Read Fail ");
+    assert (bresp == 2'b00)
+    else
+        $display("LSU Write Fail ");
+
+*/
+/* **************Axi4 bus**************s */
+
+    always @(posedge clock) begin
+        if(reset)
             ready_last <= 1'b1;
         else if(mem_ren & valid_last & ready_last)
             ready_last <= 1'b0;
         else if(mem_wen & valid_last & ready_last)
             ready_last <= 1'b0;
-        else if(bready & bvalid & bresp)
+        else if(bready & bvalid)
             ready_last <= 1'b1;
         else if(rvalid)
             ready_last <= 1'b1;
     end
 
 
-   always @(posedge clk) begin
-       if(!rst_n)
+   always @(posedge clock) begin
+       if(reset)
             valid_next <= 0;
         else if(mem_ren & valid_last & ready_last)
             valid_next <= 1'b0;
         else if(mem_wen & valid_last & ready_last)
             valid_next <= 1'b0;
-        else if(bready & bvalid & bresp)
+        else if(bready & bvalid)
             valid_next <= 1'b1;
         else if(rvalid)
             valid_next <= 1'b1;
@@ -203,18 +258,14 @@ module LSU (
     assign                       rd_next                   = rd_reg;
     assign                       mem_ren_next              = mem_ren_reg;
 
-    assign                       mem_wdata                 = rs2_value_reg;
     assign                       R_wen_next                = R_wen_reg;
     assign                       jump_flag_next            = jump_flag_reg;
     assign                       csr_wen_next              = csr_wen_reg;
 
-
-    assign                       araddr                    = Ex_result_reg;
-    assign                       awaddr                    = Ex_result_reg;
     assign                       req                       = ~ready_last;
 
-    always @(posedge clk) begin
-        if(!rst_n)
+    always @(posedge clock) begin
+        if(reset)
             inst_next <=0;
         else if(valid_last & ready_last)
             inst_next <= inst;
@@ -222,7 +273,7 @@ module LSU (
 
 
 
-MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (rdata_ex, funct3_reg, {i4_DATA_LEN{1'b0}},{
+ysyx_24100029_MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (rdata_ex, funct3_reg, {i4_DATA_LEN{1'b0}},{
   3'b000,rdata_8i,                                                  // lb
   3'b001,rdata_16i,                                                 // lh
   3'b010,rdata,                                                     // lw
@@ -230,18 +281,11 @@ MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (rdata_ex, funct3_reg, {
   3'b101,rdata_16u                                                  // 1hu
 });
 
-MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wmask, funct3_reg, {i5_DATA_LEN{1'b0}},{
-  3'b000,8'd1,
-  3'b001,8'd2,
-  3'b010,8'd4
-});
-
-
     assign                       rdata_8u                  = {24'd0,rdata[7:0]};
     assign                       rdata_16u                 = {16'd0,rdata[15:0]};
 
 /* verilator lint_off PINMISSING */
-sext #(
+ysyx_24100029_sext #(
     .DATA_WIDTH                  (8                         ),
     .OUT_WIDTH                   (32                        ) 
 ) sext_i8
@@ -250,7 +294,7 @@ sext #(
     .sext_data                   (rdata_8i                  ) 
 );
 
-sext #(
+ysyx_24100029_sext #(
     .DATA_WIDTH                  (16                        ),
     .OUT_WIDTH                   (32                        ) 
 ) sext_i16

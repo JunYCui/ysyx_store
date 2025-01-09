@@ -1,6 +1,6 @@
 /* Deal with the Data hazard */
 
-module Data_hazard(
+module ysyx_24100029_Data_hazard(
     input              [   4: 0] IDU_rs1                    ,
     input              [   4: 0] IDU_rs2                    ,
 

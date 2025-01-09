@@ -1,4 +1,4 @@
-module Control (
+module ysyx_24100029_Control (
     input              [  31: 0] mtvec_out                  ,
     input              [  31: 0] mepc_out                   ,
 
@@ -83,7 +83,7 @@ module Control (
                         IDU_rs2_value;
 
 
-Data_hazard Data_hazard_inst(
+ysyx_24100029_Data_hazard Data_hazard_inst(
     .IDU_rs1                     (IDU_rs1                   ),
     .IDU_rs2                     (IDU_rs2                   ),
 

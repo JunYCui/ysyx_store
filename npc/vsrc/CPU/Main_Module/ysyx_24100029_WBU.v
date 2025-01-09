@@ -1,9 +1,9 @@
 /* verilator lint_off UNUSEDSIGNAL */
 // signal not use
 
-module WBU (
-    input                        clk                        ,
-    input                        rst_n                      ,
+module ysyx_24100029_WBU (
+    input                        clock                      ,
+    input                        reset                      ,
 
     input              [  31: 0] MEM_Rdata                  ,
     input              [  31: 0] Ex_result                  ,
@@ -39,14 +39,14 @@ module WBU (
     reg                          mem_ren_reg                ;
     reg                          jump_flag_reg              ;
 
-    always @(posedge clk) begin
-        if(!rst_n)
+    always @(posedge clock) begin
+        if(!reset)
             valid_next <= 0;
-        else 
+        else
             valid_next <= valid;
     end
-    always @(posedge clk) begin
-        if(!rst_n)begin
+    always @(posedge clock) begin
+        if(!reset)begin
             inst_next <= 0;
             pc_next <= 0;
         end
@@ -57,8 +57,8 @@ module WBU (
     end
 
 
-always @(posedge clk) begin
-    if(!rst_n)begin
+always @(posedge clock) begin
+    if(!reset)begin
         MEM_Rdata_reg <= 0;
         Ex_result_reg <= 0;
         csrs_reg      <= 0;

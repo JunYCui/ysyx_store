@@ -1,6 +1,6 @@
 `include "./vsrc/CPU/define/para.v"
 
-module ALU
+module ysyx_24100029_ALU
 #(
     parameter                    BW                        = 2    
 )
@@ -108,7 +108,7 @@ always@(*)
     
 end
 
-add
+ysyx_24100029_add
 #(
     .BW                          (BW                        ) 
 )add_inst0

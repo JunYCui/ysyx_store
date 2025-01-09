@@ -1,10 +1,10 @@
-module CSR #(
+module ysyx_24100029_CSR #(
     parameter                    CSR_WIDTH                 = 32    ,
     parameter                    RESET_VAL                 = 0     
 )
 (
-    input                        clk                        ,
-    input                        rst_n                      ,
+    input                        clock                      ,
+    input                        reset                      ,
     input              [  31: 0] pc                         ,
     input                        ecall_flag                 ,
     input              [  31: 0] csrd                       ,
@@ -28,45 +28,45 @@ module CSR #(
     assign                       mstatus_in                = csrd;
     assign                       mtvec_in                  = csrd;
 
-Reg #(
+ysyx_24100029_Reg #(
     .WIDTH                       (CSR_WIDTH                 ),
     .RESET_VAL                   (RESET_VAL                 ) 
 ) CSR_MEPC(
-    .clk                         (clk                       ),
-    .rst                         (rst_n                     ),
+    .clock                       (clock                     ),
+    .reset                       (reset                     ),
     .din                         (mepc_in                   ),
     .dout                        (mepc_out                  ),
     .wen                         (csr_wen[0] | ecall_flag   ) 
 );
 
-Reg #(
+ysyx_24100029_Reg #(
     .WIDTH                       (CSR_WIDTH                 ),
     .RESET_VAL                   (RESET_VAL                 ) 
 ) CSR_MCAUSE(
-    .clk                         (clk                       ),
-    .rst                         (rst_n                     ),
+    .clock                       (clock                     ),
+    .reset                       (reset                     ),
     .din                         (mcause_in                 ),
     .dout                        (mcause_out                ),
     .wen                         (csr_wen[1] | ecall_flag   ) 
 );
 
-Reg #(
+ysyx_24100029_Reg #(
     .WIDTH                       (CSR_WIDTH                 ),
     .RESET_VAL                   (32'h1800                  ) 
 ) CSR_MSTATUS(
-    .clk                         (clk                       ),
-    .rst                         (rst_n                     ),
+    .clock                       (clock                     ),
+    .reset                       (reset                     ),
     .din                         (mstatus_in                ),
     .dout                        (mstatus_out               ),
     .wen                         (csr_wen[2]                ) 
 );
 
-Reg #(
+ysyx_24100029_Reg #(
     .WIDTH                       (CSR_WIDTH                 ),
     .RESET_VAL                   (RESET_VAL                 ) 
 ) CSR_MTVEC(
-    .clk                         (clk                       ),
-    .rst                         (rst_n                     ),
+    .clock                       (clock                     ),
+    .reset                       (reset                     ),
     .din                         (mtvec_in                  ),
     .dout                        (mtvec_out                 ),
     .wen                         (csr_wen[3]                ) 
