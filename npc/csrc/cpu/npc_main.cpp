@@ -6,6 +6,7 @@
 extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
 extern "C" void mrom_read(int32_t addr, int32_t *data) {
     *data = 1048691;   
+    return ;
 }
 
 // 实例化一个 VerilatedVcdC 类型的对象 m_trace，用于波形跟踪
