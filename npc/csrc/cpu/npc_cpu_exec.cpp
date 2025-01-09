@@ -84,7 +84,7 @@ void cpu_exec(uint32_t n)
         s.dnpc=top->dnpc;
         s.snpc=top->snpc;
     */
-    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.cpu"));
+    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.CPU"));
         GetInst(&s.inst);
         if(skip_flag != 0)
         {
@@ -100,7 +100,7 @@ void cpu_exec(uint32_t n)
    //     valid = top->WBU_valid;
     //    }
 
-    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.cpu.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
+    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.CPU.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
         for(int j=0;j<32;j++)
         {
             ReadReg(j,&cpu.gpr[j]);
