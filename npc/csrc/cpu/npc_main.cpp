@@ -26,7 +26,7 @@ void fi(int val) { exit(val); }
 void cpu_reset(void)
 {
     top->clock = 0;
-    top->reset = 0;
+    top->reset = 1;
     top->eval();
     m_trace->dump(sim_time);
     sim_time++;
