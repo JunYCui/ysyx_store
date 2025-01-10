@@ -28,14 +28,14 @@ import "DPI-C" function void npc_pmem_write(input int waddr, input int wdata, in
 
 /* verilator lint_off UNUSEDSIGNAL */
 /* verilator lint_off UNDRIVEN */
-module SRAM
+module ysyx_24100029_SRAM
 #(
     parameter                    DATA_WIDTH                = 32    ,
     parameter                    ADDR_WIDTH                = 32    
 )
 (
-    input                        rst_n                      ,
-    input                        clk                        ,
+    input                        reset                      ,
+    input                        clock                        ,
   
     input              [ADDR_WIDTH-1: 0]araddr              ,
     input                        arvalid                    ,
@@ -65,8 +65,8 @@ module SRAM
     reg                          read_state_next            ;
     reg                          write_state_next           ;
 
-    always @(posedge clk) begin
-        if(!rst_n)
+    always @(posedge clock) begin
+        if(!reset)
             read_state <= `wait_arv_ysyx_24100029;
         else
             read_state <= read_state_next;
@@ -92,8 +92,8 @@ module SRAM
     end
 
 
-    always @(posedge clk) begin
-        if(!rst_n)begin
+    always @(posedge clock) begin
+        if(!reset)begin
             rdata <= 0;
             rresp <= 0;
             rvalid <= 1'b0;
@@ -109,8 +109,8 @@ module SRAM
             rdata <= 0;
         end
     end
-    always @(posedge clk) begin
-        if(!rst_n)
+    always @(posedge clock) begin
+        if(!reset)
             write_state <= `wait_awv_ysyx_24100029;
         else
             write_state <= write_state_next;

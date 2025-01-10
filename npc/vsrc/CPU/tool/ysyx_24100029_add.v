@@ -1,4 +1,4 @@
-module add
+module ysyx_24100029_add
 #(
     parameter BW=4
 )

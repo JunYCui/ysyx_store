@@ -5,9 +5,9 @@
     localparam                   i1_DATA_LEN               = 32    ;
     
 
-module IDU(
-    input                        clk                        ,
-    input                        rst_n                      ,
+module ysyx_24100029_IDU(
+    input                        clock                      ,
+    input                        reset                      ,
 
     /* contorl signal */
     input                        inst_clear                 ,
@@ -73,8 +73,8 @@ module IDU(
 
     assign                       ready_last                = ready_next;
 
-    always @(posedge clk) begin
-        if(!rst_n)
+    always @(posedge clock) begin
+        if(reset)
             pipe_stop_reg <= 0;
         else if((~valid_last | ~ready_last) & ~pipe_stop)
             pipe_stop_reg <= pipe_stop;
@@ -83,8 +83,8 @@ module IDU(
     end
 
 
-    always @(posedge clk) begin
-        if(!rst_n)
+    always @(posedge clock) begin
+        if(reset)
             inst_clear_reg <= 0;
         else if((~valid_last | ~ready_last) & ~inst_clear_reg)
             inst_clear_reg <= inst_clear;
@@ -92,8 +92,8 @@ module IDU(
             inst_clear_reg <= 0;
     end
 
-    always @(posedge clk) begin
-        if(!rst_n)
+    always @(posedge clock) begin
+        if(reset)
             valid_next <= 1'b0;
         else if(ready_last & valid_last & (inst_clear | inst_clear_reg))
             valid_next <= 1'b0;
@@ -103,8 +103,8 @@ module IDU(
             valid_next <= 1'b0;
     end
 
-    always@(posedge clk)begin
-        if(!rst_n)
+    always@(posedge clock)begin
+        if(reset)
             inst_reg <= 0;
         else if((inst_clear | inst_clear_reg) & valid_last & ready_last)
             inst_reg <= 0;
@@ -113,8 +113,8 @@ module IDU(
         else if(valid_last & ready_last)
             inst_reg <= inst;
     end
-    always@(posedge clk)begin
-        if(!rst_n)
+    always@(posedge clock)begin
+        if(reset)
             pc_reg <= 0;
         else if((pipe_stop_reg | pipe_stop)& valid_last & ready_last)
             pc_reg <= pc_reg;
@@ -199,7 +199,7 @@ module IDU(
 /* verilator lint_off IMPLICIT */
 
 /* imm 处理*/
-MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, opcode, {i1_DATA_LEN{1'b0}},
+ysyx_24100029_MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, opcode, {i1_DATA_LEN{1'b0}},
 {`R_opcode_ysyx_24100029 ,    {25'd0,inst_reg[31:25]},
  `I0_opcode_ysyx_24100029,    {20'd0,inst_reg[31:20]},
  `I1_opcode_ysyx_24100029,    {20'd0,inst_reg[31:20]},
@@ -212,9 +212,9 @@ MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, opcode, {i1_DAT
  `M_opcode_ysyx_24100029 ,    {20'd0,inst_reg[31:20]}
  });
 
-Reg_Stack Reg_Stack_inst0(
-    .rst_n                       (rst_n                     ),
-    .clk                         (clk                       ),
+ysyx_24100029_Reg_Stack Reg_Stack_inst0(
+    .reset                       (reset                     ),
+    .clock                       (clock                     ),
     .pc                          (pc_reg                    ),
     .ecall_flag                  (ecall_flag                ),
 

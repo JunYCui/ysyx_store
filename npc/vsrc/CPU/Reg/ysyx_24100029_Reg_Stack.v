@@ -1,6 +1,6 @@
-module Reg_Stack(
-    input                        rst_n                      ,
-    input                        clk                        ,
+module ysyx_24100029_Reg_Stack(
+    input                        reset                      ,
+    input                        clock                      ,
     input              [  31: 0] pc                         ,
     input                        ecall_flag                 ,
 
@@ -39,9 +39,9 @@ module Reg_Stack(
 
 
 
-CSR #(32,0) CSR_inst(
-    .clk                         (clk                       ),
-    .rst_n                       (rst_n                     ),
+ysyx_24100029_CSR #(32,0) CSR_inst(
+    .clock                       (clock                     ),
+    .reset                       (reset                     ),
 
     .pc                          (pc                        ),
     .ecall_flag                  (ecall_flag                ),
@@ -58,12 +58,12 @@ CSR #(32,0) CSR_inst(
 
 );
 
-RegisterFile #(5, 32) Reg_inst(
-    .clk                         (clk                       ),
+ysyx_24100029_RegisterFile #(5, 32) Reg_inst(
+    .clock                       (clock                     ),
     .wdata                       (wdata                     ),
     .waddr                       (rd                        ),
     .wen                         (R_wen                     ),
-    .rst_n                       (rst_n                     ),
+    .reset                       (reset                     ),
     .rs1_addr                    (rs1                       ),
     .rs2_addr                    (rs2                       ),
 

@@ -22,7 +22,7 @@
 #include <math.h>
 #include <npc_reg.h>
 
-extern Vcpu_ysyx_24100029 *top ;
+extern VysyxSoCFull *top ;
 
 enum {
   TK_NOTYPE = 256,TK_int,TK_HEX,
@@ -240,7 +240,7 @@ static word_t eval(uint32_t p ,uint32_t q)
     {
       if(strcmp(tokens[p].str,"pc")== 0)
       {
-        num = top->pc;
+        num = 0;//top->pc;
         return num;
       }
       else 

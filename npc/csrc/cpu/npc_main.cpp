@@ -3,6 +3,12 @@
 #include "npc_memory.h"
 #include "npc_cpu_exec.h"
 #include "npc_sdb.h"
+extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
+extern "C" void mrom_read(int32_t addr, int32_t *data) {
+    printf("addr = 0x%x \n",addr);
+    *data = 1048691;   
+    return ;
+}
 
 // 实例化一个 VerilatedVcdC 类型的对象 m_trace，用于波形跟踪
 VerilatedVcdC *m_trace = new VerilatedVcdC;
@@ -11,7 +17,7 @@ VerilatedVcdC *m_trace = new VerilatedVcdC;
 VerilatedContext *contextp = new VerilatedContext;
 
 // 构建一个名为top的仿真模型
-Vcpu_ysyx_24100029 *top = new Vcpu_ysyx_24100029{contextp};
+VysyxSoCFull *top = new VysyxSoCFull{contextp};
 
 
 #define MAX_SIM_TIME 100 //定义模拟的时钟边沿数（包括上下边沿）
@@ -23,17 +29,17 @@ void fi(int val) { exit(val); }
 
 void cpu_reset(void)
 {
-    top->clk = 0;
-    top->rst_n = 0;
+    top->clock = 0;
+    top->reset = 1;
     top->eval();
     m_trace->dump(sim_time);
     sim_time++;
-    top->clk = 1;
+    top->clock = 1;
     top->eval();
     m_trace->dump(sim_time);
     sim_time++;
-    top->rst_n = 1;
-    top->clk = 0;
+    top->reset = 0;
+    top->clock = 0;
     top->eval();
     m_trace->dump(sim_time);
     sim_time++;
@@ -49,6 +55,7 @@ void wave_record(void)
 int main(int argc,char* argv[])
 {
     int valid;
+    Verilated::commandArgs(argc, argv);
     // 开启波形跟踪
     Verilated::traceEverOn(true);
 
@@ -59,7 +66,8 @@ int main(int argc,char* argv[])
    m_trace->open("waveform.vcd");
 
     cpu_reset();
-    valid = top->WBU_valid;
+ //   valid = top->WBU_valid;
+ /*
     while(!valid)
     {
     for(int i=0;i<2;i++)
@@ -70,6 +78,7 @@ int main(int argc,char* argv[])
     }
     valid = top->WBU_valid;
     }
+   */
     sdb_mainloop();
     
     m_trace->close();

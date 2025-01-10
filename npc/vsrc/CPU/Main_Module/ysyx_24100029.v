@@ -1,25 +1,129 @@
 import "DPI-C" function void fi(int val);
 
 
-module cpu_ysyx_24100029
+module ysyx_24100029
 (
-    input                        clk                        ,
-    input                        rst_n                      ,
-    output reg         [  31: 0] pc                         ,
-    output             [  31: 0] snpc                       ,
-    output             [  31: 0] dnpc                       ,
-    output             [  31: 0] IFU_pc                     ,
-    output             [  31: 0] LSU_pc                     ,
-    output                       WBU_valid                   
+    input                        clock                      ,
+    input                        reset                      ,
+    input                        io_interrupt               ,
+
+    input                        io_master_awready          ,
+    output                       io_master_awvalid          ,
+    output             [  31: 0] io_master_awaddr           ,// writer address
+    output             [   3: 0] io_master_awid             ,// adress write ID for transcation order
+    output             [   7: 0] io_master_awlen            ,// burst lenth = awlen[7:0]+ 1
+    output             [   2: 0] io_master_awsize           ,// burst size (Bytes in transfer)
+    output             [   1: 0] io_master_awburst          ,// burst type, three types 
+                                                              // 1.FIXED 2. incr 3.wrap
+    input                        io_master_wready           ,
+    output                       io_master_wvalid           ,
+    output             [  31: 0] io_master_wdata            ,
+    output             [   3: 0] io_master_wstrb            ,// 
+    output                       io_master_wlast            ,// This signal indicates the last transfer in a write burst
+
+    output                       io_master_bready           ,
+    input                        io_master_bvalid           ,
+    input              [   1: 0] io_master_bresp            ,
+    input              [   3: 0] io_master_bid              ,
+
+    input                        io_master_arready          ,
+    output                       io_master_arvalid          ,
+    output             [  31: 0] io_master_araddr           ,
+    output             [   3: 0] io_master_arid             ,
+    output             [   7: 0] io_master_arlen            ,
+    output             [   2: 0] io_master_arsize           ,
+    output             [   1: 0] io_master_arburst          ,
+
+    output                       io_master_rready           ,
+    input                        io_master_rvalid           ,
+    input              [   1: 0] io_master_rresp            ,
+    input              [  31: 0] io_master_rdata            ,
+    input                        io_master_rlast            ,
+    input              [   3: 0] io_master_rid              ,
+
+
+    output                       io_slave_awready           ,
+    input                        io_slave_awvalid           ,
+    input              [   3: 0] io_slave_awid              ,
+    input              [  31: 0] io_slave_awaddr            ,
+    input              [   7: 0] io_slave_awlen             ,
+    input              [   2: 0] io_slave_awsize            ,
+    input              [   1: 0] io_slave_awburst           ,
+
+    output                       io_slave_wready            ,
+    input                        io_slave_wvalid            ,
+    input              [  31: 0] io_slave_wdata             ,
+    input              [   3: 0] io_slave_wstrb             ,
+    input                        io_slave_wlast             ,
+    
+    input                        io_slave_bready            ,
+    output                       io_slave_bvalid            ,
+    output             [   3: 0] io_slave_bid               ,
+    output             [   1: 0] io_slave_bresp             ,
+    
+    output                       io_slave_arready           ,
+    input                        io_slave_arvalid           ,
+    input              [   3: 0] io_slave_arid              ,
+    input              [  31: 0] io_slave_araddr            ,
+    input              [   7: 0] io_slave_arlen             ,
+    input              [   2: 0] io_slave_arsize            ,
+    input              [   1: 0] io_slave_arburst           ,
+    
+    input                        io_slave_rready            ,
+    input                        io_slave_rvalid            ,
+    input              [   3: 0] io_slave_rid               ,
+    input              [  31: 0] io_slave_rdata             ,
+    input              [   1: 0] io_slave_rresp             ,
+    input                        io_slave_rlast              
+//    output             [  31: 0] pc                         ,
+//    output             [  31: 0] snpc                       ,
+//    output             [  31: 0] dnpc                       ,
+//    output             [  31: 0] IFU_pc                     ,
+//    output             [  31: 0] LSU_pc                     ,
+//    output                       WBU_valid                   
 );
 
 
  //   wire               [  31: 0] IFU_pc                     ;
     wire               [  31: 0] IFU_inst                   ;
     wire                         IFU_valid                  ;
-    wire                         IFU_rvalid                 ;
-    wire               [  31: 0] IFU_rdata                  ;
     wire                         IFU_req                    ;
+    wire               [  31: 0] IFU_pc                     ;
+
+    wire                         IFU_awready                ;
+    wire                         IFU_awvalid                ;
+    wire               [  31: 0] IFU_awaddr                 ;
+    wire               [   3: 0] IFU_awid                   ;
+    wire               [   7: 0] IFU_awlen                  ;
+    wire               [   2: 0] IFU_awsize                 ;
+    wire               [   1: 0] IFU_awburst                ;
+
+    wire                         IFU_wready                 ;
+    wire                         IFU_wvalid                 ;
+    wire               [  31: 0] IFU_wdata                  ;
+    wire               [   3: 0] IFU_wstrb                  ;
+    wire                         IFU_wlast                  ;
+
+    wire                         IFU_bready                 ;
+    wire                         IFU_bvalid                 ;
+    wire               [   1: 0] IFU_bresp                  ;
+    wire               [   3: 0] IFU_bid                    ;
+
+    wire                         IFU_arready                ;
+    wire                         IFU_arvalid                ;
+    wire               [  31: 0] IFU_araddr                 ;
+    wire               [   3: 0] IFU_arid                   ;
+    wire               [   7: 0] IFU_arlen                  ;
+    wire               [   2: 0] IFU_arsize                 ;
+    wire               [   1: 0] IFU_arburst                ;
+
+    wire                         IFU_rready                 ;
+    wire                         IFU_rvalid                 ;
+    wire               [   1: 0] IFU_rresp                  ;
+    wire               [  31: 0] IFU_rdata                  ;
+    wire                         IFU_rlast                  ;
+    wire               [   3: 0] IFU_rid                    ;
+
 
 /************************* IDU ********************/
     wire               [  31: 0] IDU_pc                     ;
@@ -79,29 +183,50 @@ module cpu_ysyx_24100029
     wire               [   3: 0] LSU_csr_wen                ;
     wire               [  31: 0] LSU_Ex_result              ;
     wire               [  31: 0] LSU_csrs                   ;
-//    wire               [  31: 0] MEM_pc                     ;
+    wire               [  31: 0] LSU_pc                     ;
+
     wire               [   4: 0] LSU_rd                     ;
     wire                         LSU_mem_ren                ;
 
-    wire               [  31: 0] LSU_araddr                 ;
-    wire                         LSU_arvalid                ;
-    wire                         LSU_rready                 ;
-    wire               [  31: 0] LSU_rdata                  ;
-    wire                         LSU_rvalid                 ;
-    wire               [  31: 0] LSU_awaddr                 ;
+    wire                         LSU_awready                ;
     wire                         LSU_awvalid                ;
-    wire               [  31: 0] LSU_mem_wdata              ;
-    wire               [   7: 0] LSU_wmask                  ;
-    wire                         LSU_wvalid                 ;
-    wire                         LSU_bresp                  ;
-    wire                         LSU_bvalid                 ;
-    wire                         LSU_bready                 ;
-    wire                         LSU_req                    ;
+    wire               [  31: 0] LSU_awaddr                 ;
+    wire               [   3: 0] LSU_awid                   ;
+    wire               [   7: 0] LSU_awlen                  ;
+    wire               [   2: 0] LSU_awsize                 ;
+    wire               [   1: 0] LSU_awburst                ;
 
+    wire                         LSU_wready                 ;
+    wire                         LSU_wvalid                 ;
+    wire               [  31: 0] LSU_wdata                  ;
+    wire               [   3: 0] LSU_wstrb                  ;
+    wire                         LSU_wlast                  ;
+
+    wire                         LSU_bready                 ;
+    wire                         LSU_bvalid                 ;
+    wire               [   1: 0] LSU_bresp                  ;
+    wire               [   3: 0] LSU_bid                    ;
+
+    wire                         LSU_arready                ;
+    wire                         LSU_arvalid                ;
+    wire               [  31: 0] LSU_araddr                 ;
+    wire               [   3: 0] LSU_arid                   ;
+    wire               [   7: 0] LSU_arlen                  ;
+    wire               [   2: 0] LSU_arsize                 ;
+    wire               [   1: 0] LSU_arburst                ;
+
+    wire                         LSU_rready                 ;
+    wire                         LSU_rvalid                 ;
+    wire               [   1: 0] LSU_rresp                  ;
+    wire               [  31: 0] LSU_rdata                  ;
+    wire                         LSU_rlast                  ;
+    wire               [   3: 0] LSU_rid                    ;
 
     wire                         LSU_valid                  ;
     wire                         LSU_ready                  ;
     wire               [  31: 0] LSU_inst                   ;
+
+    wire                         LSU_req                    ;
 /************************* WBU ********************/
     wire               [  31: 0] WBU_pc                     ;
     wire               [  31: 0] WBU_inst                   ;
@@ -111,6 +236,7 @@ module cpu_ysyx_24100029
     wire                         WBU_R_wen                  ;
     wire               [   3: 0] WBU_csr_wen                ;
     wire                         WBU_ready                  ;
+    wire                         WBU_valid                  ;
  //   wire                         WBU_valid                  ;
 
  /************************* SRAM ********************/
@@ -145,9 +271,11 @@ module cpu_ysyx_24100029
     wire                         IFU_pipe_s                 ;
     wire                         IDU_inst_clear             ;
     wire                         EXU_inst_clear             ;
+    wire               [  31: 0] dnpc                       ;
 
-    assign                       pc                        = WBU_pc;
-    assign                       snpc                      = pc + 4;
+
+//    assign                       pc                        = WBU_pc;
+//    assign                       snpc                      = pc + 4;
 
     always @(*)begin
         if(WBU_inst == 32'h00100073) begin
@@ -173,7 +301,7 @@ endtask
 
 export "DPI-C" task GetInst;
 
-Control Control_inst0(
+ysyx_24100029_Control Control_inst0(
     .mtvec_out                   (IDU_mtvec_out             ),
     .mepc_out                    (IDU_mepc_out              ),
 
@@ -224,26 +352,58 @@ Control Control_inst0(
 
 
 
-IFU IFU_Inst0(
-    .clk                         (clk                       ),
-    .rst_n                       (rst_n                     ),
+ysyx_24100029_IFU IFU_Inst0(
+    .clock                       (clock                     ),
+    .reset                       (reset                     ),
     .dnpc                        (dnpc                      ),
     .dnpc_flag                   (dnpc_flag                 ),
     .pipe_stop                   (IFU_pipe_s                ),
     .pc                          (IFU_pc                    ),
     .inst                        (IFU_inst                  ),
 
+    .awready                     (IFU_awready               ),
+    .awvalid                     (IFU_awvalid               ),
+    .awaddr                      (IFU_awaddr                ),
+    .awid                        (IFU_awid                  ),
+    .awlen                       (IFU_awlen                 ),
+    .awsize                      (IFU_awsize                ),
+    .awburst                     (IFU_awburst               ),
+ 
+    .wready                      (IFU_wready                ),
+    .wvalid                      (IFU_wvalid                ),
+    .wdata                       (IFU_wdata                 ),
+    .wstrb                       (IFU_wstrb                 ),
+    .wlast                       (IFU_wlast                 ),
+     
+    .bready                      (IFU_bready                ),
+    .bvalid                      (IFU_bvalid                ),
+    .bresp                       (IFU_bresp                 ),
+    .bid                         (IFU_bid                   ),
+     
+    .arready                     (IFU_arready               ),
+    .arvalid                     (IFU_arvalid               ),
+    .araddr                      (IFU_araddr                ),
+    .arid                        (IFU_arid                  ),
+    .arlen                       (IFU_arlen                 ),
+    .arsize                      (IFU_arsize                ),
+    .arburst                     (IFU_arburst               ),
+     
+    .rready                      (IFU_rready                ),
     .rvalid                      (IFU_rvalid                ),
+    .rresp                       (IFU_rresp                 ),
     .rdata                       (IFU_rdata                 ),
+    .rlast                       (IFU_rlast                 ),
+    .rid                         (IFU_rid                   ),
+    
     .req                         (IFU_req                   ),
 
     .ready                       (IDU_ready                 ),
     .valid                       (IFU_valid                 ) 
 );
 
-IDU IDU_Inst0(
-    .clk                         (clk                       ),
-    .rst_n                       (rst_n                     ),
+ysyx_24100029_IDU IDU_Inst0(
+    .clock                       (clock                     ),
+    .reset                       (reset                     ),
 
     .inst_clear                  (IDU_inst_clear            ),
     .pipe_stop                   (IDU_pipe_s                ),
@@ -294,9 +454,9 @@ IDU IDU_Inst0(
 
 );
 
-EXU EXU_Inst0(
-    .clk                         (clk                       ),
-    .rst_n                       (rst_n                     ),
+ysyx_24100029_EXU EXU_Inst0(
+    .clock                       (clock                     ),
+    .reset                       (reset                     ),
 
     .inst_clear                  (EXU_inst_clear            ),
 
@@ -345,9 +505,9 @@ EXU EXU_Inst0(
     .inst_next                   (EXU_inst                  ) 
 );
 
-LSU LSU_Inst0(
-    .clk                         (clk                       ),
-    .rst_n                       (rst_n                     ),
+ysyx_24100029_LSU LSU_Inst0(
+    .clock                       (clock                     ),
+    .reset                       (reset                     ),
 
     .pc                          (EXU_pc                    ),
     .mem_ren                     (EXU_mem_ren               ),
@@ -371,24 +531,39 @@ LSU LSU_Inst0(
     .mem_ren_next                (LSU_mem_ren               ),
     .jump_flag_next              (LSU_jump_flag             ),
 
-    .araddr                      (LSU_araddr                ),
-    .arvalid                     (LSU_arvalid               ),
-
-    .rready                      (LSU_rready                ),
-    .rdata                       (LSU_rdata                 ),
-    .rvalid                      (LSU_rvalid                ),
-
-    .awaddr                      (LSU_awaddr                ),
+    .awready                     (LSU_awready               ),
     .awvalid                     (LSU_awvalid               ),
-
-    .mem_wdata                   (LSU_mem_wdata             ),
-    .wmask                       (LSU_wmask                 ),
+    .awaddr                      (LSU_awaddr                ),
+    .awid                        (LSU_awid                  ),
+    .awlen                       (LSU_awlen                 ),
+    .awsize                      (LSU_awsize                ),
+    .awburst                     (LSU_awburst               ),
+    .wready                      (LSU_wready                ),
     .wvalid                      (LSU_wvalid                ),
-
-    .bresp                       (LSU_bresp                 ),
-    .bvalid                      (LSU_bvalid                ),
+    .wdata                       (LSU_wdata                 ),
+    .wstrb                       (LSU_wstrb                 ),
+    .wlast                       (LSU_wlast                 ),
+ 
     .bready                      (LSU_bready                ),
-
+    .bvalid                      (LSU_bvalid                ),
+    .bresp                       (LSU_bresp                 ),
+    .bid                         (LSU_bid                   ),
+ 
+    .arready                     (LSU_arready               ),
+    .arvalid                     (LSU_arvalid               ),
+    .araddr                      (LSU_araddr                ),
+    .arid                        (LSU_arid                  ),
+    .arlen                       (LSU_arlen                 ),
+    .arsize                      (LSU_arsize                ),
+    .arburst                     (LSU_arburst               ),
+ 
+    .rready                      (LSU_rready                ),
+    .rvalid                      (LSU_rvalid                ),
+    .rresp                       (LSU_rresp                 ),
+    .rdata                       (LSU_rdata                 ),
+    .rlast                       (LSU_rlast                 ),
+    .rid                         (LSU_rid                   ),
+    
     .req                         (LSU_req                   ),
 
     .valid_last                  (EXU_valid                 ),
@@ -401,9 +576,9 @@ LSU LSU_Inst0(
     .inst_next                   (LSU_inst                  ) 
 );
 
-WBU WBU_inst0(
-    .clk                         (clk                       ),
-    .rst_n                       (rst_n                     ),
+ysyx_24100029_WBU WBU_inst0(
+    .clock                       (clock                     ),
+    .reset                       (reset                     ),
 
     .MEM_Rdata                   (LSU_Rdata                 ),
     .Ex_result                   (LSU_Ex_result             ),
@@ -430,106 +605,114 @@ WBU WBU_inst0(
     .valid_next                  (WBU_valid                 ) 
 );
 /* verilator lint_off PINMISSING */
-Aribiter #(
+ysyx_24100029_Aribiter #(
     .DATA_WIDTH                  (32                        ),
     .ADDR_WIDTH                  (32                        ) 
 )Aribiter_inst(
-    .clk                         (clk                       ),
-    .rst_n                       (rst_n                     ),
+    .clock                       (clock                     ),
+    .reset                       (reset                     ),
 
     .IFU_req                     (IFU_req                   ),
     .LSU_req                     (LSU_req                   ),
 
-    .IFU_araddr                  (IFU_pc                    ),
-    .IFU_arvalid                 (1'b1                      ),
+    .IFU_araddr                  (IFU_araddr                ),
+    .IFU_arvalid                 (IFU_arvalid               ),
+    .IFU_arready                 (IFU_arready               ),
+    .IFU_arid                    (IFU_arid                  ),
+    .IFU_arlen                   (IFU_arlen                 ),
+    .IFU_arsize                  (IFU_arsize                ),
+    .IFU_arburst                 (IFU_arburst               ),
 
-    .IFU_rready                  (1'b1                      ),
+    .IFU_rready                  (IFU_rready                ),
     .IFU_rdata                   (IFU_rdata                 ),
+    .IFU_rresp                   (IFU_rresp                 ),
     .IFU_rvalid                  (IFU_rvalid                ),
+    .IFU_rlast                   (IFU_rlast                 ),
+    .IFU_rid                     (IFU_rid                   ),
 
-    .IFU_awaddr                  (0                         ),
-    .IFU_awvalid                 (0                         ),
+    .IFU_awaddr                  (IFU_awaddr                ),
+    .IFU_awvalid                 (IFU_awvalid               ),
+    .IFU_awready                 (IFU_awready               ),
+    .IFU_awid                    (IFU_awid                  ),
+    .IFU_awlen                   (IFU_awlen                 ),
+    .IFU_awsize                  (IFU_awsize                ),
+    .IFU_awburst                 (IFU_awburst               ),
 
+    .IFU_wdata                   (IFU_wdata                 ),
+    .IFU_wstrb                   (IFU_wstrb                 ),
+    .IFU_wvalid                  (IFU_wvalid                ),
+    .IFU_wready                  (IFU_wready                ),
+    .IFU_wlast                   (IFU_wlast                 ),
 
-    .IFU_wdata                   (0                         ),
-    .IFU_wstrb                   (0                         ),
-    .IFU_wvalid                  (0                         ),
+    .IFU_bresp                   (IFU_bresp                 ),
+    .IFU_bvalid                  (IFU_bvalid                ),
+    .IFU_bready                  (IFU_bready                ),
+    .IFU_bid                     (IFU_bid                   ),
 
-    .IFU_bready                  (0                         ),
-
-    .LSU_araddr                  (LSU_araddr                ),
-    .LSU_arvalid                 (LSU_arvalid               ),
-
-    .LSU_rready                  (LSU_rready                ),
-    .LSU_rdata                   (LSU_rdata                 ),
-    .LSU_rvalid                  (LSU_rvalid                ),
-
-    .LSU_awaddr                  (LSU_awaddr                ),
+    .LSU_awready                 (LSU_awready               ),
     .LSU_awvalid                 (LSU_awvalid               ),
-
-    .LSU_wdata                   (LSU_mem_wdata             ),
-    .LSU_wstrb                   (LSU_wmask                 ),
+    .LSU_awaddr                  (LSU_awaddr                ),
+    .LSU_awid                    (LSU_awid                  ),
+    .LSU_awlen                   (LSU_awlen                 ),
+    .LSU_awsize                  (LSU_awsize                ),
+    .LSU_awburst                 (LSU_awburst               ),
+    .LSU_wready                  (LSU_wready                ),
     .LSU_wvalid                  (LSU_wvalid                ),
-
-    .LSU_bresp                   (LSU_bresp                 ),
-    .LSU_bvalid                  (LSU_bvalid                ),
+    .LSU_wdata                   (LSU_wdata                 ),
+    .LSU_wstrb                   (LSU_wstrb                 ),
+    .LSU_wlast                   (LSU_wlast                 ),
     .LSU_bready                  (LSU_bready                ),
+    .LSU_bvalid                  (LSU_bvalid                ),
+    .LSU_bresp                   (LSU_bresp                 ),
+    .LSU_bid                     (LSU_bid                   ),
 
-    .araddr                      (araddr                    ),
-    .arvalid                     (arvalid                   ),
-    .arready                     (arready                   ),
+    .LSU_arready                 (LSU_arready               ),
+    .LSU_arvalid                 (LSU_arvalid               ),
+    .LSU_araddr                  (LSU_araddr                ),
+    .LSU_arid                    (LSU_arid                  ),
+    .LSU_arlen                   (LSU_arlen                 ),
+    .LSU_arsize                  (LSU_arsize                ),
+    .LSU_arburst                 (LSU_arburst               ),
+    .LSU_rready                  (LSU_rready                ),
+    .LSU_rvalid                  (LSU_rvalid                ),
+    .LSU_rresp                   (LSU_rresp                 ),
+    .LSU_rdata                   (LSU_rdata                 ),
+    .LSU_rlast                   (LSU_rlast                 ),
+    .LSU_rid                     (LSU_rid                   ),
 
-    .rready                      (rready                    ),
-    .rdata                       (rdata                     ),
-    .rresp                       (rresp                     ),
-    .rvalid                      (rvalid                    ),
+    .awready                     (io_master_awready         ),
+    .awvalid                     (io_master_awvalid         ),
+    .awaddr                      (io_master_awaddr          ),
+    .awid                        (io_master_awid            ),
+    .awlen                       (io_master_awlen           ),
+    .awsize                      (io_master_awsize          ),
+    .awburst                     (io_master_awburst         ),
+    .wready                      (io_master_wready          ),
+    .wvalid                      (io_master_wvalid          ),
+    .wdata                       (io_master_wdata           ),
+    .wstrb                       (io_master_wstrb           ),
+    .wlast                       (io_master_wlast           ),
+    .bready                      (io_master_bready          ),
+    .bvalid                      (io_master_bvalid          ),
+    .bresp                       (io_master_bresp           ),
+    .bid                         (io_master_bid             ),
 
-    .awaddr                      (awaddr                    ),
-    .awvalid                     (awvalid                   ),
-    .awready                     (awready                   ),
-
-    .wdata                       (wdata                     ),
-    .wstrb                       (wstrb                     ),
-    .wvalid                      (wvalid                    ),
-    .wready                      (wready                    ),
-
-    .bresp                       (bresp                     ),
-    .bvalid                      (bvalid                    ),
-    .bready                      (bready                    ) 
-
-
-
-);
-SRAM
-#(
-    .DATA_WIDTH                  (32                        ),
-    .ADDR_WIDTH                  (32                        ) 
-)SRAM_inst0
-(
-    .clk                         (clk                       ),
-    .rst_n                       (rst_n                     ),
-
-    .araddr                      (araddr                    ),
-    .arvalid                     (arvalid                   ),
-    .arready                     (arready                   ),
-
-    .rready                      (rready                    ),
-    .rdata                       (rdata                     ),
-    .rresp                       (rresp                     ),
-    .rvalid                      (rvalid                    ),
+    .arready                     (io_master_arready         ),
+    .arvalid                     (io_master_arvalid         ),
+    .araddr                      (io_master_araddr          ),
+    .arid                        (io_master_arid            ),
+    .arlen                       (io_master_arlen           ),
+    .arsize                      (io_master_arsize          ),
+    .arburst                     (io_master_arburst         ),
+    .rready                      (io_master_rready          ),
+    .rvalid                      (io_master_rvalid          ),
+    .rresp                       (io_master_rresp           ),
+    .rdata                       (io_master_rdata           ),
+    .rlast                       (io_master_rlast           ),
+    .rid                         (io_master_rid             ) 
     
-    .awaddr                      (awaddr                    ),
-    .awvalid                     (awvalid                   ),
-    .awready                     (awready                   ),
-    
-    .wdata                       (wdata                     ),
-    .wstrb                       (wstrb                     ),
-    .wvalid                      (wvalid                    ),
-    .wready                      (wready                    ),
-    
-    .bresp                       (bresp                     ),
-    .bvalid                      (bvalid                    ),
-    .bready                      (bready                    ) 
+
+
 );
 
 
