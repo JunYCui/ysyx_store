@@ -44,7 +44,7 @@ LDFLAGS += $(shell llvm-config --libs) -fsanitize=address
 
 CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE -rdynamic
 
-IMG ?=
+IMG ?= ../soc_test/char_test.bin
 
 override ARGS += $(ARGS_DIFF)
 
