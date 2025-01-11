@@ -44,7 +44,7 @@ module ysyx_24100029_IFU(
     output             [   7: 0] awlen                      ,
     output             [   2: 0] awsize                     ,
     output             [   1: 0] awburst                    ,
-                                                 
+
     input                        wready                     ,
     output                       wvalid                     ,
     output             [  31: 0] wdata                      ,
@@ -143,6 +143,5 @@ end
     assign                       req                       = 1'b1;
 
 
-                                                                   
 endmodule
 

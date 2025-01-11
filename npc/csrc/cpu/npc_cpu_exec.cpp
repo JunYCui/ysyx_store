@@ -74,10 +74,10 @@ void cpu_exec(uint32_t n)
     g_print_step = (n < MAX_INST_TO_PRINT);
     switch (npc_state.state) {
     case NPC_END: case NPC_ABORT:
-      printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
-      return;
+    printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
+    return;
     default: npc_state.state = NPC_RUNNING;
-  }
+}
     for(int i=0;i<n;i++)
     {/*
         s.pc=top->pc;

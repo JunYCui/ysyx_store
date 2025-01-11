@@ -24,7 +24,7 @@ module ysyx_24100029_LSU (
     input              [   2: 0] funct3                     ,
     input              [  31: 0] rs2_value                  ,
     input                        jump_flag                  ,
-  
+
 
     output                       R_wen_next                 ,
     output reg         [  31: 0] LSU_Rdata                  ,
@@ -81,7 +81,7 @@ module ysyx_24100029_LSU (
     input              [  31: 0] inst                       ,
     output reg         [  31: 0] inst_next                   
 );
- 
+
     wire               [  31: 0] rdata_8i                   ;
     wire               [  31: 0] rdata_16i                  ;
     wire               [  31: 0] rdata_8u                   ;
