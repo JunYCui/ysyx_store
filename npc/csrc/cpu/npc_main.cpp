@@ -9,8 +9,8 @@ extern "C" int npc_pmem_read(int addr);
 
 extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
 extern "C" void mrom_read(int32_t addr, int32_t *data) {
-    printf("addr = 0x%x \n",addr);
     *data = npc_pmem_read(addr+MROM_OFFSET);
+    printf("addr = 0x%x inst = %x \n",addr,data);
     return ;
 }
 
