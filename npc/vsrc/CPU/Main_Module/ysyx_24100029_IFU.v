@@ -136,7 +136,7 @@ always @(posedge clock) begin
         arvalid <= 1'b1;
     else if(valid & ready)
         arvalid <= 1'b1;
-    else 
+    else if(arvalid & arready)
         arvalid <= 1'b0;
 end
 
