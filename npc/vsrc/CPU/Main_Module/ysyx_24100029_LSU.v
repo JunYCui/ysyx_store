@@ -194,7 +194,7 @@ module ysyx_24100029_LSU (
     assign                       awaddr                    = Ex_result_reg;
     assign                       awid                      = 0;
     assign                       awlen                     = 0;
-    assign                       awsize                    = 4;
+    assign                       awsize                    = 3'b010;
     assign                       awburst                   = 0;
 
     assign                       wdata                     = rs2_value_reg;
@@ -207,7 +207,7 @@ ysyx_24100029_MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wstrb, fu
 
     assign                       arid                      = 0;
     assign                       arlen                     = 0;
-    assign                       arsize                    = 4;
+    assign                       arsize                    =  3'b010;
     assign                       arburst                   = 0;
 
 /*
