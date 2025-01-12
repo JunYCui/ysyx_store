@@ -79,7 +79,6 @@ module ysyx_24100029_IFU(
     reg                [  31: 0] dnpc_reg                   ;
 
 /************ Axi4 bus ***********/
-    assign                       arvalid                   = 1'b1;
     assign                       araddr                    = pc;
     assign                       arid                      = 0;
     assign                       arlen                     = 0;// 0+1 = 1 transfer once
@@ -126,6 +125,20 @@ always @(posedge clock) begin
 
 end
 
+always @(posedge clock) begin
+    if(reset)
+        arvalid <= 1'b1;
+    else if((pipe_stop| pipe_stop_reg) &valid&ready)
+        arvalid <= 1'b1;
+    else if(dnpc_flag_reg & valid &ready)
+        arvalid <= 1'b1;
+    else if(dnpc_flag&valid&ready)
+        arvalid <= 1'b1;
+    else if(valid & ready)
+        arvalid <= 1'b1;
+    else 
+        arvalid <= 1'b0;
+end
 
 always @(posedge clock) begin
         if(reset)
