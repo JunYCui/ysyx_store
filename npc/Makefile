@@ -11,7 +11,7 @@ VSOURCES += $(shell find $(abspath ../ysyxSoC/perip) -name "*.v" )
 VSOURCES += $(shell find $(abspath ../ysyxSoC/build) -name "*.v" )
 INC_VDEFINE += /home/cjy/ysyx-workbench/ysyxSoC/perip/uart16550/rtl /home/cjy/ysyx-workbench/ysyxSoC/perip/spi/rtl
 Warning = UNUSEDSIGNAL ASSIGNDLY DECLFILENAME PINCONNECTEMPTY DEFPARAM UNDRIVEN SYNCASYNCNET UNUSEDPARAM
-VERILATOR_FLAGS += --timescale "1ns/1ns" --no-timing 
+VERILATOR_FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 #CSOURCES += $(SRC_AUTO_BIND)
