@@ -294,12 +294,18 @@ module ysyx_24100029
 
 
 
-task  GetInst;
-    output                       bit[31:0]inst_exec         ;
-    inst_exec = WBU_inst;
+task  GetPC;
+    output                       bit[31:0]pc         ;
+    pc = WBU_pc;
 endtask
 
-export "DPI-C" task GetInst;
+task Getvalid;
+    output bit  valid;
+    valid = WBU_valid;
+endtask
+
+export "DPI-C" task Getvalid;
+export "DPI-C" task GetPC;
 
 ysyx_24100029_Control Control_inst0(
     .mtvec_out                   (IDU_mtvec_out             ),

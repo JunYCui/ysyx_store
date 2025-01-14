@@ -57,7 +57,7 @@ void wave_record(void)
 
 int main(int argc,char* argv[])
 {
-    int valid;
+    unsigned char valid;
     Verilated::commandArgs(argc, argv);
     // 开启波形跟踪
     Verilated::traceEverOn(true);
@@ -69,19 +69,20 @@ int main(int argc,char* argv[])
     m_trace->open("waveform.vcd");
 
     cpu_reset();
-    //valid = top->WBU_valid;
-/*
+        
+    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
+    Getvalid(&valid);
     while(!valid)
     {
-    for(int i=0;i<2;i++)
-    {
-    top->clk ^=1;
-    top->eval();
-    wave_record();
+        for(int i=0;i<2;i++)
+        {
+            top->clock ^=1;
+            top->eval();
+            wave_record();
+        }
+        Getvalid(&valid);
     }
-    valid = top->WBU_valid;
-    }
-   */
+
     sdb_mainloop();
     
     m_trace->close();
