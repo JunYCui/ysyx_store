@@ -228,7 +228,7 @@ ysyx_24100029_MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wstrb, fu
 
     assign                       arid                      = 0;
     assign                       arlen                     = 0;
-    assign                       arsize                    =  3'b010;
+    assign                       arsize                    = 3'b010;
     assign                       arburst                   = 0;
 
 /*
