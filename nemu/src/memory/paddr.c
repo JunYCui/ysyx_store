@@ -25,9 +25,9 @@ static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 #endif
 static uint8_t *sram = NULL;
 
-uint8_t* guest_to_host(paddr_t paddr) { return rom + paddr - CONFIG_ROM_SIZE; }
-paddr_t host_to_guest(uint8_t *haddr) { return haddr - rom + CONFIG_ROM_SIZE; }
-uint8_t* SRAM_guest_to_host(paddr_t paddr) { return sram + paddr - CONFIG_SRAM_SIZE; }
+uint8_t* guest_to_host(paddr_t paddr) { return rom + paddr - CONFIG_ROM_BASE; }
+paddr_t host_to_guest(uint8_t *haddr) { return haddr - rom + CONFIG_ROM_BASE; }
+uint8_t* SRAM_guest_to_host(paddr_t paddr) { return sram + paddr - CONFIG_SRAM_BASE; }
 
 static word_t sram_read(paddr_t addr, int len) {
   word_t ret = host_read(SRAM_guest_to_host(addr), len);
