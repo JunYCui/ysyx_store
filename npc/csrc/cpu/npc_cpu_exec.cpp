@@ -84,6 +84,7 @@ void cpu_exec(uint32_t n)
         GetPC(&s.pc);
         cpu.pc = s.pc;
         s.inst = npc_pmem_read(s.pc);
+        printf("inst = 0x%x",s.inst);
         if(skip_flag != 0)
         {
             difftest_skip_ref();
@@ -96,7 +97,6 @@ void cpu_exec(uint32_t n)
             exec_once();
             GetPC(&cpu.pc);
             Getvalid(&valid);
-            printf("cpu = 0x%x",cpu.pc);
         }
 
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
