@@ -41,20 +41,20 @@ static void sram_write(paddr_t addr, int len, word_t data) {
   IFDEF(CONFIG_MTRACE,printf("The address " ANSI_FMT(FMT_WORD, ANSI_FG_BLUE) " is written at pc = " FMT_WORD "\n",addr,cpu.pc));
 }
 
-static word_t pmem_read(paddr_t addr, int len) {
+static word_t rom_read(paddr_t addr, int len) {
   word_t ret = host_read(guest_to_host(addr), len);
 
   IFDEF(CONFIG_MTRACE,printf("The address " ANSI_FMT(FMT_WORD, ANSI_FG_BLUE)  " is read at pc = " FMT_WORD "\n",addr,cpu.pc));
   return ret;
 }
-/*
-static void pmem_write(paddr_t addr, int len, word_t data) {
+
+static void rom_write(paddr_t addr, int len, word_t data) {
   host_write(guest_to_host(addr), len, data);
   IFDEF(CONFIG_MTRACE,printf("The address " ANSI_FMT(FMT_WORD, ANSI_FG_BLUE) " is written at pc = " FMT_WORD "\n",addr,cpu.pc));
 }
-*/
+
 static void out_of_bound(paddr_t addr) {
-  panic("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
+  panic("address = " FMT_PADDR " is out of bound of rom [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
       addr, ROM_LEFT, ROM_RIGHT, cpu.pc);
 }
 
@@ -69,7 +69,7 @@ void init_mem() {
 }
 
 word_t paddr_read(paddr_t addr, int len) {
-  if (likely(in_rom(addr))) return pmem_read(addr, len);
+  if (likely(in_rom(addr))) return rom_read(addr, len);
   else if(likely(in_sram(addr))) return sram_read(addr, len);
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
@@ -77,8 +77,8 @@ word_t paddr_read(paddr_t addr, int len) {
 }
 
 void paddr_write(paddr_t addr, int len, word_t data) {
-  if (likely(in_rom(addr))) { printf("rom can't write! \n");assert(0); return; }
-  else if(likely(in_sram(addr))) return sram_write(addr,len,data);
+  if (likely(in_rom(addr))) { rom_write(addr,len,data); }
+  else if(likely(in_sram(addr))){sram_write(addr,len,data);}
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);
 }
