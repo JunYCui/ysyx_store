@@ -71,7 +71,6 @@ int main(int argc,char* argv[])
     cpu_reset();
         
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
-    Getvalid(&valid);
     while(!valid)
     {
         for(int i=0;i<2;i++)

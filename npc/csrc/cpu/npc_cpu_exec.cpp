@@ -98,7 +98,6 @@ void cpu_exec(uint32_t n)
             GetPC(&cpu.pc);
             Getvalid(&valid);
         }
-
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
         for(int j=0;j<32;j++)
         {
