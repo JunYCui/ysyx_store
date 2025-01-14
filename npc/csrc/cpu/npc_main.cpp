@@ -3,13 +3,13 @@
 #include "npc_memory.h"
 #include "npc_cpu_exec.h"
 #include "npc_sdb.h"
-#define MROM_OFFSET 0x60000000
+
 
 extern "C" int npc_pmem_read(int addr);
 
 extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
 extern "C" void mrom_read(int32_t addr, int32_t *data) {
-    *data = npc_pmem_read(addr+MROM_OFFSET);
+    *data = npc_pmem_read(addr);
     return ;
 }
 
