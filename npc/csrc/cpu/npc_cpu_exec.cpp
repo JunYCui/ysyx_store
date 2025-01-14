@@ -84,7 +84,7 @@ void cpu_exec(uint32_t n)
         GetPC(&s.pc);
         cpu.pc = s.pc;
         s.inst = npc_pmem_read(s.pc);
-        printf("inst = 0x%x",s.inst);
+        printf("pc:inst = 0x%x \n",s.pc,s.inst);
         if(skip_flag != 0)
         {
             difftest_skip_ref();
