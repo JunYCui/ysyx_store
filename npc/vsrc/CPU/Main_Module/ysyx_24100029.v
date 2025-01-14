@@ -296,7 +296,7 @@ module ysyx_24100029
 
 task  GetPC;
     output                       bit[31:0]pc         ;
-    pc = WBU_pc;
+    pc = WBU_pc + 32'h60000000;
 endtask
 
 task Getvalid;
