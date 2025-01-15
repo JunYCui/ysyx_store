@@ -15,7 +15,7 @@ void isa_reg_display()
 {
   uint16_t i;
   uint32_t regvalue;
-    svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
+    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
   for(i = 0;i<32;i++)
   {
   ReadReg(i,&regvalue);

@@ -1,6 +1,10 @@
 #include <am.h>
 #include <stdint.h>
 #include <riscv/riscv.h>
+
+#define DEVICE_BASE 0xa0000000
+#define RTC_ADDR  (DEVICE_BASE + 0x0000048)
+
 static uint64_t read_time() {
   uint32_t hi = inl(RTC_ADDR+4);
   uint32_t lo = inl(RTC_ADDR);

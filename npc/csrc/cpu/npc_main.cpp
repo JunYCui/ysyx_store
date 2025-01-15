@@ -3,10 +3,13 @@
 #include "npc_memory.h"
 #include "npc_cpu_exec.h"
 #include "npc_sdb.h"
+
+
+extern "C" int npc_pmem_read(int addr);
+
 extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
 extern "C" void mrom_read(int32_t addr, int32_t *data) {
-    printf("addr = 0x%x \n",addr);
-    *data = 1048691;   
+    *data = npc_pmem_read(addr);
     return ;
 }
 
@@ -54,7 +57,7 @@ void wave_record(void)
 
 int main(int argc,char* argv[])
 {
-    int valid;
+    unsigned char valid;
     Verilated::commandArgs(argc, argv);
     // 开启波形跟踪
     Verilated::traceEverOn(true);
@@ -62,23 +65,23 @@ int main(int argc,char* argv[])
     init_monitor(argc, argv);
     
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
-   top->trace(m_trace, 5);
-   m_trace->open("waveform.vcd");
-
+    top->trace(m_trace, 5);
+    m_trace->open("waveform.vcd");
+    for( int i=0;i<8;i++)
     cpu_reset();
- //   valid = top->WBU_valid;
- /*
+        
+    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
     while(!valid)
     {
-    for(int i=0;i<2;i++)
-    {
-    top->clk ^=1;
-    top->eval();
-    wave_record();
+        for(int i=0;i<2;i++)
+        {
+            top->clock ^=1;
+            top->eval();
+            wave_record();
+        }
+        Getvalid(&valid);
     }
-    valid = top->WBU_valid;
-    }
-   */
+
     sdb_mainloop();
     
     m_trace->close();

@@ -53,19 +53,19 @@ always@(*)
     `alu_signed_comparator_ysyx_24100029:begin                            // 比较大小
             choose_add_sub = 1'b1;
             if(d1[BW-1] != d2[BW-1])
-                 begin
-                     if(d1[BW-1] == 1'b1)
-                         res = 1;
-                     else
-                         res = 0;
-                 end
+                begin
+                    if(d1[BW-1] == 1'b1)
+                        res = 1;
+                    else
+                        res = 0;
+                end
             else
-                 begin
-                     if(result[BW-1] == 1'b1)
-                         res = 1;
-                     else
-                         res = 0;
-                 end
+                begin
+                    if(result[BW-1] == 1'b1)
+                        res = 1;
+                    else
+                        res = 0;
+                end
                 overflow = 1'b0;
             end
     `alu_unsigned_comparator_ysyx_24100029:begin

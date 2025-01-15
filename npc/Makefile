@@ -11,7 +11,7 @@ VSOURCES += $(shell find $(abspath ../ysyxSoC/perip) -name "*.v" )
 VSOURCES += $(shell find $(abspath ../ysyxSoC/build) -name "*.v" )
 INC_VDEFINE += /home/cjy/ysyx-workbench/ysyxSoC/perip/uart16550/rtl /home/cjy/ysyx-workbench/ysyxSoC/perip/spi/rtl
 Warning = UNUSEDSIGNAL ASSIGNDLY DECLFILENAME PINCONNECTEMPTY DEFPARAM UNDRIVEN SYNCASYNCNET UNUSEDPARAM
-VERILATOR_FLAGS += --timescale "1ns/1ns" --no-timing 
+VERILATOR_FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 #CSOURCES += $(SRC_AUTO_BIND)
@@ -44,7 +44,7 @@ LDFLAGS += $(shell llvm-config --libs) -fsanitize=address
 
 CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE -rdynamic
 
-IMG ?=
+IMG ?= ../soc_test/char_test.bin
 
 override ARGS += $(ARGS_DIFF)
 

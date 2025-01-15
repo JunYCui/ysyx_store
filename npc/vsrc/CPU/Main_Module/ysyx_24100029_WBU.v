@@ -82,10 +82,10 @@ always @(posedge clock) begin
     end
 
 end
-    assign                       rd_value                  = (jump_flag_reg == 1'd1)            ? 
-                                                              pc_reg+4: (mem_ren_reg == 1'b1)   ?
-                                                              MEM_Rdata_reg:(csr_wen_reg !=4'd0)?
-                                                              csrs_reg:Ex_result_reg;
+    assign                       rd_value                  =    (jump_flag_reg == 1'd1)           ? 
+                                                                pc_reg+4: (mem_ren_reg == 1'b1)   ?
+                                                                MEM_Rdata_reg:(csr_wen_reg !=4'd0)?
+                                                                csrs_reg:Ex_result_reg;
     assign                       csrd                      = Ex_result_reg;
     assign                       csr_wen_next              = csr_wen_reg;
     assign                       R_wen_next                = R_wen_reg;

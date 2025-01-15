@@ -24,7 +24,7 @@ module ysyx_24100029_LSU (
     input              [   2: 0] funct3                     ,
     input              [  31: 0] rs2_value                  ,
     input                        jump_flag                  ,
-  
+
 
     output                       R_wen_next                 ,
     output reg         [  31: 0] LSU_Rdata                  ,
@@ -81,7 +81,7 @@ module ysyx_24100029_LSU (
     input              [  31: 0] inst                       ,
     output reg         [  31: 0] inst_next                   
 );
- 
+
     wire               [  31: 0] rdata_8i                   ;
     wire               [  31: 0] rdata_16i                  ;
     wire               [  31: 0] rdata_8u                   ;
@@ -153,38 +153,59 @@ module ysyx_24100029_LSU (
     always @(posedge clock) begin
         if(reset)begin
             bready <= 1'b0;
-            awvalid <= 1'b0;
-            wvalid <= 1'b0;
-            wlast <= 1'b0;
         end
         else if(mem_wen & valid_last & ready_last)begin
-            wlast <= 1'b1;
             bready <= 1'b1;
-            awvalid <= 1'b1;
-            wvalid <= 1'b1;
         end
         else if(bready & bvalid)begin
-            wlast <= 1'b0;
             bready <= 1'b0;
-            awvalid <= 1'b0;
-            wvalid <= 1'b0;
         end
     end
 
+always @(posedge clock) begin
+    if(reset)begin
+        wvalid <= 1'b0;
+        wlast <= 1'b0;
+    end
+    else if(mem_wen & valid_last & ready_last)begin
+        wvalid <= 1'b1;
+        wlast <= 1'b1;
+    end
+    else if(wvalid & wready)begin
+        wvalid <= 1'b0;
+        wlast <= 1'b0;
+    end
+end
+
+always @(posedge clock) begin
+    if(reset)begin
+        awvalid <= 1'b0;
+    end
+    else if(mem_wen & valid_last & ready_last)begin
+        awvalid <= 1'b1;
+    end
+    else if(awvalid & awready)
+        awvalid <= 1'b0;
+end
 
     always @(posedge clock) begin
         if(reset)begin
             arvalid <= 1'b0;
-            rready <= 1'b0;
         end
         else if(mem_ren & valid_last &ready_last)begin
             arvalid <= 1'b1;
-            rready <= 1'b1;
         end
-        else if(rvalid)begin
+        else if(arready&arvalid)begin
             arvalid <= 1'b0;
-            rready <= 1'b0;
         end
+    end
+    always @(posedge clock) begin
+        if(reset)
+            rready <= 1'b0;
+        else if(mem_ren & valid_last &ready_last)
+            rready <= 1'b1;
+        else if(rready & rvalid)
+            rready <= 1'b0;
     end
 
 
@@ -194,7 +215,7 @@ module ysyx_24100029_LSU (
     assign                       awaddr                    = Ex_result_reg;
     assign                       awid                      = 0;
     assign                       awlen                     = 0;
-    assign                       awsize                    = 4;
+    assign                       awsize                    = 3'b010;
     assign                       awburst                   = 0;
 
     assign                       wdata                     = rs2_value_reg;
@@ -207,7 +228,7 @@ ysyx_24100029_MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wstrb, fu
 
     assign                       arid                      = 0;
     assign                       arlen                     = 0;
-    assign                       arsize                    = 4;
+    assign                       arsize                    = 3'b010;
     assign                       arburst                   = 0;
 
 /*
@@ -235,8 +256,8 @@ ysyx_24100029_MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wstrb, fu
     end
 
 
-   always @(posedge clock) begin
-       if(reset)
+    always @(posedge clock) begin
+        if(reset)
             valid_next <= 0;
         else if(mem_ren & valid_last & ready_last)
             valid_next <= 1'b0;
@@ -248,7 +269,7 @@ ysyx_24100029_MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wstrb, fu
             valid_next <= 1'b1;
         else if(ready_last)
             valid_next <= valid_last;
-   end
+    end
 
 
 

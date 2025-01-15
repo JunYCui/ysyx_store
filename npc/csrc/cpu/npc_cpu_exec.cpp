@@ -70,40 +70,37 @@ static void trace_and_difftest(Decode *s)
 
 void cpu_exec(uint32_t n)
 {
-    bool valid =1;
+    unsigned char valid =1;
     g_print_step = (n < MAX_INST_TO_PRINT);
     switch (npc_state.state) {
     case NPC_END: case NPC_ABORT:
-      printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
-      return;
+    printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
+    return;
     default: npc_state.state = NPC_RUNNING;
-  }
+}
     for(int i=0;i<n;i++)
-    {/*
-        s.pc=top->pc;
-        s.dnpc=top->dnpc;
-        s.snpc=top->snpc;
-    */
-    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.cpu"));
-     //   GetInst(&s.inst);
+    {
+    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
+        GetPC(&s.pc);
+        cpu.pc = s.pc;
+        s.inst = npc_pmem_read(s.pc);
         if(skip_flag != 0)
         {
             difftest_skip_ref();
         }
         exec_once();
-    //    valid = top->WBU_valid;
-    //    cpu.pc = top->pc;
-    //    while(!valid)
-    //    {
-    //    exec_once();
-   //     cpu.pc = top->pc;
-   //     valid = top->WBU_valid;
-    //    }
-
-    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.CPU.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
+        Getvalid(&valid);
+        GetPC(&cpu.pc);
+        while(!valid)
+        {
+            exec_once();
+            GetPC(&cpu.pc);
+            Getvalid(&valid);
+        }
+    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
         for(int j=0;j<32;j++)
         {
-    //        ReadReg(j,&cpu.gpr[j]);
+            ReadReg(j,&cpu.gpr[j]);
         }
         trace_and_difftest(&s);
         if(npc_state.state !=NPC_RUNNING)

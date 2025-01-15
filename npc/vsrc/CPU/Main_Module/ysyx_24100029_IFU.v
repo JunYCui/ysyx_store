@@ -32,10 +32,10 @@ module ysyx_24100029_IFU(
     input                        pipe_stop                  ,
 
     output reg         [  31: 0] pc                         ,
-    output             [  31: 0] inst                       ,
+    output reg         [  31: 0] inst                       ,
 
     input                        ready                      ,
-    output                       valid                      ,
+    output reg                   valid                      ,
 
     input                        awready                    ,
     output                       awvalid                    ,
@@ -44,7 +44,7 @@ module ysyx_24100029_IFU(
     output             [   7: 0] awlen                      ,
     output             [   2: 0] awsize                     ,
     output             [   1: 0] awburst                    ,
-                                                 
+
     input                        wready                     ,
     output                       wvalid                     ,
     output             [  31: 0] wdata                      ,
@@ -79,7 +79,6 @@ module ysyx_24100029_IFU(
     reg                [  31: 0] dnpc_reg                   ;
 
 /************ Axi4 bus ***********/
-    assign                       arvalid                   = 1'b1;
     assign                       araddr                    = pc;
     assign                       arid                      = 0;
     assign                       arlen                     = 0;// 0+1 = 1 transfer once
@@ -100,13 +99,28 @@ module ysyx_24100029_IFU(
 
     assign                       bready                    = 0;
 
-    assign                       valid                     = rvalid;
-    assign                       inst                      = rdata;
     assign                       rready                    = 1'b1;
 
   //  check_rresp: assert(rresp != 2'b00) ; 
 
 /************ Axi4 bus ***********/
+always @(posedge clock) begin
+    if(reset)begin
+        valid <= 1'b0;
+        inst <= 0;
+    end
+    else if(rvalid)begin
+        valid <= 1'b1;
+        inst <= rdata;
+    end
+    else if(valid & ready)begin
+        valid <= 1'b0;
+        inst <= 0;
+    end
+
+end
+
+
 always @(posedge clock) begin
     if(reset)begin
         dnpc_flag_reg <= 0;
@@ -126,6 +140,20 @@ always @(posedge clock) begin
 
 end
 
+always @(posedge clock) begin
+    if(reset)
+        arvalid <= 1'b1;
+    else if((pipe_stop| pipe_stop_reg) &valid&ready)
+        arvalid <= 1'b1;
+    else if(dnpc_flag_reg & valid &ready)
+        arvalid <= 1'b1;
+    else if(dnpc_flag&valid&ready)
+        arvalid <= 1'b1;
+    else if(valid & ready)
+        arvalid <= 1'b1;
+    else if(arvalid & arready)
+        arvalid <= 1'b0;
+end
 
 always @(posedge clock) begin
         if(reset)
@@ -143,6 +171,5 @@ end
     assign                       req                       = 1'b1;
 
 
-                                                                   
 endmodule
 
