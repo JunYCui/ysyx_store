@@ -1,4 +1,5 @@
 ENTRY(_start)
+PHDRS { text PT_LOAD; data PT_LOAD; }
 
 MEMORY{
   mrom(rx) : ORIGIN = 0x20000000, LENGTH = 4K
@@ -11,13 +12,13 @@ SECTIONS {
   .text : {
    *(entry)
    *(.text*)
-  } > mrom AT>mrom
+  } > mrom AT>mrom : text
   .rodata : {
     *(.rodata*)
   } > mrom AT>mrom
   .data : {
     *(.data)
-  } > sram AT>mrom
+  } > sram AT>mrom : text
   data_size = SIZEOF(.data) ;
   data_load_start = LOADADDR(.data);
   .bss : {    	
