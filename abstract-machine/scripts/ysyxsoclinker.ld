@@ -24,7 +24,7 @@ SECTIONS {
    *(.scommon)
  }
  _stack_top = 0x10000000;
- . = _stack_top - 0x100000;
+ . = _stack_top;
  _stack_pointer = .;
  end = .;
  _end = .;
