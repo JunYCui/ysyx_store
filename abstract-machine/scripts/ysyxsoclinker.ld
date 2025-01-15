@@ -18,7 +18,7 @@ SECTIONS {
   } > mrom AT>mrom
   .data : {
     *(.data)
-  } > sram AT>mrom : text
+  } > sram AT>mrom : data
   data_size = SIZEOF(.data) ;
   data_load_start = LOADADDR(.data);
   .bss : {    	
