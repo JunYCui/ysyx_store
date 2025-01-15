@@ -19,66 +19,49 @@
 #include <isa.h>
 
 #if   defined(CONFIG_PMEM_MALLOC)
-static uint8_t *rom = NULL;
+static uint8_t *pmem = NULL;
 #else // CONFIG_PMEM_GARRAY
 static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 #endif
-static uint8_t *sram = NULL;
 
-uint8_t* guest_to_host(paddr_t paddr) { return rom + paddr - CONFIG_ROM_BASE; }
-paddr_t host_to_guest(uint8_t *haddr) { return haddr - rom + CONFIG_ROM_BASE; }
-uint8_t* SRAM_guest_to_host(paddr_t paddr) { return sram + paddr - CONFIG_SRAM_BASE; }
+uint8_t* guest_to_host(paddr_t paddr) { return pmem + paddr - CONFIG_MBASE; }
+paddr_t host_to_guest(uint8_t *haddr) { return haddr - pmem + CONFIG_MBASE; }
 
-static word_t sram_read(paddr_t addr, int len) {
-  word_t ret = host_read(SRAM_guest_to_host(addr), len);
-
-  IFDEF(CONFIG_MTRACE,printf("The address " ANSI_FMT(FMT_WORD, ANSI_FG_BLUE)  " is read at pc = " FMT_WORD "\n",addr,cpu.pc));
-  return ret;
-}
-
-static void sram_write(paddr_t addr, int len, word_t data) {
-  host_write(SRAM_guest_to_host(addr), len, data);
-  IFDEF(CONFIG_MTRACE,printf("The address " ANSI_FMT(FMT_WORD, ANSI_FG_BLUE) " is written at pc = " FMT_WORD "\n",addr,cpu.pc));
-}
-
-static word_t rom_read(paddr_t addr, int len) {
+static word_t pmem_read(paddr_t addr, int len) {
   word_t ret = host_read(guest_to_host(addr), len);
 
   IFDEF(CONFIG_MTRACE,printf("The address " ANSI_FMT(FMT_WORD, ANSI_FG_BLUE)  " is read at pc = " FMT_WORD "\n",addr,cpu.pc));
   return ret;
 }
 
-static void rom_write(paddr_t addr, int len, word_t data) {
+static void pmem_write(paddr_t addr, int len, word_t data) {
   host_write(guest_to_host(addr), len, data);
   IFDEF(CONFIG_MTRACE,printf("The address " ANSI_FMT(FMT_WORD, ANSI_FG_BLUE) " is written at pc = " FMT_WORD "\n",addr,cpu.pc));
 }
 
 static void out_of_bound(paddr_t addr) {
-  panic("address = " FMT_PADDR " is out of bound of rom [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
-      addr, ROM_LEFT, ROM_RIGHT, cpu.pc);
+  panic("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
+      addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
 }
 
 void init_mem() {
 #if   defined(CONFIG_PMEM_MALLOC)
-  rom = (uint8_t*)malloc(CONFIG_ROM_SIZE);
-  sram = (uint8_t*)malloc(CONFIG_SRAM_SIZE);
-  assert(rom);
+  pmem = (uint8_t*)malloc(CONFIG_MSIZE);
+  assert(pmem);
 #endif
-  IFDEF(CONFIG_MEM_RANDOM, memset(rom, rand(), CONFIG_ROM_SIZE));
-  Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", ROM_LEFT, ROM_RIGHT);
+  IFDEF(CONFIG_MEM_RANDOM, memset(pmem, rand(), CONFIG_MSIZE));
+  Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PMEM_LEFT, PMEM_RIGHT);
 }
 
 word_t paddr_read(paddr_t addr, int len) {
-  if (likely(in_rom(addr))) return rom_read(addr, len);
-  else if(likely(in_sram(addr))) return sram_read(addr, len);
+  if (likely(in_pmem(addr))) return pmem_read(addr, len);
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
   return 0;
 }
 
 void paddr_write(paddr_t addr, int len, word_t data) {
-  if (likely(in_rom(addr))) { rom_write(addr,len,data); return; }
-  else if(likely(in_sram(addr))){sram_write(addr,len,data); return;}
+  if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);
 }
