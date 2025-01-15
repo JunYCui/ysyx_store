@@ -26,7 +26,7 @@ SECTIONS {
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > mrom AT>mrom
+  } > sram AT>mrom
   _stack_top = ORIGIN(sram)+LENGTH(sram);
   _stack_pointer =ORIGIN(sram)+LENGTH(sram);
   end = .;
