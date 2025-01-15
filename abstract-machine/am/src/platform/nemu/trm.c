@@ -1,10 +1,13 @@
 #include <am.h>
 #include <nemu.h>
-
-extern char _heap_start;
+#include <klib.h>
+//extern char _heap_start;
 int main(const char *args);
 
-Area heap = RANGE(&_heap_start, PMEM_END);
+extern char data_load_start[];
+extern char data_size[];
+extern char _heap_start[];
+Area heap = RANGE(_heap_start, PMEM_END);
 #ifndef MAINARGS
 #define MAINARGS ""
 #endif
@@ -22,6 +25,7 @@ void halt(int code) {
 }
 
 void _trm_init() {
+  memcpy(_heap_start,data_load_start,(size_t)data_size);
   int ret = main(mainargs);
   halt(ret);
 }
