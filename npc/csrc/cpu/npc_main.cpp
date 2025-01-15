@@ -4,6 +4,15 @@
 #include "npc_cpu_exec.h"
 #include "npc_sdb.h"
 
+
+extern "C" int npc_pmem_read(int addr);
+
+extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
+extern "C" void mrom_read(int32_t addr, int32_t *data) {
+    *data = npc_pmem_read(addr);
+    return ;
+}
+
 // 实例化一个 VerilatedVcdC 类型的对象 m_trace，用于波形跟踪
 VerilatedVcdC *m_trace = new VerilatedVcdC;
 
@@ -11,7 +20,7 @@ VerilatedVcdC *m_trace = new VerilatedVcdC;
 VerilatedContext *contextp = new VerilatedContext;
 
 // 构建一个名为top的仿真模型
-Vcpu_ysyx_24100029 *top = new Vcpu_ysyx_24100029{contextp};
+VysyxSoCFull *top = new VysyxSoCFull{contextp};
 
 
 #define MAX_SIM_TIME 100 //定义模拟的时钟边沿数（包括上下边沿）
@@ -19,21 +28,21 @@ uint64_t sim_time = 0;
 
 
 
-void fi() { exit(0); }
+void fi(int val) { exit(val); }
 
 void cpu_reset(void)
 {
-    top->clk = 0;
-    top->rst_n = 0;
+    top->clock = 0;
+    top->reset = 1;
     top->eval();
     m_trace->dump(sim_time);
     sim_time++;
-    top->clk = 1;
+    top->clock = 1;
     top->eval();
     m_trace->dump(sim_time);
     sim_time++;
-    top->rst_n = 1;
-    top->clk = 0;
+    top->reset = 0;
+    top->clock = 0;
     top->eval();
     m_trace->dump(sim_time);
     sim_time++;
@@ -48,28 +57,33 @@ void wave_record(void)
 
 int main(int argc,char* argv[])
 {
-
+    unsigned char valid;
+    Verilated::commandArgs(argc, argv);
     // 开启波形跟踪
     Verilated::traceEverOn(true);
 
     init_monitor(argc, argv);
     
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
-  // top->trace(m_trace, 5);
-  //  m_trace->open("waveform.vcd");
-
+    top->trace(m_trace, 5);
+    m_trace->open("waveform.vcd");
+    for( int i=0;i<8;i++)
     cpu_reset();
-/*
-    for(int i=0;i<6;i++)
+        
+    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
+    while(!valid)
     {
-    top->clk ^=1;
-    top->eval();
-    wave_record();
+        for(int i=0;i<2;i++)
+        {
+            top->clock ^=1;
+            top->eval();
+            wave_record();
+        }
+        Getvalid(&valid);
     }
-*/
+
     sdb_mainloop();
     
     m_trace->close();
-
 
 }
