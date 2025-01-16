@@ -220,12 +220,12 @@ end
 
     assign                       wdata                     = rs2_value_reg;
     assign                       rdata_b_choice            = {araddr[1:0],3'b0};
+    
+    assign wstrb = (funct3_reg == 3'b000)                           ?
+                    4'b0001<<awaddr[1:0]:(funct3_reg == 3'b001)     ?
+                    4'b0011<<awaddr[1:0]:(funct3_reg == 3'b101)     ?
+                    4'b1111:4'b0000;
 
-ysyx_24100029_MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wstrb, funct3_reg, {i5_DATA_LEN{1'b0}},{
-  3'b000,4'b0001,
-  3'b001,4'b0011,
-  3'b010,4'b1111
-});
 
     assign                       arid                      = 0;
     assign                       arlen                     = 0;
@@ -321,7 +321,7 @@ ysyx_24100029_sext #(
     .OUT_WIDTH                   (32                        ) 
 ) sext_i16
 (
-    .data                        (rdata[rdata_b_choice+:16]  ),
+    .data                        (rdata[rdata_b_choice+:16] ),
     .sext_data                   (rdata_16i                 ) 
 );
 
