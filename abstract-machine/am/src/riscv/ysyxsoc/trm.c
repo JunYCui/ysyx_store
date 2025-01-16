@@ -8,6 +8,7 @@
 extern char data_load_start[];
 extern char data_size[];
 extern char _heap_start[];
+extern char data_start[];
 int main(const char *args);
 Area heap = RANGE(_heap_start, _heap_start+SRAM_SIZE);
 
@@ -28,7 +29,7 @@ void halt(int code) {
 }
 
 void _trm_init() {
-    memcpy(_heap_start,data_load_start,(size_t)data_size);
+    memcpy(data_start,data_load_start,(size_t)data_size);
     int ret = main(mainargs);
     halt(ret);
 }
