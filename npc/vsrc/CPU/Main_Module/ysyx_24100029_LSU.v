@@ -88,7 +88,7 @@ module ysyx_24100029_LSU (
     wire               [  31: 0] rdata_16u                  ;
 
     wire               [  31: 0] rdata_ex                   ;
-
+    wire               [   4: 0] rdata_b_choice             ;
 
     reg                [  31: 0] pc_reg                     ;
     reg                          mem_ren_reg                ;
@@ -219,6 +219,7 @@ end
     assign                       awburst                   = 0;
 
     assign                       wdata                     = rs2_value_reg;
+    assign                       rdata_b_choice            = {araddr[1:0],3'b0};
 
 ysyx_24100029_MuxKeyInternal #(i5_NR_KEY, i5_KEY_LEN, i5_DATA_LEN) i5 (wstrb, funct3_reg, {i5_DATA_LEN{1'b0}},{
   3'b000,4'b0001,
@@ -302,8 +303,8 @@ ysyx_24100029_MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (rdata_ex,
   3'b101,rdata_16u                                                  // 1hu
 });
 
-    assign                       rdata_8u                  = {24'd0,rdata[7:0]};
-    assign                       rdata_16u                 = {16'd0,rdata[15:0]};
+    assign                       rdata_8u                  = {24'd0,rdata[rdata_b_choice +: 8]};
+    assign                       rdata_16u                 = {16'd0,rdata[rdata_b_choice +: 16]};
 
 /* verilator lint_off PINMISSING */
 ysyx_24100029_sext #(
@@ -311,7 +312,7 @@ ysyx_24100029_sext #(
     .OUT_WIDTH                   (32                        ) 
 ) sext_i8
 (
-    .data                        (rdata[7:0]                ),
+    .data                        (rdata[rdata_b_choice +:8] ),
     .sext_data                   (rdata_8i                  ) 
 );
 
@@ -320,7 +321,7 @@ ysyx_24100029_sext #(
     .OUT_WIDTH                   (32                        ) 
 ) sext_i16
 (
-    .data                        (rdata[15:0]               ),
+    .data                        (rdata[rdata_b_choice+:16]  ),
     .sext_data                   (rdata_16i                 ) 
 );
 
