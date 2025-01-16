@@ -212,18 +212,18 @@ end
     assign                       araddr                    = Ex_result_reg;
     
 
-    assign                       awaddr                    = Ex_result_reg;
+    assign                       awaddr                    = Ex_result_reg & 32'hfffffffc;
     assign                       awid                      = 0;
     assign                       awlen                     = 0;
     assign                       awsize                    = 3'b010;
     assign                       awburst                   = 0;
 
-    assign                       wdata                     = rs2_value_reg <<awaddr[1:0];
+    assign                       wdata                     = rs2_value_reg <<8*Ex_result_reg[1:0];
     assign                       rdata_b_choice            = {araddr[1:0],3'b0};
     
     assign wstrb = (funct3_reg == 3'b000)                           ?
-                    4'b0001<<awaddr[1:0]:(funct3_reg == 3'b001)     ?
-                    4'b0011<<awaddr[1:0]:(funct3_reg == 3'b010)     ?
+                    4'b0001<<Ex_result_reg[1:0]:(funct3_reg == 3'b001)     ?
+                    4'b0011<<Ex_result_reg[1:0]:(funct3_reg == 3'b010)     ?
                     4'b1111:4'b0000;
 
 
