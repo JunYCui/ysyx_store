@@ -223,7 +223,7 @@ end
     
     assign wstrb = (funct3_reg == 3'b000)                           ?
                     4'b0001<<awaddr[1:0]:(funct3_reg == 3'b001)     ?
-                    4'b0011<<awaddr[1:0]:(funct3_reg == 3'b101)     ?
+                    4'b0011<<awaddr[1:0]:(funct3_reg == 3'b010)     ?
                     4'b1111:4'b0000;
 
 
