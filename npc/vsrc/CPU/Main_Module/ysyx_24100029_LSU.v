@@ -213,7 +213,7 @@ end
     
 
     assign                       awaddr                    = Ex_result_reg;
-    assign                       awid                      = 0;
+    assign                       awid                      = 1;
     assign                       awlen                     = 0;
     assign                       awsize                    = funct3_reg;
     assign                       awburst                   = 0;
