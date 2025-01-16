@@ -216,7 +216,7 @@ end
     assign                       awid                      = 1;
     assign                       awlen                     = 0;
     assign                       awsize                    = funct3_reg;
-    assign                       awburst                   = 0;
+    assign                       awburst                   = 1;
 
     assign                       wdata                     = rs2_value_reg;
     assign                       rdata_b_choice            = {araddr[1:0],3'b0};
