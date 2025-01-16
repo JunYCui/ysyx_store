@@ -15,12 +15,12 @@ SECTIONS {
   } > mrom AT>mrom : text
   .rodata : {
     *(.rodata*)
-  } > mrom AT>mrom
+  } > sram AT>mrom
   .data : {
     *(.data)
   } > sram AT>mrom : data
-  data_size = SIZEOF(.data) ;
-  data_load_start = LOADADDR(.data);
+  data_size = SIZEOF(.data) + SIZEOF(.rodata) ;
+  data_load_start = LOADADDR(.rodata);
   .bss : {    	
     _bss_start = .;
     *(.bss*)
