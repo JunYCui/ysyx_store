@@ -215,10 +215,10 @@ end
     assign                       awaddr                    = Ex_result_reg;
     assign                       awid                      = 1;
     assign                       awlen                     = 0;
-    assign                       awsize                    = funct3_reg;
+    assign                       awsize                    = 2;
     assign                       awburst                   = 0;
 
-    assign                       wdata                     = rs2_value_reg;
+    assign                       wdata                     = rs2_value_reg<<8*Ex_result_reg[1:0];
     assign                       rdata_b_choice            = {araddr[1:0],3'b0};
     
     assign wstrb = (funct3_reg == 3'b000)                           ?
