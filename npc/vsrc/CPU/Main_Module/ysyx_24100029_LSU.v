@@ -229,7 +229,7 @@ end
 
     assign                       arid                      = 0;
     assign                       arlen                     = 0;
-    assign                       arsize                    = 3'b010;
+    assign                       arsize                    = funct3;
     assign                       arburst                   = 0;
 
 /*
