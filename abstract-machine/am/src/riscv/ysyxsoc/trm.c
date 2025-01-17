@@ -34,16 +34,11 @@ void uart_init(){
 }
 
 void putch(char ch) {
-    char status = inb(LSR)&0x20; // 6th Bits of LSR 
-    if(status == 0x20)    
-        outb(SERIAL_PORT, ch);
-    else {
-        while(status != 0x20)
-        {
-        status = inb(LSR)&0x20; 
-        }
-        outb(SERIAL_PORT, ch);
-    }
+    char status = inb(LSR); // 6th Bits of LSR 
+    if(status == 0)
+        outb(SERIAL_PORT,ch);
+
+
 }
 void halt(int code) {
     asm volatile("mv a0, %0; ebreak" : :"r"(code));
