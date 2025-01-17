@@ -10,6 +10,7 @@
 #define Divisor_MSB  (SERIAL_PORT+0x01)
 #define FCR (SERIAL_PORT+0x02)
 #define IER (SERIAL_PORT+0x01)
+#define LSR (SERIAL_PORT+0x05)
 
 extern char data_load_start[];
 extern char data_size[];
@@ -24,6 +25,12 @@ Area heap = RANGE(_heap_start, _heap_start+SRAM_SIZE);
 static const char mainargs[] = MAINARGS;
 
 void putch(char ch) {
+    char status = inb(LSR)&0x20; // 6th Bits of LSR 
+    while (status!=0)
+    {
+        status = inb(LSR);
+    }
+    
     outb(SERIAL_PORT, ch);
 }
 
