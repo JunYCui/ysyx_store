@@ -17,7 +17,9 @@ SECTIONS {
     *(.rodata*)
   } > mrom AT>mrom
   .data : {
-    *(.data)
+    data_start = . ;
+    *(.data*)
+    *(.sdata*)
   } > sram AT>mrom : data
   data_size = SIZEOF(.data) ;
   data_load_start = LOADADDR(.data);
