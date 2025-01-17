@@ -25,11 +25,11 @@ Area heap = RANGE(_heap_start, _heap_start+SRAM_SIZE);
 static const char mainargs[] = MAINARGS;
 
 void uart_init(){
-    outb(LCR,'a'); // Set 8 bits of each character and allow access to the Devisor Latch
+    outb(LCR,0x83); // Set 8 bits of each character and allow access to the Devisor Latch
     outb(Divisor_MSB,0x00);
     outb(Divisor_LSB,0x01);
     outb(LCR,0x03); // clear access to the Driver Latch
-    outb(FCR,0x80); // set fifo interupt triggle level = 14bytes
+    outb(FCR,'a'); // set fifo interupt triggle level = 14bytes
     outb(IER,0x00); // disable all interrupt 
 }
 
