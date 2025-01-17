@@ -24,16 +24,6 @@ Area heap = RANGE(_heap_start, _heap_start+SRAM_SIZE);
 #endif
 static const char mainargs[] = MAINARGS;
 
-void putch(char ch) {
-    char status = inb(LSR)&0x20; // 6th Bits of LSR 
-    while (status!=0)
-    {
-        status = inb(LSR);
-    }
-    
-    outb(SERIAL_PORT, ch);
-}
-
 void uart_init(){
     outb(LCR,0x83); // Set 8 bits of each character and allow access to the Devisor Latch
     outb(Divisor_MSB,0x00);
@@ -42,6 +32,17 @@ void uart_init(){
     outb(FCR,0xc0); // set fifo interupt triggle level = 14bytes
     outb(IER,0x00); // disable all interrupt 
 }
+
+void putch(char ch) {
+    char status = inb(LSR)&0x20; // 6th Bits of LSR 
+    uart_init();
+    while (status!=0)
+    {
+        status = inb(LSR);
+    }
+    
+    outb(SERIAL_PORT, ch);
+}
 void halt(int code) {
     asm volatile("mv a0, %0; ebreak" : :"r"(code));
 
@@ -49,7 +50,6 @@ void halt(int code) {
     while (1);
 }
 void _trm_init() {
-    uart_init();
     memcpy(data_start, data_load_start,(size_t)data_size);
     int ret = main(mainargs);
     halt(ret);
