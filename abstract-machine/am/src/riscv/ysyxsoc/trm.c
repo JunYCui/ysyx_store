@@ -29,7 +29,7 @@ void uart_init(){
     outb(Divisor_MSB,0x00);
     outb(Divisor_LSB,0x01);
     outb(LCR,0x03); // clear access to the Driver Latch
-    outb(FCR,0x40); // set fifo interupt triggle level = 14bytes
+    //outb(FCR,0x80); // set fifo interupt triggle level = 14bytes
     outb(IER,0x00); // disable all interrupt 
 }
 
