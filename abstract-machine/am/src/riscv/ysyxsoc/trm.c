@@ -34,7 +34,7 @@ void uart_init(){
 }
 
 void putch(char ch) {
-    char status = inb(LSR)&0x40; // 6th Bits of LSR 
+    char status = inb(LSR)&0x20; // 6th Bits of LSR 
     while (status!=0)
     {
         status = inb(LSR);
