@@ -37,7 +37,7 @@ void putch(char ch) {
     char status = inb(LSR)&0x20; // 6th Bits of LSR 
     while (status!=0)
     {
-        status = inb(LSR);
+        status = inb(LSR)&0x20;
     }
     
     outb(SERIAL_PORT, ch);
