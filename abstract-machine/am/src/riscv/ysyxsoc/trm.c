@@ -25,7 +25,7 @@ Area heap = RANGE(_heap_start, _heap_start+SRAM_SIZE);
 static const char mainargs[] = MAINARGS;
 
 void uart_init(){
-    int delay=20;
+    int delay=100;
     outb(LCR,0x80); // Set 8 bits of each character and allow access to the Devisor Latch
     for(int i=0;i<delay;i++)
     ;
