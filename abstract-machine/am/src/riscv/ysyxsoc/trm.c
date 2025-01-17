@@ -40,7 +40,7 @@ void uart_init(){
     outb(Divisor_LSB,0x00);
     outb(LCR,0x03); // clear access to the Driver Latch
     outb(FCR,0xc0); // set fifo interupt triggle level = 14bytes
-    outb(IER,0x00); // disable all interrupt 
+    //outb(IER,0x00); // disable all interrupt 
 }
 void halt(int code) {
     asm volatile("mv a0, %0; ebreak" : :"r"(code));
