@@ -26,7 +26,7 @@ static const char mainargs[] = MAINARGS;
 
 void uart_init(){
     int delay=100;
-    outb(LCR,0x80); // Set 8 bits of each character and allow access to the Devisor Latch
+    outb(LCR,0x83); // Set 8 bits of each character and allow access to the Devisor Latch
     for(int i=0;i<delay;i++)
     ;
     outb(Divisor_MSB,'a');
