@@ -3,7 +3,7 @@
 #include <riscv/riscv.h>
 #include <klib.h>
 #define SRAM_SIZE (8 * 1024)
-#define SERIAL_PORT 0x10000001
+#define SERIAL_PORT 0x10000000
 
 #define LCR (SERIAL_PORT+0x03)
 #define Divisor_LSB  (SERIAL_PORT+0x00)

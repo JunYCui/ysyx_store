@@ -215,7 +215,7 @@ end
     assign                       awaddr                    = Ex_result_reg;
     assign                       awid                      = 1;
     assign                       awlen                     = 0;
-    assign                       awsize                    = 2;
+    assign                       awsize                    = funct3;
     assign                       awburst                   = 0;
 
     assign                       wdata                     = rs2_value_reg<<8*Ex_result_reg[1:0];
