@@ -27,7 +27,7 @@ static const char mainargs[] = MAINARGS;
 void uart_init(){
     outb(LCR,0x83); // Set 8 bits of each character and allow access to the Devisor Latch 
     outb(Divisor_MSB,0x00);
-    outb(Divisor_LSB,0x11);
+    outb(Divisor_LSB,0x01);
     outb(LCR,0x03); // clear access to the Driver Latch
     outb(FCR,0x80); // set fifo interupt triggle level = 14bytes
     outb(IER,0x00); // disable all interrupt 
@@ -35,12 +35,15 @@ void uart_init(){
 
 void putch(char ch) {
     char status = inb(LSR)&0x20; // 6th Bits of LSR 
-    while (status!=0)
-    {
-        status = inb(LSR)&0x20;
+    if(status == 0x20)    
+        outb(SERIAL_PORT, ch);
+    else {
+        while(status != 0x20)
+        {
+        status = inb(LSR)&0x20; 
+        }
+        outb(SERIAL_PORT, ch);
     }
-    
-    outb(SERIAL_PORT, ch);
 }
 void halt(int code) {
     asm volatile("mv a0, %0; ebreak" : :"r"(code));
