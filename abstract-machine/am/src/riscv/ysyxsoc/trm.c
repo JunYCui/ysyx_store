@@ -25,7 +25,7 @@ Area heap = RANGE(_heap_start, _heap_start+SRAM_SIZE);
 static const char mainargs[] = MAINARGS;
 
 void putch(char ch) {
-    char status = inb(LSR)&0x40; // 6th Bits of LSR 
+    char status = inb(LSR);// 6th Bits of LSR 
     while (status!=0)
     {
         status = inb(LSR);
