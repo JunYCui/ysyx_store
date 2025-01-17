@@ -35,7 +35,7 @@ void putch(char ch) {
 }
 
 void uart_init(){
-    outb(LCR,0x83); // Set 8 bits of each character and allow access to the Devisor Latch
+    //outb(LCR,0x83); // Set 8 bits of each character and allow access to the Devisor Latch
     outb(Divisor_MSB,0x00);
     outb(Divisor_LSB,0x00);
     outb(LCR,0x03); // clear access to the Driver Latch
