@@ -26,7 +26,7 @@ static const char mainargs[] = MAINARGS;
 
 void putch(char ch) {
     char status = inb(LSR)&0x01; // 6th Bits of LSR 
-    while (status!=0)
+    while (status==0)
     {
         status = inb(LSR);
     }
