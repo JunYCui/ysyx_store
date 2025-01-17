@@ -35,7 +35,6 @@ void uart_init(){
 
 void putch(char ch) {
     char status = inb(LSR)&0x20; // 6th Bits of LSR 
-    uart_init();
     while (status!=0)
     {
         status = inb(LSR);
@@ -50,6 +49,7 @@ void halt(int code) {
     while (1);
 }
 void _trm_init() {
+    uart_init();
     memcpy(data_start, data_load_start,(size_t)data_size);
     int ret = main(mainargs);
     halt(ret);
