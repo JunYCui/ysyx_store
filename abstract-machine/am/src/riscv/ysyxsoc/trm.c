@@ -41,10 +41,10 @@ void halt(int code) {
   // should not reach here
     while (1);
 }
-
 void _trm_init() {
-    memcpy(data_start,data_load_start,(size_t)data_size);
-    uart_init();
+    
+    memcpy(data_start, data_load_start,(size_t)data_size);
+    //uart_init();
     int ret = main(mainargs);
     halt(ret);
 }
