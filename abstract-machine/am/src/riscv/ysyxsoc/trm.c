@@ -37,7 +37,7 @@ void putch(char ch) {
 void uart_init(){
     outb(LCR,0x83); // Set 8 bits of each character and allow access to the Devisor Latch
     outb(Divisor_MSB,0x00);
-    outb(Divisor_LSB,0x01);
+    outb(Divisor_LSB,0x00);
     outb(LCR,0x03); // clear access to the Driver Latch
     outb(FCR,0xc0); // set fifo interupt triggle level = 14bytes
     outb(IER,0x00); // disable all interrupt 
@@ -50,7 +50,7 @@ void halt(int code) {
 }
 void _trm_init() {
     memcpy(data_start, data_load_start,(size_t)data_size);
-    //uart_init();
+    uart_init();
     int ret = main(mainargs);
     halt(ret);
 }
