@@ -26,6 +26,7 @@ static const char mainargs[] = MAINARGS;
 
 void putch(char ch) {
     char status = inb(LSR)&0x20; // 6th Bits of LSR 
+    printf("%d",status);
     while (status!=0)
     {
         status = inb(LSR);
@@ -49,7 +50,6 @@ void halt(int code) {
     while (1);
 }
 void _trm_init() {
-    
     memcpy(data_start, data_load_start,(size_t)data_size);
     uart_init();
     int ret = main(mainargs);
