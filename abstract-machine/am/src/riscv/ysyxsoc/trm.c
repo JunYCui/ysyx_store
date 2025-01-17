@@ -10,7 +10,7 @@
 #define Divisor_MSB  (SERIAL_PORT+0x01)
 #define FCR (SERIAL_PORT+0x02)
 #define IER (SERIAL_PORT+0x01)
-#define LSR (SERIAL_PORT+0x04)
+#define LSR (SERIAL_PORT+0x05)
 
 extern char data_load_start[];
 extern char data_size[];
