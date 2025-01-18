@@ -209,7 +209,7 @@ end
     end
 
 
-    assign                       araddr                    = {Ex_result_reg[31:2],2'd0};
+    assign                       araddr                    = Ex_result_reg;
     
 
     assign                       awaddr                    = Ex_result_reg;
@@ -230,7 +230,9 @@ end
     assign                       arid                      = 0;
     assign                       arlen                     = 0;
 
-    assign                       arsize                    = 3'b010;
+    assign                       arsize                    = (funct3_reg == 3'b000 | funct3_reg == 3'b100)? 
+                                                            3'b000:(funct3_reg == 3'b001 | funct3_reg == 3'b101)?
+                                                            3'b001:3'b010;
 
     assign                       arburst                   = 0;
 
