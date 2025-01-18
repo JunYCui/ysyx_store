@@ -29,12 +29,12 @@ void uart_init(){
     outb(Divisor_MSB,0x00);
     outb(Divisor_LSB,0x01);
     outb(LCR,0x03); // clear access to the Driver Latch
-    outb(FCR,0xc0); // set fifo interupt triggle level = 14bytes
+    outb(FCR,0x80); // set fifo interupt triggle level = 14bytes
     outb(IER,0x00); // disable all interrupt 
 }
 
 void putch(char ch) {
-    uint8_t status = inb(LCR); // 6th Bits of LSR 
+    uint8_t status = inb(LSR); // 6th Bits of LSR 
     if(status == 0)
         outb(SERIAL_PORT,ch);
 
