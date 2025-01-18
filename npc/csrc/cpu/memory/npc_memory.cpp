@@ -35,7 +35,7 @@ word_t paddr_read(paddr_t addr, int len) {
 
 extern "C" int npc_pmem_read(int addr)
 {
-  int paddr = addr & 0xffffff00;
+  int paddr = addr & ~0x03u;
   int data;
  if(paddr == RTC_ADDR + 4)
   {
