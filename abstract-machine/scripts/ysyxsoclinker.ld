@@ -1,5 +1,5 @@
 ENTRY(_start)
-PHDRS { text PT_LOAD; data PT_LOAD; }
+PHDRS { text PT_LOAD; data PT_LOAD; bss PT_LOAD; }
 
 MEMORY{
   mrom(rx) : ORIGIN = 0x20000000, LENGTH = 4K
@@ -27,7 +27,7 @@ SECTIONS {
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > sram AT>mrom
+  } > sram AT>mrom : bss
   data_size = SIZEOF(.data) + SIZEOF(.bss);
   data_load_start = LOADADDR(.data);
   . = ORIGIN(sram)+LENGTH(sram);
