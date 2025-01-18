@@ -27,7 +27,7 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
   } > sram AT>mrom
-  data_size = SIZEOF(.data) + SIZEOF(.bss);
+  data_size = SIZEOF(.data);
   data_load_start = LOADADDR(.data);
   . = ORIGIN(sram)+LENGTH(sram);
   _stack_top = .;
