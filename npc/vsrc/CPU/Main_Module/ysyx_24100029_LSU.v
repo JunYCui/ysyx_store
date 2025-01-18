@@ -230,10 +230,7 @@ end
     assign                       arid                      = 0;
     assign                       arlen                     = 0;
 
-    assign arsize = (funct3_reg == 3'b000 | funct3 == 3'b100)                           ?
-                    3'b000:(funct3_reg == 3'b001 | funct3_reg == 3'b101)     ?
-                    3'b001:(funct3_reg == 3'b010)     ?
-                    3'b010:3'b0000;
+    assign arsize = 3'b101;
 
     assign                       arburst                   = 0;
 
