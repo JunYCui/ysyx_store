@@ -308,8 +308,8 @@ ysyx_24100029_MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (rdata_ex,
   3'b101,rdata_16u                                                  // 1hu
 });
 
-    assign                       rdata_8u                  = {24'd0,rdata[7:0]};
-    assign                       rdata_16u                 = {16'd0,rdata[15:0]};
+    assign                       rdata_8u                  = {24'd0,rdata[rdata_b_choice +: 8]};
+    assign                       rdata_16u                 = {16'd0,rdata[rdata_b_choice +: 16]};
 
 /* verilator lint_off PINMISSING */
 ysyx_24100029_sext #(
@@ -317,7 +317,7 @@ ysyx_24100029_sext #(
     .OUT_WIDTH                   (32                        ) 
 ) sext_i8
 (
-    .data                        (rdata[7:0]),
+    .data                        (rdata[rdata_b_choice +:8] ),
     .sext_data                   (rdata_8i                  ) 
 );
 
@@ -326,7 +326,7 @@ ysyx_24100029_sext #(
     .OUT_WIDTH                   (32                        ) 
 ) sext_i16
 (
-    .data                        (rdata[15:0]),
+    .data                        (rdata[rdata_b_choice+:16] ),
     .sext_data                   (rdata_16i                 ) 
 );
 
