@@ -16,6 +16,7 @@ SECTIONS {
   .rodata : {
     *(.rodata*)
   } > mrom AT>mrom
+  . = ALIGN(2) ;
   .data : {
     data_start = . ;
     *(.data*)
