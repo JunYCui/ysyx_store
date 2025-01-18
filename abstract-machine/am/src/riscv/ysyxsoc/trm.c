@@ -47,8 +47,8 @@ void halt(int code) {
     while (1);
 }
 void _trm_init() {
-    uart_init();
     memcpy(data_start, data_load_start,(size_t)data_size);
+    uart_init();
     int ret = main(mainargs);
     halt(ret);
 }
