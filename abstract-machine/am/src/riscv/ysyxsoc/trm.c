@@ -34,10 +34,15 @@ void uart_init(){
 }
 
 void putch(char ch) {
-    //uint8_t status = inb(LSR); // 6th Bits of LSR 
-    //if(status == 0)
+    uint8_t status = inb(LSR) & 0x20; // 6th Bits of LSR 
+    if(status !=0)
         outb(SERIAL_PORT,ch);
-
+    else {
+        while(status ==0){
+            status = inb(LSR) & 0x20; 
+        }
+        outb(SERIAL_PORT,ch);
+    }
 
 }
 void halt(int code) {
