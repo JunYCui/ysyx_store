@@ -209,10 +209,10 @@ end
     end
 
 
-    assign                       araddr                    = Ex_result_reg << 2;
+    assign                       araddr                    = {Ex_result_reg[31:2],2'd0};
     
 
-    assign                       awaddr                    = Ex_result_reg << 2;
+    assign                       awaddr                    = {Ex_result_reg[31:2],2'd0};
     assign                       awid                      = 1;
     assign                       awlen                     = 0;
     assign                       awsize                    = funct3;
