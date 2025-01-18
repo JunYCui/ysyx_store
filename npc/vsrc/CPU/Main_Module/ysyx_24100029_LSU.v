@@ -317,7 +317,7 @@ ysyx_24100029_sext #(
     .OUT_WIDTH                   (32                        ) 
 ) sext_i8
 (
-    .data                        (rdata[7:0] ),
+    .data                        (rdata[7:0]),
     .sext_data                   (rdata_8i                  ) 
 );
 
@@ -326,7 +326,7 @@ ysyx_24100029_sext #(
     .OUT_WIDTH                   (32                        ) 
 ) sext_i16
 (
-    .data                        (rdata[15:0] ),
+    .data                        (rdata[15:0]),
     .sext_data                   (rdata_16i                 ) 
 );
 
