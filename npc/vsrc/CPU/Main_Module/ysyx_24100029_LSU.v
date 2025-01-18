@@ -230,7 +230,7 @@ end
     assign                       arid                      = 0;
     assign                       arlen                     = 0;
 
-    assign arsize = 3'b101;
+    assign arsize = 3'b010;
 
     assign                       arburst                   = 0;
 
