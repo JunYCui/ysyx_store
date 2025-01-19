@@ -215,11 +215,11 @@ end
     assign                       awaddr                    = Ex_result_reg;
     assign                       awid                      = 1;
     assign                       awlen                     = 0;
-    assign                       awsize                    = 2;
+    assign                       awsize                    = funct3;
     assign                       awburst                   = 0;
 
     assign                       wdata                     = rs2_value_reg<<8*Ex_result_reg[1:0];
-    assign                       rdata_b_choice            = {araddr[1:0],3'b0};
+    assign                       rdata_b_choice            = {Ex_result_reg[1:0],3'b0};
     
     assign wstrb = (funct3_reg == 3'b000)                           ?
                     4'b0001<<Ex_result_reg[1:0]:(funct3_reg == 3'b001)     ?
@@ -229,7 +229,11 @@ end
 
     assign                       arid                      = 0;
     assign                       arlen                     = 0;
-    assign                       arsize                    = 3'b010;
+
+    assign                       arsize                    = (funct3_reg == 3'b000 | funct3_reg == 3'b100)? 
+                                                            3'b000:(funct3_reg == 3'b001 | funct3_reg == 3'b101)?
+                                                            3'b001:3'b010;
+
     assign                       arburst                   = 0;
 
 /*
