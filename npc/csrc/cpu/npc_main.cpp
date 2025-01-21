@@ -4,10 +4,14 @@
 #include "npc_cpu_exec.h"
 #include "npc_sdb.h"
 
+#define FLASH_OFESET 0x10000000
 
 extern "C" int npc_pmem_read(int addr);
 
-extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
+extern "C" void flash_read(int32_t addr, int32_t *data) { 
+    *data = npc_pmem_read(addr-FLASH_OFESET);
+    return;
+}
 extern "C" void mrom_read(int32_t addr, int32_t *data) {
     *data = npc_pmem_read(addr);
     return ;
