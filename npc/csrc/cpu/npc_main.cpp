@@ -70,7 +70,7 @@ int main(int argc,char* argv[])
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
     top->trace(m_trace, 5);
     m_trace->open("waveform.vcd");
-    for( int i=0;i<8;i++)
+    for( int i=0;i<10;i++)
     cpu_reset();
         
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
