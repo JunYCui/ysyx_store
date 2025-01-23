@@ -9,7 +9,7 @@
 extern "C" int npc_pmem_read(int addr);
 
 extern "C" void flash_read(int32_t addr, int32_t *data) { 
-    *data = npc_pmem_read(addr-FLASH_OFESET);
+    assert(0);
     return;
 }
 extern "C" void mrom_read(int32_t addr, int32_t *data) {
