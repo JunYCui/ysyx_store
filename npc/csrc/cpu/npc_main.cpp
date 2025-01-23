@@ -9,7 +9,14 @@
 extern "C" int npc_pmem_read(int addr);
 
 extern "C" void flash_read(int32_t addr, int32_t *data) { 
-    assert(0);
+    if(addr == 0)
+    {
+        *data = 12;
+    }
+    else {
+        assert(0);
+    }
+
     return;
 }
 extern "C" void mrom_read(int32_t addr, int32_t *data) {
