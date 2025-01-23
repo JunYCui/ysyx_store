@@ -4,12 +4,11 @@
 #include "npc_cpu_exec.h"
 #include "npc_sdb.h"
 
-
+#define FLASH_OFFSET 0X30000000
 extern "C" int npc_pmem_read(int addr);
 
 extern "C" void flash_read(int32_t addr, int32_t *data) { 
-    printf("addr = 0x%x\n",addr);
-    *data = npc_pmem_read(addr);
+    *data = npc_pmem_read(addr+FLASH_OFFSET);
     return;
 }
 extern "C" void mrom_read(int32_t addr, int32_t *data) {
