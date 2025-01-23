@@ -62,10 +62,10 @@ int main(int argc,char* argv[])
 {
     unsigned char valid;
     Verilated::commandArgs(argc, argv);
+    init_monitor(argc, argv);
 #ifdef WAVE_TRACE
     Verilated::traceEverOn(true);
 
-    init_monitor(argc, argv);
     
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
     top->trace(m_trace, 5);
