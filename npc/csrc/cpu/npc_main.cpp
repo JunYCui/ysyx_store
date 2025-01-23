@@ -4,10 +4,13 @@
 #include "npc_cpu_exec.h"
 #include "npc_sdb.h"
 
-
+#define FLASH_OFFSET 0X30000000
 extern "C" int npc_pmem_read(int addr);
 
-extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
+extern "C" void flash_read(int32_t addr, int32_t *data) { 
+    *data = npc_pmem_read(addr+FLASH_OFFSET);
+    return;
+}
 extern "C" void mrom_read(int32_t addr, int32_t *data) {
     *data = npc_pmem_read(addr);
     return ;
@@ -59,15 +62,16 @@ int main(int argc,char* argv[])
 {
     unsigned char valid;
     Verilated::commandArgs(argc, argv);
-    // 开启波形跟踪
+    init_monitor(argc, argv);
+#ifdef WAVE_TRACE
     Verilated::traceEverOn(true);
 
-    init_monitor(argc, argv);
     
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
     top->trace(m_trace, 5);
     m_trace->open("waveform.vcd");
-    for( int i=0;i<8;i++)
+#endif
+    for( int i=0;i<10;i++)
     cpu_reset();
         
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
