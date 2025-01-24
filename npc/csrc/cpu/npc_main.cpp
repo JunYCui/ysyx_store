@@ -3,7 +3,7 @@
 #include "npc_memory.h"
 #include "npc_cpu_exec.h"
 #include "npc_sdb.h"
-
+#include "npc_define.h"
 #define FLASH_OFFSET 0X30000000
 extern "C" int npc_pmem_read(int addr);
 
