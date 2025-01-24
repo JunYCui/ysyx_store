@@ -13,7 +13,7 @@ static uint64_t read_time() {
 static uint64_t time =0;
 
 void __am_timer_init() {
-  time = 0;
+  time = read_time() ;
 }
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
