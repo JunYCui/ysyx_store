@@ -32,14 +32,15 @@ void uart_init(){
     outb(FCR,0x80); // set fifo interupt triggle level = 14bytes
     outb(IER,0x00); // disable all interrupt 
 }
-
-void display(int a, int b)
+//extern void id_display(void);
+/*
+static void display(int a, int b)
 {
     printf("ysyx = 0x%x \n",a);
     printf("ID:%d \n",b);
     return;
 }
-
+*/
 void putch(char ch) {
     uint8_t status = inb(LSR) & 0x20; // 6th Bits of LSR 
     if(status !=0)
