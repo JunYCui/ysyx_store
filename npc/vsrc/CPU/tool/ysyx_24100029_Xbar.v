@@ -132,10 +132,7 @@ module ysyx_24100029_Xbar(
     input              [   3: 0]           SOC_rid                     
 );
     initial begin
-        if(araddr[31:24] == 8'h02)
-            $display("read time!");
-        else 
-            $display("not read time");
+        $monitor("araddr = %d \n",araddr);
     end
 
     always @(*) begin
