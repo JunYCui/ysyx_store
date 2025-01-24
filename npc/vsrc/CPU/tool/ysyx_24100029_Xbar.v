@@ -134,6 +134,8 @@ module ysyx_24100029_Xbar(
     initial begin
         if(araddr[31:24] == 8'h02)
             $display("read time!");
+        else 
+            $display("not read time");
     end
 
     always @(*) begin
