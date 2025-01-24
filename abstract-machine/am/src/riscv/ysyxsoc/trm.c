@@ -32,6 +32,14 @@ void uart_init(){
     outb(FCR,0x80); // set fifo interupt triggle level = 14bytes
     outb(IER,0x00); // disable all interrupt 
 }
+extern void id_display(void);
+
+void display(int a, int b)
+{
+    printf("ysyx = 0x%x \n",a);
+    printf("ID:%d \n",b);
+    return;
+}
 
 void putch(char ch) {
     uint8_t status = inb(LSR) & 0x20; // 6th Bits of LSR 
@@ -54,6 +62,7 @@ void halt(int code) {
 void _trm_init() {
     memcpy(data_start, data_load_start,(size_t)data_size);
     uart_init();
+    id_display();
     int ret = main(mainargs);
     halt(ret);
 }
