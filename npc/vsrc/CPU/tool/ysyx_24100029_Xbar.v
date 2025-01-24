@@ -132,7 +132,7 @@ module ysyx_24100029_Xbar(
     input              [   3: 0]           SOC_rid                     
 );
     initial begin
-            if(araddr[31:24] == 8'h02)
+        if(araddr[31:24] > 8'h02)
         $monitor("araddr = %d \n",araddr);
     end
 
