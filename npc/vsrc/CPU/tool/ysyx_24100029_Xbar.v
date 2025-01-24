@@ -162,7 +162,7 @@ module ysyx_24100029_Xbar(
             rdata   = CLNT_rdata   ;
             rlast   = CLNT_rlast   ;
             rid     = CLNT_rid     ;
-
+           // $display("Read time\n");
             SOC_arvalid = 0     ;
             SOC_araddr  = 0     ;
             SOC_arid    = 0     ;
