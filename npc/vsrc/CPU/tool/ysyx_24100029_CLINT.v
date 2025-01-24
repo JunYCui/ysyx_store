@@ -69,7 +69,7 @@ module ysyx_24100029_CLINT
     reg                [  31: 0]        clk_count_high              ;
 
     initial begin
-        $monitor("araddr = %d \n",araddr);
+        $monitor("clk_count_low = %b \n",clk_count_low);
     end
 
     always @(posedge clock) begin
