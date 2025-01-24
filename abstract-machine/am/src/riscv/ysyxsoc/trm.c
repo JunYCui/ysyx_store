@@ -37,6 +37,7 @@ void display(int a, int b)
 {
     printf("ysyx = 0x%x \n",a);
     printf("ID:%d \n",b);
+    return;
 }
 
 void putch(char ch) {
