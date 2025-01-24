@@ -38,6 +38,7 @@ extern "C" int npc_pmem_read(int addr)
 {
   int paddr = addr & ~0x03u;
   int data;
+/*
   if(paddr == RTC_ADDR + 4)
   {
     skip_flag = 1;
@@ -59,6 +60,7 @@ extern "C" int npc_pmem_read(int addr)
     skip_flag = 1;
     return (weight<<16)|height ;
   }  
+  */
 #ifdef MTRACE
   if(paddr != top->IFU_pc)
   printf("Read addr 0x%x at pc: 0x%x    \n",paddr,top->MEM_pc);
