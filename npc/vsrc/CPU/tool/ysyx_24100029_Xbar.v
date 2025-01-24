@@ -131,6 +131,11 @@ module ysyx_24100029_Xbar(
     input                                  SOC_rlast                  ,
     input              [   3: 0]           SOC_rid                     
 );
+    initial begin
+        if(araddr[31:24] == 8'h02)
+            $display("read time!");
+    end
+
     always @(*) begin
         if(araddr[31:24] == 8'h02 )begin
             awready = CLNT_awready ;
@@ -162,7 +167,7 @@ module ysyx_24100029_Xbar(
             rdata   = CLNT_rdata   ;
             rlast   = CLNT_rlast   ;
             rid     = CLNT_rid     ;
-           // $display("Read time\n");
+
             SOC_arvalid = 0     ;
             SOC_araddr  = 0     ;
             SOC_arid    = 0     ;
