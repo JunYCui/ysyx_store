@@ -96,7 +96,7 @@ module psram(
           addr <= {addr[19:0],data_in};
         else if(state == wdata_t & count[0])
           addr <= addr + 1;
-        else if(state == rdata_t & count[0])
+        else if(state == rdata_t & ~count[0])
           addr <= addr + 1;
     end
     always @(posedge sck) begin
