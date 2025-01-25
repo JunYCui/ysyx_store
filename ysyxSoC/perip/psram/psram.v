@@ -7,7 +7,7 @@ module psram(
     
     wire                                reset                       ;
     reg                [   5: 0]        count                       ;
-    reg                [   7: 0]        psr        [2**24-1:0]  ;
+    reg                [   7: 0]        psr     [2**24-1:0]  ;
     reg                [   2: 0]        state                       ;
     reg                [   2: 0]        next_state                  ;
     reg                [   7: 0]        cmd                         ;
@@ -20,6 +20,7 @@ module psram(
     assign                              data_in                     = dio;
     assign                              dio                         = ctrl? data_out:4'bz;
     assign                              data_out                    = count[0]? psr[addr][3:0]:psr[addr][7:4];
+    assign                              reset                       = ce_n;
 // 0xeb read 
 // 0x38 write
     always @(posedge sck or posedge reset) begin
