@@ -19,7 +19,7 @@ module psram(
 
     assign                              data_in                     = dio;
     assign                              dio                         = ctrl? data_out:4'bz;
-    assign                              data_out                    = count[0]? psr[addr][3:0]:psr[addr][7:4];
+    assign                              data_out                    = ~count[0]? psr[addr][3:0]:psr[addr][7:4];
     assign                              reset                       = ce_n;
 // 0xeb read 
 // 0x38 write
@@ -52,7 +52,7 @@ module psram(
             wdata_t:
                 next_state = state;
             wait_t:
-                if(count == 19)
+                if(count == 20)
                   next_state = rdata_t;
                 else
                   next_state = wait_t;
