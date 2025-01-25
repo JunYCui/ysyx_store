@@ -22,6 +22,9 @@ module psram(
     assign                              data_out                    = count[0]? psr[addr][3:0]:psr[addr][7:4];
 // 0xeb read 
 // 0x38 write
+    initial begin
+      $monitor("addr =0x%x",addr);
+    end
     always @(posedge sck or posedge reset) begin
           if(reset)
             state <= cmd_t;
