@@ -23,7 +23,7 @@ module psram(
 // 0xeb read 
 // 0x38 write
     initial begin
-      $monitor("addr =0x%x",addr);
+      $monitor(" data_out=0x%x",data_out);
     end
     always @(posedge sck or posedge reset) begin
           if(reset)
