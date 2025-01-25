@@ -85,7 +85,7 @@ module psram(
     always @(posedge sck or posedge reset) begin
         if(reset)
           ctrl <= 0;
-        else if(state == rdata_t)
+        else if(state == wait_t & count == 19)
           ctrl <= 1;
     end
 
