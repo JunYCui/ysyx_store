@@ -21,16 +21,16 @@ SECTIONS {
     data_start = . ;
     *(.data*)
     *(.sdata*)
-  } > psram AT>flash : data
+  } > sram AT>flash : data
   .bss : {    	
     _bss_start = .;
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > psram AT>flash : bss
+  } > sram AT>flash : bss
   data_size = SIZEOF(.data) + SIZEOF(.bss);
   data_load_start = LOADADDR(.data);
-  . = ORIGIN(psram)+LENGTH(psram);
+  . = ORIGIN(sram)+LENGTH(sram);
   _stack_top = .;
   _stack_pointer = .;
   end = .;
