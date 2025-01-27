@@ -9,16 +9,16 @@ MEMORY{
 
 
 SECTIONS {
-  . = ORIGIN(flash);
+  . = ORIGIN(psram);
   .text : {
+    data_start = . ;
    *(entry)
    *(.text*)
-  } > flash AT>flash : text
+  } > psram AT>flash : text
   .rodata : {
     *(.rodata*)
-  } > flash AT>flash
+  } > psram AT>flash
   .data : {
-    data_start = . ;
     *(.data*)
     *(.sdata*)
   } > psram AT>flash : data
@@ -28,8 +28,8 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
   } > psram AT>flash : bss
-  data_size = SIZEOF(.data) + SIZEOF(.bss);
-  data_load_start = LOADADDR(.data);
+  data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) ;
+  data_load_start = LOADADDR(.text);
   _heap_start = . ;
   . = ORIGIN(psram) + LENGTH(psram);
   _stack_top = . ;
