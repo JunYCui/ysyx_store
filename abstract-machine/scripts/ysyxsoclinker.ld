@@ -30,9 +30,8 @@ SECTIONS {
   } > psram AT>flash : bss
   data_size = SIZEOF(.data) + SIZEOF(.bss);
   data_load_start = LOADADDR(.data);
-  . = ORIGIN(psram)+LENGTH(psram);
-  _stack_top = .;
-  _stack_pointer = .;
+  _stack_top = ORIGIN(psram);
+  _stack_pointer = . + LENGTH(psram);
   end = .;
   _end = .;
   _heap_start = ALIGN(0x1000);
