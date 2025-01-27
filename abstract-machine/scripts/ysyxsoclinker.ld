@@ -9,7 +9,7 @@ MEMORY{
 
 
 SECTIONS {
-  . = ORIGIN(psram);
+  . = ORIGIN(flash);
   .text : {
     data_start = . ;
    *(entry)
