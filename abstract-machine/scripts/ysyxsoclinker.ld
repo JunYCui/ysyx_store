@@ -11,8 +11,8 @@ MEMORY{
 SECTIONS {
   . = ORIGIN(flash);
   .text : {
+    *(entry)
     data_start = . ;
-   *(entry)
    *(.text*)
   } > psram AT>flash : text
   .rodata : {
