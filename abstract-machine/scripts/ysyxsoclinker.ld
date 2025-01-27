@@ -11,14 +11,14 @@ MEMORY{
 SECTIONS {
   . = ORIGIN(flash);
   .text : {
-    *(entry)     
-    data_start = . ;
+    *(entry)
    *(.text*)
   } > sram AT>flash : text
   .rodata : {
     *(.rodata*)
   } > sram AT>flash
   .data : {
+    data_start = . ;
     *(.data*)
     *(.sdata*)
   } > psram AT>flash : data

@@ -53,11 +53,6 @@ void putch(char ch) {
     }
 
 }
-void sram_init(void){
-    memcpy(data_start, data_load_start,(size_t)data_size);
-    return;
-}
-
 void halt(int code) {
     asm volatile("mv a0, %0; ebreak" : :"r"(code));
 
@@ -66,6 +61,7 @@ void halt(int code) {
 }
 void _trm_init() {
     uart_init();
+    memcpy(data_start, data_load_start,(size_t)data_size);
     id_display();
     int ret = main(mainargs);
     halt(ret);

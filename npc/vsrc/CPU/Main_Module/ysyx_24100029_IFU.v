@@ -102,6 +102,7 @@ module ysyx_24100029_IFU(
     assign                       rready                    = 1'b1;
 
   //  check_rresp: assert(rresp != 2'b00) ; 
+    localparam  ResetValue= 32'hf000000;
 
 /************ Axi4 bus ***********/
 always @(posedge clock) begin
