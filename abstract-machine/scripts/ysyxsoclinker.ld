@@ -14,10 +14,10 @@ SECTIONS {
     *(entry)
     data_start = . ;
    *(.text*)
-  } > psram AT>flash : text
+  } > sram AT>flash : text
   .rodata : {
     *(.rodata*)
-  } > psram AT>flash
+  } > sram AT>flash
   .data : {
     *(.data*)
     *(.sdata*)
