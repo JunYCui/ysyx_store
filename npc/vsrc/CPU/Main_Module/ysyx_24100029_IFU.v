@@ -158,7 +158,7 @@ end
 
 always @(posedge clock) begin
         if(reset)
-            pc <= 32'h30000000;
+            pc <= ResetValue;
         else if((pipe_stop| pipe_stop_reg) &valid&ready)
             pc <= pc ;
         else if(dnpc_flag_reg & valid &ready)
