@@ -31,8 +31,8 @@ SECTIONS {
   data_size = SIZEOF(.data) + SIZEOF(.bss);
   data_load_start = LOADADDR(.data);
   _stack_top = ORIGIN(psram);
-  _stack_pointer = . + LENGTH(psram);
+  _stack_pointer = . + 0x8000;
   end = .;
   _end = .;
-  _heap_start = ALIGN(0x1000);
+  _heap_start = ORIGIN(psram) + data_size;
 }
