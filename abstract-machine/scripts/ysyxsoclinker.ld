@@ -11,7 +11,7 @@ MEMORY{
 SECTIONS {
   . = ORIGIN(flash);
   .text : {
-    *(entry)
+    *(entry)     
     data_start = . ;
    *(.text*)
   } > sram AT>flash : text
