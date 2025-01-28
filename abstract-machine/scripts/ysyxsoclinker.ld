@@ -20,24 +20,24 @@ SECTIONS {
   .text : {
     data_start = . ;
   *(.text*)
-  } > psram AT>flash : text
+  } > sram AT>flash : text
   .rodata : {
     *(.rodata*)
-  } > psram AT>flash
+  } > sram AT>flash
   .data : {
     *(.data*)
     *(.sdata*)
-  } > psram AT>flash : data
+  } > sram AT>flash : data
   .bss : {    	
     _bss_start = .;
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > psram AT>flash
+  } > sram AT>flash
   data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) ;
   data_load_start = LOADADDR(.text);
   _heap_start = ALIGN(4) ;
-  . = ORIGIN(psram) + LENGTH(psram);
+  . = ORIGIN(sram) + LENGTH(sram);
   _stack_top = . ;
   _stack_pointer = .;
   end = .;
