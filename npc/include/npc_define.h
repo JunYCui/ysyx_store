@@ -3,7 +3,7 @@
 
 //#define FTRACE
 //#define DIFFTEST
-//#define MTRACE
+#define MTRACE
 //#define ITARCE
 //#define WAVE_TRACE
 
