@@ -8,6 +8,7 @@
 extern "C" int npc_pmem_read(int addr);
 
 extern "C" void flash_read(int32_t addr, int32_t *data) { 
+    printf("addr = %x\n",addr);
     *data = npc_pmem_read(addr+FLASH_OFFSET);
     return;
 }
