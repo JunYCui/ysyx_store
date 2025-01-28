@@ -16,7 +16,7 @@ SECTIONS {
     *(.text.memcpy)
     *(.text._trm_init)
   } >flash AT>flash : bootloader
-  . = ORIGIN(psram);
+  . = ORIGIN(sram);
   .text : {
     data_start = . ;
   *(.text*)
