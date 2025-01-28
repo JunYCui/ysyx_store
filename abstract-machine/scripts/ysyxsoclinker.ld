@@ -18,13 +18,13 @@ SECTIONS {
   } >flash AT>flash : bootloader
   . = ORIGIN(sram);
   .text : {
+    data_start = . ;
   *(.text*)
   } > sram AT>flash : text
   .rodata : {
     *(.rodata*)
   } > sram AT>flash
   .data : {
-    data_start = . ;
     *(.data*)
     *(.sdata*)
   } > sram AT>flash : data
