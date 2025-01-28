@@ -12,8 +12,8 @@ SECTIONS {
   . = ORIGIN(flash);
   .bootloader : {
     *(entry)
-    *(.text.uart_init)
     *(.text.memcpy)
+    *(.text.uart_init)
     *(.text._trm_init)
   } >flash AT>flash : bootloader
   . = ORIGIN(sram);
