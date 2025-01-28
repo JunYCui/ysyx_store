@@ -16,28 +16,28 @@ SECTIONS {
     *(.text.memcpy)
     *(.text._trm_init)
   } >flash AT>flash : bootloader
-  . = ORIGIN(sram);
+  . = ORIGIN(psram);
   .text : {
     data_start = . ;
   *(.text*)
-  } > sram AT>flash : text
+  } > psram AT>flash : text
   .rodata : {
     *(.rodata*)
-  } > sram AT>flash
+  } > psram AT>flash
   .data : {
     *(.data*)
     *(.sdata*)
-  } > sram AT>flash : data
+  } > psram AT>flash : data
   .bss : {    	
     _bss_start = .;
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > sram AT>flash
+  } > psram AT>flash
   data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) ;
   data_load_start = LOADADDR(.text);
   _heap_start = ALIGN(4) ;
-  . = ORIGIN(sram) + LENGTH(sram);
+  . = ORIGIN(psram) + LENGTH(psram);
   _stack_top = . ;
   _stack_pointer = .;
   end = .;
