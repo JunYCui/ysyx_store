@@ -23,7 +23,7 @@ SECTIONS {
   } > sram AT>flash : text
   .rodata : {
     *(.rodata*)
-  } > sram AT>flash
+  } > sram AT>flash 
   .data : {
     *(.data*)
     *(.sdata*)
