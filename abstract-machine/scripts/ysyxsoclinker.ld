@@ -20,14 +20,14 @@ SECTIONS {
   .text : {
     data_start = . ;
   *(.text*)
-  } > sram AT>flash : text
+  } > psram AT>flash : text
   .rodata : {
     *(.rodata*)
   } > psram AT>flash 
   .data : {
     *(.data*)
     *(.sdata*)
-  } > p AT>flash : data
+  } > psram AT>flash : data
   .bss : {    	
     _bss_start = .;
     *(.bss*)
