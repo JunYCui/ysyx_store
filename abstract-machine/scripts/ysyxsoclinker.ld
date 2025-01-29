@@ -23,6 +23,7 @@ SECTIONS {
   } > psram AT>flash : text
   .rodata : {
     *(.rodata*)
+    *(.srodata*)
   } > psram AT>flash 
   .data : {
     *(.data*)
