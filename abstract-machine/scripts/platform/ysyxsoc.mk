@@ -5,8 +5,8 @@ AM_SRCS := riscv/ysyxsoc/start.S \
 		   riscv/ysyxsoc/id.S
 
 CFLAGS    += -fdata-sections -ffunction-sections
-LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld
-LDFLAGS   += --gc-sections -e _start --print-map
+LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld --enable-non-contiguous-regions
+LDFLAGS   += --gc-sections -e _start --print-map 
 CFLAGS += -DMAINARGS=\"$(mainargs)\" 
 SOCFLAGS = -e $(IMAGE).elf -b
 
