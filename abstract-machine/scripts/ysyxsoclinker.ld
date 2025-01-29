@@ -21,13 +21,14 @@ SECTIONS {
     data_start = . ;
   *(.text*)
   } > psram AT>flash : text
-  .data : {
-    *(.data*)
-    *(.sdata*)
-  } > psram AT>flash : data
   .rodata : {
     *(.rodata*)
   } > psram AT>flash : rodata
+  .data : {
+    . = ALIGN(0x10) ;
+    *(.data*)
+    *(.sdata*)
+  } > psram AT>flash : data
   .bss : {    	
     _bss_start = .;
     *(.bss*)
