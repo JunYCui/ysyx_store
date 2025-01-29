@@ -15,7 +15,6 @@ SECTIONS {
     *(.text.memcpy)
     *(.text.uart_init)
     *(.text._trm_init)
-    *(.text.halt)
   } >flash AT>flash : bootloader
   . = ORIGIN(psram);
   .text : {
@@ -35,6 +34,9 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
   } > psram AT>flash
+  .rela : {
+    *(.rela*)
+  } > flash AT> flash 
   data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) ;
   data_load_start = LOADADDR(.text);
   _heap_start = ORIGIN(sram) ;
