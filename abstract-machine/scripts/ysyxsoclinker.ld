@@ -10,26 +10,26 @@ MEMORY{
 
 SECTIONS {
   . = ORIGIN(flash);
-  .bootloader : {
+  .bootloader ALIGN(0x04) : {
     *(entry)
     *(.text.memcpy)
     *(.text.uart_init)
     *(.text._trm_init)
   } >flash AT>flash : bootloader
   . = ORIGIN(psram);
-  .text : {
+  .text  ALIGN(0x04)  : {
     data_start = . ;
   *(.text*)
   } > psram AT>flash : text
-  .rodata : {
+  .rodata ALIGN(0x04)  : {
     *(.rodata*)
     *(.srodata*)
   } > psram AT>flash : rodata
-  .data : {
+  .data  ALIGN(0x04)  : {
     *(.data*)
     *(.sdata*)
   } > psram AT>flash : data
-  .bss : {    	
+  .bss  ALIGN(0x04)  : {    	
     _bss_start = .;
     *(.bss*)
     *(.sbss*)
