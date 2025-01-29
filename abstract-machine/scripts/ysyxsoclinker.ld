@@ -17,23 +17,23 @@ SECTIONS {
     *(.text._trm_init)
   } >flash AT>flash : bootloader
   . = ORIGIN(psram);
-  .text : {
+  .text : AT(ALIGN(LOADADDR(.bootloader)+SIZEOF(.bootloader),0x04)) {
     data_start = . ;
   *(.text*)
-  } > psram AT>flash : text
-  .data : {
+  } > psram : text
+  .data : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.data*)
     *(.sdata*)
-  } > psram AT>flash : data1
-  .rodata : {
+  } > psram  : data1
+  .rodata : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(.rodata*)
-  } > psram AT>flash : rodata
-  .bss : {    	
+  } > psram : rodata
+  .bss : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {    	
     _bss_start = .;
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > psram AT>flash : bss
+  } > psram : bss
   data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) ;
   data_load_start = LOADADDR(.text);
   _heap_start = ALIGN(4) ;
