@@ -25,7 +25,6 @@ SECTIONS {
     *(.rodata*)
   } > psram AT>flash : rodata
   .data : {
-    . = ALIGN(0x10) ;
     *(.data*)
     *(.sdata*)
   } > psram AT>flash : data
