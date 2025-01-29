@@ -1,5 +1,5 @@
 ENTRY(_start)
-PHDRS { text PT_LOAD; data PT_LOAD;rodata PT_LOAD ;bootloader PT_LOAD; }
+PHDRS { text PT_LOAD; data PT_LOAD;}
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
@@ -15,7 +15,7 @@ SECTIONS {
     *(.text.memcpy)
     *(.text.uart_init)
     *(.text._trm_init)
-  } >flash AT>flash : bootloader
+  } >flash AT>flash 
   . = ORIGIN(psram);
   .text : {
     data_start = . ;
@@ -28,7 +28,7 @@ SECTIONS {
   .rodata : {
     *(.rodata*)
     *(.srodata*)
-  } > psram AT>flash : rodata
+  } > psram AT>flash 
   .bss : {    	
     _bss_start = .;
     *(.bss*)
