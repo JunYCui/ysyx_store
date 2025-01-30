@@ -1,5 +1,5 @@
 ENTRY(_start)
-PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;rodata PT_LOAD; bss PT_LOAD; ssbl PT_LOAD;}
+PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;rodata PT_LOAD; bss PT_LOAD; ssbl PT_LOAD;data_extra PT_LOAD; }
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
@@ -27,7 +27,7 @@ SECTIONS {
   .data.extra : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.data*)
     *(.sdata*)
-  } > psram : data
+  } > psram : data_extra 
   .data : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
     *(.data*)
     *(.sdata*)
