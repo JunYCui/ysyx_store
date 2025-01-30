@@ -1,5 +1,5 @@
 ENTRY(_start)
-PHDRS { text PT_LOAD;bootloader PT_LOAD; data1 PT_LOAD;rodata PT_LOAD; bss PT_LOAD;}
+PHDRS { text PT_LOAD; bootloader PT_LOAD; data PT_LOAD;rodata PT_LOAD; bss PT_LOAD;}
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
@@ -24,9 +24,10 @@ SECTIONS {
   .data : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.data*)
     *(.sdata*)
-  } > psram  : data1
+  } > psram  : data
   .rodata : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(.rodata*)
+    *(.srodata*)
   } > psram : rodata
   .bss : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {    	
     _bss_start = .;
@@ -37,7 +38,7 @@ SECTIONS {
   data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) ;
   data_load_start = LOADADDR(.text);
   _heap_start = ALIGN(4) ;
-  . = ORIGIN(psram) + LENGTH(psram);
+  . = ORIGIN(sram) + LENGTH(sram);
   _stack_top = . ;
   _stack_pointer = .;
   end = .;
