@@ -3,8 +3,8 @@ PHDRS { text PT_LOAD; bootloader PT_LOAD; data PT_LOAD;rodata PT_LOAD; bss PT_LO
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
-  sram(rwx) : ORIGIN = 0x0f000000, LENGTH = 8K
   psram(rwx) :ORIGIN = 0x80000000, LENGTH = 4M
+  sram(rwx) : ORIGIN = 0x0f000000, LENGTH = 8K
 }
 
 
@@ -16,15 +16,18 @@ SECTIONS {
     *(.text.memcpy)
     *(.text._trm_init)
   } >flash AT>flash : bootloader
-  . = ORIGIN(psram);
-  .text : AT(ALIGN(LOADADDR(.bootloader)+SIZEOF(.bootloader),0x04)) {
+  .text : AT(ALIGN(LOADADDR(.bootloader )+SIZEOF(.bootloader),0x04)) {
     data_start = . ;
   *(.text*)
   } > psram : text
-  .data : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
+  .data.extra : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.data*)
     *(.sdata*)
-  } > psram  : data
+  } > psram : data
+  .data : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
+    *(.data*)
+    *(.sdata*)
+  } > psram : data
   .rodata : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(.rodata*)
     *(.srodata*)
