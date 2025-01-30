@@ -63,14 +63,11 @@ void halt(int code) {
     while (1);
 }
 
-void __attribute__((section(".fsbl"))) fsbl_init(){
-    char *p0=_ssbl_start;
-    const char*p1 = _ssbl_loadstart;
-    size_t n = (size_t) _ssbl_size;
-    while(n--)
-    {
-      *(p0++) = *(p1++);
-    }
+void _trm_init() {
+    uart_init();
+    id_display();
+    int ret = main(mainargs);
+    halt(ret);
 }
 
 void __attribute__((section(".ssbl"))) ssbl_init(){
@@ -81,12 +78,16 @@ void __attribute__((section(".ssbl"))) ssbl_init(){
     {
       *(p0++) = *(p1++);
     }
-    return ;
+    _trm_init();
 } 
-
-void _trm_init() {
-    uart_init();
-    id_display();
-    int ret = main(mainargs);
-    halt(ret);
+void __attribute__((section(".fsbl"))) fsbl_init(){
+    char *p0=_ssbl_start;
+    const char*p1 = _ssbl_loadstart;
+    size_t n = (size_t) _ssbl_size;
+    while(n--)
+    {
+      *(p0++) = *(p1++);
+    }
+    ssbl_init();
 }
+
