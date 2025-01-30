@@ -1,5 +1,5 @@
 ENTRY(_start)
-PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;rodata PT_LOAD; bss PT_LOAD; ssbl PT_LOAD;data_extra PT_LOAD; }
+PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;rodata PT_LOAD; bss PT_LOAD;data_extra PT_LOAD ; ssbl PT_LOAD;}
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
@@ -25,14 +25,15 @@ SECTIONS {
   *(.text*)
   } > psram : text
   .data.extra : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
+    *(FSymTab)
     *(.data*)
     *(.sdata*)
-  } > psram : data_extra 
+  } > psram : data_extra
   .data : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
     *(.data*)
     *(.sdata*)
   } > psram : data
-  .rodata : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
+  .rodata : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
     *(.rodata*)
     *(.srodata*)
   } > psram : rodata
@@ -44,7 +45,7 @@ SECTIONS {
   } > psram : bss
   data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) ;
   data_load_start = LOADADDR(.text);
-  _heap_start = ORIGIN(sram) + 0x500;
+  _heap_start = ORIGIN(sram);
   . = ORIGIN(sram) + LENGTH(sram);
   _stack_top = . ;
   _stack_pointer = .;
