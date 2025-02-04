@@ -57,7 +57,7 @@ module sdram(
         if (!cke)
           cas_latency <= 2;
         else if(loadm_cmd)
-          cas_latency <= a[6:4];
+          cas_latency <= a[6:4] - 1;
         else
           cas_latency <= cas_latency;
     end
