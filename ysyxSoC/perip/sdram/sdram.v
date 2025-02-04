@@ -65,7 +65,7 @@ module sdram(
         if(!cke)
           burst_lenth <= 0;
         else if(loadm_cmd)
-          burst_lenth <= a[2:0];
+          burst_lenth <= a[2:0]<<1;
         else
           burst_lenth <= burst_lenth ;
     end
@@ -114,7 +114,7 @@ module sdram(
         case(state)
         idle:if(read_cmd & ba == bank_addr)
                   next_state = work_r;
-              else if(write_cmd & ba == bank_addr & burst_lenth != 1)
+              else if(write_cmd & ba == bank_addr & burst_lenth != 0)
                   next_state = work_w;
               else
                   next_state = idle;
