@@ -138,8 +138,6 @@ module sdram(
     always @(posedge clk) begin
         if(!cke)
           col_addr <= 0;
-        else if(state == idle)
-          col_addr <= 0;
         else if(read_cmd & ba == bank_addr)
           col_addr <= {a[11],a[9:0]};
         else if(write_cmd & ba == bank_addr)
@@ -148,6 +146,8 @@ module sdram(
           col_addr <= col_addr + 1;
         else if(state == data_o)
           col_addr <= col_addr + 1;
+        else if(state == idle)
+          col_addr <= 0;
     end
     always @(posedge clk) begin
         if(write_cmd & ba == bank_addr & ~dqm[0])
