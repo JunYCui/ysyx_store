@@ -146,19 +146,17 @@ module sdram(
           col_addr <= col_addr + 1;
         else if(state == data_o)
           col_addr <= col_addr + 1;
-        else if(state == idle)
-          col_addr <= 0;
     end
     always @(posedge clk) begin
         if(write_cmd & ba == bank_addr & ~dqm[0])
           ram[bank_addr][row_addr][{a[11],a[9:0]}][7:0] <= data_in[7:0];
-        else if(state == work_w & dqm[0])
+        else if(state == work_w & ~dqm[0])
           ram[bank_addr][row_addr][col_addr][7:0] <= data_in[7:0] ;
     end
     always @(posedge clk) begin
         if(write_cmd & ba == bank_addr & ~dqm[1])
           ram[bank_addr][row_addr][{a[11],a[9:0]}][15:8] <= data_in[15:8];
-        else if(state == work_w & dqm[1])
+        else if(state == work_w & ~dqm[1])
           ram[bank_addr][row_addr][col_addr][15:8] <= data_in[15:8] ;
     end
 
