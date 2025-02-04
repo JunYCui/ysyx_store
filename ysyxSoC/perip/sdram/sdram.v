@@ -90,7 +90,7 @@ module sdram(
     always @(posedge clk or negedge cke) begin
         if(!cke)
           ctrl <= 1;
-        else if(state == work_r & counter == cas_latency + burst_lenth - 1)
+        else if(state == data_o & counter == cas_latency + burst_lenth - 1)
           ctrl <= 1;
         else if(state == work_r & counter == cas_latency - 1)
           ctrl <= dqm_reg[0];
