@@ -16,8 +16,8 @@ module sdram(
 );
     reg                [   2: 0]        cas_latency                 ;
     reg                [   2: 0]        burst_lenth                 ;
-    reg                 [1:0]                state                       ;
-    reg [1:0] next_state;
+    reg                [   1: 0]        state                       ;
+    reg                [   1: 0]        next_state                  ;
     reg                [  12: 0]        row_addr                    ;
     reg                [   1: 0]        bank_addr                   ;
     reg                [  10: 0]        col_addr                    ;
@@ -39,7 +39,7 @@ module sdram(
     localparam                          idle                       = 2'b00 ;
     localparam                          work_r                     = 2'b01 ;
     localparam                          work_w                     = 2'b10 ;
-    localparam   data_o= 2'b11;
+    localparam                          data_o                     = 2'b11 ;
 /***************** ram *****************/
     localparam                          BankWidth                  = 2     ;
     localparam                          RowWidth                   = 13    ;
@@ -102,33 +102,33 @@ module sdram(
           dqm_reg <= dqm;
     end
     always @(posedge clk or negedge cke ) begin
-          counter <= (cke & state == work_r | state == work_w | state == data_o )? counter+1 : 0;          
+          counter <= (cke & state == work_r | state == work_w | state == data_o )? counter+1 : 0;
     end
     always @(posedge clk or negedge cke ) begin
         if(!cke)
           state <= idle;
-        else 
+        else
           state <= next_state;
-    end 
+    end
     always @(*) begin
         case(state)
         idle:if(read_cmd & ba == bank_addr)
                   next_state = work_r;
-              else if(write_cmd & ba == bank_addr)
+              else if(write_cmd & ba == bank_addr & burst_lenth != 1)
                   next_state = work_w;
-              else 
+              else
                   next_state = idle;
         work_r:if(counter == cas_latency-1)
                   next_state = data_o;
-                else 
+                else
                   next_state = work_r;
         work_w:if(counter == burst_lenth - 2)
                   next_state = idle;
-                else 
+                else
                   next_state = work_w;
         data_o:if(counter == cas_latency + burst_lenth - 1)
                   next_state = idle;
-                else 
+                else
                   next_state = state ;
         default:
                 next_state = idle;
@@ -148,20 +148,20 @@ module sdram(
           col_addr <= col_addr + 1;
     end
     always @(posedge clk) begin
-        if(write_cmd & ba == bank_addr & dqm[0]) 
+        if(write_cmd & ba == bank_addr & dqm[0])
           ram[bank_addr][row_addr][{a[11],a[9:0]}][7:0] <= data_in[7:0];
         else if(state == work_w & dqm[0])
           ram[bank_addr][row_addr][col_addr][7:0] <= data_in[7:0] ;
     end
     always @(posedge clk) begin
-        if(write_cmd & ba == bank_addr & dqm[1]) 
+        if(write_cmd & ba == bank_addr & dqm[1])
           ram[bank_addr][row_addr][{a[11],a[9:0]}][15:8] <= data_in[15:8];
         else if(state == work_w & dqm[1])
           ram[bank_addr][row_addr][col_addr][15:8] <= data_in[15:8] ;
     end
 
 
-assign data_out = ram[bank_addr][row_addr][col_addr];
+    assign                              data_out                    = ram[bank_addr][row_addr][col_addr];
 
 
 endmodule
