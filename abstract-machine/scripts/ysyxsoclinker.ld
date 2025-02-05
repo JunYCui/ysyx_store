@@ -46,7 +46,7 @@ SECTIONS {
   } > sdram : bss
   data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) ;
   data_load_start = LOADADDR(.text);
-  _heap_start = ORIGIN(sram);
+  _heap_start = ORIGIN(sram) + 0x1000;
   . = ORIGIN(sram) + LENGTH(sram);
   _stack_top = . ;
   _stack_pointer = .;
