@@ -84,7 +84,7 @@ module sdram(
     always @(posedge clk or negedge cke) begin
         if(!cke)
           bank_addr <= 0;
-        else if(active_cmd)
+        else if(read_cmd | write_cmd)
           bank_addr <= ba;
     end
     always @(posedge clk or negedge cke) begin
@@ -98,7 +98,7 @@ module sdram(
     always @(posedge clk or negedge cke) begin
         if(!cke)
           dqm_reg <= 1;
-        else if(read_cmd & ba == bank_addr)
+        else if(read_cmd)
           dqm_reg <= dqm;
     end
     always @(posedge clk or negedge cke ) begin
@@ -112,9 +112,9 @@ module sdram(
     end
     always @(*) begin
         case(state)
-        idle:if(read_cmd & ba == bank_addr)
+        idle:if(read_cmd)
                   next_state = work_r;
-              else if(write_cmd & ba == bank_addr & burst_lenth != 0)
+              else if(write_cmd & burst_lenth != 0)
                   next_state = work_w;
               else
                   next_state = idle;
@@ -138,9 +138,9 @@ module sdram(
     always @(posedge clk) begin
         if(!cke)
           col_addr <= 0;
-        else if(read_cmd & ba == bank_addr)
+        else if(read_cmd)
           col_addr <= {a[11],a[9:0]};
-        else if(write_cmd & ba == bank_addr)
+        else if(write_cmd)
           col_addr <= {a[11],a[9:0]} + 1;
         else if(state == work_w)
           col_addr <= col_addr + 1;
@@ -148,14 +148,14 @@ module sdram(
           col_addr <= col_addr + 1;
     end
     always @(posedge clk) begin
-        if(write_cmd & ba == bank_addr & ~dqm[0])
-          ram[bank_addr][row_addr][{a[11],a[9:0]}][7:0] <= data_in[7:0];
+        if(write_cmd& ~dqm[0])
+          ram[ba][row_addr][{a[11],a[9:0]}][7:0] <= data_in[7:0];
         else if(state == work_w & ~dqm[0])
           ram[bank_addr][row_addr][col_addr][7:0] <= data_in[7:0] ;
     end
     always @(posedge clk) begin
-        if(write_cmd & ba == bank_addr & ~dqm[1])
-          ram[bank_addr][row_addr][{a[11],a[9:0]}][15:8] <= data_in[15:8];
+        if(write_cmd & ~dqm[1])
+          ram[ba][row_addr][{a[11],a[9:0]}][15:8] <= data_in[15:8];
         else if(state == work_w & ~dqm[1])
           ram[bank_addr][row_addr][col_addr][15:8] <= data_in[15:8] ;
     end
