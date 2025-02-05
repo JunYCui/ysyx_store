@@ -18,7 +18,7 @@ module sdram(
     reg                [   2: 0]        burst_lenth                 ;
     reg                [   1: 0]        state                       ;
     reg                [   1: 0]        next_state                  ;
-    reg                [  12: 0]        row_addr                    ;
+    reg                [  12: 0]        row_addr [3:0]              ;
     reg                [   1: 0]        bank_addr                   ;
     reg                [  10: 0]        col_addr                    ;
     reg                [   2: 0]        counter                     ;
@@ -76,10 +76,8 @@ module sdram(
           state <= next_state;
     end
     always @(posedge clk or negedge cke) begin
-        if(!cke)
-          row_addr <= 0;
-        else if(active_cmd)
-          row_addr <= a;
+        if(active_cmd)
+          row_addr[ba] <= a;
     end
     always @(posedge clk or negedge cke) begin
         if(!cke)
@@ -114,7 +112,7 @@ module sdram(
         case(state)
         idle:if(read_cmd)
                   next_state = work_r;
-              else if(write_cmd & burst_lenth != 0)
+              else if(write_cmd)
                   next_state = work_w;
               else
                   next_state = idle;
@@ -149,19 +147,19 @@ module sdram(
     end
     always @(posedge clk) begin
         if(write_cmd& ~dqm[0])
-          ram[ba][row_addr][{a[11],a[9:0]}][7:0] <= data_in[7:0];
+          ram[ba][row_addr[ba]][{a[11],a[9:0]}][7:0] <= data_in[7:0];
         else if(state == work_w & ~dqm[0])
-          ram[bank_addr][row_addr][col_addr][7:0] <= data_in[7:0] ;
+          ram[bank_addr][row_addr[bank_addr]][col_addr][7:0] <= data_in[7:0] ;
     end
     always @(posedge clk) begin
         if(write_cmd & ~dqm[1])
-          ram[ba][row_addr][{a[11],a[9:0]}][15:8] <= data_in[15:8];
+          ram[ba][row_addr[ba]][{a[11],a[9:0]}][15:8] <= data_in[15:8];
         else if(state == work_w & ~dqm[1])
-          ram[bank_addr][row_addr][col_addr][15:8] <= data_in[15:8] ;
+          ram[bank_addr][row_addr[bank_addr]][col_addr][15:8] <= data_in[15:8] ;
     end
 
 
-    assign                              data_out                    = ram[bank_addr][row_addr][col_addr];
+    assign                              data_out                    = ram[bank_addr][row_addr[bank_addr]][col_addr];
 
 
 endmodule
