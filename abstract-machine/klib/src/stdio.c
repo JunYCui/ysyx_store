@@ -92,14 +92,13 @@ int printf(const char *fmt, ...) {
   putstr(strout);
   return num;
 }
-
+  char num_store[50]; // 用来保存变量
 int vsprintf(char *out, const char *fmt, va_list ap) {
   const char *p1=fmt;
   char *p2 = out;
   char *Argstrval; // 字符串参数
   int Argintval; // 整数参数
   int num=0; // 返回字符串长度
-  char num_store[100]; // 用来保存变量
   int num_count=0;
   int flag;
   int flag_neg; //判断正负
