@@ -65,7 +65,6 @@ void halt(int code) {
 
 void _trm_init() {
     uart_init();
-    assert(0);
     id_display();
     int ret = main(mainargs);
     halt(ret);
