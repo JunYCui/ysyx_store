@@ -65,6 +65,7 @@ void halt(int code) {
 
 void _trm_init() {
     uart_init();
+    printf("ok");
     id_display();
     int ret = main(mainargs);
     halt(ret);
