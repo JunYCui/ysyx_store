@@ -23,14 +23,14 @@ SECTIONS {
     text_start = . ;
     *(.text*)
   } > psram : text
-  .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
-  } > psram : rodata
-  .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata)+1,0x04)) {
+  .data : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text)+1,0x04)) {
     *(.sdata*)
     *(.data*)
   } > psram : data
-  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
+  .rodata : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(.rodata*)
+  } > psram : rodata
+  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(.data*)
     *(.sdata*)
     *(FSymTab)
