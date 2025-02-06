@@ -25,15 +25,15 @@ SECTIONS {
     data_start = . ;
   *(.text*)
   } > sdram : text
-  .data : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
-    *(.data*)
-    *(.sdata*)
-  } > sdram : data
-  .rodata : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
+  .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.rodata*)
     *(.srodata*)
   } > sdram : rodata
-  .data.extra : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {
+  .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {
+    *(.data*)
+    *(.sdata*)
+  } > sdram : data
+  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(.data*)
     *(.sdata*)
     *(FSymTab)
