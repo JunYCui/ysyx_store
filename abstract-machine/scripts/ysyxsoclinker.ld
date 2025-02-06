@@ -32,14 +32,14 @@ SECTIONS {
     *(.data*)
     *(.sdata*)
   } > sdram : data
-  .srodata : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
-    *(.srodata*)
-  } > sdram 
-  .data.extra : AT(ALIGN(LOADADDR(.srodata )+SIZEOF(.srodata),0x04)) {
+  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(.data*)
     *(.sdata*)
     *(FSymTab)
   } > sdram : data_extra
+  .srodata : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
+    *(.srodata*)
+  } > sdram 
   .bss : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {    	
     _bss_start = .;
     *(.bss*)
