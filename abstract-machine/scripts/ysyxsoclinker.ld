@@ -27,8 +27,6 @@ SECTIONS {
   } > sdram : text
   .data.extra : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(FSymTab)
-    *(.data*)
-    *(.sdata*)
   } > sdram : data_extra
   .data : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
     *(.data*)
