@@ -28,14 +28,14 @@ SECTIONS {
   .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.rodata*)
   } > sdram 
-  .srodata : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {
-    *(.srodata*)
-  } > sdram 
-  .data : AT(ALIGN(LOADADDR(.srodata )+SIZEOF(.srodata),0x04)) {
+  .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {
     *(.data*)
     *(.sdata*)
   } > sdram : data
-  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
+  .srodata : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
+    *(.srodata*)
+  } > sdram 
+  .data.extra : AT(ALIGN(LOADADDR(.srodata )+SIZEOF(.srodata),0x04)) {
     *(.data*)
     *(.sdata*)
     *(FSymTab)
