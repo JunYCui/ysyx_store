@@ -90,16 +90,15 @@ void _trm_init() {
 }
 
 void __attribute__((section(".ssbl"))) ssbl_init(){
-    char * p0 = (char*)text_start;
-    char * p1 = (char*)text_load_start;
-    size_t n = (size_t)text_size;
+    char * p0 = text_start;
+    char * p1 = text_load_start;
+    size_t n =  (size_t)text_size;
     while(n--)
     {
-                assert(0);
       *(p0++) = *(p1++);
     }
-    p0 = (char*)rodata_start;
-    p1 = (char*)rodata_load_start;
+    p0 = rodata_start;
+    p1 = rodata_load_start;
     n = (size_t)rodata_size;
     while(n--)
     {

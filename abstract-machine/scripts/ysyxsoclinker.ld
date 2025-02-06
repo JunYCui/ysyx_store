@@ -17,16 +17,6 @@ SECTIONS {
   } >flash AT>flash : fsbl
   .ssbl : AT(ALIGN(LOADADDR(.fsbl )+SIZEOF(.fsbl),0x04)) {
     _ssbl_start = .;
-    data_size             = SIZEOF(.data);
-    data_load_start       = LOADADDR(.data);
-    text_size             = SIZEOF(.text);
-    text_load_start       = LOADADDR(.text);
-    rodata_size           = SIZEOF(.rodata);
-    rodata_load_start     = LOADADDR(.rodata);
-    bss_size              = SIZEOF(.bss);
-    bss_load_start        = LOADADDR(.bss);
-    data_extra_size       = SIZEOF(.data.extra);
-    data_extra_load_start = LOADADDR(.data.extra);
     *(.ssbl*)
   } > sram : ssbl
   _ssbl_loadstart = LOADADDR(.ssbl);
@@ -57,6 +47,16 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
   } > sdram : bss 
+  data_size             = SIZEOF(.data);
+  data_load_start       = LOADADDR(.data);
+  text_size             = SIZEOF(.text);
+  text_load_start       = LOADADDR(.text);
+  rodata_size           = SIZEOF(.rodata);
+  rodata_load_start     = LOADADDR(.rodata);
+  bss_size              = SIZEOF(.bss);
+  bss_load_start        = LOADADDR(.bss);
+  data_extra_size       = SIZEOF(.data.extra);
+  data_extra_load_start = LOADADDR(.data.extra);
   _heap_start = ORIGIN(sram);
   . = ORIGIN(sram) + LENGTH(sram);
   _stack_top = . ;
