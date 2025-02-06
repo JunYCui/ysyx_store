@@ -32,9 +32,6 @@ SECTIONS {
     *(.data*)
     *(.sdata*)
   } > sdram : data
-  .rodata : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
-    *(.rodata*)
-  } > sdram : rodata
   .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(.data*)
     *(.sdata*)
