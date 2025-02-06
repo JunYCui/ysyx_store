@@ -37,14 +37,14 @@ SECTIONS {
   .rodata : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
     *(.rodata*)
     *(.srodata*)
-  } > psram 
+  } > flash 
   .bss : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {    	
     _bss_start = .;
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > psram 
-  data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) ;
+  } > flash 
+  data_size = SIZEOF(.data) + SIZEOF(.text)+ SIZEOF(.data.extra) ;
   data_load_start = LOADADDR(.text);
   _heap_start = ORIGIN(sram);
   . = ORIGIN(sram) + LENGTH(sram);
