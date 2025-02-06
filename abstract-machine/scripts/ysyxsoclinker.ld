@@ -19,8 +19,6 @@ SECTIONS {
     _ssbl_start = .;
     *(.ssbl*)
   } > sram : ssbl
-  _ssbl_loadstart = LOADADDR(.ssbl);
-  _ssbl_size = SIZEOF(.ssbl);
   .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),0x04)) {
     text_start = . ;
   *(.text*)
@@ -47,6 +45,8 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
   } > sdram : bss 
+  _ssbl_loadstart = LOADADDR(.ssbl);
+  _ssbl_size = SIZEOF(.ssbl);
   data_size             = SIZEOF(.data);
   data_load_start       = LOADADDR(.data);
   text_size             = SIZEOF(.text);
