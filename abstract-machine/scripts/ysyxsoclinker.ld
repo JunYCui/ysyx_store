@@ -22,30 +22,41 @@ SECTIONS {
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
   .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),0x04)) {
-    data_start = . ;
+    text_start = . ;
   *(.text*)
   } > sdram : text
   .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
+    rodata_start = . ;
     *(.rodata*)
     *(.srodata*)
   } > sdram 
   .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {
+    data_start = . ;
     *(.data*)
     *(.sdata*)
   } > sdram : data
   .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
+    data_extra_start = . ;
     *(.data*)
     *(.sdata*)
     *(FSymTab)
   } > sdram : data_extra
   .bss : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {    	
-    _bss_start = .;
+    bss_start = .;
     *(.bss*)
     *(.sbss*)
     *(.scommon)
   } > sdram 
-  data_size = SIZEOF(.data) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) + SIZEOF(.bss) ;
-  data_load_start = LOADADDR(.text);
+  data_size             = SIZEOF(.data);
+  data_load_start       = LOADADDR(.data);
+  text_size             = SIZEOF(.text);
+  text_load_start       = LOADADDR(.text);
+  rodata_size           = SIZEOF(.rodata);
+  rodata_load_start     = LOADADDR(.rodata);
+  bss_size              = SIZEOF(.bss);
+  bss_load_start        = LOADADDR(.bss);
+  data_extra_size       = SIZEOF(.data.extra);
+  data_extra_load_start = LOADADDR(.data.extra);
   _heap_start = ORIGIN(sram);
   . = ORIGIN(sram) + LENGTH(sram);
   _stack_top = . ;

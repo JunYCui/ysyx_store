@@ -16,10 +16,28 @@
 extern char _ssbl_size[] ;
 extern char _ssbl_start[];
 extern char _ssbl_loadstart[];
+
 extern char data_load_start[];
 extern char data_size[];
+extern char data_start[];  
+
+extern char text_start[];
+extern char text_size[];
+extern char text_load_start[];
+
+extern char rodata_start[];
+extern char rodata_size[];
+extern char rodata_load_start[];
+
+extern char bss_start[];
+extern char bss_size[];
+extern char bss_load_start[];
+
+extern char data_extra_start[]; 
+extern char data_extra_size[];
+extern char data_extra_load_start[];
+
 extern char _heap_start[];
-extern char data_start[];
 int main(const char *args);
 Area heap = RANGE(_heap_start, _heap_start+SRAM_SIZE);
 
@@ -73,8 +91,36 @@ void _trm_init() {
 
 void __attribute__((section(".ssbl"))) ssbl_init(){
     char *p0=data_start;
-    const char*p1 = data_load_start;
+    char*p1 = data_load_start;
     size_t n = (size_t) data_size;
+    while(n--)
+    {
+      *(p0++) = *(p1++);
+    }
+    p0 = text_start;
+    p1 = text_load_start;
+    n = (size_t)text_size;
+    while(n--)
+    {
+      *(p0++) = *(p1++);
+    }
+    p0 = rodata_start;
+    p1 = rodata_load_start;
+    n = (size_t)rodata_size;
+    while(n--)
+    {
+      *(p0++) = *(p1++);
+    }
+    p0 = bss_start;
+    p1 = bss_load_start;
+    n = (size_t)bss_size;
+    while(n--)
+    {
+      *(p0++) = *(p1++);
+    }
+    p0 = data_extra_start;
+    p1 = data_extra_load_start;
+    n = (size_t)data_extra_size;
     while(n--)
     {
       *(p0++) = *(p1++);
