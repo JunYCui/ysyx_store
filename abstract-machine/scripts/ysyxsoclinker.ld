@@ -32,21 +32,21 @@ SECTIONS {
     *(.data*)
     *(.sdata*)
   } > sdram : data
-  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
+  .srodata : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
+    *(.srodata*)
+  } > sdram 
+  .data.extra : AT(ALIGN(LOADADDR(.srodata )+SIZEOF(.srodata),0x04)) {
     *(.data*)
     *(.sdata*)
     *(FSymTab)
   } > sdram : data_extra
-  .srodata : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
-    *(.srodata*)
-  } > sdram 
   .bss : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {    	
     _bss_start = .;
     *(.bss*)
     *(.sbss*)
     *(.scommon)
   } > sdram 
-  data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) ;
+  data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) + SIZEOF(.srodata);
   data_load_start = LOADADDR(.text);
   _heap_start = ORIGIN(sram);
   . = ORIGIN(sram) + LENGTH(sram);
