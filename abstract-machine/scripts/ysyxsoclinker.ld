@@ -25,16 +25,16 @@ SECTIONS {
     data_start = . ;
   *(.text*)
   } > psram : text
-  .data : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x01)) {
+  .data : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.data*)
     *(.sdata*)
   } > psram : data
-  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x01)) {
+  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(FSymTab)
     *(.data*)
     *(.sdata*)
   } > psram 
-  .rodata : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x01)) {
+  .rodata : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
     *(.rodata*)
     *(.srodata*)
   } > psram 
