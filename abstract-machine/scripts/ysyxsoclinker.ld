@@ -18,13 +18,7 @@ SECTIONS {
   .srodata : AT(ALIGN(LOADADDR(.fsbl )+SIZEOF(.fsbl),0x04)) {
     *(.srodata*)
   } > flash 
-  .bss : AT(ALIGN(LOADADDR(.srodata )+SIZEOF(.srodata),0x04)) {    	
-    _bss_start = .;
-    *(.bss*)
-    *(.sbss*)
-    *(.scommon)
-  } > flash 
-  .ssbl : AT(ALIGN(LOADADDR(.bss )+SIZEOF(.bss),0x04)) {
+  .ssbl : AT(ALIGN(LOADADDR(.srodata )+SIZEOF(.srodata),0x04)) {
     _ssbl_start = .;
     *(.ssbl*)
   } > sram : ssbl
@@ -46,7 +40,13 @@ SECTIONS {
     *(.sdata*)
     *(FSymTab)
   } > sdram : data_extra
-  data_size = SIZEOF(.data) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) ;
+  .bss : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {    	
+    _bss_start = .;
+    *(.bss*)
+    *(.sbss*)
+    *(.scommon)
+  } > sdram 
+  data_size = SIZEOF(.data) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) + SIZEOF(.bss);
   data_load_start = LOADADDR(.text);
   _heap_start = ORIGIN(sram);
   . = ORIGIN(sram) + LENGTH(sram);
