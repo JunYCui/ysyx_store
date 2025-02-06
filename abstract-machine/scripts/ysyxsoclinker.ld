@@ -38,7 +38,7 @@ SECTIONS {
     *(.data*)
     *(.sdata*)
   } > sdram : data
-  .bss : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {    	
+  .bss : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {    	
     _bss_start = .;
     *(.bss*)
     *(.sbss*)
