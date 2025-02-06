@@ -4,7 +4,7 @@ AM_SRCS := riscv/ysyxsoc/start.S \
            riscv/ysyxsoc/timer.c \
 		   riscv/ysyxsoc/id.S
 
-CFLAGS    += -fdata-sections -ffunction-sections 
+CFLAGS    += -fdata-sections -ffunction-sections -O2
 LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld --print-map
 LDFLAGS   += --gc-sections -e _start
 CFLAGS += -DMAINARGS=\"$(mainargs)\" 
