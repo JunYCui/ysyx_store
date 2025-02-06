@@ -29,16 +29,16 @@ SECTIONS {
     *(.rodata*)
     *(.srodata*)
   } > sdram : rodata
-  .data.extra : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {
-    *(FSymTab)
-    *(.data*)
-    *(.sdata*)
-  } > sdram : data_extra
-  .data : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
+  .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {
     *(.data*)
     *(.sdata*)
   } > sdram : data
-  .bss : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {    	
+  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
+    *(.data*)
+    *(.sdata*)
+    *(FSymTab)
+  } > sdram : data_extra
+  .bss : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {    	
     _bss_start = .;
     *(.bss*)
     *(.sbss*)
