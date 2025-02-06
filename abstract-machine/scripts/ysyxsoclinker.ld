@@ -24,28 +24,28 @@ SECTIONS {
   .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),0x04)) {
     data_start = . ;
   *(.text*)
-  } > sdram : text
+  } > sram : text
   .data : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.data*)
     *(.sdata*)
-  } > sdram : data
+  } > sram : data
   .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(FSymTab)
     *(.data*)
     *(.sdata*)
-  } > sdram : data_extra
+  } > sram : data_extra
   .rodata : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
     *(.rodata*)
     *(.srodata*)
-  } > sdram : rodata
+  } > sram : rodata
   .bss : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {    	
     _bss_start = .;
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > sdram : bss
-  _heap_start = ORIGIN(sram);
-  . = ORIGIN(sram) + LENGTH(sram);
+  } > sram : bss
+  _heap_start = ORIGIN(sdram);
+  . = ORIGIN(sdram) + LENGTH(sdram);
   data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) ;
   data_load_start = LOADADDR(.text);
   _stack_top = . ;
