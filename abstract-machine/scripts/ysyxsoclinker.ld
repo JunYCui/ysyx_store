@@ -1,11 +1,11 @@
 ENTRY(_start)
-PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD; ssbl PT_LOAD;data_extra PT_LOAD;rodata PT_LOAD;bss PT_LOAD;}
+PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;data_extra PT_LOAD ; ssbl PT_LOAD ; rodata PT_LOAD; bss PT_LOAD;};
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
-  sdram(rwx) : ORIGIN = 0xa0000000, LENGTH = 32M
   psram(rwx) :ORIGIN = 0x80000000, LENGTH = 4M
   sram(rwx) : ORIGIN = 0x0f000000, LENGTH = 8K
+  sdram(rwx) : ORIGIN = 0xa0000000, LENGTH = 32M
 }
 
 
@@ -15,39 +15,37 @@ SECTIONS {
     *(entry)
     *(.fsbl*)
   } >flash AT>flash : fsbl
-  .ssbl :  {
+  .ssbl : AT(ALIGN(LOADADDR(.fsbl )+SIZEOF(.fsbl),0x04)) {
     _ssbl_start = .;
     *(.ssbl*)
-  } > sram AT>flash : ssbl
-  _ssbl_loadstart = LOADADDR(.ssbl);
-  _ssbl_size = SIZEOF(.ssbl);
-  .text :  {
-    data_start = . ;
-  *(.text*)
-  } > sdram AT>flash  : text
-  .data :  {
-    *(.data*)
+  } > sram : ssbl
+  .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),0x04)) {
+    text_start = . ;
+    *(.text*)
+  } > sdram : text
+  .data : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.sdata*)
-  } > sdram AT>flash  : data
-  .data.extra :  {
-    *(FSymTab)
     *(.data*)
-    *(.sdata*)
-  } > sdram AT>flash : data_extra
-  .rodata : {
     *(.rodata*)
     *(.srodata*)
-  } > sdram : rodata
-  .bss :  {    	
-    _bss_start = .;
+  } > sdram : data
+  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
+    *(.data*)
+    *(.sdata*)
+    *(FSymTab)
+  } > sdram : data_extra
+  .bss : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {    	
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > sdram AT>flash  : bss
+    bss_end = .;
+  } > sdram : bss 
+  _ssbl_loadstart = LOADADDR(.ssbl);
+  _ssbl_size = SIZEOF(.ssbl);
+  text_load_start = LOADADDR(.text);
+  _size = bss_end - text_start; 
   _heap_start = ORIGIN(sram);
   . = ORIGIN(sram) + LENGTH(sram);
-  data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) ;
-  data_load_start = LOADADDR(.text);
   _stack_top = . ;
   _stack_pointer = .;
   end = .;
