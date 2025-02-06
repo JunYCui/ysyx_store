@@ -23,10 +23,7 @@ SECTIONS {
     text_start = . ;
   *(.text*)
   } > sdram : text
-  .rela.dyn : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
-    *(.rela*)
-  } >sdram
-  .data : AT(ALIGN(LOADADDR(.rela.dyn )+SIZEOF(.rela.dyn),0x04)) {
+  .data : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.data*)
     *(.sdata*)
     *(.rodata*)
