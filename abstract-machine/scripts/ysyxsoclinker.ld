@@ -21,13 +21,13 @@ SECTIONS {
   } > sram : ssbl
   .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),0x04)) {
     text_start = . ;
-  *(.text*)
+    *(.text*)
+    *(.rodata*)
+    *(.srodata*)
   } > sdram : text
   .data : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.sdata*)
     *(.data*)
-    *(.rodata*)
-    *(.srodata*)
   } > sdram : data
   .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(.data*)
