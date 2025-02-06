@@ -15,13 +15,13 @@ SECTIONS {
     *(entry)
     *(.fsbl*)
   } >flash AT>flash : fsbl
-  .ssbl : AT(ALIGN(LOADADDR(.fsbl )+SIZEOF(.fsbl),0x01)) {
+  .ssbl : AT(ALIGN(LOADADDR(.fsbl )+SIZEOF(.fsbl),0x04)) {
     _ssbl_start = .;
     *(.ssbl*)
   } > sram : ssbl
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
-  .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),0x01)) {
+  .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),0x04)) {
     data_start = . ;
   *(.text*)
   } > psram : text
