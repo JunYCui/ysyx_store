@@ -17,25 +17,10 @@ extern char _ssbl_size[] ;
 extern char _ssbl_start[];
 extern char _ssbl_loadstart[];
 
-extern char data_load_start[];
-extern char data_size[];
-extern char data_start[];  
-
 extern char text_start[];
-extern char text_size[];
 extern char text_load_start[];
-
-extern char rodata_start[];
-extern char rodata_size[];
-extern char rodata_load_start[];
-
-extern char bss_start[];
-extern char bss_size[];
-extern char bss_load_start[];
-
-extern char data_extra_start[]; 
-extern char data_extra_size[];
-extern char data_extra_load_start[];
+extern char bss_end[];
+extern char _size[];
 
 extern char _heap_start[];
 int main(const char *args);
@@ -92,39 +77,10 @@ void _trm_init() {
 void __attribute__((section(".ssbl"))) ssbl_init(){
     char * p0 = text_start;
     char * p1 = text_load_start;
-    size_t n =  (size_t)text_size;
-    for(int i=1;i<n+1;i++)
+    size_t n =  (size_t)_size;
+    while(n--)
     {
-        *(p0++) = *(p1++);
-    }
-    p0 = rodata_start;
-    p1 = rodata_load_start;
-    n = (size_t)rodata_size;
-    for(int i=1; i<n+1;i++ )
-    {
-        *(p0++) = *(p1++);
-    }
-
-    p0=  (char*)data_start;
-    p1 = (char*)data_load_start;
-    n = (size_t) data_size;
-    for(int i=0;i<n;i++)
-    {
-        *(p0++) = *(p1++);
-    }
-    p0 = (char*)data_extra_start;
-    p1 = (char*)data_extra_load_start;
-    n = (size_t)data_extra_size;
-    for(int i=1; i<n+1;i++ )
-    {
-        *(p0++) = *(p1++);
-    }
-    p0 = (char*)bss_start;
-    p1 = (char*)bss_load_start;
-    n = (size_t)bss_size;
-    for(int i=1; i<n+1;i++ )
-    {
-        *(p0++) = *(p1++);
+        *(p0++) =*(p1++);
     }
     _trm_init();
 } 
