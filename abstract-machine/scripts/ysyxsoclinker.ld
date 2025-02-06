@@ -1,5 +1,5 @@
 ENTRY(_start)
-PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;rodata PT_LOAD; bss PT_LOAD;data_extra PT_LOAD ; ssbl PT_LOAD;srodata PT_LOAD;}
+PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;data_extra PT_LOAD ; ssbl PT_LOAD;}
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
@@ -15,37 +15,37 @@ SECTIONS {
     *(entry)
     *(.fsbl*)
   } >flash AT>flash : fsbl
-  .ssbl : AT(ALIGN(LOADADDR(.fsbl )+SIZEOF(.fsbl),0x02)) {
+  .ssbl : AT(ALIGN(LOADADDR(.fsbl )+SIZEOF(.fsbl),0x04)) {
     _ssbl_start = .;
     *(.ssbl*)
   } > sram : ssbl
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
-  .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),0x02)) {
+  .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),0x04)) {
     data_start = . ;
   *(.text*)
   } > sdram : text
-  .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x02)) {
+  .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.rodata*)
-  } > sdram : rodata
-  .srodata : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x02)) {
+  } > sdram 
+  .srodata : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {
     *(.srodata*)
-  } > sdram : srodata
-  .data : AT(ALIGN(LOADADDR(.srodata )+SIZEOF(.srodata),0x02)) {
+  } > sdram 
+  .data : AT(ALIGN(LOADADDR(.srodata )+SIZEOF(.srodata),0x04)) {
     *(.data*)
     *(.sdata*)
   } > sdram : data
-  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x02)) {
+  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(.data*)
     *(.sdata*)
     *(FSymTab)
   } > sdram : data_extra
-  .bss : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x02)) {    	
+  .bss : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {    	
     _bss_start = .;
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > sdram : bss
+  } > sdram 
   data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) ;
   data_load_start = LOADADDR(.text);
   _heap_start = ORIGIN(sram);
