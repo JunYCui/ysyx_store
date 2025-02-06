@@ -27,6 +27,7 @@ SECTIONS {
     *(.rela*)
   } >sdram
   .data : AT(ALIGN(LOADADDR(.rela.dyn )+SIZEOF(.rela.dyn),0x04)) {
+    *(.rodata*)
     *(.data*)
     *(.sdata*)
     *(.srodata*)
