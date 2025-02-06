@@ -22,8 +22,6 @@ SECTIONS {
   .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),0x04)) {
     text_start = . ;
     *(.text*)
-    *(.rodata*)
-    *(.srodata*)
   } > sdram : text
   .data : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.sdata*)
@@ -35,6 +33,8 @@ SECTIONS {
     *(FSymTab)
   } > sdram : data_extra
   .bss : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {    	
+    *(.rodata*)
+    *(.srodata*)
     *(.bss*)
     *(.sbss*)
     *(.scommon)
