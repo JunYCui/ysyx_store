@@ -27,6 +27,7 @@ SECTIONS {
   } > sdram : text
   .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.rodata*)
+    *(.srodata*)
   } > sdram 
   .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {
     *(.data*)
@@ -43,10 +44,7 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
   } > sdram 
-  .srodata : AT(ALIGN(LOADADDR(.bss )+SIZEOF(.bss),0x04)) {
-    *(.srodata*)
-  } > sdram 
-  data_size = SIZEOF(.data) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) + SIZEOF(.bss) + SIZEOF(.srodata);
+  data_size = SIZEOF(.data) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) + SIZEOF(.bss) ;
   data_load_start = LOADADDR(.text);
   _heap_start = ORIGIN(sram);
   . = ORIGIN(sram) + LENGTH(sram);
