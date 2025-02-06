@@ -99,7 +99,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
   char *Argstrval; // 字符串参数
   int Argintval; // 整数参数
   int num=0; // 返回字符串长度
-  char num_store[30]; // 用来保存变量
+  char num_store[100]; // 用来保存变量
   int num_count=0;
   int flag;
   int flag_neg; //判断正负
