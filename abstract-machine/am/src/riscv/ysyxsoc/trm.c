@@ -92,8 +92,7 @@ void _trm_init() {
 void __attribute__((section(".ssbl"))) ssbl_init(){
     char * p0 = (char*)text_start;
     char * p1 = (char*)text_load_start;
-    size_t n = (size_t)text_size;
-    if(n!=0){
+    int n = (size_t)text_size;
     while(n--)
     {
       *(p0++) = *(p1++);
@@ -101,39 +100,31 @@ void __attribute__((section(".ssbl"))) ssbl_init(){
     p0 = (char*)rodata_start;
     p1 = (char*)rodata_load_start;
     n = (size_t)rodata_size;
-    if(n!=0){
     while(n--)
     {
       *(p0++) = *(p1++);
     }
-    }
+
     p0=  (char*)data_start;
     p1 = (char*)data_load_start;
     n = (size_t) data_size;
-    if(n!=0){
     while(n--)
     {
       *(p0++) = *(p1++);
-    }
-    }
     }
     p0 = (char*)data_extra_start;
     p1 = (char*)data_extra_load_start;
     n = (size_t)data_extra_size;
-    if(n!=0){
     while(n--)
     {
       *(p0++) = *(p1++);
-    }
     }
     p0 = (char*)bss_start;
     p1 = (char*)bss_load_start;
     n = (size_t)bss_size;
-    if(n!=0){
-    while(n--)
+    while(n)
     {
       *(p0++) = *(p1++);
-    }
     }
     _trm_init();
 } 
