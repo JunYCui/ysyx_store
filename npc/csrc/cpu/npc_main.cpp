@@ -12,6 +12,7 @@ extern "C" void flash_read(int32_t addr, int32_t *data) {
     return;
 }
 extern "C" void mrom_read(int32_t addr, int32_t *data) {
+   // printf("addr = %x\n",addr);
     *data = npc_pmem_read(addr);
     return ;
 }
