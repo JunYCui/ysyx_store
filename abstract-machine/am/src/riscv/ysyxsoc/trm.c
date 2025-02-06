@@ -90,23 +90,13 @@ void _trm_init() {
 }
 
 void __attribute__((section(".ssbl"))) ssbl_init(){
-    char *p0=data_start;
-    char*p1 = data_load_start;
-    size_t n = (size_t) data_size;
+    char * p0 = text_start;
+    char * p1 = text_load_start;
+    size_t n = (size_t)text_size;
     if(n!=0){
     while(n--)
     {
       *(p0++) = *(p1++);
-    }
-    }
-    p0 = text_start;
-    p1 = text_load_start;
-    n = (size_t)text_size;
-    if(n!=0){
-    while(n--)
-    {
-      *(p0++) = *(p1++);
-    }
     }
     p0 = rodata_start;
     p1 = rodata_load_start;
@@ -117,18 +107,28 @@ void __attribute__((section(".ssbl"))) ssbl_init(){
       *(p0++) = *(p1++);
     }
     }
-    p0 = bss_start;
-    p1 = bss_load_start;
-    n = (size_t)bss_size;
+    p0=data_start;
+    p1 = data_load_start;
+    size_t n = (size_t) data_size;
     if(n!=0){
     while(n--)
     {
       *(p0++) = *(p1++);
     }
     }
+    }
     p0 = data_extra_start;
     p1 = data_extra_load_start;
     n = (size_t)data_extra_size;
+    if(n!=0){
+    while(n--)
+    {
+      *(p0++) = *(p1++);
+    }
+    }
+    p0 = bss_start;
+    p1 = bss_load_start;
+    n = (size_t)bss_size;
     if(n!=0){
     while(n--)
     {
