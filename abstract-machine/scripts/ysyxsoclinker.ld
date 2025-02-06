@@ -1,5 +1,5 @@
 ENTRY(_start)
-PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;data_extra PT_LOAD ;}
+PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD; ssbl PT_LOAD;}
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
@@ -15,11 +15,10 @@ SECTIONS {
     *(entry)
     *(.fsbl*)
   } >flash AT>flash : fsbl
-  . = ORIGIN(sram);
   .ssbl : AT(ALIGN(LOADADDR(.fsbl )+SIZEOF(.fsbl),0x04)) {
     _ssbl_start = .;
     *(.ssbl*)
-  } > sram 
+  } > sram : ssbl
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
   .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),0x04)) {
@@ -34,7 +33,7 @@ SECTIONS {
     *(FSymTab)
     *(.data*)
     *(.sdata*)
-  } > sdram : data_extra
+  } > sdram 
   .rodata : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
     *(.rodata*)
     *(.srodata*)
