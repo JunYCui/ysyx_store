@@ -30,7 +30,7 @@ SECTIONS {
   .rodata : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(.rodata*)
   } > psram : rodata
-  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
+  .data.extra : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {
     *(.data*)
     *(.sdata*)
     *(FSymTab)
