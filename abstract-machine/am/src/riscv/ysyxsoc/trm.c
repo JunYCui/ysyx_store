@@ -122,7 +122,7 @@ void __attribute__((section(".ssbl"))) ssbl_init(){
     p0 = (char*)bss_start;
     p1 = (char*)bss_load_start;
     n = (size_t)bss_size;
-    while(n)
+    while(n--)
     {
       *(p0++) = *(p1++);
     }
