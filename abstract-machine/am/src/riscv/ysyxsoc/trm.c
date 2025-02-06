@@ -109,7 +109,7 @@ void __attribute__((section(".ssbl"))) ssbl_init(){
     }
     p0=  (char*)data_start;
     p1 = (char*)data_load_start;
-    size_t n = (size_t) data_size;
+    n = (size_t) data_size;
     if(n!=0){
     while(n--)
     {
