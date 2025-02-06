@@ -124,6 +124,7 @@ void __attribute__((section(".ssbl"))) ssbl_init(){
     n = (size_t)bss_size;
     while(n--)
     {
+                assert(0);
       *(p0++) = *(p1++);
     }
     _trm_init();
