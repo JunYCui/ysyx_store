@@ -38,7 +38,7 @@ SECTIONS {
     *(.rodata*)
     *(.srodata*)
   } > psram 
-  .bss : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x01)) {    	
+  .bss : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {    	
     _bss_start = .;
     *(.bss*)
     *(.sbss*)
