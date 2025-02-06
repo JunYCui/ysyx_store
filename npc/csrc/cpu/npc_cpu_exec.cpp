@@ -84,7 +84,7 @@ void cpu_exec(uint32_t n)
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
         GetPC(&s.pc);
         cpu.pc = s.pc;
-     //   s.inst = npc_pmem_read(s.pc);
+        s.inst = npc_pmem_read(s.pc);
         if(skip_flag != 0)
         {
             difftest_skip_ref();
