@@ -92,7 +92,7 @@ void _trm_init() {
 void __attribute__((section(".ssbl"))) ssbl_init(){
     char * p0 = (char*)text_start;
     char * p1 = (char*)text_load_start;
-    int n = (size_t)text_size;
+    size_t n = (size_t)text_size;
     while(n--)
     {
       *(p0++) = *(p1++);
