@@ -24,7 +24,11 @@ SECTIONS {
     data_start = . ;
   *(.text*)
   } > psram : text
-  .data.extra : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
+  .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
+    *(.rodata*)
+    *(.srodata*)
+  } > psram : rodata
+  .data.extra : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {
     *(FSymTab)
     *(.data*)
     *(.sdata*)
@@ -33,10 +37,6 @@ SECTIONS {
     *(.data*)
     *(.sdata*)
   } > psram : data
-  .rodata : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
-    *(.rodata*)
-    *(.srodata*)
-  } > psram : rodata
   .bss : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {    	
     _bss_start = .;
     *(.bss*)
