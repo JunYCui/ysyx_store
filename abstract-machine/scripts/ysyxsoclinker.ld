@@ -23,17 +23,17 @@ SECTIONS {
     text_start = . ;
   *(.text*)
   } > sdram : text
-  .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
-    *(.rodata*)
-    *(.srodata*)
-  } > sdram : rodata
-  .rela.dyn : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {
+  .rela.dyn : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x04)) {
     *(.rela*)
   } >sdram
   .data : AT(ALIGN(LOADADDR(.rela.dyn )+SIZEOF(.rela.dyn),0x04)) {
     *(.data*)
     *(.sdata*)
   } > sdram : data
+  .rodata : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
+    *(.rodata*)
+    *(.srodata*)
+  } > sdram : rodata
   .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x04)) {
     *(.data*)
     *(.sdata*)
