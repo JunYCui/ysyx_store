@@ -3,9 +3,9 @@ PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;data_extra PT_LOAD ; ssbl PT_LO
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
+  sdram(rwx) : ORIGIN = 0xa0000000, LENGTH = 32M
   psram(rwx) :ORIGIN = 0x80000000, LENGTH = 4M
   sram(rwx) : ORIGIN = 0x0f000000, LENGTH = 8K
-  sdram(rwx) : ORIGIN = 0xa0000000, LENGTH = 32M
 }
 
 
