@@ -26,10 +26,10 @@ SECTIONS {
   .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0)) {
     *(.srodata*)
     *(.rodata*)
-  } > sdram : rodata
-  .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0)) {
     *(.sdata*)
     *(.data*)
+  } > sdram : rodata
+  .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0)) {
   } > sdram : data
   .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0)) {
     *(.data*)
