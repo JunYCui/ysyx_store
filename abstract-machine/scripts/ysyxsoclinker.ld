@@ -15,28 +15,28 @@ SECTIONS {
     *(entry)
     *(.fsbl*)
   } >flash AT>flash : fsbl
-  .ssbl : AT(ALIGN(LOADADDR(.fsbl )+SIZEOF(.fsbl),0x4)) {
+  .ssbl : AT(ALIGN(LOADADDR(.fsbl )+SIZEOF(.fsbl),2)) {
     _ssbl_start = .;
     *(.ssbl*)
   } > sram : ssbl
-  .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),0x4)) {
+  .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),2)) {
     text_start = . ;
     *(.text*)
   } > psram : text
-  .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0x4)) {
+  .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),2)) {
     *(.rodata*)
     *(.srodata*)
   } > psram : rodata
-  .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata)+1,0x4)) {
+  .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata)+1,2)) {
     *(.sdata*)
     *(.data*)
   } > psram : data
-  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),0x4)) {
+  .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),2)) {
     *(.data*)
     *(.sdata*)
     *(FSymTab)
   } > psram : data_extra
-  .bss : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x4)) {    	
+  .bss : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),2)) {    	
     *(.bss*)
     *(.sbss*)
     *(.scommon)
