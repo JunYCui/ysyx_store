@@ -28,9 +28,8 @@ SECTIONS {
     *(.rodata*)
     rodata_end = .;
   } > sdram AT>flash : rodata
-  . = ORIGIN(flash);
-  .data :  {
     data_start = .;
+  .data :  {
     *(.data*)
     *(.sdata*)
   } > sdram AT>flash : data
