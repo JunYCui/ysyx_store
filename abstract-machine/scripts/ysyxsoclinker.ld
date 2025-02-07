@@ -25,7 +25,6 @@ SECTIONS {
   } > psram : text
   .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),2)) {
     *(.rodata*)
-    *(.srodata*)
   } > psram : rodata
   .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),2)) {
     *(.sdata*)
@@ -42,8 +41,9 @@ SECTIONS {
     *(.scommon)
     bss_end = .;
   } > psram : bss 
-  .rela : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),2))  {
+  .rela : AT(ALIGN(LOADADDR(.bss )+SIZEOF(.bss),2))  {
     *(.rela*)
+    *(.srodata*)
   } > psram
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
