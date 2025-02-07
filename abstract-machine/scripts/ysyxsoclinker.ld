@@ -22,29 +22,29 @@ SECTIONS {
   .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),4)) {
     text_start = . ;
     *(.text*)
-  } > psram : text
+  } > sdram : text
   .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),4)) {
     *(.rodata*)
-  } > psram : rodata
+  } > sdram : rodata
   .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),4)) {
     *(.sdata*)
     *(.data*)
     *(.srodata*)
-  } > psram : data
+  } > sdram : data
   .data.extra : AT(ALIGN(LOADADDR(.data )+SIZEOF(.data),4)) {
     *(.data*)
     *(.sdata*)
     *(FSymTab)
-  } > psram : data_extra
+  } > sdram : data_extra
   .bss : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),4)) {    	
     *(.bss*)
     *(.sbss*)
     *(.scommon)
     bss_end = .;
-  } > psram : bss 
+  } > sdram : bss 
   .rela : AT(ALIGN(LOADADDR(.bss )+SIZEOF(.bss),4))  {
     *(.rela*)
-  } > psram
+  } > sdram
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
   text_load_start = LOADADDR(.text);
