@@ -40,9 +40,9 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
     *(.srodata*)
-    bss_end = .;
   } > psram : bss 
   .rela : AT(ALIGN(LOADADDR(.bss )+SIZEOF(.bss),2))  {
+    bss_end = .;
     *(.rela*)
   } > psram
   _ssbl_loadstart = LOADADDR(.ssbl);
