@@ -15,12 +15,10 @@ SECTIONS {
     *(entry)
     *(.fsbl*)
   } >flash AT>flash : fsbl
-  . = ORIGIN(sram);
   .ssbl :  {
     _ssbl_start = .;
     *(.ssbl*)
   } > sram AT>flash : ssbl
-  . = ORIGIN(sdram);
   .text :  {
     text_start = . ;
     *(.text*)
