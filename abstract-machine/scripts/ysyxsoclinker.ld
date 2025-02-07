@@ -38,7 +38,7 @@ SECTIONS {
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } 
+  } > sdram AT>flash
   .rela : {
     *(.rela*)
   } 
