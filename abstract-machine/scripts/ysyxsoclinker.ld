@@ -26,10 +26,12 @@ SECTIONS {
   .rodata :  {
     *(.srodata*)
     *(.rodata*)
+    _rodata_end = .;
   } > sdram AT>flash : rodata
   .data :  {
-    *(.sdata*)
+    data_start = .;
     *(.data*)
+    *(.sdata*)
   } > sdram AT>flash : data
   .data.extra : {
     *(.data*)
