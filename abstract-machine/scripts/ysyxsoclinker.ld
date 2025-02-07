@@ -26,6 +26,7 @@ SECTIONS {
   .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),2)) {
     *(.rodata*)
     *(.srodata*)
+    *(fill*)
   } > psram : rodata
   .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata)+1,2)) {
     *(.sdata*)
