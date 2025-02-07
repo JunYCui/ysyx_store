@@ -5,7 +5,7 @@ AM_SRCS := riscv/ysyxsoc/start.S \
 		   riscv/ysyxsoc/id.S
 
 CFLAGS    += -fdata-sections -ffunction-sections 
-LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld #--print-map
+LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld --print-map
 LDFLAGS   += --gc-sections -e _start
 CFLAGS += -DMAINARGS=\"$(mainargs)\" 
 SOCFLAGS = -e $(IMAGE).elf -b
