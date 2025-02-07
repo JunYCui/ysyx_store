@@ -34,7 +34,7 @@ SECTIONS {
     data_start = .;
     *(.data.extra*)
     *(.data.extra.*)
-    *(.FSymTab*)
+    *(SORT_BY_NAME(.rti_fn*))
   } > sdram AT>flash : data_extra
   .data :  {
     *(.data*)
