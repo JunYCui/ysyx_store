@@ -1,11 +1,11 @@
 ENTRY(_start)
-PHDRS { text PT_LOAD; fsbl PT_LOAD; data_extra PT_LOAD;data PT_LOAD; ssbl PT_LOAD ; rodata PT_LOAD;};
+PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD; data_extra PT_LOAD ; ssbl PT_LOAD ; rodata PT_LOAD; bss PT_LOAD;};
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
   sdram(rwx) : ORIGIN = 0xa0000000, LENGTH = 32M
-  psram(rwx) :ORIGIN = 0x80000000, LENGTH = 4M
   sram(rwx) : ORIGIN = 0x0f000000, LENGTH = 8K
+  psram(rwx) :ORIGIN = 0x80000000, LENGTH = 4M
 }
 
 
@@ -15,12 +15,12 @@ SECTIONS {
     *(entry)
     *(.fsbl*)
   } >flash AT>flash : fsbl
-  . = ORIGIN(sram) ;
+  . = ORIGIN(sram);
   .ssbl :  {
     _ssbl_start = .;
     *(.ssbl*)
   } > sram AT>flash : ssbl
-  . = ORIGIN(sdram) ;
+  . = ORIGIN(sdram);
   .text :  {
     text_start = . ;
     *(.text*)
@@ -30,9 +30,11 @@ SECTIONS {
     *(.rodata*)
     rodata_end = .;
   } > sdram AT>flash : rodata
-  .data :  {
+  .data.extra : {
     data_start = .;
-    *(.data.extra*)
+    *(FSymTab)
+  } > sdram AT>flash : data_extra
+  .data :  {
     *(.data*)
     *(.sdata*)
   } > sdram AT>flash : data
@@ -41,7 +43,7 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
     bss_end = .;
-  } > sdram AT>flash
+  } > sdram AT>flash : bss 
   .rela : {
     *(.rela*)
   } > sdram AT>flash
