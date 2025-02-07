@@ -22,9 +22,9 @@ SECTIONS {
   .text : AT(ALIGN(LOADADDR(.ssbl )+SIZEOF(.ssbl),0)) {
     text_start = . ;
     *(.text*)
+    *(.srodata*)
   } > sdram : text
   .data : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),0)) {
-    *(.srodata*)
     *(.rodata*)
     *(.sdata*)
     *(.data*)
