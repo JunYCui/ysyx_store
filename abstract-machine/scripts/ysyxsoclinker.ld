@@ -30,16 +30,16 @@ SECTIONS {
     *(.rodata*)
     rodata_end = .;
   } > sdram AT>flash : rodata
-  .data.extra : {
+  .data :  {
     data_start = .;
+    *(.data*)
+    *(.sdata*)
+  } > sdram AT>flash : data
+  .data.extra : {
     *(.data.extra*)
     *(.data.extra.*)
     *(SORT_BY_NAME(.rti_fn*))
   } > sdram AT>flash : data_extra
-  .data :  {
-    *(.data*)
-    *(.sdata*)
-  } > sdram AT>flash : data
   .bss : {    	
     *(.bss*)
     *(.sbss*)
