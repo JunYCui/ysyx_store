@@ -36,13 +36,14 @@ SECTIONS {
     *(.sdata*)
   } > sdram AT>flash : data
   .bss : {    	
+    *(.bss.extra*)
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > sdram AT>flash
+  } 
   .rela : {
     *(.rela*)
-  } > sdram AT>flash
+  } 
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
   text_load_start = LOADADDR(.text);
