@@ -68,6 +68,8 @@ void halt(int code) {
 }
 
 void _trm_init() {
+    uart_init();
+    id_display();
     int ret = main(mainargs);
     halt(ret);
 }
@@ -80,8 +82,6 @@ void __attribute__((section(".ssbl"))) ssbl_init(){
     {
         *(p0++) =*(p1++);
     }
-    uart_init();
-    id_display();
     _trm_init();
 } 
 void __attribute__((section(".fsbl"))) fsbl_init(){
