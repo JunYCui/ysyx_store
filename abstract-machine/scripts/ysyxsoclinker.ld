@@ -32,7 +32,7 @@ SECTIONS {
   .data :  {
     *(.data*)
     *(.sdata*)
-    data_end = .;
+    data_end = . + 1;
   } > sdram AT>flash : data
   .bss : {    	
     *(.bss*)
