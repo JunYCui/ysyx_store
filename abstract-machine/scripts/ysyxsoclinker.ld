@@ -25,7 +25,6 @@ SECTIONS {
   } > psram : text
   .rodata : AT(ALIGN(LOADADDR(.text )+SIZEOF(.text),4)) {
     *(.rodata*)
-    *(.srodata*)
   } > psram : rodata
   .data : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),4)) {
     *(.sdata*)
@@ -40,6 +39,7 @@ SECTIONS {
     *(.bss*)
     *(.sbss*)
     *(.scommon)
+    *(.srodata*)
     bss_end = .;
   } > psram : bss 
   .rela : AT(ALIGN(LOADADDR(.bss )+SIZEOF(.bss),4))  {
