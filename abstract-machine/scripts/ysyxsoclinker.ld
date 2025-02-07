@@ -36,9 +36,8 @@ SECTIONS {
     *(.sdata*)
   } > sdram AT>flash : data
   .data.extra : {
-    *(.data.extra*)
-    *(.data.extra.*)
-    *(SORT_BY_NAME(.rti_fn*))
+    *(.data*)
+    *(.sdata*)
   } > sdram AT>flash : data_extra
   .bss : {    	
     *(.bss*)
