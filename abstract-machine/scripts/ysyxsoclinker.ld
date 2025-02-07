@@ -41,7 +41,7 @@ SECTIONS {
   } > sdram AT>flash
   .rela : {
     *(.rela*)
-  } 
+  } > sdram AT>flash
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
   text_load_start = LOADADDR(.text);
