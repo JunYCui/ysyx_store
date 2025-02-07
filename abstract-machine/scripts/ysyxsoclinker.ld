@@ -30,8 +30,7 @@ SECTIONS {
   } > sdram AT>flash : rodata
   .data.extra : {
     data_start = .;
-    *(.data.extra*)
-    *(FSymTab)
+    *(FSymTab*)
   } > sdram AT>flash : data_extra
   .data :  {
     *(.data*)
