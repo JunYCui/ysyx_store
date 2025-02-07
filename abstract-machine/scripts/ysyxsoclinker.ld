@@ -10,7 +10,6 @@ MEMORY{
 
 
 SECTIONS {
-  . = ORIGIN(flash);
   .fsbl : {
     *(entry)
     *(.fsbl*)
