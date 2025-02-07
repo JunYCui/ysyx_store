@@ -34,10 +34,12 @@ SECTIONS {
     *(.sdata*)
   } > sdram AT>flash : data
   .bss : {    	
-    *(.bss.extra*)
     *(.bss*)
     *(.sbss*)
     *(.scommon)
+  } > sdram AT>flash
+  .comment :{
+    *(.comment*)
   } > sdram AT>flash
   .rela : {
     *(.rela*)
