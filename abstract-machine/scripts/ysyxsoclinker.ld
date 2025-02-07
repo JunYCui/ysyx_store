@@ -41,6 +41,9 @@ SECTIONS {
     *(.scommon)
     bss_end = .;
   } > psram : bss 
+  .rela : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04))  {
+    *(.rela.dyn*)
+  } > psram
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
   text_load_start = LOADADDR(.text);
