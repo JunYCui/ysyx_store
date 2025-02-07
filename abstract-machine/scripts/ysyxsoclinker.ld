@@ -32,6 +32,7 @@ SECTIONS {
   .data :  {
     *(.data*)
     *(.sdata*)
+    data_end = .;
   } > sdram AT>flash : data
   .bss : {    	
     *(.bss*)
@@ -45,7 +46,7 @@ SECTIONS {
   _ssbl_size = SIZEOF(.ssbl);
   text_load_start = LOADADDR(.text);
   data_load_start = LOADADDR(.data);
-  _size2 = SIZEOF(.data);
+  _size2 = data_end - data_start;
   _size1 = rodata_end - text_start; 
   _heap_start = ORIGIN(sram);
   . = ORIGIN(sram) + LENGTH(sram);
