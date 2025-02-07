@@ -28,16 +28,16 @@ SECTIONS {
     *(.rodata*)
     rodata_end = .;
   } > sdram AT>flash : rodata
-  .data :  {
-    data_start = .;
-    *(.data*)
-    *(.sdata*)
-  } > sdram AT>flash : data
   .data.extra : {
+    data_start = .;
     *(.data*)
     *(.sdata*)
     *(FSymTab)
   } > sdram AT>flash : data_extra
+  .data :  {
+    *(.data*)
+    *(.sdata*)
+  } > sdram AT>flash : data
   .bss : {    	
     *(.bss*)
     *(.sbss*)
@@ -50,7 +50,7 @@ SECTIONS {
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
   text_load_start = LOADADDR(.text);
-  data_load_start = LOADADDR(.data);
+  data_load_start = LOADADDR(.data.extra);
   _size2 = bss_end - data_start ;
   _size1 = rodata_end - text_start; 
   _heap_start = ORIGIN(sram);
