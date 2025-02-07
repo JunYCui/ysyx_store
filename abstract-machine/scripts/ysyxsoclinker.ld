@@ -1,5 +1,5 @@
 ENTRY(_start)
-PHDRS { text PT_LOAD; fsbl PT_LOAD; ssbl PT_LOAD ; data PT_LOAD;  };
+PHDRS { text PT_LOAD; fsbl PT_LOAD; ssbl PT_LOAD ; data PT_LOAD;  rodata PT_LOAD; };
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
@@ -27,7 +27,8 @@ SECTIONS {
     *(.srodata*)
     *(.rodata*)
     rodata_end = .;
-  } > sdram AT>flash 
+  } > sdram AT>flash : rodata
+  . = ORIGIN(flash);
   .data :  {
     data_start = .;
     *(.data*)
