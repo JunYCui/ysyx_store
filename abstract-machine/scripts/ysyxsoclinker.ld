@@ -23,6 +23,11 @@ SECTIONS {
     text_start = . ;
     *(.text*)
   } > sdram AT>flash : text
+  .rodata :  {
+    *(.srodata*)
+    *(.rodata*)
+    rodata_end = .;
+  } > sdram AT>flash : rodata
   .data.extra : {
     data_start = .;
     *(.data*)
@@ -33,11 +38,6 @@ SECTIONS {
     *(.data*)
     *(.sdata*)
   } > sdram AT>flash : data
-  .rodata :  {
-    *(.srodata*)
-    *(.rodata*)
-    rodata_end = .;
-  } > sdram AT>flash : rodata
   .bss : {    	
     *(.bss*)
     *(.sbss*)
