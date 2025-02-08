@@ -3,7 +3,7 @@
 #include <riscv/riscv.h>
 #include <klib.h>
 
-#define PMEM_SIZE (1*1024*1024)
+#define PMEM_SIZE (8*1024*1024)
 #define SERIAL_PORT 0x10000000
 
 #define LCR (SERIAL_PORT+0x03)
@@ -24,7 +24,7 @@ extern char _size[];
 
 extern char _heap_start[];
 int main(const char *args);
-Area heap = RANGE(_heap_start, _heap_start-PMEM_SIZE);
+Area heap = RANGE(_heap_start, _heap_start+PMEM_SIZE);
 
 #ifndef MAINARGS
 #define MAINARGS ""
