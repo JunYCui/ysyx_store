@@ -167,8 +167,9 @@ always @(posedge clock) begin
             pc <= dnpc;
         else if(valid & ready)
             pc <= pc + 4;
-        if(pc > 32'hf000000)
-        $display("pc = 0x%x",pc);
+        if(pc > 32'hf000000)begin
+            $display("pc = 0x%x",pc);
+        end
 end
 
     assign                       req                       = 1'b1;
