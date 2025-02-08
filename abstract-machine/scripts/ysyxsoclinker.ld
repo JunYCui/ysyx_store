@@ -32,22 +32,21 @@ SECTIONS {
   .data : {
     *(.sdata*)
     *(.data*)
-    . = ALIGN(8);
+    data_end = .;
   } > sdram AT> flash : data
   .bss : {    	
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-      data_end = .;
   } > sdram AT> flash : bss
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
   text_load_start = LOADADDR(.text);
   _size = data_end - text_start; 
   _heap_start = ALIGN (0x1000);
+  _end = .;
   _stack_top = ORIGIN(sram);
-  . = ORIGIN(psram) + LENGTH(psram);
+  . = ORIGIN(sram) + LENGTH(sram);
   _stack_pointer = .;
   end = .;
-  _end = .;
 }
