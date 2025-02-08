@@ -167,7 +167,8 @@ always @(posedge clock) begin
             pc <= dnpc;
         else if(valid & ready)
             pc <= pc + 4;
-        //k$display("pc = 0x%x",pc);
+        
+        $display("pc = 0x%x",pc);
 end
 
     assign                       req                       = 1'b1;
