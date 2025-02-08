@@ -25,6 +25,7 @@ SECTIONS {
   .rodata :  {
     *(.srodata*)
     *(.rodata*)
+    . = ALIGN(8);
   } > sdram AT>flash : rodata
   .data :  {
     *(.data*)
