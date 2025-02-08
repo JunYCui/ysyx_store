@@ -169,8 +169,8 @@ always @(posedge clock) begin
             pc <= pc + 4;
 end
 initial begin
-    begin
-            $display("pc = 0x%x",pc);
+    if(pc > 32'hf000000)begin
+            $monitor("pc = 0x%x",pc);
     end
 end
 
