@@ -33,12 +33,12 @@ SECTIONS {
   .data :  {
     *(.data*)
     *(.sdata*)
+    data_end = . ;
   } > sdram AT>flash : data
   .bss : {    	
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-    data_end = . ;
   } > sdram AT>flash : bss
   .rela : {
     *(.rela*)
@@ -48,7 +48,7 @@ SECTIONS {
   text_load_start = LOADADDR(.text);
   _size1 = data_end - text_start; 
   _heap_start = ORIGIN(psram) ;
-  _stack_top =  ORIGIN(psram) + 0x100000 ;
+  _stack_top =  ORIGIN(psram) + 0x300000 ;
   . = ORIGIN(psram) + LENGTH(psram);
   _stack_pointer = .;
   end = .;
