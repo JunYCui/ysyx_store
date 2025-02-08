@@ -13,14 +13,17 @@ SECTIONS {
   .fsbl : {
     *(entry)
     *(.fsbl*)
+    . = ALIGN(8);
   } >flash AT>flash : fsbl
   .ssbl :  {
     _ssbl_start = .;
     *(.ssbl*)
+    . = ALIGN(8);
   } > sram AT>flash : ssbl
   .text :  {
     text_start = . ;
     *(.text*)
+    . = ALIGN(8);
   } > sdram AT>flash : text
   .rodata :  {
     *(.srodata*)
