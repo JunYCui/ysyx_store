@@ -168,7 +168,7 @@ always @(posedge clock) begin
         else if(valid & ready)
             pc <= pc + 4;
         
-        $display("pc = 0x%x",pc);
+        //$display("pc = 0x%x",pc);
 end
 
     assign                       req                       = 1'b1;
