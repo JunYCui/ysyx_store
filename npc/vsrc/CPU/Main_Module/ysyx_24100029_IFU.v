@@ -169,7 +169,7 @@ always @(posedge clock) begin
             pc <= pc + 4;
 end
 always @(*) begin
-    if(pc > 32'hf0000000)
+    if(pc > 32'hf000000)
         $display("pc = 0x%x",pc);
 end
 
