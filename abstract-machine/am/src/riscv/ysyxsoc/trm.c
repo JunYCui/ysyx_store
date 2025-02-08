@@ -19,7 +19,7 @@ extern char _ssbl_loadstart[];
 
 extern char text_start[];
 extern char text_load_start[];
-extern char bss_end[];
+extern char data_end[];
 extern char _size[];
 
 extern char _heap_start[];
