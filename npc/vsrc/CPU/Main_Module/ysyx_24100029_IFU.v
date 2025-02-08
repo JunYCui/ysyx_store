@@ -170,7 +170,7 @@ always @(posedge clock) begin
 end
 always @(*) begin
     if(pc > 32'hf000000)
-    $display("pc = 0x%x",pc);
+        $display("pc = 0x%x",pc);
 end
 
     assign                       req                       = 1'b1;
