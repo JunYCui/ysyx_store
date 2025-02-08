@@ -47,9 +47,9 @@ SECTIONS {
   _ssbl_size = SIZEOF(.ssbl);
   text_load_start = LOADADDR(.text);
   _size1 = data_end - text_start; 
-  _heap_start = ORIGIN(sram) ;
-  _stack_top =  ORIGIN(sram) ;
-  . = ORIGIN(sram) + LENGTH(sram);
+  _heap_start = ORIGIN(psram) ;
+  _stack_top =  ORIGIN(psram) ;
+  . = ORIGIN(psram) + LENGTH(psram);
   _stack_pointer = .;
   end = .;
   _end = .;
