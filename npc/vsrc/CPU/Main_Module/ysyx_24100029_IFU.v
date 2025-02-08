@@ -168,10 +168,9 @@ always @(posedge clock) begin
         else if(valid & ready)
             pc <= pc + 4;
 end
-initial begin
-    begin
-            $monitor("pc = 0x%x",pc);
-    end
+always @(*) begin
+    if(pc > 2000)
+    $display("pc = 0x%x",pc);
 end
 
     assign                       req                       = 1'b1;
