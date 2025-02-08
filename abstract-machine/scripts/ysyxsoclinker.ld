@@ -48,7 +48,7 @@ SECTIONS {
   text_load_start = LOADADDR(.text);
   _size1 = data_end - text_start; 
   _heap_start = ORIGIN(psram) ;
-  _stack_top =  ORIGIN(psram) + 0x300000 ;
+  _stack_top =  ORIGIN(psram) ;
   . = ORIGIN(psram) + LENGTH(psram);
   _stack_pointer = .;
   end = .;
