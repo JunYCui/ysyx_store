@@ -202,8 +202,8 @@ void ftrace_exe(Decode* s)
             {
                 if(func_array[i].state == true)
                 {
-                    if(func_array[i].addr == s->dnpc) 
-                {
+                   if(func_array[i].addr == s->dnpc) 
+                   {
                     for(int j=0;j<count;j++)
                     {
                         printf(" ");
@@ -212,7 +212,7 @@ void ftrace_exe(Decode* s)
                     printf("call [%s@0x%x]\n",func_array[i].name,func_array[i].addr);
                     count++;
                     break;
-                }
+                   }
                 }
                 else 
                 {
