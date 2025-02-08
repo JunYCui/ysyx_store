@@ -18,12 +18,9 @@ extern char _ssbl_start[];
 extern char _ssbl_loadstart[];
 
 extern char text_start[];
-extern char data_start[];
 extern char text_load_start[];
-extern char data_load_start[];
-extern char bss_end[];
 extern char _size1[];
-extern char _size2[];
+
 
 extern char _heap_start[];
 int main(const char *args);
@@ -81,13 +78,6 @@ void __attribute__((section(".ssbl"))) ssbl_init(){
     char * p0 = text_start;
     const char * p1 = text_load_start;
     size_t n =  (size_t)_size1;
-    while(n--)
-    {
-        *(p0++) =*(p1++);
-    }
-    n =  (size_t)_size2;
-    p0 = data_start;
-    p1 = data_load_start;
     while(n--)
     {
         *(p0++) =*(p1++);

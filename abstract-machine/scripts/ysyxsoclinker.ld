@@ -25,13 +25,11 @@ SECTIONS {
   .rodata :  {
     *(.srodata*)
     *(.rodata*)
-    rodata_end = .;
   } > sdram AT>flash : rodata
-    data_start = .;
   .data :  {
     *(.data*)
     *(.sdata*)
-    data_end = . + 1;
+    data_end = . ;
   } > sdram AT>flash : data
   .bss : {    	
     *(.bss*)
@@ -44,9 +42,7 @@ SECTIONS {
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
   text_load_start = LOADADDR(.text);
-  data_load_start = LOADADDR(.data);
-  _size2 = data_end - data_start;
-  _size1 = rodata_end - text_start; 
+  _size1 = data_end - text_start; 
   _heap_start = ORIGIN(sram);
   . = ORIGIN(sram) + LENGTH(sram);
   _stack_top = . ;
