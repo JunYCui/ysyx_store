@@ -7,14 +7,14 @@
 #include "string.h"
 #include "assert.h"
 #include "getopt.h"
-#include "Vcpu_ysyx_24100029.h"
+#include "VysyxSoCFull.h"
 #include <verilated.h>
 #include <verilated_vcd_c.h>  //VCD波形输出头文件
 #include "svdpi.h"
-#include "Vcpu_ysyx_24100029__Dpi.h"
+#include "VysyxSoCFull__Dpi.h"
 
 #define CONFIG_MSIZE 0x10000000
-#define CONFIG_MBASE 0x80000000
+#define CONFIG_MBASE 0x30000000
 #define RESET_VECTOR CONFIG_MBASE
 
 typedef uint32_t word_t;

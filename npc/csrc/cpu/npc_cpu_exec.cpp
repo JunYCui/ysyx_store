@@ -4,6 +4,7 @@
 #include "npc_define.h"
 
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+extern "C" int npc_pmem_read(int addr);
 extern void ReadReg(int reg_num, svBitVecVal* reg_value);
 void difftest_step(vaddr_t pc, vaddr_t npc);
 void ftrace_exe(Decode* s);
@@ -30,7 +31,7 @@ static void wave_record(void)
     m_trace->dump(sim_time);
     sim_time++; // 模拟时钟边沿数加1
 }
-extern Vcpu_ysyx_24100029 *top; 
+extern VysyxSoCFull *top; 
 
 static void itrace(Decode *s)
 {
@@ -39,23 +40,13 @@ static void itrace(Decode *s)
 
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
-    inst = strtok(str,"\t");
-    if(strcmp(inst,"c.unimp") == 0)
-    {
-        return;
-    }
-    if(strcmp(inst,"jal") == 0 || strcmp(inst,"jalr") == 0 || inst[0] == 'b')
-    {
-        skip_flag = 2;
-        cpu.pc = top->IDU_pc;
-    }
 }
 
 static void exec_once()
 {
     for(int i=0;i<2;i++)
     {
-    top->clk ^=1;
+    top->clock ^=1;
     top->eval();
     wave_record();
     }
@@ -80,28 +71,34 @@ static void trace_and_difftest(Decode *s)
 
 void cpu_exec(uint32_t n)
 {
+    unsigned char valid =1;
     g_print_step = (n < MAX_INST_TO_PRINT);
     switch (npc_state.state) {
     case NPC_END: case NPC_ABORT:
-      printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
-      return;
+    printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
+    return;
     default: npc_state.state = NPC_RUNNING;
-  }
+}
     for(int i=0;i<n;i++)
     {
-        s.pc=top->pc;
-        s.dnpc=top->dnpc;
-        s.snpc=top->snpc;
-    svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029"));
-        GetInst(&s.inst);
-        if(skip_flag-- > 0)
+    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
+        GetPC(&s.pc);
+        cpu.pc = s.pc;
+     //   s.inst = npc_pmem_read(s.pc);
+        if(skip_flag != 0)
         {
             difftest_skip_ref();
-        }    
+        }
         exec_once();
-   // printf("top->pc = 0x%x, top->dnpc = 0x%x, top->snpc = 0x%x \n",top->pc,top->dnpc,top->snpc);
-        cpu.pc = top->pc;
-    svSetScope(svGetScopeFromName("TOP.cpu_ysyx_24100029.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
+        Getvalid(&valid);
+        GetPC(&cpu.pc);
+        while(!valid)
+        {
+            exec_once();
+            GetPC(&cpu.pc);
+            Getvalid(&valid);
+        }
+    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
         for(int j=0;j<32;j++)
         {
             ReadReg(j,&cpu.gpr[j]);
