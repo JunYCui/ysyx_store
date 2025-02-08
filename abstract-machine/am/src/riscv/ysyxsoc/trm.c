@@ -3,7 +3,7 @@
 #include <riscv/riscv.h>
 #include <klib.h>
 
-#define SRAM_SIZE (4 *1024 *1024)
+#define SRAM_SIZE (4*1024*1024)
 #define SERIAL_PORT 0x10000000
 
 #define LCR (SERIAL_PORT+0x03)
@@ -21,7 +21,7 @@ extern char text_start[];
 extern char text_load_start[];
 extern char data_end[];
 extern char _size[];
-
+extern char _pmem_start[];
 extern char _heap_start[];
 int main(const char *args);
 Area heap = RANGE(_heap_start, _heap_start+SRAM_SIZE);
