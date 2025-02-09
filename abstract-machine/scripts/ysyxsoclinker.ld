@@ -24,16 +24,16 @@ SECTIONS {
     *(.text*)
     . = ALIGN(8);
   } > sdram AT> flash : text
-  .rodata : {
-    *(.srodata*)
-    *(.rodata*)
-    . = ALIGN(8);
-  } > sdram AT > flash : rodata
   .data : {
     *(.sdata*)
     *(.data*)
     data_end = .;
   } > sdram AT> flash : data
+  .rodata : {
+    *(.srodata*)
+    *(.rodata*)
+    . = ALIGN(8);
+  } > sdram AT > flash : rodata
   .bss : {    	
     *(.bss*)
     *(.sbss*)
@@ -45,8 +45,8 @@ SECTIONS {
   _size = data_end - text_start; 
   _heap_start = ALIGN (0x1000);
   _end = .;
-  _stack_top = ORIGIN(sram) + SIZEOF(.ssbl);
-  . = ORIGIN(sram) + LENGTH(sram);
+  _stack_top = ORIGIN(psram);
+  . = ORIGIN(psram) + LENGTH(psram);
   _stack_pointer = .;
   end = .;
 }
