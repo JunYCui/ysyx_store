@@ -24,12 +24,8 @@ uint8_t g_print_step;
 
 
 void Cpu_Wp(void);
-static void wave_record(void)
-{
-    //将所有跟踪的信号值写入波形转储文件
-    m_trace->dump(sim_time);
-    sim_time++; // 模拟时钟边沿数加1
-}
+void wave_record(void);
+
 extern VysyxSoCFull *top; 
 
 static void itrace(Decode *s)
