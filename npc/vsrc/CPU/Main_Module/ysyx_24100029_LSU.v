@@ -225,12 +225,15 @@ end
     assign                       awsize                    = funct3;
     assign                       awburst                   = 0;
 
-    assign                       wdata                     = rs2_value_reg<<8*Ex_result_reg[1:0];
+    assign                       wdata                     = (funct3_reg == 3'b000)?
+                                                            rs2_value_reg<<8*Ex_result_reg[1:0]:(funct3_reg == 3'b001)?
+                                                            rs2_value_reg<<8*{Ex_result_reg[1],1'b0}:(funct3_reg == 3'b010)?
+                                                            rs2_value_reg:0;
     assign                       rdata_b_choice            = {Ex_result_reg[1:0],3'b0};
     
     assign wstrb = (funct3_reg == 3'b000)                           ?
                     4'b0001<<Ex_result_reg[1:0]:(funct3_reg == 3'b001)     ?
-                    4'b0011<<Ex_result_reg[1:0]:(funct3_reg == 3'b010)     ?
+                    4'b0011<<{Ex_result_reg[1],1'b0}:(funct3_reg == 3'b010)     ?
                     4'b1111:4'b0000;
 
 
