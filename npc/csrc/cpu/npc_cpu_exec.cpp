@@ -15,7 +15,6 @@ extern void GetInst(svBitVecVal* inst_exec);
 extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
-extern uint8_t skip_flag;
 
 CPU_state cpu={};
 
@@ -71,6 +70,7 @@ static void trace_and_difftest(Decode *s)
 
 void cpu_exec(uint32_t n)
 {
+    bool skip_dif;
     unsigned char valid =1;
     g_print_step = (n < MAX_INST_TO_PRINT);
     switch (npc_state.state) {
@@ -83,9 +83,10 @@ void cpu_exec(uint32_t n)
     {
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
         GetPC(&s.pc);
+        Getskip_flag(&skip_dif);
         cpu.pc = s.pc;
      //   s.inst = npc_pmem_read(s.pc);
-        if(skip_flag != 0)
+        if(skip_dif != 0)
         {
             difftest_skip_ref();
         }

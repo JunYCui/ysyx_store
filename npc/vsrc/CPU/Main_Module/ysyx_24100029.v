@@ -385,7 +385,15 @@ module ysyx_24100029
 
 
 
-
+    wire                                skip                        ;
+    wire                                mem_ren_flag                ;
+    wire               [  31: 0]        paddr                       ;
+always @(*) begin
+    if(mem_ren_flag && paddr <32'h2000008 && paddr > 32'h2000000 || paddr > 32'h10000000 && paddr < 32'h10000fff )
+        skip = 1;
+    else
+        skip = 0;
+end
 
 task  GetPC;
     output                                 bit[31:0]pc                ;
@@ -397,6 +405,11 @@ task Getvalid;
     valid = WBU_valid;
 endtask
 
+task Getskip_flag;
+    output                                 bit skip_flag              ;
+    skip_flag = skip;
+endtask
+export "DPI-C" task Getskip_flag;
 export "DPI-C" task Getvalid;
 export "DPI-C" task GetPC;
 
@@ -701,7 +714,10 @@ ysyx_24100029_WBU WBU_inst0(
     .ready                              (WBU_ready                 ),
 
     .rd_next                            (WBU_rd                    ),
-    .valid_next                         (WBU_valid                 ) 
+    .valid_next                         (WBU_valid                 ),
+    
+    .mem_ren_flag                       (men_ren_flag              ),
+    .paddr                              (paddr                     ) 
 );
 /* verilator lint_off PINMISSING */
 ysyx_24100029_Aribiter #(
