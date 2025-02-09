@@ -86,6 +86,7 @@ word_t paddr_read(paddr_t addr, int len) {
   if (likely(in_flash(addr))) return flash_read(addr, len);
   else if(likely(in_sram(addr))) return sram_read(addr, len);
   else if(likely(in_sdram(addr))) return sdram_read(addr, len);
+  else if(addr <0x2000008 && addr > 0x10000000 ) { return; }
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
   return 0;
