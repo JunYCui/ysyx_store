@@ -66,9 +66,8 @@ void wave_record(void)
     //将所有跟踪的信号值写入波形转储文件
     m_trace->dump(sim_time);
     sim_time++; // 模拟时钟边沿数加1
-    if(sim_time > 1000)
+    if(sim_time%10000)
     {
-        sim_time =0;
         m_trace->flush();
         m_trace->close();
         new_wave();
