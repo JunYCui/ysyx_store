@@ -6,7 +6,7 @@ AM_SRCS := riscv/ysyxsoc/start.S \
 		   riscv/ysyxsoc/cte.c \
            riscv/ysyxsoc/trap.S 
 
-CFLAGS    += -fdata-sections -ffunction-sections -O2
+CFLAGS    += -fdata-sections -ffunction-sections -Os
 LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld  --print-map
 LDFLAGS   += --gc-sections -e _start
 CFLAGS += -DMAINARGS=\"$(mainargs)\" 
