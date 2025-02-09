@@ -59,8 +59,8 @@ void new_wave(void)
     count ++;
     if(count > 10){
         sprintf(str,"wave%d.vcd",count-10);
-    }
         remove(str);
+    }
     sprintf(str,"wave%d.vcd",count);
     m_trace->open((const char*)str);
 }
@@ -70,7 +70,7 @@ void wave_record(void)
     //将所有跟踪的信号值写入波形转储文件
     m_trace->dump(sim_time);
     sim_time++; // 模拟时钟边沿数加1
-    if(sim_time%100000 == 0)
+    if(sim_time%10000000 == 0)
     {
         m_trace->flush();
         m_trace->close();
