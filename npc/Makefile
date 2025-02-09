@@ -28,7 +28,7 @@ ARGS_DIFF = -d $(DIFF_REF_SO)
 VERILATOR = verilator
 
 VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)) \
-			-O3 --x-assign fast --x-initial fast --noassert -DTOP_NAME="\"V$(TOPNAME)\"" $(addprefix -I, $(INC_VDEFINE))
+			-O2 --x-assign fast --x-initial fast --noassert -DTOP_NAME="\"V$(TOPNAME)\"" $(addprefix -I, $(INC_VDEFINE))
 
 
 LDFLAGS = -lSDL2 -lSDL2_image -O2 -lreadline -ldl -pie
