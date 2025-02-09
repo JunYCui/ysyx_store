@@ -385,7 +385,7 @@ module ysyx_24100029
 
 
 
-    wire                                skip                        ;
+    reg                                skip                        ;
     wire                                mem_ren_flag                ;
     wire               [  31: 0]        paddr                       ;
 always @(*) begin
@@ -716,7 +716,7 @@ ysyx_24100029_WBU WBU_inst0(
     .rd_next                            (WBU_rd                    ),
     .valid_next                         (WBU_valid                 ),
     
-    .mem_ren_flag                       (men_ren_flag              ),
+    .mem_ren_flag                       (mem_ren_flag              ),
     .paddr                              (paddr                     ) 
 );
 /* verilator lint_off PINMISSING */

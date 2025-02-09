@@ -70,7 +70,7 @@ static void trace_and_difftest(Decode *s)
 
 void cpu_exec(uint32_t n)
 {
-    bool skip_dif;
+    uint8_t skip_dif;
     unsigned char valid =1;
     g_print_step = (n < MAX_INST_TO_PRINT);
     switch (npc_state.state) {
