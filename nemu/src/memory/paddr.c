@@ -39,7 +39,7 @@ static word_t sram_read(paddr_t addr, int len) {
 }
 
 static void sram_write(paddr_t addr, int len, word_t data) {
-  host_write(SDRAM_guest_to_host(addr), len, data);
+  host_write(SRAM_guest_to_host(addr), len, data);
   IFDEF(CONFIG_MTRACE,printf("The address " ANSI_FMT(FMT_WORD, ANSI_FG_BLUE) " is written at pc = " FMT_WORD "\n",addr,cpu.pc));
 }
 
