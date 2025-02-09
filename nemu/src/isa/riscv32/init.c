@@ -44,4 +44,6 @@ void init_isa() {
 
     /* Init mstatus*/
   cpu.csr[Mstatus] = 0x1800;
+  cpu.csr[0xf11] = 0x79737978;
+  cpu.csr[0xf12] = 0x16FBCBD;
 }

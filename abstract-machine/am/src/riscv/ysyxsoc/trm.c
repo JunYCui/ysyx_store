@@ -2,7 +2,8 @@
 #include <klib-macros.h>
 #include <riscv/riscv.h>
 #include <klib.h>
-#define SRAM_SIZE (128 *1024 *1024)
+
+#define PMEM_SIZE (8*1024*1024)
 #define SERIAL_PORT 0x10000000
 
 #define LCR (SERIAL_PORT+0x03)
@@ -15,12 +16,15 @@
 extern char _ssbl_size[] ;
 extern char _ssbl_start[];
 extern char _ssbl_loadstart[];
-extern char data_load_start[];
-extern char data_size[];
+
+extern char text_start[];
+extern char text_load_start[];
+extern char data_end[];
+extern char _size[];
+
 extern char _heap_start[];
-extern char data_start[];
 int main(const char *args);
-Area heap = RANGE(_heap_start, _heap_start+SRAM_SIZE);
+Area heap = RANGE(_heap_start, _heap_start+PMEM_SIZE);
 
 #ifndef MAINARGS
 #define MAINARGS ""
@@ -71,12 +75,12 @@ void _trm_init() {
 }
 
 void __attribute__((section(".ssbl"))) ssbl_init(){
-    char *p0=data_start;
-    const char*p1 = data_load_start;
-    size_t n = (size_t) data_size;
+    char * p0 = text_start;
+    char * p1 = text_load_start;
+    size_t n =  (size_t)_size;
     while(n--)
     {
-      *(p0++) = *(p1++);
+        *(p0++) =*(p1++);
     }
     _trm_init();
 } 

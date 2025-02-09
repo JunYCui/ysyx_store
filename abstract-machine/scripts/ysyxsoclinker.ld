@@ -1,10 +1,11 @@
 ENTRY(_start)
-PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;rodata PT_LOAD; bss PT_LOAD;data_extra PT_LOAD ; ssbl PT_LOAD;}
+PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;ssbl PT_LOAD ;data_extra PT_LOAD;};
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
   psram(rwx) :ORIGIN = 0x80000000, LENGTH = 4M
   sram(rwx) : ORIGIN = 0x0f000000, LENGTH = 8K
+  sdram(rwx) : ORIGIN = 0xa0000000, LENGTH = 32M
 }
 
 
@@ -14,9 +15,10 @@ SECTIONS {
     *(entry)
     *(.fsbl*)
   } >flash AT>flash : fsbl
-  .ssbl : AT(ALIGN(LOADADDR(.fsbl )+SIZEOF(.fsbl),0x04)) {
+  .ssbl : {
     _ssbl_start = .;
     *(.ssbl*)
+<<<<<<< HEAD
   } > sram : ssbl
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
@@ -31,23 +33,45 @@ SECTIONS {
   .data.extra : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {
     *(FSymTab)
     *(.data*)
+=======
+  } > sram AT> flash : ssbl
+  .text : {
+    text_start = . ;
+    *(.text*)
+    . = ALIGN(8);
+  } > sdram AT> flash : text
+  .data : {
+>>>>>>> SDRAM
     *(.sdata*)
-  } > psram : data_extra
-  .data : AT(ALIGN(LOADADDR(.data.extra )+SIZEOF(.data.extra),0x04)) {
     *(.data*)
+<<<<<<< HEAD
     *(.sdata*)
   } > psram : data
   .bss : AT(ALIGN(LOADADDR(.rodata )+SIZEOF(.rodata),0x04)) {    	
     _bss_start = .;
+=======
+      . = ALIGN(8);
+  } > sdram AT> flash : data
+  .bss : {    	
+>>>>>>> SDRAM
     *(.bss*)
     *(.sbss*)
     *(.scommon)
-  } > psram : bss
-  data_size = SIZEOF(.data) + SIZEOF(.bss) + SIZEOF(.text) + SIZEOF(.rodata) + SIZEOF(.data.extra) ;
-  data_load_start = LOADADDR(.text);
-  _heap_start = ORIGIN(sram);
-  . = ORIGIN(sram) + LENGTH(sram);
-  _stack_top = . ;
+      . = ALIGN(8);
+  } > sdram AT> flash 
+  .rodata : {
+    *(.srodata*)
+    *(.rodata*)
+    . = ALIGN(8);
+    data_end = .;
+  } > sdram AT > flash 
+  _ssbl_loadstart = LOADADDR(.ssbl);
+  _ssbl_size = SIZEOF(.ssbl);
+  text_load_start = LOADADDR(.text);
+  _size = data_end - text_start; 
+  _heap_start = ALIGN (0x1000);
+  _stack_top = ORIGIN(psram);
+  . = ORIGIN(psram) + LENGTH(psram);
   _stack_pointer = .;
   end = .;
   _end = .;
