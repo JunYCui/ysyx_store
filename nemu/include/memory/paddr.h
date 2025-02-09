@@ -25,7 +25,7 @@
 #define SDRAM_LEFT  ((paddr_t)CONFIG_SDRAM_BASE)
 #define SDRAM_RIGHT ((paddr_t)CONFIG_SDRAM_BASE + CONFIG_SDRAM_SIZE - 1)
 
-#define RESET_VECTOR (ROM_LEFT + CONFIG_PC_RESET_OFFSET)
+#define RESET_VECTOR (FLASH_LEFT + CONFIG_PC_RESET_OFFSET)
 
 /* convert the guest physical address in the guest program to host virtual address in NEMU */
 uint8_t* guest_to_host(paddr_t paddr);
@@ -42,6 +42,7 @@ static inline bool in_sram(paddr_t addr){
 static inline bool in_sdram(paddr_t addr){
   return addr - CONFIG_SDRAM_BASE < CONFIG_SDRAM_SIZE;
 }
+
 
 
 word_t paddr_read(paddr_t addr, int len);
