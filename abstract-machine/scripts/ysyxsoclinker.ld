@@ -32,12 +32,12 @@ SECTIONS {
     *(.srodata*)
     *(.rodata*)
     . = ALIGN(8);
-    data_end = .;
   } > sdram AT > flash : rodata
   .bss : {    	
     *(.bss*)
     *(.sbss*)
     *(.scommon)
+    data_end = .;
   } > sdram AT> flash : bss
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
