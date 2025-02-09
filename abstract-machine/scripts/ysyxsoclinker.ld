@@ -1,5 +1,5 @@
 ENTRY(_start)
-PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;ssbl PT_LOAD ; rodata PT_LOAD;bss PT_LOAD;data_extra PT_LOAD;};
+PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;ssbl PT_LOAD ; rodata PT_LOAD;bss PT_LOAD;data_extra PT_LOAD;bss_extra PT_LOAD;};
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
