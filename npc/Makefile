@@ -1,11 +1,17 @@
-TOPNAME = cpu_ysyx_24100029
-INC_PATH = $(NPC_HOME)/include
+TOPNAME = ysyxSoCFull
+INC_PATH = $(NPC_HOME)/include 
 
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
-VSOURCES=$(shell find $(abspath ./vsrc) -name "*.v" )
+VSOURCES=$(shell find $(abspath ./vsrc/CPU) -name "*.v" )
 CSOURCES=$(shell find $(abspath ./csrc/cpu) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
 
+# add ysyxsoc
+VSOURCES += $(shell find $(abspath ../ysyxSoC/perip) -name "*.v" )
+VSOURCES += $(shell find $(abspath ../ysyxSoC/build) -name "*.v" )
+INC_VDEFINE += /home/cjy/ysyx-workbench/ysyxSoC/perip/uart16550/rtl /home/cjy/ysyx-workbench/ysyxSoC/perip/spi/rtl
+Warning = UNUSEDSIGNAL ASSIGNDLY DECLFILENAME PINCONNECTEMPTY DEFPARAM UNDRIVEN SYNCASYNCNET UNUSEDPARAM
+VERILATOR_FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 #CSOURCES += $(SRC_AUTO_BIND)
@@ -21,8 +27,8 @@ ARGS_DIFF = -d $(DIFF_REF_SO)
 
 VERILATOR = verilator
 
-VERILATOR_CFLAGS += -Wall --cc -MMD --build --trace \
-			-O3 --x-assign fast --x-initial fast --noassert -DTOP_NAME="\"V$(TOPNAME)\""
+VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)) \
+			-O3 --x-assign fast --x-initial fast --noassert -DTOP_NAME="\"V$(TOPNAME)\"" $(addprefix -I, $(INC_VDEFINE))
 
 
 LDFLAGS = -lSDL2 -lSDL2_image -O2 -lreadline -ldl -pie
@@ -38,7 +44,7 @@ LDFLAGS += $(shell llvm-config --libs) -fsanitize=address
 
 CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE -rdynamic
 
-IMG ?=
+IMG ?= ../soc_test/char_test.bin
 
 override ARGS += $(ARGS_DIFF)
 
@@ -61,10 +67,10 @@ gdb: all
 all:$(CSOURCES) $(VSOURCES) 
 	@echo "Write this Makefile by your self."
 	@rm -rf $(OBJ_DIR) *.vcd
-	$(VERILATOR) $(VERILATOR_CFLAGS) \
+	$(VERILATOR) $(VERILATOR_FLAGS) \
 	--top-module $(TOPNAME) \
-	$^ \
 	$(addprefix -CFLAGS , $(CFLAGS))  $(addprefix -LDFLAGS , $(LDFLAGS)) \
+	$^ \
 	--Mdir $(OBJ_DIR)  --exe -o $(abspath $(BIN))\
 
 

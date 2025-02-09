@@ -1,14 +1,19 @@
 #include <am.h>
 #include <klib-macros.h>
-#include <./riscv/riscv.h>
+#include <riscv/riscv.h>
+
+#define DEVICE_BASE 0xa0000000
+
+#define UART_ADDR (DEVICE_BASE + 0x00003f8)
+#define RTC_ADDR  (DEVICE_BASE + 0x0000048)
 
 
 extern char _heap_start;
 int main(const char *args);
 
-extern char _pmem_start;
+extern char _stack_top;
 #define PMEM_SIZE (1 * 1024 * 1024)
-#define PMEM_END  ((uintptr_t)&_heap_start + PMEM_SIZE)
+#define PMEM_END  ((uintptr_t)&_stack_top - PMEM_SIZE)
 
 Area heap = RANGE(&_heap_start, PMEM_END);
 #ifndef MAINARGS
