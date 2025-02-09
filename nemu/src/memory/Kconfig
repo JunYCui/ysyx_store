@@ -7,15 +7,15 @@ config FLASH_BASE
 
 config FLASH_SIZE
   hex "flash size"
-  default 0x10000000
+  default 0x1000000
 
 config SRAM_BASE
   hex "SRAM base address"
-  default 0xf0000000
+  default 0xf000000
 
 config SRAM_SIZE
   hex "SRAM size"
-  default 0x10000000
+  default 0x2000
 
 config SDRAM_BASE
   hex "sdram base address"
