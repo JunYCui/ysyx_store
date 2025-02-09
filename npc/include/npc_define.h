@@ -5,6 +5,6 @@
 #define DIFFTEST
 //#define MTRACE
 //#define ITARCE
-#define WAVE_TRACE
+//#define WAVE_TRACE
 
 #endif
