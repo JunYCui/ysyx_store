@@ -17,6 +17,14 @@ config SRAM_SIZE
   hex "SRAM size"
   default 0x2000
 
+config PSRAM_BASE
+  hex "PSRAM base address"
+  default 0xf000000
+
+config PSRAM_SIZE
+  hex "PSRAM size"
+  default 0x400000
+
 config SDRAM_BASE
   hex "sdram base address"
   default 0xa0000000

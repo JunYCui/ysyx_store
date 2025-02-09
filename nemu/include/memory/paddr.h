@@ -24,6 +24,8 @@
 #define SRAM_RIGHT ((paddr_t)CONFIG_SRAM_BASE + CONFIG_SRAM_SIZE - 1)
 #define SDRAM_LEFT  ((paddr_t)CONFIG_SDRAM_BASE)
 #define SDRAM_RIGHT ((paddr_t)CONFIG_SDRAM_BASE + CONFIG_SDRAM_SIZE - 1)
+#define PSRAM_LEFT  ((paddr_t)CONFIG_PSRAM_BASE)
+#define PSRAM_RIGHT ((paddr_t)CONFIG_PSRAM_BASE + CONFIG_PSRAM_SIZE - 1)
 
 #define RESET_VECTOR (FLASH_LEFT + CONFIG_PC_RESET_OFFSET)
 
@@ -42,7 +44,9 @@ static inline bool in_sram(paddr_t addr){
 static inline bool in_sdram(paddr_t addr){
   return addr - CONFIG_SDRAM_BASE < CONFIG_SDRAM_SIZE;
 }
-
+static inline bool in_psram(paddr_t addr){
+  return addr - CONFIG_PSRAM_BASE < CONFIG_PSRAM_SIZE;
+}
 
 
 word_t paddr_read(paddr_t addr, int len);
