@@ -57,6 +57,10 @@ void new_wave(void)
     static uint32_t count;
     char str[30];
     count ++;
+    if(count > 2){
+        sprintf(str,"wave%d.vcd",count-1);
+    }
+        remove(str);
     sprintf(str,"wave%d.vcd",count);
     m_trace->open((const char*)str);
 }
