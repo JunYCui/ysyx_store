@@ -82,6 +82,13 @@ module ysyx_24100029_LSU (
     output reg         [  31: 0] inst_next                   
 );
 
+always @(*) begin
+    if(awaddr == 32'ha0086fc3 & mem_wen_reg)
+        $display("0x%x:\t 0x%x is written ",pc_reg,wdata);
+    else if(araddr == 32'ha0086fc3 & mem_ren_reg)
+        $display("0x%x:\t 0x%x is read ",pc_reg,rdata_ex);
+end
+
     wire               [  31: 0] rdata_8i                   ;
     wire               [  31: 0] rdata_16i                  ;
     wire               [  31: 0] rdata_8u                   ;
