@@ -29,7 +29,7 @@ static uint8_t *sdram = NULL;
 uint8_t* guest_to_host(paddr_t paddr) { return flash + paddr - CONFIG_FLASH_BASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - flash + CONFIG_FLASH_BASE; }
 uint8_t* SRAM_guest_to_host(paddr_t paddr) { return sram + paddr - CONFIG_SRAM_BASE; }
-uint8_t* SDRAM_guest_to_host(paddr_t paddr) { return sram + paddr - CONFIG_SDRAM_BASE; }
+uint8_t* SDRAM_guest_to_host(paddr_t paddr) { return sdram + paddr - CONFIG_SDRAM_BASE; }
 
 static word_t sram_read(paddr_t addr, int len) {
   word_t ret = host_read(SRAM_guest_to_host(addr), len);
