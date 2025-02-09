@@ -27,12 +27,12 @@ SECTIONS {
   .data : {
     *(.sdata*)
     *(.data*)
-    data_end = .;
   } > sdram AT> flash : data
   .rodata : {
     *(.srodata*)
     *(.rodata*)
     . = ALIGN(8);
+    data_end = .;
   } > sdram AT > flash : rodata
   .bss : {    	
     *(.bss*)
