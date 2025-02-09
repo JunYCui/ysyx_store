@@ -1,5 +1,5 @@
 ENTRY(_start)
-PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;ssbl PT_LOAD ; rodata PT_LOAD;bss PT_LOAD;data_extra PT_LOAD;bss_extra PT_LOAD;};
+PHDRS { text PT_LOAD; fsbl PT_LOAD; data PT_LOAD;ssbl PT_LOAD ; rodata PT_LOAD;data_extra PT_LOAD;bss_extra PT_LOAD;};
 
 MEMORY{
   flash(rx) : ORIGIN = 0x30000000, LENGTH = 16M
@@ -27,25 +27,20 @@ SECTIONS {
   .data : {
     *(.sdata*)
     *(.data*)
+      . = ALIGN(8);
   } > sdram AT> flash : data
+  .bss : {    	
+    *(.bss*)
+    *(.sbss*)
+    *(.scommon)
+      . = ALIGN(8);
+  } > sdram AT> flash 
   .rodata : {
     *(.srodata*)
     *(.rodata*)
     . = ALIGN(8);
-  } > sdram AT > flash : rodata
-  .bss : {    	
-    . = ALIGN(8);
-    __am_apps_bss_start = .;
-    *(__am_apps.bss*)
-    *(__am_apps.sbss*)
-    *(__am_apps.scommon*)
-    __am_apps_bss_end = .;
-    . = ALIGN(8);
-    *(.bss*)
-    *(.sbss*)
-    *(.scommon)
     data_end = .;
-  } > sdram AT> flash : bss
+  } > sdram AT > flash : rodata
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
   text_load_start = LOADADDR(.text);
