@@ -627,6 +627,7 @@ begin
 
         // Read mask (all bytes in burst)
         dqm_q       <= {SDRAM_DQM_W{1'b0}};
+        updqm_q       <= {SDRAM_DQM_W{1'b0}};
     end
     //-----------------------------------------
     // STATE_WRITE0
