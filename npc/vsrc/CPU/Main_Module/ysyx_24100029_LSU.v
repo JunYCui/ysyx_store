@@ -83,9 +83,9 @@ module ysyx_24100029_LSU (
 );
 
 always @(*) begin
-    if(awaddr >= 32'ha0086fc0 && awaddr < 32'ha0086fc4  && mem_wen_reg)
+    if(awaddr >= 32'ha0086fc0 && awaddr < 32'ha0086fc8  && mem_wen_reg)
         $display("0x%x[pc]:\t 0x%x is written at addr 0x%x ",pc_reg,wdata,awaddr);
-    else if(araddr >= 32'ha0086fc0 && awaddr < 32'ha0086fc4 && mem_ren_reg)
+    else if(araddr >= 32'ha0086fc0 && awaddr < 32'ha0086fc8 && mem_ren_reg)
         $display("0x%x[pc]:\t 0x%x is read at addr 0x%x  ",pc_reg,rdata_ex,araddr);
 end
 
