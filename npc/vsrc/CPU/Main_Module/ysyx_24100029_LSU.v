@@ -81,14 +81,14 @@ module ysyx_24100029_LSU (
     input              [  31: 0] inst                       ,
     output reg         [  31: 0] inst_next                   
 );
-
+/*
 always @(*) begin
     if(awaddr >= 32'ha0086fc0 && awaddr < 32'ha0086fc8  && mem_wen_reg)
         $display("0x%x[pc]:\t 0x%x is written at addr 0x%x ",pc_reg,wdata,awaddr);
     else if(araddr >= 32'ha0086fc0 && awaddr < 32'ha0086fc8 && mem_ren_reg)
         $display("0x%x[pc]:\t 0x%x is read at addr 0x%x  ",pc_reg,rdata_ex,araddr);
 end
-
+*/
     wire               [  31: 0] rdata_8i                   ;
     wire               [  31: 0] rdata_16i                  ;
     wire               [  31: 0] rdata_8u                   ;
