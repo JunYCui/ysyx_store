@@ -167,6 +167,7 @@ reg [SDRAM_BANK_W-1:0] bank_q;
 
 // Buffer half word during read and write commands
 reg [SDRAM_DATA_W-1:0] data_buffer_q;
+reg [SDRAM_DATA_W-1:0] updata_buffer_q;
 reg [SDRAM_DQM_W-1:0]  dqm_buffer_q;
 
 wire [SDRAM_DATA_W-1:0] sdram_data_in_w;
@@ -686,17 +687,23 @@ else
 
 // Buffer upper 16-bits of write data so write command can be accepted
 // in WRITE0. Also buffer lower 16-bits of read data.
-/*
+
 always @ (posedge clk_i or posedge rst_i)
-if (rst_i)
+if (rst_i)begin
     data_buffer_q <= 16'b0;
+    updata_buffer_q <= 16'b0;
+end
+    /*
 else if (state_q == STATE_WRITE0)
     data_buffer_q <= ram_write_data_w[31:16];
-else if (rd_q[SDRAM_READ_LATENCY+1])
-    data_buffer_q <= sample_data_q;
-*/
+    */
+else if (rd_q[SDRAM_READ_LATENCY+1])begin
+        data_buffer_q <= sample_data_q;
+        updata_buffer_q <= sample_updata_q;
+end
+
 // Read data output
-assign ram_read_data_w = {sample_updata_q,sample_data_q};
+assign ram_read_data_w = {updata_buffer_q,data_buffer_q};
 
 //-----------------------------------------------------------------
 // ACK
@@ -729,6 +736,7 @@ assign sdram_data_out_en_o   = ~data_rd_en_q;
 assign sdram_data_output_o   =  data_q;
 assign sdram_updata_output_o =  updata_q;
 assign sdram_data_in_w       = sdram_data_input_i;
+assign sdram_updata_in_w     = sdram_updata_input_i;
 
 assign sdram_cke_o  = cke_q;
 assign sdram_cs_o   = command_q[3];
