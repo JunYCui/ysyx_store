@@ -64,7 +64,7 @@ module sdram(
         if(!cke)
           burst_lenth <= 0;
         else if(loadm_cmd)
-          burst_lenth <= a[2:0]<<1;
+          burst_lenth <= a[2:0]+1;
         else
           burst_lenth <= burst_lenth ;
     end
