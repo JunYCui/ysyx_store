@@ -113,10 +113,10 @@ always @(posedge clock) begin
     else if(rvalid)begin
         valid <= 1'b1;
         inst <= rdata;
-        assert(0) 
+        assert(rdata!=0) 
         else begin
-        $fatal;
         $error("read inst error!");
+        $fatal;
         end
     end
     else if(valid & ready)begin
