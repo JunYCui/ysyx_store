@@ -26,8 +26,8 @@ DIFF_REF_SO = $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
 ARGS_DIFF = -d $(DIFF_REF_SO)
 
 VERILATOR = verilator
-
-VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)) \
+# -- assert allows all assert
+VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)) --assert \
 			-O2 --x-assign fast --x-initial fast --noassert -DTOP_NAME="\"V$(TOPNAME)\"" $(addprefix -I, $(INC_VDEFINE))
 
 
@@ -44,7 +44,7 @@ LDFLAGS += $(shell llvm-config --libs) -fsanitize=address
 
 CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE -rdynamic
 
-IMG ?= ../soc_test/char_test.bin
+IMG ?= 
 
 override ARGS += $(ARGS_DIFF)
 
