@@ -104,7 +104,7 @@ module ysyx_24100029_IFU(
   //  check_rresp: assert(rresp != 2'b00) ; 
     localparam  ResetValue= 32'h30000000;
 
-    assert property(@(posedge clock) rdata==0) 
+    assert property(@(posedge clock) rdata!=0) 
     else begin
     $finish;
     $error("read inst error!");
