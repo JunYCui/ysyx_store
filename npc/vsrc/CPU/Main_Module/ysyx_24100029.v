@@ -304,35 +304,8 @@ module ysyx_24100029
     wire               [  31: 0]        Aribiter_rdata              ;
     wire                                Aribiter_rlast              ;
     wire               [   3: 0]        Aribiter_rid                ;
-    wire                                Aribiter_awready            ;
-    wire                                Aribiter_awvalid            ;
-    wire               [   3: 0]        Aribiter_awid               ;
-    wire               [  31: 0]        Aribiter_awaddr             ;
-    wire               [   7: 0]        Aribiter_awlen              ;
-    wire               [   2: 0]        Aribiter_awsize             ;
-    wire               [   1: 0]        Aribiter_awburst            ;
-    wire                                Aribiter_wready             ;
-    wire                                Aribiter_wvalid             ;
-    wire               [  31: 0]        Aribiter_wdata              ;
-    wire               [   3: 0]        Aribiter_wstrb              ;
-    wire                                Aribiter_wlast              ;
-    wire                                Aribiter_bready             ;
-    wire                                Aribiter_bvalid             ;
-    wire               [   3: 0]        Aribiter_bid                ;
-    wire               [   1: 0]        Aribiter_bresp              ;
-    wire                                Aribiter_arready            ;
-    wire                                Aribiter_arvalid            ;
-    wire               [   3: 0]        Aribiter_arid               ;
-    wire               [  31: 0]        Aribiter_araddr             ;
-    wire               [   7: 0]        Aribiter_arlen              ;
-    wire               [   2: 0]        Aribiter_arsize             ;
-    wire               [   1: 0]        Aribiter_arburst            ;
-    wire                                Aribiter_rready             ;
-    wire                                Aribiter_rvalid             ;
-    wire               [   3: 0]        Aribiter_rid                ;
-    wire               [  31: 0]        Aribiter_rdata              ;
-    wire               [   1: 0]        Aribiter_rresp              ;
-    wire                                Aribiter_rlast              ;
+
+
 
 
 /******************************** CLNT **************************/

@@ -2,6 +2,7 @@
 #include "npc_isa.h"
 #include "npc_macro.h"
 #include "npc_define.h"
+#include <iostream>
 
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 extern "C" int npc_pmem_read(int addr);
@@ -45,6 +46,7 @@ static void exec_once()
     top->eval();
     wave_record();
     }
+
 }
 
 

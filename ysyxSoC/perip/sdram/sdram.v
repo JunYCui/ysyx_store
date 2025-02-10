@@ -29,7 +29,6 @@ module sdram(
     wire                                active_cmd                  ;
     wire                                write_cmd                   ;
     wire                                read_cmd                    ;
-    wire                                write_cmd                   ;
     wire                                loadm_cmd                   ;
 
     reg                                 ctrl                        ;
@@ -65,7 +64,7 @@ module sdram(
         if(!cke)
           burst_lenth <= 0;
         else if(loadm_cmd)
-          burst_lenth <= a[2:0]<<1;
+          burst_lenth <= 2**a[2:0];
         else
           burst_lenth <= burst_lenth ;
     end
@@ -100,7 +99,7 @@ module sdram(
           dqm_reg <= dqm;
     end
     always @(posedge clk or negedge cke ) begin
-          counter <= (cke & state == work_r | state == work_w | state == data_o )? counter+1 : 0;
+          counter <= (cke & state == work_r | state == work_w | state == data_o)? counter+1 : 0;
     end
     always @(posedge clk or negedge cke ) begin
         if(!cke)
@@ -112,7 +111,7 @@ module sdram(
         case(state)
         idle:if(read_cmd)
                   next_state = work_r;
-              else if(write_cmd)
+              else if(write_cmd & burst_lenth>1)
                   next_state = work_w;
               else
                   next_state = idle;

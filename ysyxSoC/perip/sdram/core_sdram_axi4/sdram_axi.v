@@ -54,7 +54,7 @@ module sdram_axi
     ,input  [  1:0]  inport_arburst_i
     ,input           inport_rready_i
     ,input  [ 15:0]  sdram_data_input_i
-
+    ,input  [ 15:0]  sdram_updata_input_i
     // Outputs
     ,output          inport_awready_o
     ,output          inport_wready_o
@@ -77,6 +77,7 @@ module sdram_axi
     ,output [ 12:0]  sdram_addr_o
     ,output [  1:0]  sdram_ba_o
     ,output [ 15:0]  sdram_data_output_o
+    ,output [ 15:0]  sdram_updata_output_o
     ,output          sdram_data_out_en_o
 );
 
@@ -182,11 +183,14 @@ u_core
     ,.sdram_cas_o(sdram_cas_o)
     ,.sdram_we_o(sdram_we_o)
     ,.sdram_dqm_o(sdram_dqm_o)
+    ,.sdram_updqm_o(sdram_dqm_o)
     ,.sdram_addr_o(sdram_addr_o)
     ,.sdram_ba_o(sdram_ba_o)
     ,.sdram_data_output_o(sdram_data_output_o)
+    ,.sdram_updata_output_o(sdram_updata_output_o)
     ,.sdram_data_out_en_o(sdram_data_out_en_o)
     ,.sdram_data_input_i(sdram_data_input_i)
+    ,.sdram_updata_input_i(sdram_updata_input_i)
 );
 
 

@@ -1,13 +1,13 @@
 AM_SRCS := riscv/ysyxsoc/start.S \
            riscv/ysyxsoc/trm.c \
+		   riscv/ysyxsoc/cte.c \
 		   riscv/ysyxsoc/ioe.c \
            riscv/ysyxsoc/timer.c \
 		   riscv/ysyxsoc/id.S \
-		   riscv/ysyxsoc/cte.c \
            riscv/ysyxsoc/trap.S 
 
 CFLAGS    += -fdata-sections -ffunction-sections -O2
-LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld  --print-map
+LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld  #--print-map
 LDFLAGS   += --gc-sections -e _start
 CFLAGS += -DMAINARGS=\"$(mainargs)\" 
 SOCFLAGS = -e $(IMAGE).elf -b

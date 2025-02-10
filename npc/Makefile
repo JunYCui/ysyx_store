@@ -3,7 +3,7 @@ INC_PATH = $(NPC_HOME)/include
 
 #VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
-VSOURCES=$(shell find $(abspath ./vsrc/CPU) -name "*.v" )
+VSOURCES=$(shell find $(abspath ./vsrc/CPU) -name "*.v" -or -name "*.sv" )
 CSOURCES=$(shell find $(abspath ./csrc/cpu) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
 
 # add ysyxsoc
@@ -26,9 +26,9 @@ DIFF_REF_SO = $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
 ARGS_DIFF = -d $(DIFF_REF_SO)
 
 VERILATOR = verilator
-
-VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)) \
-			-O2 --x-assign fast --x-initial fast --noassert -DTOP_NAME="\"V$(TOPNAME)\"" $(addprefix -I, $(INC_VDEFINE))
+# -- assert allows all assert -sv allows SV parses
+VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)) --assert \
+			-O2 --x-assign fast --x-initial fast -DTOP_NAME="\"V$(TOPNAME)\"" $(addprefix -I, $(INC_VDEFINE))
 
 
 LDFLAGS = -lSDL2 -lSDL2_image -O2 -lreadline -ldl -pie
@@ -44,7 +44,7 @@ LDFLAGS += $(shell llvm-config --libs) -fsanitize=address
 
 CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE -rdynamic
 
-IMG ?= ../soc_test/char_test.bin
+IMG ?= 
 
 override ARGS += $(ARGS_DIFF)
 
