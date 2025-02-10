@@ -115,7 +115,7 @@ always @(posedge clock) begin
         inst <= rdata;
         assert(rdata!=0) 
         else begin
-        $finish;
+        $fatal;
         $error("read inst error!");
         end
     end
