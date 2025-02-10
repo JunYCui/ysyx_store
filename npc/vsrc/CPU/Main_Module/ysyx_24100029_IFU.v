@@ -103,7 +103,7 @@ module ysyx_24100029_IFU(
 
   //  check_rresp: assert(rresp != 2'b00) ; 
     localparam  ResetValue= 32'h30000000;
-
+    assert property(@(posedge clock) ~rvalid | (rdata==0)) ;
 /************ Axi4 bus ***********/
 always @(posedge clock) begin
     if(reset)begin
