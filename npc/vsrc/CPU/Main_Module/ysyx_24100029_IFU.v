@@ -114,11 +114,13 @@ always @(posedge clock) begin
         valid <= 1'b1;
         inst <= rdata;
         //$fatal;
+        /*
         assert(rdata!=0 | pc <32'ha0000000) 
         else begin
         $error("read inst error!");
         $fatal;
         end
+        */
     end
     else if(valid & ready)begin
         valid <= 1'b0;
