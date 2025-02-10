@@ -104,11 +104,6 @@ module ysyx_24100029_IFU(
   //  check_rresp: assert(rresp != 2'b00) ; 
     localparam  ResetValue= 32'h30000000;
 
-    assert property(@(posedge clock) rdata!=0) 
-    else begin
-    $finish;
-    $error("read inst error!");
-    end
 /************ Axi4 bus ***********/
 always @(posedge clock) begin
     if(reset)begin
@@ -118,6 +113,11 @@ always @(posedge clock) begin
     else if(rvalid)begin
         valid <= 1'b1;
         inst <= rdata;
+        assert(rdata!=0) 
+        else begin
+        $finish;
+        $error("read inst error!");
+        end
     end
     else if(valid & ready)begin
         valid <= 1'b0;
