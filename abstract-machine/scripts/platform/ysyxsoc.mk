@@ -2,10 +2,12 @@ AM_SRCS := riscv/ysyxsoc/start.S \
            riscv/ysyxsoc/trm.c \
 		   riscv/ysyxsoc/ioe.c \
            riscv/ysyxsoc/timer.c \
-		   riscv/ysyxsoc/id.S
+		   riscv/ysyxsoc/id.S \
+		   riscv/ysyxsoc/cte.c \
+           riscv/ysyxsoc/trap.S 
 
-CFLAGS    += -fdata-sections -ffunction-sections 
-LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld --defsym=_pmem_start=0xa0000000 --defsym=_entry_offset=0x0 --print-map
+CFLAGS    += -fdata-sections -ffunction-sections -O2
+LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld  --print-map
 LDFLAGS   += --gc-sections -e _start
 CFLAGS += -DMAINARGS=\"$(mainargs)\" 
 SOCFLAGS = -e $(IMAGE).elf -b
