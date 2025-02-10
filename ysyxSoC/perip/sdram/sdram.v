@@ -29,7 +29,6 @@ module sdram(
     wire                                active_cmd                  ;
     wire                                write_cmd                   ;
     wire                                read_cmd                    ;
-    wire                                write_cmd                   ;
     wire                                loadm_cmd                   ;
 
     reg                                 ctrl                        ;
