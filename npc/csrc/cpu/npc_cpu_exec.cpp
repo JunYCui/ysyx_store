@@ -45,10 +45,6 @@ static void exec_once()
     top->clock ^=1;
     top->eval();
     wave_record();
-    if (Verilated::gotError()) {
-            std::cerr << "Simulation failed due to error!" << std::endl;
-            exit(1);
-        }
     }
 
 }
