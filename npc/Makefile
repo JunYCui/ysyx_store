@@ -27,7 +27,7 @@ ARGS_DIFF = -d $(DIFF_REF_SO)
 
 VERILATOR = verilator
 # -- assert allows all assert -sv allows SV parses
-VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)) --assert -sv --language 1800-2023 \
+VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)) --assert -sv \
 			-O2 --x-assign fast --x-initial fast --noassert -DTOP_NAME="\"V$(TOPNAME)\"" $(addprefix -I, $(INC_VDEFINE))
 
 
