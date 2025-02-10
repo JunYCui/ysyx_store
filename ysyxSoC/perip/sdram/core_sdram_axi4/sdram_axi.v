@@ -183,6 +183,7 @@ u_core
     ,.sdram_cas_o(sdram_cas_o)
     ,.sdram_we_o(sdram_we_o)
     ,.sdram_dqm_o(sdram_dqm_o)
+    ,.sdram_updqm_o(sdram_dqm_o)
     ,.sdram_addr_o(sdram_addr_o)
     ,.sdram_ba_o(sdram_ba_o)
     ,.sdram_data_output_o(sdram_data_output_o)

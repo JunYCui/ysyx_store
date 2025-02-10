@@ -21,6 +21,7 @@ module sdram_top_apb (
   output [12:0] sdram_a,
   output [ 1:0] sdram_ba,
   output [ 1:0] sdram_dqm,
+  output [ 1:0] sdram_updqm,
   inout  [15:0] sdram_dq,
   inout  [15:0] sdram_updq
 );
@@ -73,6 +74,7 @@ module sdram_top_apb (
     .sdram_cas_o(sdram_cas),
     .sdram_we_o(sdram_we),
     .sdram_dqm_o(sdram_dqm),
+    .sdram_updqm_o(sdram_updqm),
     .sdram_addr_o(sdram_a),
     .sdram_ba_o(sdram_ba),
     .sdram_data_input_i(sdram_dq),

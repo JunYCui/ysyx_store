@@ -56,6 +56,7 @@ module sdram_axi_core
     ,output          sdram_ras_o
     ,output          sdram_cas_o
     ,output          sdram_we_o
+    ,output [  1:0]  sdram_updqm_o
     ,output [  1:0]  sdram_dqm_o
     ,output [ 12:0]  sdram_addr_o
     ,output [  1:0]  sdram_ba_o
@@ -160,6 +161,7 @@ reg [SDRAM_DATA_W-1:0] data_q;
 reg [SDRAM_DATA_W-1:0] updata_q;
 reg                    data_rd_en_q;
 reg [SDRAM_DQM_W-1:0]  dqm_q;
+reg [SDRAM_DQM_W-1:0]  updqm_q; 
 reg                    cke_q;
 reg [SDRAM_BANK_W-1:0] bank_q;
 
@@ -505,6 +507,7 @@ begin
     bank_q          <= {SDRAM_BANK_W{1'b0}};
     cke_q           <= 1'b0;
     dqm_q           <= {SDRAM_DQM_W{1'b0}};
+    updqm_q           <= {SDRAM_DQM_W{1'b0}};
     data_rd_en_q    <= 1'b1;
     dqm_buffer_q    <= {SDRAM_DQM_W{1'b0}};
 
@@ -640,7 +643,7 @@ begin
 
         // Write mask
         dqm_q           <= ~ram_wr_w[1:0];
-        dqm_buffer_q    <= ~ram_wr_w[3:2];
+        updqm_q    <= ~ram_wr_w[3:2];
 
         data_rd_en_q    <= 1'b0;
     end
@@ -704,7 +707,7 @@ if (rst_i)
     ack_q   <= 1'b0;
 else
 begin
-    if (state_q == STATE_WRITE1)
+    if (state_q == STATE_WRITE0)
         ack_q <= 1'b1;
     else if (rd_q[SDRAM_READ_LATENCY+1])
         ack_q <= 1'b1;
@@ -732,6 +735,7 @@ assign sdram_ras_o  = command_q[2];
 assign sdram_cas_o  = command_q[1];
 assign sdram_we_o   = command_q[0];
 assign sdram_dqm_o  = dqm_q;
+assign sdram_updqm_o = updqm_q;
 assign sdram_ba_o   = bank_q;
 assign sdram_addr_o = addr_q;
 
