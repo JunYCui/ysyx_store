@@ -99,7 +99,7 @@ module sdram(
           dqm_reg <= dqm;
     end
     always @(posedge clk or negedge cke ) begin
-          counter <= (cke & state == work_r | state == work_w | state == data_o | write_cmd )? counter+1 : 0;
+          counter <= (cke & state == work_r | state == work_w | state == data_o)? counter+1 : 0;
     end
     always @(posedge clk or negedge cke ) begin
         if(!cke)
@@ -111,7 +111,7 @@ module sdram(
         case(state)
         idle:if(read_cmd)
                   next_state = work_r;
-              else if(write_cmd)
+              else if(write_cmd & burst_lenth>1)
                   next_state = work_w;
               else
                   next_state = idle;
@@ -119,7 +119,7 @@ module sdram(
                   next_state = data_o;
                 else
                   next_state = work_r;
-        work_w:if(counter > burst_lenth - 1)
+        work_w:if(counter == burst_lenth - 2)
                   next_state = idle;
                 else
                   next_state = work_w;
