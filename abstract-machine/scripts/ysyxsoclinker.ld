@@ -23,30 +23,30 @@ SECTIONS {
     text_start = . ;
     *(.text*)
     . = ALIGN(8);
-  } > sdram AT> flash : text
+  } > psram AT> flash : text
   .data : {
     *(.sdata*)
     *(.data*)
       . = ALIGN(8);
-  } > sdram AT> flash : data
+  } > psram AT> flash : data
   .rodata : {
     *(.srodata*)
     *(.rodata*)
     . = ALIGN(8);
-  } > sdram AT > flash : rodata
+  } > psram AT > flash : rodata
   .bss : {    	
     *(.bss*)
     *(.sbss*)
     *(.scommon)
     data_end = .;
-  } > sdram AT> flash 
+  } > psram AT> flash 
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
   text_load_start = LOADADDR(.text);
   _size = data_end - text_start; 
   _heap_start = ALIGN (0x1000);
-  _stack_top = ORIGIN(psram);
-  . = ORIGIN(psram) + LENGTH(psram);
+  _stack_top = ORIGIN(sram) + 0x200;
+  . = ORIGIN(sram) + LENGTH(sram);
   _stack_pointer = .;
   end = .;
   _end = .;
