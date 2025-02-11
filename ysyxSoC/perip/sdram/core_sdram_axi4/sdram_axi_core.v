@@ -53,6 +53,7 @@ module sdram_axi_core
     ,output          sdram_clk_o
     ,output          sdram_cke_o
     ,output          sdram_cs_o
+    ,output          sdram_cs1_o
     ,output          sdram_ras_o
     ,output          sdram_cas_o
     ,output          sdram_we_o
@@ -154,7 +155,7 @@ assign inport_accept_o    = ram_accept_w;
 //synthesis attribute IOB of cke_q is "TRUE"
 //synthesis attribute IOB of bank_q is "TRUE"
 //synthesis attribute IOB of data_q is "TRUE"
-
+reg                    chip1_cs ;
 reg [CMD_W-1:0]        command_q;
 reg [SDRAM_ROW_W-1:0]  addr_q;
 reg [SDRAM_DATA_W-1:0] data_q;
@@ -175,7 +176,7 @@ wire [SDRAM_DATA_W-1:0] sdram_updata_in_w;
 
 reg                    refresh_q;
 
-reg [SDRAM_BANKS-1:0]  row_open_q;
+reg [SDRAM_BANKS-1:0]  row_open_q ;
 reg [SDRAM_ROW_W-1:0]  active_row_q[0:SDRAM_BANKS-1];
 
 reg  [STATE_W-1:0]     state_q;
@@ -501,6 +502,7 @@ integer idx;
 always @ (posedge clk_i or posedge rst_i)
 if (rst_i)
 begin
+    chip1_cs        <= 1'b0;
     command_q       <= CMD_NOP;
     data_q          <= 16'b0;
     updata_q        <= 16'b0;
@@ -526,6 +528,7 @@ begin
     default:
     begin
         // Default
+        chip1_cs     <= 1'b0;
         command_q    <= CMD_NOP;
         addr_q       <= {SDRAM_ROW_W{1'b0}};
         bank_q       <= {SDRAM_BANK_W{1'b0}};
@@ -546,23 +549,27 @@ begin
         else if (refresh_timer_q == 40)
         begin
             // Precharge all banks
+            chip1_cs            <= 1'b0;
             command_q           <= CMD_PRECHARGE;
             addr_q[ALL_BANKS]   <= 1'b1;
         end
         // 2 x REFRESH (with at least tREF wait)
         else if (refresh_timer_q == 20 || refresh_timer_q == 30)
         begin
+            chip1_cs  <= 1'b0;
             command_q <= CMD_REFRESH;
         end
         // Load mode register
         else if (refresh_timer_q == 10)
         begin
+            chip1_cs  <= 1'b0;
             command_q <= CMD_LOAD_MODE;
             addr_q    <= MODE_REG;
         end
         // Other cycles during init - just NOP
         else
         begin
+            chip1_cs    <= 1'b0;
             command_q   <= CMD_NOP;
             addr_q      <= {SDRAM_ROW_W{1'b0}};
             bank_q      <= {SDRAM_BANK_W{1'b0}};
@@ -574,6 +581,7 @@ begin
     STATE_ACTIVATE :
     begin
         // Select a row and activate it
+        chip1_cs      <= 1'b0;
         command_q     <= CMD_ACTIVE;
         addr_q        <= addr_row_w;
         bank_q        <= addr_bank_w;
@@ -590,6 +598,7 @@ begin
         if (target_state_r == STATE_REFRESH)
         begin
             // Precharge all banks
+            chip1_cs            <= 1'b0;
             command_q           <= CMD_PRECHARGE;
             addr_q[ALL_BANKS]   <= 1'b1;
             row_open_q          <= {SDRAM_BANKS{1'b0}};
@@ -597,6 +606,7 @@ begin
         else
         begin
             // Precharge specific banks
+            chip1_cs            <= 1'b0;
             command_q           <= CMD_PRECHARGE;
             addr_q[ALL_BANKS]   <= 1'b0;
             bank_q              <= addr_bank_w;
@@ -610,6 +620,7 @@ begin
     STATE_REFRESH :
     begin
         // Auto refresh
+        chip1_cs    <= 1'b0;
         command_q   <= CMD_REFRESH;
         addr_q      <= {SDRAM_ROW_W{1'b0}};
         bank_q      <= {SDRAM_BANK_W{1'b0}};
@@ -619,9 +630,11 @@ begin
     //-----------------------------------------
     STATE_READ :
     begin
-        command_q   <= CMD_READ;
-        addr_q      <= addr_col_w;
-        bank_q      <= addr_bank_w;
+        chip1_cs        <= ~ram_addr_w[SDRAM_ADDR_W+1];
+        command_q[3]    <= ram_addr_w[SDRAM_ADDR_W+1];
+        command_q[2:0]  <= CMD_READ[2:0];
+        addr_q          <= addr_col_w   ;
+        bank_q          <= addr_bank_w  ;
 
         // Disable auto precharge (auto close of row)
         addr_q[AUTO_PRECHARGE]  <= 1'b0;
@@ -635,7 +648,9 @@ begin
     //-----------------------------------------
     STATE_WRITE0 :
     begin
-        command_q       <= CMD_WRITE;
+        chip1_cs        <= ~ram_addr_w[SDRAM_ADDR_W+1];
+        command_q[3]    <= ram_addr_w[SDRAM_ADDR_W+1];
+        command_q[2:0]  <= CMD_WRITE[2:0];
         addr_q          <= addr_col_w;
         bank_q          <= addr_bank_w;
         data_q          <= ram_write_data_w[15:0];
@@ -739,6 +754,7 @@ assign sdram_data_in_w       = sdram_data_input_i;
 assign sdram_updata_in_w     = sdram_updata_input_i;
 
 assign sdram_cke_o  = cke_q;
+assign sdram_cs1_o  = chip1_cs;
 assign sdram_cs_o   = command_q[3];
 assign sdram_ras_o  = command_q[2];
 assign sdram_cas_o  = command_q[1];
