@@ -116,11 +116,11 @@ seg7 seg7_inst5(
 
 seg7 seg7_inst6(
     .num                                (data_byte[3][3:0]         ),
-    .seg_out                            (seg[6]                    ) 
+    .seg_out                            (seg_w[6]                    ) 
 );
 seg7 seg7_inst7(
     .num                                (data_byte[3][7:4]         ),
-    .seg_out                            (seg[7]                    ) 
+    .seg_out                            (seg_w[7]                    ) 
 );
 
 endmodule
