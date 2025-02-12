@@ -1,9 +1,14 @@
 #include "npc_init.h"
+#include "nvboard.h"
 #include "npc_common.h"
 #include "npc_memory.h"
 #include "npc_cpu_exec.h"
 #include "npc_sdb.h"
 #include "npc_define.h"
+
+
+void nvboard_bind_all_pins(VysyxSoCFull* top);
+
 #define FLASH_OFFSET 0X30000000
 extern "C" int npc_pmem_read(int addr);
 
@@ -27,7 +32,6 @@ VerilatedContext *contextp = new VerilatedContext;
 VysyxSoCFull *top = new VysyxSoCFull{contextp};
 
 
-#define MAX_SIM_TIME 100 //定义模拟的时钟边沿数（包括上下边沿）
 uint64_t sim_time = 0;
 
 
@@ -68,6 +72,7 @@ void new_wave(void)
 void wave_record(void)
 {
     //将所有跟踪的信号值写入波形转储文件
+    nvboard_update();
     m_trace->dump(sim_time);
     sim_time++; // 模拟时钟边沿数加1
 #ifdef WAVE_TRACE
@@ -88,7 +93,8 @@ int main(int argc,char* argv[])
 #ifdef WAVE_TRACE
     Verilated::traceEverOn(true);
 
-    
+    nvboard_bind_all_pins(top);
+    nvboard_init();
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
     top->trace(m_trace, 5);
     new_wave();

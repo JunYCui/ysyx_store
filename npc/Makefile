@@ -1,7 +1,6 @@
 TOPNAME = ysyxSoCFull
 INC_PATH = $(NPC_HOME)/include 
 
-#VERILATOR_trace_FLAGS=--cc --exe --build --trace
 
 VSOURCES=$(shell find $(abspath ./vsrc/CPU) -name "*.v" -or -name "*.sv" )
 CSOURCES=$(shell find $(abspath ./csrc/cpu) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
@@ -13,14 +12,18 @@ INC_VDEFINE += /home/cjy/ysyx-workbench/ysyxSoC/perip/uart16550/rtl /home/cjy/ys
 Warning = UNUSEDSIGNAL ASSIGNDLY DECLFILENAME PINCONNECTEMPTY DEFPARAM UNDRIVEN SYNCASYNCNET UNUSEDPARAM
 VERILATOR_FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
 
-SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
-#CSOURCES += $(SRC_AUTO_BIND)
-CONSTR = constrain/$(TOPNAME).nxdc
-
+CONSTR = constr/$(TOPNAME).nxdc
 BUILD_DIR = $(NPC_HOME)/build
+
+SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
+$(SRC_AUTO_BIND): $(NXDC_FILES)
+	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
+
+
+CSOURCES += $(SRC_AUTO_BIND)
+
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
-
 
 DIFF_REF_SO = $(NEMU_HOME)/build/riscv32-nemu-interpreter-so
 ARGS_DIFF = -d $(DIFF_REF_SO)
@@ -28,7 +31,7 @@ ARGS_DIFF = -d $(DIFF_REF_SO)
 VERILATOR = verilator
 # -- assert allows all assert -sv allows SV parses
 VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)) --assert \
-			-O2 --x-assign fast --x-initial fast -DTOP_NAME="\"V$(TOPNAME)\"" $(addprefix -I, $(INC_VDEFINE))
+			-O2 --x-assign fast --x-initial fast  $(addprefix -I, $(INC_VDEFINE))
 
 
 LDFLAGS = -lSDL2 -lSDL2_image -O2 -lreadline -ldl -pie
@@ -38,7 +41,7 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 
-CFLAGS  = -O2 -MMD -Wall  $(INCFLAGS) 
+CFLAGS  = -O2 -MMD -Wall -DTOP_NAME="\"V$(TOPNAME)\""  $(INCFLAGS) 
 
 LDFLAGS += $(shell llvm-config --libs) -fsanitize=address 
 
@@ -64,7 +67,7 @@ gdb: all
 	gdb -s $(BIN) --args $(NPC_EXEC)
 
 .PHONY:all
-all:$(CSOURCES) $(VSOURCES) 
+all:$(CSOURCES) $(VSOURCES)  $(NVBOARD_ARCHIVE)
 	@echo "Write this Makefile by your self."
 	@rm -rf $(OBJ_DIR) *.vcd
 	$(VERILATOR) $(VERILATOR_FLAGS) \
@@ -85,8 +88,5 @@ clean:
 #.PHONY:clean
 #clean:
 #	@rm -rf ./obj_dir *.vcd
-
-$(SRC_AUTO_BIND): $(CONSTR) 
-	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py  $^ $@
 
 include ../Makefile
