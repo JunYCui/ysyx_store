@@ -1,4 +1,5 @@
 `include "./vsrc/CPU/define/para.v"
+//`include "/home/cjy/ysyx-workbench/npc/vsrc/CPU/define/para.v"
 
 module ysyx_24100029_EXU (
     input                        clock                      ,

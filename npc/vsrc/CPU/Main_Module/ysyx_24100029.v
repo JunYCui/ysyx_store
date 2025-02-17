@@ -361,6 +361,7 @@ module ysyx_24100029
     reg                                skip                        ;
     wire                                mem_ren_flag                ;
     wire               [  31: 0]        paddr                       ;
+
 always @(*) begin
     if(mem_ren_flag && paddr <=32'h2000008 && paddr >= 32'h2000000 || paddr >= 32'h10000000 && paddr <= 32'h10000fff )
         skip = 1;
