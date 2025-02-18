@@ -43,6 +43,7 @@ static void exec_once()
     for(int i=0;i<2;i++)
     {
     top->clock ^=1;
+    printf("tx = %d \n",top->externalPins_uart_tx);
     top->eval();
     wave_record();
     }
