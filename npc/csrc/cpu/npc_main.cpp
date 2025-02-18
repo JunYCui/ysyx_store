@@ -110,7 +110,6 @@ int main(int argc,char* argv[])
         {
             top->clock ^=1;
             top->eval();
-            wave_record();
         }
         Getvalid(&valid);
     }
