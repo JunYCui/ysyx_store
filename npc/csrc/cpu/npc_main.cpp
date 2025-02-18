@@ -107,7 +107,7 @@ int main(int argc,char* argv[])
         for(int i=0;i<2;i++)
         {
             top->clock ^=1;
-            printf("tx = %d",top->externalPins_uart_tx);
+            printf("tx = %d \n",top->externalPins_uart_tx);
             top->eval();
             nvboard_update();
             wave_record();
