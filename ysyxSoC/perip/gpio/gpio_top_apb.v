@@ -75,7 +75,8 @@ module gpio_top_apb(
         rdata[15:8] <= (in_pstrb[1])? gpio_in[15:8]: 0;
         rdata[23:16] <= 0;
         rdata[31:24] <= 0;
-  end
+        $display("gpio = %d",gpio_in);
+end
 
 // it means no error
     assign                              in_pslverr                  = 0;
