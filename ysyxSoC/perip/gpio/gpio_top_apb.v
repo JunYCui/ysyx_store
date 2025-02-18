@@ -75,7 +75,7 @@ module gpio_top_apb(
         rdata[15:8] <= (in_pstrb[1])? gpio_in[15:8]: 0;
         rdata[23:16] <= 0;
         rdata[31:24] <= 0;
-        $display("gpio = %d",gpio_in);
+        $display("gpio = %d",in_pstrb[0]);
         end
 end
 
