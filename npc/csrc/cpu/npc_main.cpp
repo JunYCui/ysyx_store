@@ -96,7 +96,6 @@ int main(int argc,char* argv[])
     Verilated::traceEverOn(true);
 
     nvboard_bind_all_pins(top);
-    nvboard_init();
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
     top->trace(m_trace, 5);
     new_wave();
@@ -115,7 +114,7 @@ int main(int argc,char* argv[])
         }
         Getvalid(&valid);
     }
-
+    nvboard_init();
     sdb_mainloop();
     
     m_trace->close();
