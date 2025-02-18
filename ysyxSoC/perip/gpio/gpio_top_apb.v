@@ -70,12 +70,13 @@ module gpio_top_apb(
   always @(posedge clock or posedge reset) begin
       if(reset)
         rdata <= 0;
-      else if(in_pready&~in_pwrite&in_paddr[3:0] == 4'd4)
+      else if(in_pready&~in_pwrite&in_paddr[3:0] == 4'd4)begin
         rdata[7:0] <= (in_pstrb[0])? gpio_in[7:0]: 0;
         rdata[15:8] <= (in_pstrb[1])? gpio_in[15:8]: 0;
         rdata[23:16] <= 0;
         rdata[31:24] <= 0;
         $display("gpio = %d",gpio_in);
+        end
 end
 
 // it means no error
