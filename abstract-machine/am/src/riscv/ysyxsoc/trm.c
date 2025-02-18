@@ -33,7 +33,7 @@ static const char mainargs[] = MAINARGS;
 
 void uart_init(){
     outb(LCR,0x83); // Set 8 bits of each character and allow access to the Devisor Latch 
-    outb(Divisor_MSB,0x00);
+    outb(Divisor_MSB,0x01);
     outb(Divisor_LSB,0x10);
     outb(LCR,0x03); // clear access to the Driver Latch
     outb(FCR,0x80); // set fifo interupt triggle level = 14bytes
