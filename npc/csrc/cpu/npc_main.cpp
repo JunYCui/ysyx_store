@@ -72,8 +72,8 @@ void new_wave(void)
 void wave_record(void)
 {
     //将所有跟踪的信号值写入波形转储文件
-    if(~top->externalPins_uart_tx)
- //   printf("tx = %d \n",top->externalPins_uart_tx);
+    if(!top->externalPins_uart_tx)
+    printf("tx = %d \n",top->externalPins_uart_tx);
     nvboard_update();
     m_trace->dump(sim_time);
     sim_time++; // 模拟时钟边沿数加1
