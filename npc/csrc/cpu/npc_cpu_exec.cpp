@@ -46,7 +46,7 @@ static void exec_once()
     top->eval();
     nvboard_update();
     if(top->externalPins_uart_tx)
-    printf("1\n");
+        printf("val = %d\n",top->externalPins_uart_tx);
     wave_record();
     }
 
