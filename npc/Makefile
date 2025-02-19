@@ -30,7 +30,7 @@ ARGS_DIFF = -d $(DIFF_REF_SO)
 
 VERILATOR = verilator
 # -- assert allows all assert -sv allows SV parses
-VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)) --assert \
+VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)) --assert --gdb \
 			-O2 --x-assign fast --x-initial fast  $(addprefix -I, $(INC_VDEFINE))
 
 
@@ -41,7 +41,7 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 
-CFLAGS  = -O2 -MMD -Wall -g -DTOP_NAME="\"V$(TOPNAME)\""  $(INCFLAGS) 
+CFLAGS  = -O2 -MMD -Wall -DTOP_NAME="\"V$(TOPNAME)\""  $(INCFLAGS) 
 
 LDFLAGS += $(shell llvm-config --libs) -fsanitize=address 
 
