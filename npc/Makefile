@@ -41,7 +41,7 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 
-CFLAGS  = -O2 -MMD -Wall -DTOP_NAME="\"V$(TOPNAME)\""  $(INCFLAGS) 
+CFLAGS  = -O2 -MMD -Wall -g -DTOP_NAME="\"V$(TOPNAME)\""  $(INCFLAGS) 
 
 LDFLAGS += $(shell llvm-config --libs) -fsanitize=address 
 
