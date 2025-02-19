@@ -3,7 +3,7 @@
 #include "npc_macro.h"
 #include "npc_define.h"
 #include <iostream>
-
+extern void nvboard_update();
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 extern "C" int npc_pmem_read(int addr);
 extern void ReadReg(int reg_num, svBitVecVal* reg_value);
@@ -46,6 +46,7 @@ static void exec_once()
     top->eval();
     wave_record();
     }
+    nvboard_update();
 
 }
 

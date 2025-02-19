@@ -74,7 +74,6 @@ void wave_record(void)
     //将所有跟踪的信号值写入波形转储文件
     if(!top->externalPins_uart_tx)
     printf("tx = %d \n",top->externalPins_uart_tx);
-    nvboard_update();
     m_trace->dump(sim_time);
     sim_time++; // 模拟时钟边沿数加1
 #ifdef WAVE_TRACE
@@ -100,7 +99,7 @@ int main(int argc,char* argv[])
     top->trace(m_trace, 5);
     new_wave();
 #endif
-    for( int i=0;i<12;i++)
+    for( int i=0;i<10;i++)
     cpu_reset();
         
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
