@@ -111,8 +111,8 @@ int main(int argc,char* argv[])
         }
         Getvalid(&valid);
     }
-    nvboard_init();
     nvboard_bind_all_pins(top);
+    nvboard_init();
     sdb_mainloop();
     
     m_trace->close();
