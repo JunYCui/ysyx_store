@@ -16,7 +16,7 @@ CONSTR = constr/$(TOPNAME).nxdc
 BUILD_DIR = $(NPC_HOME)/build
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
-$(SRC_AUTO_BIND): $(NXDC_FILES)
+$(SRC_AUTO_BIND): $(CONSTR)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
 
