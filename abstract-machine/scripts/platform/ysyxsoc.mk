@@ -4,8 +4,10 @@ AM_SRCS := riscv/ysyxsoc/start.S \
 		   riscv/ysyxsoc/ioe.c \
            riscv/ysyxsoc/timer.c \
 		   riscv/ysyxsoc/id.S \
-           riscv/ysyxsoc/trap.S 
-
+           riscv/ysyxsoc/trap.S \
+           platform/dummy/vme.c \
+           platform/dummy/mpe.c
+		   
 CFLAGS    += -fdata-sections -ffunction-sections -O2
 LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld  #--print-map
 LDFLAGS   += --gc-sections -e _start
