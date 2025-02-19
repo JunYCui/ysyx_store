@@ -100,7 +100,7 @@ int main(int argc,char* argv[])
     top->trace(m_trace, 5);
     new_wave();
 #endif
-    for( int i=0;i<10;i++)
+    for( int i=0;i<12;i++)
     cpu_reset();
         
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
