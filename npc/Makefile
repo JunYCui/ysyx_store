@@ -34,7 +34,7 @@ VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)
 			-O2 --x-assign fast --x-initial fast  $(addprefix -I, $(INC_VDEFINE))
 
 
-LDFLAGS = -lSDL2 -lSDL2_image -O2 -lreadline -ldl -pie -g
+LDFLAGS = -lSDL2 -lSDL2_image -O2 -lreadline -ldl -pie 
 
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 
