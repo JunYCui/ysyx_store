@@ -27,9 +27,9 @@ module ps2_top_apb(
     logic                               fifo_empty                  ;
 
     // sample falling and avoid
-    assign                              sampling                    = ps2_clk_syn[2] & ~ps2_clk_syn[1] & ~fifo_full;
+    assign                              sampling                    = ps2_clk_syn[2] & ~ps2_clk_syn[1];
     assign                              in_pready                   = in_psel & in_penable;
-    assign                              fifo_ren                    = in_pready;
+    assign                              fifo_ren                    = in_pready | fifo_full;
     assign                              in_pslverr                  = 0;
 
     always @(posedge clock) begin
