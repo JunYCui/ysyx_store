@@ -50,7 +50,21 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
   int i;
   if(code == 0xf0){
     code = inb(KBR_ADDR);
-    if(code == 0xe0){
+    kbd->keydown = false;
+    kbd->keycode = search_id(code);
+    for(i=0;i<count;i++){
+      if(code == reg[i])
+          break;
+    }
+    for(int j=i+1;j<count;j++){
+        reg[j-1] = reg[j];
+    }
+    count --;
+  }
+  else if(code == 0xe0)
+  {
+    code = inb(KBR_ADDR);
+    if(code == 0xf0){
       code = inb(KBR_ADDR);
       kbd->keydown = false;
       kbd->keycode = ex_search_id(code);
@@ -63,32 +77,17 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
       }
       ex_count --;
     }
-    else 
-    {
-    kbd->keydown = false;
-    kbd->keycode = search_id(code);
-    for(i=0;i<count;i++){
-      if(code == reg[i])
-          break;
+    else {
+      for(i=0;i<ex_count;i++){
+        if(code == ex_reg[i])
+            break;
+      }
+    if(i == ex_count){
+      ex_reg[ex_count++] = code;
+      kbd->keycode = ex_search_id(code);
+      kbd->keydown = true;
     }
-    for(int j=i+1;j<count;j++){
-        reg[j-1] = reg[j];
     }
-    count --;
-  }
-  }
-  else if(code == 0xe0)
-  {
-    code = inb(KBR_ADDR);
-    for(i=0;i<ex_count;i++){
-      if(code == ex_reg[i])
-          break;
-  }
-  if(i == ex_count){
-    ex_reg[ex_count++] = code;
-    kbd->keycode = ex_search_id(code);
-    kbd->keydown = true;
-  }
   }
   else if(code !=0){
     for(i=0;i<count;i++){
