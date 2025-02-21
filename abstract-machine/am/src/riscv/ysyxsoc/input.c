@@ -10,7 +10,7 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
   if(code == 0xf0){
     code = inb(KBR_ADDR);
     kbd->keydown = false;
-    kbd->keycode = code;
+    kbd->keycode = code + 1 ;
     for(i=0;i<count;i++){
       if(code == reg[i])
         break;
@@ -27,7 +27,7 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
     }
     if(i == count){
       reg[count++] = code;
-      kbd->keycode = code;
+      kbd->keycode = code + 1 ;
       kbd->keydown = true;
     }
     else 
