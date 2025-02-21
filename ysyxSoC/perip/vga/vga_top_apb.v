@@ -24,7 +24,6 @@ module vga_top_apb(
     wire               [   9: 0]        h_addr                      ;
     wire               [   9: 0]        v_addr                      ;
     wire               [  19: 0]        addr                        ;
-    wire                                start                       ;
     reg                [  31: 0]        ram[2**20-1:0]              ;
     
     assign                              in_pready                   = in_penable & in_psel;
@@ -34,12 +33,10 @@ module vga_top_apb(
         if(in_penable & in_psel & in_pwrite)
           ram[{1'b0,in_paddr[20:2]}] <= in_pwdata;
     end
-    assign                              start                       = (in_paddr[20:2] == Screen_size ) & in_penable & in_psel;
 
 vga_ctrl u_vga_ctrl(
     .pclk                               (clock                     ),
     .reset                              (reset                     ),
-    .start                              (start                     ),
     .vga_data                           (ram[addr][23:0]           ),
     .h_addr                             (h_addr                    ),
     .v_addr                             (v_addr                    ),
@@ -58,7 +55,6 @@ endmodule
 module vga_ctrl(
     input                                  pclk                       ,//25MHz时钟
     input                                  reset                      ,//置位
-    input                                  start                      ,// 使能信号
     input              [  23: 0]           vga_data                   ,//上层模块提供的VGA颜色数据
     output             [   9: 0]           h_addr                     ,//提供给上层模块的当前扫描像素点坐标
     output             [   9: 0]           v_addr                     ,
@@ -84,21 +80,11 @@ module vga_ctrl(
   //像素计数值
     reg                [   9: 0]        x_cnt                       ;
     reg                [   9: 0]        y_cnt                       ;
-    reg                                 en                          ;
     wire                                h_valid                     ;
     wire                                v_valid                     ;
 
-    always @(posedge pclk) begin
-        if(reset)
-          en <= 1'b0;
-        else if(start)
-          en <= 1'b1;
-        else if(y_cnt == v_total & x_cnt == h_total)
-          en <= 1'b0;
-    end
-
   always @(posedge pclk)                                            //行像素计数
-      if (reset == 1'b1 || ~en )
+      if (reset == 1'b1)
         x_cnt <= 1;
       else
       begin
@@ -109,7 +95,7 @@ module vga_ctrl(
       end
 
   always @(posedge pclk)                                            //列像素计数
-      if (reset == 1'b1 | ~en )
+      if (reset == 1'b1)
         y_cnt <= 1;
       else
       begin
