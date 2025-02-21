@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <riscv/riscv.h>
 
-#define SCREEN_W 640
-#define SCREEN_H 480
+#define SCREEN_W 400
+#define SCREEN_H 300
 #define FB_ADDR  0x21000000
 
 uint16_t w_init;
