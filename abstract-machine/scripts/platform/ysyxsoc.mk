@@ -6,8 +6,10 @@ AM_SRCS := riscv/ysyxsoc/start.S \
 		   riscv/ysyxsoc/id.S \
            riscv/ysyxsoc/trap.S \
            riscv/ysyxsoc/input.c\
+		   riscv/ysyxsoc/gpu.c\
            platform/dummy/vme.c \
            platform/dummy/mpe.c 
+
 		   
 CFLAGS    += -fdata-sections -ffunction-sections -O2
 LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld  #--print-map
