@@ -19,7 +19,6 @@ module vga_top_apb(
     output                                 vga_vsync                  ,
     output                                 vga_valid                   
 );
-    parameter                           Screen_size                = 640*480;
 // outports wire
     wire               [   9: 0]        h_addr                      ;
     wire               [   9: 0]        v_addr                      ;
