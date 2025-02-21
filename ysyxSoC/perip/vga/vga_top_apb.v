@@ -28,7 +28,7 @@ module vga_top_apb(
     
     assign                              in_pready                   = in_penable & in_psel;
     assign                              in_pslverr                  = 0;
-    assign                              addr                        = h_addr * v_addr;
+    assign                              addr                        = {10'd0,h_addr} + 640* v_addr;
     always @(posedge clock) begin
         if(in_penable & in_psel & in_pwrite)
           ram[{1'b0,in_paddr[20:2]}] <= in_pwdata;
