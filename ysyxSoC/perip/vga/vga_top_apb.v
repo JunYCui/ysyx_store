@@ -51,7 +51,7 @@ always @(posedge clock or posedge reset) begin
 end
 
 vga_ctrl u_vga_ctrl(
-    .pclk                               (clock                     ),
+    .pclk                               (vga_clk                   ),
     .reset                              (reset                     ),
     .vga_data                           (ram[addr][23:0]           ),
     .h_addr                             (h_addr                    ),
