@@ -39,11 +39,9 @@ module vga_top_apb(
       if(in_penable & in_psel & in_pwrite)
           $display("addr = %d",in_paddr[21:2]);
     end
-always @(posedge clock) begin
-  vga_clk <= ~vga_clk;
-end
+
 vga_ctrl u_vga_ctrl(
-    .pclk                               (vga_clk                   ),
+    .pclk                               (clock                     ),
     .reset                              (reset                     ),
     .vga_data                           (ram[addr][23:0]           ),
     .h_addr                             (h_addr                    ),
