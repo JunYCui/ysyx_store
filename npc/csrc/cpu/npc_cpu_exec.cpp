@@ -38,7 +38,7 @@ static void itrace(Decode *s)
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
 }
 
-static void exec_once()
+void exec_once()
 {
     for(int i=0;i<2;i++)
     {

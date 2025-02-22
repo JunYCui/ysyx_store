@@ -40,7 +40,7 @@ always @(posedge clock or posedge reset) begin
       count <= 0;
       vga_clk <= 0;
     end
-    else if(count == 1)begin
+    else if(count == 0)begin
       count <= 0;
       vga_clk <= ~vga_clk;
     end
@@ -99,7 +99,7 @@ module vga_ctrl(
     wire                                h_valid                     ;
     wire                                v_valid                     ;
 
-  always @(posedge pclk)                                            //行像素计数
+  always @(posedge pclk or posedge reset)                                            //行像素计数
       if (reset == 1'b1)
         x_cnt <= 1;
       else
@@ -110,7 +110,7 @@ module vga_ctrl(
             x_cnt <= x_cnt + 10'd1;
       end
 
-  always @(posedge pclk)                                            //列像素计数
+  always @(posedge pclk or posedge reset)                                            //列像素计数
       if (reset == 1'b1)
         y_cnt <= 1;
       else

@@ -34,7 +34,7 @@ VysyxSoCFull *top = new VysyxSoCFull{contextp};
 
 uint64_t sim_time = 0;
 
-
+void exec_once();
 
 void fi(int val) { exit(val); }
 
