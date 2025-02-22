@@ -37,7 +37,7 @@ module vga_top_apb(
     end
     always @(*) begin
       if(in_penable & in_psel & in_pwrite)
-          $monitor("addr = %d",in_paddr[21:2]);
+          $display("addr = %d",in_paddr[21:2]);
     end
 vga_ctrl u_vga_ctrl(
     .pclk                               (clock                     ),
