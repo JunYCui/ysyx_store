@@ -30,26 +30,11 @@ module vga_top_apb(
 
     assign                              in_pready                   = in_penable & in_psel;
     assign                              in_pslverr                  = 0;
-    assign                              addr                        = {10'd0,h_addr} + 640* v_addr;
+    assign                              addr                        = {10'd0,h_addr} + 640* {10'd0,v_addr};
     always @(posedge clock) begin
         if(in_penable & in_psel & in_pwrite)
           ram[in_paddr[21:2]] <= in_pwdata;
     end
-always @(posedge clock or posedge reset) begin
-    if(reset)begin
-      count <= 0;
-      vga_clk <= 0;
-    end
-    else if(count == 0)begin
-      count <= 0;
-      vga_clk <= ~vga_clk;
-    end
-    else begin
-      count <= count + 1;
-      vga_clk <= vga_clk;
-    end
-end
-
 vga_ctrl u_vga_ctrl(
     .pclk                               (clock                   ),
     .reset                              (reset                     ),

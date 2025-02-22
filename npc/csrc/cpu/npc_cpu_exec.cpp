@@ -47,12 +47,9 @@ void exec_once()
     nvboard_update();
     wave_record();
     }
-
+    cycle++;
 }
 
-void inst_once(void){
-
-}
 
 
 static void trace_and_difftest(Decode *s)

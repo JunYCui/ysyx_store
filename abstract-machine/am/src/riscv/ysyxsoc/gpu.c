@@ -11,8 +11,6 @@ uint16_t w_init;
 uint16_t h_init;
 
 void __am_gpu_init() {
-    w_init = SCREEN_W;
-    h_init = SCREEN_H;
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {

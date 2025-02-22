@@ -100,12 +100,6 @@ int main(int argc,char* argv[])
     for( int i=0;i<10;i++)
     cpu_reset();
         
-    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
-    while(!valid)
-    {
-        exec_once();
-        Getvalid(&valid);
-    }
     sdb_mainloop();
     
     m_trace->close();
