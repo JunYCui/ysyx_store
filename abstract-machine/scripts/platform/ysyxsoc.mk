@@ -15,7 +15,7 @@ CFLAGS    += -fdata-sections -ffunction-sections -O2
 LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld  #--print-map
 LDFLAGS   += --gc-sections -e _start
 CFLAGS += -DMAINARGS=\"$(mainargs)\" 
-SOCFLAGS = -e $(IMAGE).elf 
+SOCFLAGS = -e $(IMAGE).elf -b
 
 
 .PHONY: $(AM_HOME)/am/src/riscv/ysyxsoc/trm.c
