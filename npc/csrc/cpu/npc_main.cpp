@@ -6,21 +6,11 @@
 #include "npc_sdb.h"
 #include "npc_define.h"
 
-
-void nvboard_bind_all_pins(VysyxSoCFull* top);
-
+/***********#define********************/
 #define FLASH_OFFSET 0X30000000
-extern "C" int npc_pmem_read(int addr);
 
-extern "C" void flash_read(int32_t addr, int32_t *data) { 
-    *data = npc_pmem_read(addr+FLASH_OFFSET);
-    return;
-}
-extern "C" void mrom_read(int32_t addr, int32_t *data) {
-   // printf("addr = %x\n",addr);
-    *data = npc_pmem_read(addr);
-    return ;
-}
+
+/**************global variations********/
 
 // 实例化一个 VerilatedVcdC 类型的对象 m_trace，用于波形跟踪
 VerilatedVcdC *m_trace = new VerilatedVcdC;
@@ -34,6 +24,22 @@ VysyxSoCFull *top = new VysyxSoCFull{contextp};
 
 uint64_t sim_time = 0;
 
+
+/********************function**************/
+void nvboard_bind_all_pins(VysyxSoCFull* top);
+
+extern "C" int npc_pmem_read(int addr);
+
+extern "C" void flash_read(int32_t addr, int32_t *data) { 
+    *data = npc_pmem_read(addr+FLASH_OFFSET);
+    return;
+}
+extern "C" void mrom_read(int32_t addr, int32_t *data) {
+   // printf("addr = %x\n",addr);
+    *data = npc_pmem_read(addr);
+    return ;
+}
+
 void exec_once();
 
 void fi(int val) { exit(val); }
@@ -41,19 +47,13 @@ void fi(int val) { exit(val); }
 void cpu_reset(void)
 {
     top->clock = 0;
+    top->reset = 0;
+    top->eval();
+    top->clock = 1;
     top->reset = 1;
     top->eval();
-    m_trace->dump(sim_time);
-    sim_time++;
-    top->clock = 1;
-    top->eval();
-    m_trace->dump(sim_time);
-    sim_time++;
     top->reset = 0;
-    top->clock = 0;
     top->eval();
-    m_trace->dump(sim_time);
-    sim_time++;
 }
 
 void new_wave(void)
@@ -103,11 +103,7 @@ int main(int argc,char* argv[])
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
     while(!valid)
     {
-        for(int i=0;i<2;i++)
-        {
-            top->clock ^=1;
-            top->eval();
-        }
+        exec_once();
         Getvalid(&valid);
     }
     sdb_mainloop();

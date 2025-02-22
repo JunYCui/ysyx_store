@@ -17,10 +17,11 @@ extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
 
+uint64_t cycle;
+uint64_t inst_num;
+
 CPU_state cpu={};
-
 Decode s;
-
 uint8_t g_print_step;
 
 
@@ -37,7 +38,6 @@ static void itrace(Decode *s)
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
 }
-
 void exec_once()
 {
     for(int i=0;i<2;i++)
@@ -47,6 +47,10 @@ void exec_once()
     nvboard_update();
     wave_record();
     }
+
+}
+
+void inst_once(void){
 
 }
 
