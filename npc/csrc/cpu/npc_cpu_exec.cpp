@@ -3,6 +3,8 @@
 #include "npc_macro.h"
 #include "npc_define.h"
 #include <iostream>
+
+
 extern void nvboard_update();
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 extern "C" int npc_pmem_read(int addr);
@@ -30,6 +32,12 @@ void wave_record(void);
 
 extern VysyxSoCFull *top; 
 
+void fi(int val) { 
+    printf("\033[0m\033[1;34m ipc= %.3f \033[0m", (float)inst_num/cycle);
+    exit(val); 
+}
+
+
 static void itrace(Decode *s)
 {
     char str[50];
@@ -38,7 +46,7 @@ static void itrace(Decode *s)
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
 }
-void exec_once()
+static void exec_once()
 {
     for(int i=0;i<2;i++)
     {
@@ -50,7 +58,17 @@ void exec_once()
     cycle++;
 }
 
-
+void inst_exe(void){
+    uint8_t valid;
+    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
+        Getvalid(&valid);
+    while(!valid)
+    {
+        exec_once();
+        Getvalid(&valid);
+    }
+    inst_num++;
+}
 
 static void trace_and_difftest(Decode *s)
 {
@@ -81,24 +99,17 @@ void cpu_exec(uint32_t n)
 }
     for(int i=0;i<n;i++)
     {
-    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
+        svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
         GetPC(&s.pc);
         Getskip_flag(&skip_dif);
-        cpu.pc = s.pc;
-     //   s.inst = npc_pmem_read(s.pc);
         if(skip_dif != 0)
         {
             difftest_skip_ref();
         }
-        exec_once();
-        Getvalid(&valid);
+        exec_once(); // wbu exec
+
+        inst_exe();
         GetPC(&cpu.pc);
-        while(!valid)
-        {
-            exec_once();
-            GetPC(&cpu.pc);
-            Getvalid(&valid);
-        }
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
         for(int j=0;j<32;j++)
         {

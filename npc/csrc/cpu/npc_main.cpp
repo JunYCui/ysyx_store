@@ -40,9 +40,8 @@ extern "C" void mrom_read(int32_t addr, int32_t *data) {
     return ;
 }
 
-void exec_once();
+void inst_exe(void);
 
-void fi(int val) { exit(val); }
 
 void cpu_reset(void)
 {
@@ -99,7 +98,8 @@ int main(int argc,char* argv[])
 #endif
     for( int i=0;i<10;i++)
     cpu_reset();
-        
+
+    inst_exe(); // execute first instruction
     sdb_mainloop();
     
     m_trace->close();
