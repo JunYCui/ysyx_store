@@ -44,9 +44,9 @@ void exec_once()
     {
     top->clock ^=1;
     top->eval();
-    nvboard_update();
     wave_record();
     }
+    nvboard_update();
     cycle++;
 }
 
