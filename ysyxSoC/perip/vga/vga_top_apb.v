@@ -23,6 +23,7 @@ module vga_top_apb(
     wire               [   9: 0]        h_addr                      ;
     wire               [   9: 0]        v_addr                      ;
     wire               [  19: 0]        addr                        ;
+    wire                                valid                       ;
     reg                                 vga_clk                     ;
     reg                [  31: 0]        ram[2**20-1:0]              ;
     reg                [   1: 0]        count                       ;
@@ -31,12 +32,13 @@ module vga_top_apb(
     assign                              in_pready                   = in_penable & in_psel;
     assign                              in_pslverr                  = 0;
     assign                              addr                        = {10'd0,h_addr} + 640* {10'd0,v_addr};
+    assign                              vga_valid                   = valid & 0;
     always @(posedge clock) begin
         if(in_penable & in_psel & in_pwrite)
           ram[in_paddr[21:2]] <= in_pwdata;
     end
     always @(*) begin
-      if(in_penable & in_psel & in_pwrite)
+          $display("h_addr = %d, v_addr = %d",h_addr,v_addr);
           $display("addr = %x, data = %x",addr,ram[addr][23:0]);
     end
 
@@ -48,7 +50,7 @@ vga_ctrl u_vga_ctrl(
     .v_addr                             (v_addr                    ),
     .hsync                              (vga_hsync                 ),
     .vsync                              (vga_vsync                 ),
-    .valid                              (vga_valid                 ),
+    .valid                              (valid                     ),
     .vga_r                              (vga_r                     ),
     .vga_g                              (vga_g                     ),
     .vga_b                              (vga_b                     ) 
