@@ -32,7 +32,7 @@ void wave_record(void);
 extern VysyxSoCFull *top; 
 
 void fi(int val) { 
-    printf("\033[0m\033[1;34m ipc= %.3f \033[0m", (float)inst_num/cycle);
+    printf("\033[0m\033[1;34m ipc= %.3f \n \033[0m", (float)inst_num/cycle);
     m_trace->close();
     nvboard_quit();
     exit(val); 
