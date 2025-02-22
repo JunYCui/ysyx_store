@@ -32,13 +32,13 @@ void wave_record(void);
 extern VysyxSoCFull *top; 
 
 void fi(int val) { 
-    printf("\033[0m\033[1;34m ipc= %.3f \n \033[0m", (float)inst_num/cycle);
+    printf("\033[0m\033[1;34m cycle=%ld inst_num=%ld  ipc= %.3f \n \033[0m",cycle,inst_num,(float)inst_num/cycle);
     m_trace->close();
     nvboard_quit();
     exit(val); 
 }
 
-
+#ifdef ITARCE
 static void itrace(Decode *s)
 {
     char str[50];
@@ -48,6 +48,7 @@ static void itrace(Decode *s)
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
     printf("cycle = %ld, inst_num = %ld \n",cycle,inst_num);
 }
+#endif
 static void exec_once()
 {
     for(int i=0;i<2;i++)

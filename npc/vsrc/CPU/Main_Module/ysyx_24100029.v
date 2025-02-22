@@ -1,5 +1,5 @@
 import "DPI-C" function void fi(int val);
-
+`include "./vsrc/CPU/define/para.v"
 
 module ysyx_24100029
 (
@@ -75,16 +75,9 @@ module ysyx_24100029
     input              [  31: 0]           io_slave_rdata             ,
     input              [   1: 0]           io_slave_rresp             ,
     input                                  io_slave_rlast              
-//    output             [  31: 0] pc                         ,
-//    output             [  31: 0] snpc                       ,
-//    output             [  31: 0] dnpc                       ,
-//    output             [  31: 0] IFU_pc                     ,
-//    output             [  31: 0] LSU_pc                     ,
-//    output                       WBU_valid                   
+
 );
 
-
- //   wire               [  31: 0] IFU_pc                     ;
     wire               [  31: 0]        IFU_inst                    ;
     wire                                IFU_valid                   ;
     wire                                IFU_req                     ;
@@ -339,18 +332,35 @@ module ysyx_24100029
     wire                                CLNT_rlast                  ;
     wire               [   3: 0]        CLNT_rid                    ;
 
+/***************Performance Count*********************/
+`ifdef Performance_Count
+    wire               [  31: 0]        fetch_inst                  ;
+    reg                [  31: 0]        inste_clr_num               ;// excute clear num
+    reg                [  31: 0]        instd_clr_num               ;// decode clear num
 
-//    assign                       pc                        = WBU_pc;
-//    assign                       snpc                      = pc + 4;
+    always @(posedge clock) begin
+        if(reset)
+            instd_clr_num <= 0;
+        else if(IDU_inst_clear)
+            instd_clr_num <= instd_clr_num + 32'd1 ;
+    end
+    always @(posedge clock) begin
+        if(reset)
+            inste_clr_num <= 0;
+        else if(IDU_inst_clear)
+            inste_clr_num <= inste_clr_num + 32'd1 ;
+    end
 
     always @(*)begin
         if(WBU_inst == 32'h00100073) begin
             if(IDU_a0_value == 0)begin
                 $display("\033[32;42m Hit The Good TRAP \033[0m");
+                $display("\033[0m\033[1;34m fetch_inst = %d flush_decoder_i = %d flush_execute_i = %d \n \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
                 fi(0);
             end
             else begin
                 $display("\033[31;41m Hit The Bad TRAP \033[0m");
+                $display("\033[0m\033[1;34m fetch_inst = %d flush_decoder_i = %d flush_execute_i = %d \n \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
                 fi(1);
             end
         end
@@ -358,9 +368,11 @@ module ysyx_24100029
 
 
 
-    reg                                skip                        ;
+    reg                                 skip                        ;
     wire                                mem_ren_flag                ;
     wire               [  31: 0]        paddr                       ;
+
+
 
 always @(*) begin
     if(mem_ren_flag && paddr <=32'h2000008 && paddr >= 32'h2000000 || paddr >= 32'h10000000 && paddr <= 32'h10000fff )
@@ -370,7 +382,7 @@ always @(*) begin
 end
 
 task Getinst;
-    output bit[31:0] inst;
+    output                                 bit[31:0] inst             ;
     inst = WBU_inst;
 endtask
 
@@ -392,6 +404,9 @@ export "DPI-C" task Getskip_flag;
 export "DPI-C" task Getvalid;
 export "DPI-C" task GetPC;
 export "DPI-C" task Getinst;
+
+`endif
+
 
 ysyx_24100029_Control Control_inst0(
     .mtvec_out                          (IDU_mtvec_out             ),
@@ -488,7 +503,9 @@ ysyx_24100029_IFU IFU_Inst0(
     .rid                                (IFU_rid                   ),
     
     .req                                (IFU_req                   ),
-
+`ifdef Performance_Count
+    .fetch_inst                         (fetch_inst                ),
+`endif
     .ready                              (IDU_ready                 ),
     .valid                              (IFU_valid                 ) 
 );

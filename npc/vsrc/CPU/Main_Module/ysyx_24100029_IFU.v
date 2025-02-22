@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`include "./vsrc/CPU/define/para.v"
 //****************************************VSCODE PLUG-IN**********************************//
 //----------------------------------------------------------------------------------------
 // IDE :                   VSCODE     
@@ -23,88 +24,99 @@
 //                         
 //----------------------------------------------------------------------------------------
 //****************************************************************************************//
-
 module ysyx_24100029_IFU(
-    input                        clock                      ,
-    input                        reset                      ,
-    input              [  31: 0] dnpc                       ,
-    input                        dnpc_flag                  ,
-    input                        pipe_stop                  ,
+    input                                  clock                      ,
+    input                                  reset                      ,
+    input              [  31: 0]           dnpc                       ,
+    input                                  dnpc_flag                  ,
+    input                                  pipe_stop                  ,
 
-    output reg         [  31: 0] pc                         ,
-    output reg         [  31: 0] inst                       ,
+    output reg         [  31: 0]           pc                         ,
+    output reg         [  31: 0]           inst                       ,
 
-    input                        ready                      ,
-    output reg                   valid                      ,
+    input                                  ready                      ,
+    output reg                             valid                      ,
 
-    input                        awready                    ,
-    output                       awvalid                    ,
-    output             [  31: 0] awaddr                     ,
-    output             [   3: 0] awid                       ,
-    output             [   7: 0] awlen                      ,
-    output             [   2: 0] awsize                     ,
-    output             [   1: 0] awburst                    ,
+    input                                  awready                    ,
+    output                                 awvalid                    ,
+    output             [  31: 0]           awaddr                     ,
+    output             [   3: 0]           awid                       ,
+    output             [   7: 0]           awlen                      ,
+    output             [   2: 0]           awsize                     ,
+    output             [   1: 0]           awburst                    ,
 
-    input                        wready                     ,
-    output                       wvalid                     ,
-    output             [  31: 0] wdata                      ,
-    output             [   3: 0] wstrb                      ,
-    output                       wlast                      ,
+    input                                  wready                     ,
+    output                                 wvalid                     ,
+    output             [  31: 0]           wdata                      ,
+    output             [   3: 0]           wstrb                      ,
+    output                                 wlast                      ,
 
-    output                       bready                     ,
-    input                        bvalid                     ,
-    input              [   1: 0] bresp                      ,
-    input              [   3: 0] bid                        ,
+    output                                 bready                     ,
+    input                                  bvalid                     ,
+    input              [   1: 0]           bresp                      ,
+    input              [   3: 0]           bid                        ,
 
-    input                        arready                    ,
-    output                       arvalid                    ,
-    output             [  31: 0] araddr                     ,
-    output             [   3: 0] arid                       ,
-    output             [   7: 0] arlen                      ,
-    output             [   2: 0] arsize                     ,
-    output             [   1: 0] arburst                    ,
+    input                                  arready                    ,
+    output                                 arvalid                    ,
+    output             [  31: 0]           araddr                     ,
+    output             [   3: 0]           arid                       ,
+    output             [   7: 0]           arlen                      ,
+    output             [   2: 0]           arsize                     ,
+    output             [   1: 0]           arburst                    ,
 
-    output                       rready                     ,
-    input                        rvalid                     ,
-    input              [   1: 0] rresp                      ,
-    input              [  31: 0] rdata                      ,
-    input                        rlast                      ,
-    input              [   3: 0] rid                        ,
+    output                                 rready                     ,
+    input                                  rvalid                     ,
+    input              [   1: 0]           rresp                      ,
+    input              [  31: 0]           rdata                      ,
+    input                                  rlast                      ,
+    input              [   3: 0]           rid                        ,
 
-    output                       req                         
+`ifdef Performance_Count
+    output             [  31: 0]           fetch_inst                 ,
+`endif
+    output                                 req                         
 );
 
-    reg                          dnpc_flag_reg              ;
-    reg                          pipe_stop_reg              ;
-    reg                [  31: 0] dnpc_reg                   ;
+    reg                                 dnpc_flag_reg               ;
+    reg                                 pipe_stop_reg               ;
+    reg                [  31: 0]        dnpc_reg                    ;
 
 /************ Axi4 bus ***********/
-    assign                       araddr                    = pc;
-    assign                       arid                      = 0;
-    assign                       arlen                     = 0;// 0+1 = 1 transfer once
-    assign                       arsize                    = 3'b010;// transfer 4 bytes once
-    assign                       arburst                   = 2'b00;// FIXED Burst
+    assign                              araddr                      = pc;
+    assign                              arid                        = 0;
+    assign                              arlen                       = 0;// 0+1 = 1 transfer once
+    assign                              arsize                      = 3'b010;// transfer 4 bytes once
+    assign                              arburst                     = 2'b00;// FIXED Burst
 
-    assign                       awvalid                   = 0;
-    assign                       awaddr                    = 0;
-    assign                       awid                      = 0;
-    assign                       awlen                     = 0;
-    assign                       awsize                    = 0;
-    assign                       awburst                   = 0;
+    assign                              awvalid                     = 0;
+    assign                              awaddr                      = 0;
+    assign                              awid                        = 0;
+    assign                              awlen                       = 0;
+    assign                              awsize                      = 0;
+    assign                              awburst                     = 0;
 
-    assign                       wvalid                    = 0;
-    assign                       wdata                     = 0;
-    assign                       wstrb                     = 0;
-    assign                       wlast                     = 0;
+    assign                              wvalid                      = 0;
+    assign                              wdata                       = 0;
+    assign                              wstrb                       = 0;
+    assign                              wlast                       = 0;
 
-    assign                       bready                    = 0;
+    assign                              bready                      = 0;
 
-    assign                       rready                    = 1'b1;
+    assign                              rready                      = 1'b1;
 
   //  check_rresp: assert(rresp != 2'b00) ; 
-    localparam  ResetValue= 32'h30000000;
+    localparam                          ResetValue                 = 32'h30000000;
 
 /************ Axi4 bus ***********/
+`ifdef Performance_Count
+    always @(posedge clock) begin
+        if(reset)
+            fetch_inst <= 0;
+        else if(arvalid)
+            fetch_inst <= fetch_inst + 1;
+    end
+`endif 
+
 always @(posedge clock) begin
     if(reset)begin
         valid <= 1'b0;
@@ -113,14 +125,6 @@ always @(posedge clock) begin
     else if(rvalid)begin
         valid <= 1'b1;
         inst <= rdata;
-        //$fatal;
-        /*
-        assert(rdata!=0 | pc <32'ha0000000) 
-        else begin
-        $error("read inst error!");
-        $fatal;
-        end
-        */
     end
     else if(valid & ready)begin
         valid <= 1'b0;
@@ -152,12 +156,6 @@ end
 always @(posedge clock) begin
     if(reset)
         arvalid <= 1'b1;
-    else if((pipe_stop| pipe_stop_reg) &valid&ready)
-        arvalid <= 1'b1;
-    else if(dnpc_flag_reg & valid &ready)
-        arvalid <= 1'b1;
-    else if(dnpc_flag&valid&ready)
-        arvalid <= 1'b1;
     else if(valid & ready)
         arvalid <= 1'b1;
     else if(arvalid & arready)
@@ -166,7 +164,7 @@ end
 
 always @(posedge clock) begin
         if(reset)
-            pc <= ResetValue;   
+            pc <= ResetValue;
         else if((pipe_stop| pipe_stop_reg) &valid&ready)
             pc <= pc ;
         else if(dnpc_flag_reg & valid &ready)
@@ -177,7 +175,7 @@ always @(posedge clock) begin
             pc <= pc + 4;
 end
 
-    assign                       req                       = 1'b1;
+    assign                              req                         = 1'b1;
 
 
 endmodule

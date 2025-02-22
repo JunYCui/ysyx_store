@@ -47,3 +47,7 @@
 `define Aribiter_choice_IDLE_ysyx_24100029 2'b00
 `define Aribiter_choice_IFU_ysyx_24100029  2'b01 
 `define Aribiter_choice_LSU_ysyx_24100029  2'b10
+
+// Performance
+`define Performance_Count 
+
