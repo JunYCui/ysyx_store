@@ -36,10 +36,11 @@ module vga_top_apb(
           ram[in_paddr[21:2]] <= in_pwdata;
     end
     always @(*) begin
-          $monitor("addr = %d",addr);
+      if(in_penable & in_psel & in_pwrite)
+          $monitor("addr = %d",in_paddr[21:2]);
     end
 vga_ctrl u_vga_ctrl(
-    .pclk                               (clock                   ),
+    .pclk                               (clock                     ),
     .reset                              (reset                     ),
     .vga_data                           (ram[addr][23:0]           ),
     .h_addr                             (h_addr                    ),
