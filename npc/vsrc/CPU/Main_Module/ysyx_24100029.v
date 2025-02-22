@@ -347,7 +347,7 @@ module ysyx_24100029
     always @(posedge clock) begin
         if(reset)
             inste_clr_num <= 0;
-        else if(EXU_inst_clear)
+        else if(EXU_inst_clear & EXU_ready & IDU_valid)
             inste_clr_num <= inste_clr_num + 32'd1 ;
     end
 
@@ -355,12 +355,12 @@ module ysyx_24100029
         if(WBU_inst == 32'h00100073) begin
             if(IDU_a0_value == 0)begin
                 $display("\033[32;42m Hit The Good TRAP \033[0m");
-                $display("\033[0m\033[1;34m fetch_inst = %-d flush_decoder_i =%-d flush_execute_i = %-d \n \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
+                $display("\033[0m\033[1;34m fetch_inst = %-d flush_decoder_i = %-d flush_execute_i = %-d \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
                 fi(0);
             end
             else begin
                 $display("\033[31;41m Hit The Bad TRAP \033[0m");
-                $display("\033[0m\033[1;34m fetch_inst = %d flush_decoder_i = %d flush_execute_i = %d \n \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
+                $display("\033[0m\033[1;34m fetch_inst = %d flush_decoder_i = %d flush_execute_i = %d \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
                 fi(1);
             end
         end
