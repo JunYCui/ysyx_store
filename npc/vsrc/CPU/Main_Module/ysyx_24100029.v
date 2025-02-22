@@ -347,7 +347,7 @@ module ysyx_24100029
     always @(posedge clock) begin
         if(reset)
             inste_clr_num <= 0;
-        else if(IDU_inst_clear)
+        else if(EXU_inst_clear)
             inste_clr_num <= inste_clr_num + 32'd1 ;
     end
 
