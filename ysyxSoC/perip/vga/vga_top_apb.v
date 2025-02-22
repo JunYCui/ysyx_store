@@ -80,7 +80,7 @@ module vga_ctrl(
 
     parameter                           v_frontporch               = 2     ;
     parameter                           v_active                   = 35    ;
-    parameter                           v_backporch                = 515   ;
+    parameter                           v_backporch                = 275   ;
     parameter                           v_total                    = 525   ;
 
   //像素计数值
