@@ -39,8 +39,11 @@ module vga_top_apb(
       if(in_penable & in_psel & in_pwrite)
           $display("addr = %d",in_paddr[21:2]);
     end
+always @(posedge clock) begin
+  vga_clk <= ~vga_clk;
+end
 vga_ctrl u_vga_ctrl(
-    .pclk                               (clock                     ),
+    .pclk                               (vga_clk                   ),
     .reset                              (reset                     ),
     .vga_data                           (ram[addr][23:0]           ),
     .h_addr                             (h_addr                    ),
@@ -88,7 +91,7 @@ module vga_ctrl(
     wire                                h_valid                     ;
     wire                                v_valid                     ;
 
-  always @(posedge pclk or posedge reset)                                            //行像素计数
+  always @(posedge pclk or posedge reset)                           //行像素计数
       if (reset == 1'b1)
         x_cnt <= 1;
       else
@@ -99,7 +102,7 @@ module vga_ctrl(
             x_cnt <= x_cnt + 10'd1;
       end
 
-  always @(posedge pclk or posedge reset)                                            //列像素计数
+  always @(posedge pclk or posedge reset)                           //列像素计数
       if (reset == 1'b1)
         y_cnt <= 1;
       else
