@@ -45,6 +45,7 @@ static void itrace(Decode *s)
 
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
+    printf("cycle = %d, inst_num = %d \n",cycle,inst_num);
 }
 static void exec_once()
 {
