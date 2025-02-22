@@ -19,7 +19,6 @@ SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 $(SRC_AUTO_BIND): $(CONSTR)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
-
 CSOURCES += $(SRC_AUTO_BIND)
 
 OBJ_DIR = $(BUILD_DIR)/obj_dir
