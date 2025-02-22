@@ -4,7 +4,7 @@
 #include "npc_define.h"
 #include <iostream>
 
-
+extern void nvboard_quit();
 extern void nvboard_update();
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 extern "C" int npc_pmem_read(int addr);
@@ -33,6 +33,7 @@ extern VysyxSoCFull *top;
 
 void fi(int val) { 
     printf("\033[0m\033[1;34m ipc= %.3f \033[0m", (float)inst_num/cycle);
+    nvboard_quit();
     exit(val); 
 }
 
@@ -44,7 +45,7 @@ static void itrace(Decode *s)
 
     disassemble(str, sizeof(str),s->pc, (uint8_t *)&s->inst, 4);
     printf("0x%x: %x \t %s  \n",s->pc,s->inst,str);
-    printf("cycle = %d, inst_num = %d \n",cycle,inst_num);
+    printf("cycle = %ld, inst_num = %ld \n",cycle,inst_num);
 }
 static void exec_once()
 {
