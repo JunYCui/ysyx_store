@@ -369,6 +369,11 @@ always @(*) begin
         skip = 0;
 end
 
+task Getinst;
+    output bit[31:0] inst;
+    inst = WBU_inst;
+endtask
+
 task  GetPC;
     output                                 bit[31:0]pc                ;
     pc = WBU_pc;
@@ -386,6 +391,7 @@ endtask
 export "DPI-C" task Getskip_flag;
 export "DPI-C" task Getvalid;
 export "DPI-C" task GetPC;
+export "DPI-C" task Getinst;
 
 ysyx_24100029_Control Control_inst0(
     .mtvec_out                          (IDU_mtvec_out             ),

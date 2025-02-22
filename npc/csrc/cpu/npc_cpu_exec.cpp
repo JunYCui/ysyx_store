@@ -12,8 +12,7 @@ extern void ReadReg(int reg_num, svBitVecVal* reg_value);
 void difftest_step(vaddr_t pc, vaddr_t npc);
 void ftrace_exe(Decode* s);
 void difftest_skip_ref();
-/* DPI-C*/
-extern void GetInst(svBitVecVal* inst_exec);
+
 
 extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
@@ -102,6 +101,7 @@ void cpu_exec(uint32_t n)
     {
         svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
         GetPC(&s.pc);
+        Getinst(&s.inst);
         Getskip_flag(&skip_dif);
         if(skip_dif != 0)
         {
