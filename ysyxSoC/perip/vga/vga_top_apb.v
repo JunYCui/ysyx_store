@@ -37,7 +37,7 @@ module vga_top_apb(
     end
     always @(*) begin
       if(in_penable & in_psel & in_pwrite)
-          $display("addr = %d",addr);
+          $display("addr = %x, data = %x",addr,ram[addr][23:0]);
     end
 
 vga_ctrl u_vga_ctrl(
