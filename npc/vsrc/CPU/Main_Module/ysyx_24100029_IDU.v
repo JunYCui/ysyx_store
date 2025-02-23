@@ -60,6 +60,7 @@ module ysyx_24100029_IDU(
     output reg         [  31: 0]           InstB_count                ,
     output reg         [  31: 0]           InstU_count                ,
     output reg         [  31: 0]           InstJ_count                ,
+    output reg         [  31: 0]           InstM_count                ,
 `endif
     input                                  valid_last                 ,
     output                                 ready_last                 ,
@@ -70,12 +71,13 @@ module ysyx_24100029_IDU(
 `ifdef Performance_Count
     always @(posedge clock) begin
         if(reset)begin
-            InstR_count <= 0; 
+            InstR_count <= 0;
             InstI_count <= 0;
             InstS_count <= 0;
             InstB_count <= 0;
             InstU_count <= 0;
             InstJ_count <= 0;
+            InstM_count <= 0;
         end
         else if (valid_next & ready_next) begin
             InstR_count <= (opcode == `R_opcode_ysyx_24100029 )? InstR_count+1:InstR_count;
@@ -84,13 +86,14 @@ module ysyx_24100029_IDU(
             InstB_count <= (opcode == `B_opcode_ysyx_24100029)? InstB_count+1 : InstB_count;
             InstU_count <= (opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029)? InstU_count+1 : InstU_count;
             InstJ_count <= (opcode == `J_opcode_ysyx_24100029)? InstJ_count + 1 : InstJ_count;
+            InstM_count <= (opcode == `M_opcode_ysyx_24100029)? InstM_count + 1 : InstM_count;
         end
 
 
     end
 
 
-`endif 
+`endif
 
     wire               [  31: 0]        csr_addr                    ;
     wire               [   6: 0]        oprand                      ;
