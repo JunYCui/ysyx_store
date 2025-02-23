@@ -1,5 +1,5 @@
 import "DPI-C" function void fi(int val);
-`include "./vsrc/CPU/define/para.v"
+`include "para.v"
 
 module ysyx_24100029
 (
