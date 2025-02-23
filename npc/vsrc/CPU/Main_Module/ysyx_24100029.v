@@ -345,7 +345,7 @@ module ysyx_24100029
     wire               [  31: 0]        InstJ_count                 ;
     wire               [  31: 0]        total_count                 ;
    
-    assign total_count = InstR_count + InstI_count + InstS_count + InstB_count + InstU_count + InstJ_count;
+    assign                              total_count                 = InstR_count + InstI_count + InstS_count + InstB_count + InstU_count + InstJ_count;
 
     always @(posedge clock) begin
         if(reset)
@@ -364,7 +364,7 @@ module ysyx_24100029
         if(WBU_inst == 32'h00100073) begin
             if(IDU_a0_value == 0)begin
                 $display("\033[32;42m Hit The Good TRAP \033[0m");
-                $display("\033[0m\033[1;34m | total_count \t| InstR_count \t| InstI_count \t| InstS_count = \t| InstU_count \t| InstB_count \t| InstJ_count \t| \033[0m");
+                $display("\033[0m\033[1;34m | total_count \t| InstR_count \t| InstI_count \t| InstS_count \t| InstU_count \t| InstB_count \t| InstJ_count \t| \033[0m");
                 $display("\033[0m\033[1;34m | %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t|  \033[0m",total_count,InstR_count,InstI_count,InstS_count, InstU_count,InstB_count,InstJ_count);
                 $display("\033[0m\033[1;34m fetch_inst \t| flush_decoder_i \t| flush_execute_i \t| \033[0m");
                 $display("\033[0m\033[1;34m %d \t| %d \t\t| %d \t\t| \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
@@ -573,12 +573,12 @@ ysyx_24100029_IDU IDU_Inst0(
     .valid_last                         (IFU_valid                 ),
     .ready_last                         (IDU_ready                 ),
 `ifdef Performance_Count
-    .InstR_count                        (                          ),
-    .InstI_count                        (                          ),
-    .InstS_count                        (                          ),
-    .InstB_count                        (                          ),
-    .InstU_count                        (                          ),
-    .InstJ_count                        (                          ),
+    .InstR_count                        (InstR_count               ),
+    .InstI_count                        (InstI_count               ),
+    .InstS_count                        (InstS_count               ),
+    .InstB_count                        (InstB_count               ),
+    .InstU_count                        (InstU_count               ),
+    .InstJ_count                        (InstJ_count               ),
 `endif
     .ready_next                         (EXU_ready                 ),
     .valid_next                         (IDU_valid                 ) 
