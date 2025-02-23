@@ -77,8 +77,8 @@ module apb_delayer(
     
 
 
-    assign                              in_pready                   = (state == IDLE)? 0 : out_pready;
-    assign                              in_prdata                   = (state == IDLE)? 0 : out_prdata;
-    assign                              in_pslverr                  = (state == IDLE)? 0 : out_pslverr;
+    assign                              in_pready                   = (state == IDLE)? out_pready : 0 ;
+    assign                              in_prdata                   = (state == IDLE)? out_prdata : 0 ;
+    assign                              in_pslverr                  = (state == IDLE)? out_pslverr: 0 ;
 
 endmodule
