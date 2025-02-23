@@ -61,6 +61,7 @@ module ysyx_24100029_IDU(
     output reg         [  31: 0]           InstU_count                ,
     output reg         [  31: 0]           InstJ_count                ,
     output reg         [  31: 0]           InstM_count                ,
+
 `endif
     input                                  valid_last                 ,
     output                                 ready_last                 ,
@@ -80,7 +81,7 @@ module ysyx_24100029_IDU(
             InstM_count <= 0;
         end
         else if (valid_next & ready_next) begin
-            InstR_count <= (opcode == `R_opcode_ysyx_24100029 )? InstR_count+1:InstR_count;
+            InstR_count <= (opcode == `R_opcode_ysyx_24100029)? InstR_count+1:InstR_count;
             InstI_count <= (opcode == `I0_opcode_ysyx_24100029 || opcode == `I1_opcode_ysyx_24100029 || opcode == `I2_opcode_ysyx_24100029)? InstI_count+1 : InstI_count;
             InstS_count <= (opcode == `S_opcode_ysyx_24100029)? InstS_count+1 : InstS_count;
             InstB_count <= (opcode == `B_opcode_ysyx_24100029)? InstB_count+1 : InstB_count;
@@ -88,8 +89,6 @@ module ysyx_24100029_IDU(
             InstJ_count <= (opcode == `J_opcode_ysyx_24100029)? InstJ_count + 1 : InstJ_count;
             InstM_count <= (opcode == `M_opcode_ysyx_24100029)? InstM_count + 1 : InstM_count;
         end
-
-
     end
 
 
