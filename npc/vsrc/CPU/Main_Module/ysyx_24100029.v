@@ -364,20 +364,16 @@ module ysyx_24100029
         if(WBU_inst == 32'h00100073) begin
             if(IDU_a0_value == 0)begin
                 $display("\033[32;42m Hit The Good TRAP \033[0m");
-                $display("\033[0m\033[1;34m | total_count \t| InstR_count \t| InstI_count \t| InstS_count \t| InstU_count \t| InstB_count \t| InstJ_count \t| \033[0m");
-                $display("\033[0m\033[1;34m | %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t|  \033[0m",total_count,InstR_count,InstI_count,InstS_count, InstU_count,InstB_count,InstJ_count);
-                $display("\033[0m\033[1;34m | fetch_inst \t| flush_decoder_i \t| flush_execute_i \t| \033[0m");
-                $display("\033[0m\033[1;34m | %d \t| %d \t\t| %d \t\t| \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
                 fi(0);
             end
             else begin
                 $display("\033[32;42m Hit The Bad TRAP \033[0m");
+                fi(1);
+            end
                 $display("\033[0m\033[1;34m | total_count \t| InstR_count \t| InstI_count \t| InstS_count \t| InstU_count \t| InstB_count \t| InstJ_count \t| \033[0m");
                 $display("\033[0m\033[1;34m | %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t|  \033[0m",total_count,InstR_count,InstI_count,InstS_count, InstU_count,InstB_count,InstJ_count);
                 $display("\033[0m\033[1;34m | fetch_inst \t| flush_decoder_i \t| flush_execute_i \t| \033[0m");
                 $display("\033[0m\033[1;34m | %d \t| %d \t\t| %d \t\t| \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
-                fi(1);
-            end
         end
     end
 
