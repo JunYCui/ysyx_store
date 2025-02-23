@@ -337,6 +337,15 @@ module ysyx_24100029
     wire               [  31: 0]        fetch_inst                  ;
     reg                [  31: 0]        inste_clr_num               ;// excute clear num
     reg                [  31: 0]        instd_clr_num               ;// decode clear num
+    wire               [  31: 0]        InstR_count                 ;
+    wire               [  31: 0]        InstI_count                 ;
+    wire               [  31: 0]        InstS_count                 ;
+    wire               [  31: 0]        InstB_count                 ;
+    wire               [  31: 0]        InstU_count                 ;
+    wire               [  31: 0]        InstJ_count                 ;
+    wire               [  31: 0]        total_count                 ;
+   
+    assign total_count = InstR_count + InstI_count + InstS_count + InstB_count + InstU_count + InstJ_count;
 
     always @(posedge clock) begin
         if(reset)
@@ -355,12 +364,16 @@ module ysyx_24100029
         if(WBU_inst == 32'h00100073) begin
             if(IDU_a0_value == 0)begin
                 $display("\033[32;42m Hit The Good TRAP \033[0m");
-                $display("\033[0m\033[1;34m fetch_inst = %-d flush_decoder_i = %-d flush_execute_i = %-d \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
+                $display("\033[0m\033[1;34m | total_count \t| InstR_count \t| InstI_count = \t| InstS_count = \t| InstU_count \t| InstB_count \t| InstJ_count \t| \033[0m");
+                $display("\033[0m\033[1;34m | %-d \t| %-d \t| %-d \t| %-d \t| %-d \t| %-d \t| %-d \t|  \033[0m",total_count,InstR_count,InstI_count,InstS_count, InstU_count,InstB_count,InstJ_count);
+                $display("\033[0m\033[1;34m fetch_inst \t| flush_decoder_i = \t| flush_execute_i = \t| \033[0m");
+                $display("\033[0m\033[1;34m %-d \t| %-d \t| %-d \t| \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
                 fi(0);
             end
             else begin
                 $display("\033[31;41m Hit The Bad TRAP \033[0m");
-                $display("\033[0m\033[1;34m fetch_inst = %d flush_decoder_i = %d flush_execute_i = %d \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
+                $display("\033[0m\033[1;34m fetch_inst \t| flush_decoder_i = \t| flush_execute_i = \t| \033[0m");
+                $display("\033[0m\033[1;34m %-d \t| %-d \t| %-d \t| \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
                 fi(1);
             end
         end
@@ -557,7 +570,14 @@ ysyx_24100029_IDU IDU_Inst0(
 
     .valid_last                         (IFU_valid                 ),
     .ready_last                         (IDU_ready                 ),
-
+`ifdef Performance_Count
+    .InstR_count                        (                          ),
+    .InstI_count                        (                          ),
+    .InstS_count                        (                          ),
+    .InstB_count                        (                          ),
+    .InstU_count                        (                          ),
+    .InstJ_count                        (                          ),
+`endif
     .ready_next                         (EXU_ready                 ),
     .valid_next                         (IDU_valid                 ) 
 
