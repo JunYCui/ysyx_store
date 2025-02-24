@@ -23,8 +23,8 @@ module apb_delayer(
     input              [  31: 0]           out_prdata                 ,
     input                                  out_pslverr                 
 );
-    parameter                           r                          = 3     ; // main frequency vs slave frequency
-    parameter                           s                          = 4     ; //  ratio
+    parameter                           r                          = 4     ; // main frequency vs slave frequency
+    parameter                           s                          = 8     ; //  ratio
 
 
     typedef enum logic [1:0] {
@@ -91,7 +91,7 @@ module apb_delayer(
     end
     
 
-    assign                              req                         = state == WAIT & count == 0;
+    assign                              req                         = state == WAIT & count == 1;
     assign                              in_pready                   = (req)? pready_r :(state == IDLE)? out_pready :0;
     assign                              in_prdata                   = (req)? rdata_r  :(state == IDLE)? out_prdata :0;
     assign                              in_pslverr                  = (req)? pslverr_r:(state == IDLE)? out_pslverr :0;
