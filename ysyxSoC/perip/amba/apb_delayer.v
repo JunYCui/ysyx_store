@@ -56,7 +56,7 @@ module apb_delayer(
                       state <= REQ;
             REQ:if(out_pready)
                       state <= WAIT;
-            WAIT:if(count == 0)
+            WAIT:if(count == 1)
                       state <= IDLE;
             default: state <= IDLE;
         endcase
@@ -67,7 +67,7 @@ module apb_delayer(
         if(reset | state == IDLE)begin
           count <= 0;
         end
-        else if(state == WAIT & |count) begin
+        else if(state == WAIT) begin
           count <= count - 1;
         end
         else if(state == REQ & out_pready)begin
