@@ -70,7 +70,7 @@ module apb_delayer(
           count <= count >> $clog2(s) ;
         end
         else if(state == REQ)begin
-          count <= count + r<<$clog2(s) ;
+          count <= count + (r<<$clog2(s)) ;
           $display("count = %d",count);
         end
     end
