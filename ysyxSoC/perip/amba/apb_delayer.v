@@ -71,6 +71,7 @@ module apb_delayer(
         end
         else if(state == REQ)begin
           count <= count + r<<$clog2(s) ;
+          $display("count = %d",count);
         end
     end
 
