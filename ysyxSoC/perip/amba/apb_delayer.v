@@ -37,6 +37,7 @@ module apb_delayer(
     reg                [  31: 0]        rdata_r                     ;
     reg                                 pready_r                    ;
     reg                                 pslverr_r                   ;
+    wire                                req                         ;
 
     assign                              out_paddr                   = in_paddr;
     assign                              out_psel                    = in_psel;
@@ -66,7 +67,7 @@ module apb_delayer(
         if(reset | state == IDLE)begin
           count <= 0;
         end
-        else if(state == WAIT) begin
+        else if(state == WAIT & |count) begin
           count <= count - 1;
         end
         else if(state == REQ & out_pready)begin
@@ -90,9 +91,9 @@ module apb_delayer(
     end
     
 
-
-    assign                              in_pready                   = (state == WAIT & count == 0)? pready_r :(state == IDLE)? out_pready :0 ;
-    assign                              in_prdata                   = (state == WAIT & count == 0)? rdata_r  :(state == IDLE)? out_prdata :0 ;
-    assign                              in_pslverr                  = (state == WAIT & count == 0)? pslverr_r:(state == IDLE)? out_pslverr :0 ;
+    assign                              req                         = state == WAIT & count == 0;
+    assign                              in_pready                   = (req)? pready_r :(state == IDLE)? out_pready :0;
+    assign                              in_prdata                   = (req)? rdata_r  :(state == IDLE)? out_prdata :0;
+    assign                              in_pslverr                  = (req)? pslverr_r:(state == IDLE)? out_pslverr :0;
 
 endmodule
