@@ -91,8 +91,8 @@ module apb_delayer(
     
 
 
-    assign                              in_pready                   = (state == WAIT & count == 0)? pready_r :out_pready;
-    assign                              in_prdata                   = (state == WAIT & count == 0)? rdata_r  :out_prdata;
-    assign                              in_pslverr                  = (state == WAIT & count == 0)? pslverr_r :out_pslverr;
+    assign                              in_pready                   = (state == WAIT & count == 0)? pready_r :(state == IDLE)? out_pready :0 ;
+    assign                              in_prdata                   = (state == WAIT & count == 0)? rdata_r  :(state == IDLE)? out_prdata :0 ;
+    assign                              in_pslverr                  = (state == WAIT & count == 0)? pslverr_r:(state == IDLE)? out_pslverr :0 ;
 
 endmodule
