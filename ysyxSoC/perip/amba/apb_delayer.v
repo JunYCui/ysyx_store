@@ -23,7 +23,7 @@ module apb_delayer(
     input              [  31: 0]           out_prdata                 ,
     input                                  out_pslverr                 
 );
-    parameter                           r                          = 4     ; // main frequency vs slave frequency
+    parameter                           r                          = 3     ; // main frequency vs slave frequency
     parameter                           s                          = 8     ; //  ratio
 
 
