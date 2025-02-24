@@ -34,6 +34,9 @@ module apb_delayer(
     } state_t;
     state_t state;
     reg                [   9: 0]        count                       ;
+    reg                [  31: 0]        rdata_r                     ;
+    reg                                 pready_r                    ;
+    reg                                 pslverr_r                   ;
 
     assign                              out_paddr                   = in_paddr;
     assign                              out_psel                    = in_psel;
@@ -59,7 +62,7 @@ module apb_delayer(
         end
     end
 
-    always @(posedge clock) begin
+    always @(posedge clock or posedge reset) begin
         if(reset | state == IDLE)begin
           count <= 0;
         end
@@ -71,15 +74,25 @@ module apb_delayer(
         end
         else if(state == REQ)begin
           count <= count + (r<<$clog2(s)) ;
-          $display("count = %d",count);
         end
     end
-
+    always @(posedge clock or posedge reset) begin
+        if(reset)begin
+          pready_r <= 0;
+          rdata_r  <= 0;
+          pslverr_r<= 0;
+        end
+        else begin
+          pready_r  <= (out_pready)? 1 : pready_r ;
+          rdata_r   <= (out_pready)? out_prdata : rdata_r ;
+          pslverr_r <= (out_pready)? out_pslverr : pslverr_r ;
+        end
+    end
     
 
 
-    assign                              in_pready                   = (state == IDLE)? out_pready : 0 ;
-    assign                              in_prdata                   = (state == IDLE)? out_prdata : 0 ;
-    assign                              in_pslverr                  = (state == IDLE)? out_pslverr: 0 ;
+    assign                              in_pready                   = (state == WAIT & count == 0)? pready_r :out_pready;
+    assign                              in_prdata                   = (state == WAIT & count == 0)? rdata_r  :out_prdata;
+    assign                              in_pslverr                  = (state == WAIT & count == 0)? pslverr_r :out_pslverr;
 
 endmodule
