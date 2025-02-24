@@ -112,7 +112,7 @@ module ysyx_24100029_IFU(
     always @(posedge clock) begin
         if(reset)
             fetch_inst <= 0;
-        else if(arvalid)
+        else if(rvalid)
             fetch_inst <= fetch_inst + 1;
     end
 `endif 
