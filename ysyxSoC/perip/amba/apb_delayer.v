@@ -24,7 +24,7 @@ module apb_delayer(
     input                                  out_pslverr                 
 );
     parameter                           r                          = 3     ; // main frequency vs slave frequency
-    parameter                           s                          = 8     ; //  ratio
+    parameter                           s                          = 16     ; //  ratio
 
 
     typedef enum logic [1:0] {
