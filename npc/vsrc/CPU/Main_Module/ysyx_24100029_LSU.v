@@ -1,85 +1,88 @@
 /* verilator lint_off UNUSEDSIGNAL */
 // signal not use
 `timescale 1ns / 1ps
-    localparam                   i4_NR_KEY                 = 5     ; //键值的个数
-    localparam                   i4_KEY_LEN                = 3     ; //键值的长度
-    localparam                   i4_DATA_LEN               = 32    ; //数据的长度
+    localparam                          i4_NR_KEY                  = 5     ; //键值的个数
+    localparam                          i4_KEY_LEN                 = 3     ; //键值的长度
+    localparam                          i4_DATA_LEN                = 32    ; //数据的长度
 
-    localparam                   i5_NR_KEY                 = 3     ; 
-    localparam                   i5_KEY_LEN                = 3     ; 
-    localparam                   i5_DATA_LEN               = 4     ; 
+    localparam                          i5_NR_KEY                  = 3     ; 
+    localparam                          i5_KEY_LEN                 = 3     ; 
+    localparam                          i5_DATA_LEN                = 4     ; 
 
 module ysyx_24100029_LSU (
-    input                        clock                      ,
-    input                        reset                      ,
+    input                                  clock                      ,
+    input                                  reset                      ,
 
-    input              [  31: 0] pc                         ,
-    input                        mem_ren                    ,
-    input                        mem_wen                    ,
-    input                        R_wen                      ,
-    input              [   3: 0] csr_wen                    ,
-    input              [  31: 0] Ex_result                  ,
-    input              [  31: 0] csrs                       ,
-    input              [   4: 0] rd                         ,
-    input              [   2: 0] funct3                     ,
-    input              [  31: 0] rs2_value                  ,
-    input                        jump_flag                  ,
+    input              [  31: 0]           pc                         ,
+    input                                  mem_ren                    ,
+    input                                  mem_wen                    ,
+    input                                  R_wen                      ,
+    input              [   3: 0]           csr_wen                    ,
+    input              [  31: 0]           Ex_result                  ,
+    input              [  31: 0]           csrs                       ,
+    input              [   4: 0]           rd                         ,
+    input              [   2: 0]           funct3                     ,
+    input              [  31: 0]           rs2_value                  ,
+    input                                  jump_flag                  ,
 
 
-    output                       R_wen_next                 ,
-    output reg         [  31: 0] LSU_Rdata                  ,
-    output             [   3: 0] csr_wen_next               ,
-    output             [  31: 0] Ex_result_next             ,
-    output             [  31: 0] csrs_next                  ,
-    output             [  31: 0] pc_next                    ,
-    output             [   4: 0] rd_next                    ,
-    output                       mem_ren_next               ,
-    output                       jump_flag_next             ,
+    output                                 R_wen_next                 ,
+    output reg         [  31: 0]           LSU_Rdata                  ,
+    output             [   3: 0]           csr_wen_next               ,
+    output             [  31: 0]           Ex_result_next             ,
+    output             [  31: 0]           csrs_next                  ,
+    output             [  31: 0]           pc_next                    ,
+    output             [   4: 0]           rd_next                    ,
+    output                                 mem_ren_next               ,
+    output                                 jump_flag_next             ,
 
-    input                        awready                    ,
-    output                       awvalid                    ,
-    output             [  31: 0] awaddr                     ,
-    output             [   3: 0] awid                       ,
-    output             [   7: 0] awlen                      ,
-    output             [   2: 0] awsize                     ,
-    output             [   1: 0] awburst                    ,
+    input                                  awready                    ,
+    output                                 awvalid                    ,
+    output             [  31: 0]           awaddr                     ,
+    output             [   3: 0]           awid                       ,
+    output             [   7: 0]           awlen                      ,
+    output             [   2: 0]           awsize                     ,
+    output             [   1: 0]           awburst                    ,
 
-    input                        wready                     ,
-    output                       wvalid                     ,
-    output             [  31: 0] wdata                      ,
-    output             [   3: 0] wstrb                      ,
-    output                       wlast                      ,
+    input                                  wready                     ,
+    output                                 wvalid                     ,
+    output             [  31: 0]           wdata                      ,
+    output             [   3: 0]           wstrb                      ,
+    output                                 wlast                      ,
 
-    output                       bready                     ,
-    input                        bvalid                     ,
-    input              [   1: 0] bresp                      ,
-    input              [   3: 0] bid                        ,
+    output                                 bready                     ,
+    input                                  bvalid                     ,
+    input              [   1: 0]           bresp                      ,
+    input              [   3: 0]           bid                        ,
     
-    input                        arready                    ,
-    output                       arvalid                    ,
-    output             [  31: 0] araddr                     ,
-    output             [   3: 0] arid                       ,
-    output             [   7: 0] arlen                      ,
-    output             [   2: 0] arsize                     ,
-    output             [   1: 0] arburst                    ,
+    input                                  arready                    ,
+    output                                 arvalid                    ,
+    output             [  31: 0]           araddr                     ,
+    output             [   3: 0]           arid                       ,
+    output             [   7: 0]           arlen                      ,
+    output             [   2: 0]           arsize                     ,
+    output             [   1: 0]           arburst                    ,
     
-    output                       rready                     ,
-    input                        rvalid                     ,
-    input              [   1: 0] rresp                      ,
-    input              [  31: 0] rdata                      ,
-    input                        rlast                      ,
-    input              [   3: 0] rid                        ,
+    output                                 rready                     ,
+    input                                  rvalid                     ,
+    input              [   1: 0]           rresp                      ,
+    input              [  31: 0]           rdata                      ,
+    input                                  rlast                      ,
+    input              [   3: 0]           rid                        ,
 
-    output reg                   req                        ,
+    output reg                             req                        ,
 
-    input                        valid_last                 ,
-    output reg                   ready_last                 ,
+    input                                  valid_last                 ,
+    output reg                             ready_last                 ,
 
-    input                        ready_next                 ,
-    output reg                   valid_next                 ,
+    input                                  ready_next                 ,
+    output reg                             valid_next                 ,
 
-    input              [  31: 0] inst                       ,
-    output reg         [  31: 0] inst_next                   
+`ifdef Performance_Count
+    output reg         [  31: 0]           lsu_cycle                  ,
+`endif
+    input              [  31: 0]           inst                       ,
+    output reg         [  31: 0]           inst_next                   
 );
 /*
 always @(*) begin
@@ -89,26 +92,52 @@ always @(*) begin
         $display("0x%x[pc]:\t 0x%x is read at addr 0x%x  ",pc_reg,rdata_ex,araddr);
 end
 */
-    wire               [  31: 0] rdata_8i                   ;
-    wire               [  31: 0] rdata_16i                  ;
-    wire               [  31: 0] rdata_8u                   ;
-    wire               [  31: 0] rdata_16u                  ;
+    wire               [  31: 0]        rdata_8i                    ;
+    wire               [  31: 0]        rdata_16i                   ;
+    wire               [  31: 0]        rdata_8u                    ;
+    wire               [  31: 0]        rdata_16u                   ;
 
-    wire               [  31: 0] rdata_ex                   ;
-    wire               [   4: 0] rdata_b_choice             ;
+    wire               [  31: 0]        rdata_ex                    ;
+    wire               [   4: 0]        rdata_b_choice              ;
 
-    reg                [  31: 0] pc_reg                     ;
-    reg                          mem_ren_reg                ;
-    reg                          mem_wen_reg                ;
-    reg                          R_wen_reg                  ;
-    reg                [   3: 0] csr_wen_reg                ;
-    reg                [  31: 0] Ex_result_reg              ;
-    reg                [  31: 0] csrs_reg                   ;
-    reg                [   4: 0] rd_reg                     ;
-    reg                [   2: 0] funct3_reg                 ;
-    reg                [  31: 0] rs2_value_reg              ;
-    reg                          jump_flag_reg              ;
-    reg                          valid_last_reg             ;
+    reg                [  31: 0]        pc_reg                      ;
+    reg                                 mem_ren_reg                 ;
+    reg                                 mem_wen_reg                 ;
+    reg                                 R_wen_reg                   ;
+    reg                [   3: 0]        csr_wen_reg                 ;
+    reg                [  31: 0]        Ex_result_reg               ;
+    reg                [  31: 0]        csrs_reg                    ;
+    reg                [   4: 0]        rd_reg                      ;
+    reg                [   2: 0]        funct3_reg                  ;
+    reg                [  31: 0]        rs2_value_reg               ;
+    reg                                 jump_flag_reg               ;
+    reg                                 valid_last_reg              ;
+
+`ifdef Performance_Count
+    typedef enum logic {IDLE,WORK} state;
+    state state_p;
+    always @(posedge clock or posedge reset) begin
+        if(reset)
+            state_p <= IDLE;
+        else begin
+            case(state_p)
+            IDLE: if(mem_ren | mem_wen)
+                    state_p <= WORK;
+            WORK: if(rvalid | bvalid)
+                    state_p <= IDLE;
+            endcase
+        end
+    end
+    always @(posedge clock or posedge reset) begin
+        if(reset)
+            lsu_cycle <= 0;
+        else if(state_p == IDLE & (mem_ren | mem_wen) )
+            lsu_cycle <= lsu_cycle + 1;
+        else if(state_p == WORK)
+            lsu_cycle <= lsu_cycle + 1;
+    end
+
+`endif
 
     always @(posedge clock) begin
         if(reset)begin
@@ -216,20 +245,20 @@ end
     end
 
 
-    assign                       araddr                    = Ex_result_reg;
+    assign                              araddr                      = Ex_result_reg;
     
 
-    assign                       awaddr                    = Ex_result_reg;
-    assign                       awid                      = 1;
-    assign                       awlen                     = 0;
-    assign                       awsize                    = funct3;
-    assign                       awburst                   = 0;
+    assign                              awaddr                      = Ex_result_reg;
+    assign                              awid                        = 1;
+    assign                              awlen                       = 0;
+    assign                              awsize                      = funct3;
+    assign                              awburst                     = 0;
 
     assign                       wdata                     = (funct3_reg == 3'b000)?
                                                             rs2_value_reg<<8*Ex_result_reg[1:0]:(funct3_reg == 3'b001)?
                                                             rs2_value_reg<<8*{Ex_result_reg[1],1'b0}:(funct3_reg == 3'b010)?
                                                             rs2_value_reg:0;
-    assign                       rdata_b_choice            = {Ex_result_reg[1:0],3'b0};
+    assign                              rdata_b_choice              = {Ex_result_reg[1:0],3'b0};
     
     assign wstrb = (funct3_reg == 3'b000)                           ?
                     4'b0001<<Ex_result_reg[1:0]:(funct3_reg == 3'b001)     ?
@@ -237,14 +266,14 @@ end
                     4'b1111:4'b0000;
 
 
-    assign                       arid                      = 0;
-    assign                       arlen                     = 0;
+    assign                              arid                        = 0;
+    assign                              arlen                       = 0;
 
     assign                       arsize                    = (funct3_reg == 3'b000 | funct3_reg == 3'b100)? 
                                                             3'b000:(funct3_reg == 3'b001 | funct3_reg == 3'b101)?
                                                             3'b001:3'b010;
 
-    assign                       arburst                   = 0;
+    assign                              arburst                     = 0;
 
 /*
     assert (rresp == 2'b00)
@@ -288,17 +317,17 @@ end
 
 
 
-    assign                       Ex_result_next            = Ex_result_reg;
-    assign                       csrs_next                 = csrs_reg;
-    assign                       pc_next                   = pc_reg;
-    assign                       rd_next                   = rd_reg;
-    assign                       mem_ren_next              = mem_ren_reg;
+    assign                              Ex_result_next              = Ex_result_reg;
+    assign                              csrs_next                   = csrs_reg;
+    assign                              pc_next                     = pc_reg;
+    assign                              rd_next                     = rd_reg;
+    assign                              mem_ren_next                = mem_ren_reg;
 
-    assign                       R_wen_next                = R_wen_reg;
-    assign                       jump_flag_next            = jump_flag_reg;
-    assign                       csr_wen_next              = csr_wen_reg;
+    assign                              R_wen_next                  = R_wen_reg;
+    assign                              jump_flag_next              = jump_flag_reg;
+    assign                              csr_wen_next                = csr_wen_reg;
 
-    assign                       req                       = ~ready_last;
+    assign                              req                         = ~ready_last;
 
     always @(posedge clock) begin
         if(reset)
@@ -317,26 +346,26 @@ ysyx_24100029_MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (rdata_ex,
   3'b101,rdata_16u                                                  // 1hu
 });
 
-    assign                       rdata_8u                  = {24'd0,rdata[rdata_b_choice +: 8]};
-    assign                       rdata_16u                 = {16'd0,rdata[rdata_b_choice +: 16]};
+    assign                              rdata_8u                    = {24'd0,rdata[rdata_b_choice +: 8]};
+    assign                              rdata_16u                   = {16'd0,rdata[rdata_b_choice +: 16]};
 
 /* verilator lint_off PINMISSING */
 ysyx_24100029_sext #(
-    .DATA_WIDTH                  (8                         ),
-    .OUT_WIDTH                   (32                        ) 
+    .DATA_WIDTH                         (8                         ),
+    .OUT_WIDTH                          (32                        ) 
 ) sext_i8
 (
-    .data                        (rdata[rdata_b_choice +:8] ),
-    .sext_data                   (rdata_8i                  ) 
+    .data                               (rdata[rdata_b_choice +:8] ),
+    .sext_data                          (rdata_8i                  ) 
 );
 
 ysyx_24100029_sext #(
-    .DATA_WIDTH                  (16                        ),
-    .OUT_WIDTH                   (32                        ) 
+    .DATA_WIDTH                         (16                        ),
+    .OUT_WIDTH                          (32                        ) 
 ) sext_i16
 (
-    .data                        (rdata[rdata_b_choice+:16] ),
-    .sext_data                   (rdata_16i                 ) 
+    .data                               (rdata[rdata_b_choice+:16] ),
+    .sext_data                          (rdata_16i                 ) 
 );
 
 

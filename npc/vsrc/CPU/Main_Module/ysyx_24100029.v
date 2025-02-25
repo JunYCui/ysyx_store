@@ -1,7 +1,7 @@
 `include "../define/para.v"
 `ifdef Performance_Count
 import "DPI-C" function void fi(int val);
-`endif 
+`endif
 
 module ysyx_24100029
 (
@@ -347,7 +347,9 @@ module ysyx_24100029
     wire               [  31: 0]        InstJ_count                 ;
     wire               [  31: 0]        InstM_count                 ;
     wire               [  31: 0]        total_count                 ;
-   
+    wire               [  31: 0]        Exu_count                   ;
+    wire               [  31: 0]        lsu_cycle                   ;
+
     assign                              total_count                 = InstR_count + InstI_count + InstS_count + InstB_count + InstU_count + InstJ_count + InstM_count;
 
     always @(posedge clock) begin
@@ -369,6 +371,8 @@ module ysyx_24100029
         $display("\033[0m\033[1;34m | %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| \033[0m",total_count,InstR_count,InstI_count,InstS_count, InstU_count,InstB_count,InstJ_count,InstM_count);
         $display("\033[0m\033[1;34m | fetch_inst \t| flush_decoder_i \t| flush_execute_i \t| \033[0m");
         $display("\033[0m\033[1;34m | %d \t| %d \t\t| %d \t\t| \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
+        $display("\033[0m\033[1;34m | exu_cycle \t| lsu_cycle \t| \033[0m");
+        $display("\033[0m\033[1;34m | %d \t| %d \t| \033[0m",Exu_count,);
             if(IDU_a0_value == 0)begin
                 $display("\033[32;42m Hit The Good TRAP \033[0m");
                 fi(0);
@@ -631,7 +635,10 @@ ysyx_24100029_EXU EXU_Inst0(
     .ready_next                         (LSU_ready                 ),
     .valid_next                         (EXU_valid                 ),
 
+`ifdef Performance_Count
+    .Exu_count                          (Exu_count                 ),
 
+`endif
     .inst                               (IDU_inst                  ),
     .inst_next                          (EXU_inst                  ) 
 );
@@ -702,7 +709,9 @@ ysyx_24100029_LSU LSU_Inst0(
 
     .ready_next                         (WBU_ready                 ),
     .valid_next                         (LSU_valid                 ),
-
+`ifdef Performance_Count
+    .lsu_cycle                          (lsu_cycle                 ),
+`endif
     .inst                               (EXU_inst                  ),
     .inst_next                          (LSU_inst                  ) 
 );
