@@ -83,7 +83,7 @@ clean:
 perf:
 	@sed -i '/Performance/d' ./vsrc/CPU/define/para.v
 	@echo "analyse the chip area and frequency"
-	@$(MAKE) -C yosys-sta sta > log.txt 
+	@$(MAKE) -C ~/yosys-sta sta > log.txt 
 	@grep --after-context=1 "Chip area for top module " log.txt > area.txt
 	@grep --after-context=7 "Endpoint" log.txt > frequency.txt 
 	@sed -i '$$a \`define Performance_Count' ./vsrc/CPU/define/para.v
