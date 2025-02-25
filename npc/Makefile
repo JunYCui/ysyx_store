@@ -88,7 +88,8 @@ perf:
 	@grep --after-context=7 "Endpoint" log.txt > frequency.txt 
 	@sed -i '$$a \`define Performance_Count' ./vsrc/CPU/define/para.v
 	@echo "microbench test"
-	@$(MAKE) -C ../am-kernels/benchmarks/microbench ARCH=riscv32e-ysyxsoc mainargs=train run
+	@$(MAKE) -C ../am-kernels/benchmarks/microbench ARCH=riscv32e-ysyxsoc mainargs=test run > log1.txt
+	@ grep --after-context=9 'total_count' log.txt count.txt 2>&1
 .PHONY: clean all sim
 #waves:*.vcd
 #	gtkwave *.vcd
