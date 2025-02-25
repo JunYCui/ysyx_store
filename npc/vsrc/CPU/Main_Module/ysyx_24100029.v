@@ -372,7 +372,7 @@ module ysyx_24100029
         $display("\033[0m\033[1;34m | fetch_inst \t| flush_decoder_i \t| flush_execute_i \t| \033[0m");
         $display("\033[0m\033[1;34m | %d \t| %d \t\t| %d \t\t| \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
         $display("\033[0m\033[1;34m | exu_cycle \t| lsu_cycle \t| \033[0m");
-        $display("\033[0m\033[1;34m | %d \t| %d \t| \033[0m",Exu_count,);
+        $display("\033[0m\033[1;34m | %d \t| %d \t\t| \033[0m",Exu_count,lsu_cycle);
             if(IDU_a0_value == 0)begin
                 $display("\033[32;42m Hit The Good TRAP \033[0m");
                 fi(0);
