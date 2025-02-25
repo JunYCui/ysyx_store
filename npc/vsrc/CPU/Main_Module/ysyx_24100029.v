@@ -740,12 +740,12 @@ ysyx_24100029_WBU WBU_inst0(
 
     .valid                              (LSU_valid                 ),
     .ready                              (WBU_ready                 ),
-
-    .rd_next                            (WBU_rd                    ),
-    .valid_next                         (WBU_valid                 ),
-    
+`ifdef Performance_Count
     .mem_ren_flag                       (mem_ren_flag              ),
-    .paddr                              (paddr                     ) 
+    .paddr                              (paddr                     ), 
+`endif 
+    .rd_next                            (WBU_rd                    ),
+    .valid_next                         (WBU_valid                 )
 );
 /* verilator lint_off PINMISSING */
 ysyx_24100029_Aribiter #(

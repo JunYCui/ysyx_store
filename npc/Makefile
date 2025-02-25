@@ -55,7 +55,7 @@ $(shell mkdir -p $(BUILD_DIR))
 NPC_EXEC = $(BIN) $(ARGS) $(IMG)
 
 
-.PHONY:sim
+
 sim:all
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by your self." 
@@ -65,7 +65,7 @@ gdb: all
 	$(call git_commit, "gdb NEMU")
 	gdb -s $(BIN) --args $(NPC_EXEC)
 
-.PHONY:all
+
 all:$(CSOURCES) $(VSOURCES)  $(NVBOARD_ARCHIVE)
 	@echo "Write this Makefile by your self."
 	@rm -rf $(OBJ_DIR) *.vcd
@@ -77,15 +77,23 @@ all:$(CSOURCES) $(VSOURCES)  $(NVBOARD_ARCHIVE)
 
 
 
-
-
 clean: 
 	rm -rf $(BUILD_DIR) *.vcd
+
+perf:
+	@sed -i '/Performance/d' ./vsrc/CPU/define/para.v
+	@echo "analyse the chip area and frequency"
+	@$(MAKE) -C yosys-sta sta > log.txt 
+	@grep --after-context=1 "Chip area for top module " log.txt > area.txt
+	@grep --after-context=7 "Endpoint" log.txt > frequency.txt 
+	@sed -i '$$a \`define Performance_Count' ./vsrc/CPU/define/para.v
+	@echo "microbench test"
+	@$(MAKE) -C ../am-kernels/benchmarks/microbench ARCH=riscv32e-ysyxsoc mainargs=test run
+.PHONY: clean all sim
 #waves:*.vcd
 #	gtkwave *.vcd
 
 #.PHONY:clean
 #clean:
 #	@rm -rf ./obj_dir *.vcd
-
 include ../Makefile

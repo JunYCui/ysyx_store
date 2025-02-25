@@ -25,16 +25,17 @@ module ysyx_24100029_WBU (
     output                                 R_wen_next                 ,
     output             [   3: 0]           csr_wen_next               ,
     output             [  31: 0]           csrd                       ,
-    output             [  31: 0]           rd_value                   ,
-    output             [   4: 0]           rd_next                    ,
-
+`ifdef Performance_Count
     output                                 mem_ren_flag               ,
-    output             [  31: 0]           paddr                       
+    output             [  31: 0]           paddr                      ,
+`endif  
+    output             [  31: 0]           rd_value                   ,
+    output             [   4: 0]           rd_next                    
 );
-
+`ifdef Performance_Count
     assign                              mem_ren_flag                = mem_ren_reg;
     assign                              paddr                       = Ex_result_reg;
-
+`endif  
     reg                [  31: 0]        MEM_Rdata_reg               ;
     reg                [  31: 0]        Ex_result_reg               ;
     reg                [  31: 0]        csrs_reg                    ;
