@@ -1,3 +1,4 @@
+`include "../define/para.v"
 module ysyx_24100029_RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
     input                        clock                        ,
     input              [DATA_WIDTH-1: 0]wdata               ,
@@ -22,18 +23,20 @@ module ysyx_24100029_RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
       rf[0] <= 32'd0;
   end
 
-
+`ifdef Performance_Count
 task ReadReg;
     input                        int reg_num                ;
     output                       bit[31:0] reg_value        ;
     reg_value = rf[reg_num];
 endtask
 
+export "DPI-C" task ReadReg;
+`endif 
+
     assign                       rs1_value                 = rf[rs1_addr];
     assign                       rs2_value                 = rf[rs2_addr];
     assign                       a0_value                  = rf[10];
 
-export "DPI-C" task ReadReg;
 
 endmodule
 

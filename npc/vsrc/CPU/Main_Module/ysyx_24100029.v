@@ -1,5 +1,7 @@
+`include "../define/para.v"
+`ifdef Performance_Count
 import "DPI-C" function void fi(int val);
-`include "para.v"
+`endif 
 
 module ysyx_24100029
 (

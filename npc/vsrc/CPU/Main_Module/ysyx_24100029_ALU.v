@@ -1,4 +1,4 @@
-`include "para.v"
+`include "../define/para.v"
 //`include "/home/cjy/ysyx-workbench/npc/vsrc/CPU/define/para.v"
 `timescale 1ns / 1ps
 //****************************************VSCODE PLUG-IN**********************************//

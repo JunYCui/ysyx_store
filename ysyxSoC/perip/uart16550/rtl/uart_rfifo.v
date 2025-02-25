@@ -210,9 +210,9 @@ always @(posedge clk or posedge wb_rst_i)                           // synchrono
 begin
     if (wb_rst_i)
     begin
-        top        <= #1 'b0;
-        bottom        <= #1 'b0;
-        count        <= #1 'b0;
+        top        <= #1 0;
+        bottom        <= #1 0;
+        count        <= #1 0;
         fifo[0] <= #1 0;
         fifo[1] <= #1 0;
         fifo[2] <= #1 0;
@@ -232,9 +232,9 @@ begin
     end
     else
     if (fifo_reset) begin
-        top        <= #1 'b0;
-        bottom        <= #1 'b0;
-        count        <= #1 'b0;
+        top        <= #1 0;
+        bottom        <= #1 0;
+        count        <= #1 0;
         fifo[0] <= #1 0;
         fifo[1] <= #1 0;
         fifo[2] <= #1 0;

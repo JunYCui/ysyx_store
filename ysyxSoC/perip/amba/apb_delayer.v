@@ -23,7 +23,7 @@ module apb_delayer(
     input              [  31: 0]           out_prdata                 ,
     input                                  out_pslverr                 
 );
-    parameter                           r                          = 3     ; // main frequency vs slave frequency
+    parameter                           r                          = 1     ; // main frequency vs slave frequency
     parameter                           s                          = 8     ; //  ratio
 
 
@@ -71,7 +71,7 @@ module apb_delayer(
           count <= count - 1;
         end
         else if(state == REQ & out_pready)begin
-          count <= count >> $clog2(s) ;
+          count <= count >> $clog2(s) - 1 ;
         end
         else if(state == REQ)begin
           count <= count + (r<<$clog2(s)) ;

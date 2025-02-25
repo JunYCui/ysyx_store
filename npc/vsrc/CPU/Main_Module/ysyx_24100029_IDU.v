@@ -1,4 +1,4 @@
-`include "para.v"
+`include "../define/para.v"
 //`include "/home/cjy/ysyx-workbench/npc/vsrc/CPU/define/para.v"
 
     localparam                          i1_NR_KEY                  = 10    ;
