@@ -89,7 +89,7 @@ perf:
 	@sed -i '$$a \`define Performance_Count' ./vsrc/CPU/define/para.v
 	@echo "microbench test"
 	@$(MAKE) -C ../am-kernels/benchmarks/microbench ARCH=riscv32e-ysyxsoc mainargs=test run > log1.txt
-	@ grep --after-context=9 'total_count' log.txt count.txt 2>&1
+	@ grep --after-context=9 'total_count' log.txt > count.txt
 .PHONY: clean all sim
 #waves:*.vcd
 #	gtkwave *.vcd
