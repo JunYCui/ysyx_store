@@ -33,6 +33,7 @@ extern VysyxSoCFull *top;
 
 void fi(int val) { 
     printf("\033[0m\033[1;34m cycle=%ld inst_num=%ld  ipc= %.3f \n \033[0m",cycle,inst_num,(float)inst_num/cycle);
+    fflush(stdout);
     m_trace->close();
     nvboard_quit();
     exit(val); 
