@@ -121,7 +121,7 @@ end
             state_p <= IDLE;
         else begin
             case(state_p)
-            IDLE: if(mem_ren | mem_wen & valid_last & ready_last)
+            IDLE: if((mem_ren | mem_wen) & valid_last & ready_last)
                     state_p <= WORK;
             WORK: if(rvalid | bvalid)
                     state_p <= IDLE;
