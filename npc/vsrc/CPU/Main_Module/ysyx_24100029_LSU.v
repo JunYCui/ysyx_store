@@ -121,7 +121,7 @@ end
             state_p <= IDLE;
         else begin
             case(state_p)
-            IDLE: if(mem_ren | mem_wen & valid_last)
+            IDLE: if(mem_ren | mem_wen & valid_last & ready_last)
                     state_p <= WORK;
             WORK: if(rvalid | bvalid)
                     state_p <= IDLE;
@@ -131,7 +131,7 @@ end
     always @(posedge clock or posedge reset) begin
         if(reset)
             lsu_cycle <= 0;
-        else if(state_p == IDLE & (mem_ren | mem_wen) & valid_last)
+        else if(state_p == IDLE & (mem_ren | mem_wen) & valid_last & ready_last)
             lsu_cycle <= lsu_cycle + 1;
         else if(state_p == WORK)
             lsu_cycle <= lsu_cycle + 1;
