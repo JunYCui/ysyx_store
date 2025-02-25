@@ -52,15 +52,15 @@ module ysyx_24100029_Control (
     wire               [   2: 0] IDU_rs1_choice             ;
     wire               [   2: 0] IDU_rs2_choice             ;
 
-    assign                       dnpc_flag                 = ((mret_flag&IDU_valid) || (ecall_flag&IDU_valid) || (jump_flag&EXU_valid) || (branch_flag&EXU_valid&Ex_result != 32'd0));
+    assign                       dnpc_flag                 = ((mret_flag&IDU_valid) || (ecall_flag&IDU_valid) || (jump_flag&EXU_valid) || (branch_flag&EXU_valid));
 
-    assign                       IDU_inst_clear            = ((mret_flag&IDU_valid) || (ecall_flag&IDU_valid) || (jump_flag&EXU_valid) || (branch_flag&EXU_valid&Ex_result != 32'd0));
-    assign                       EXU_inst_clear            = ((jump_flag&EXU_valid) || (branch_flag&EXU_valid&Ex_result != 32'd0) || pipe_stop);
+    assign                       IDU_inst_clear            = ((mret_flag&IDU_valid) || (ecall_flag&IDU_valid) || (jump_flag&EXU_valid) || (branch_flag&EXU_valid));
+    assign                       EXU_inst_clear            = ((jump_flag&EXU_valid) || (branch_flag&EXU_valid) || pipe_stop);
 
 
     assign                       dnpc                      = (jump_flag&EXU_valid)                                                  ?                                                                         
                                                             Ex_result:(branch_flag&EXU_valid)                                       ?
-                                                            ((Ex_result != 32'd0)? EXU_pc+EXU_imm:0):(mret_flag&IDU_valid)   ?
+                                                            ((Ex_result != 32'd0)? EXU_pc+EXU_imm:EXU_pc+4):(mret_flag&IDU_valid)   ?
                                                             mepc_out:(ecall_flag&IDU_valid)                                         ?
                                                             mtvec_out:0;
 
