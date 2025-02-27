@@ -166,7 +166,7 @@ module ysyx_24100029_icache #(
         else begin
             case(state)
                 IDLE:begin
-                    if(~(ifu_arvalid & ifu_arready))
+                    if(ifu_arvalid & ifu_arready)
                         state <= ADDR;
                     else begin
                         state <= IDLE;
