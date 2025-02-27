@@ -1,3 +1,6 @@
+/*interface define*/
+
+
 // __opcode__
 
 `define R_opcode_ysyx_24100029  7'b0110011
@@ -30,22 +33,22 @@
 `define rs1_dist_pc_ysyx_24100029        2'b01
 `define rs1_dist_para_ysyx_24100029      2'b10
 
-// imm_opcode 
+// imm_opcode
 
 `define imm_12i_ysyx_24100029            2'b00
 `define imm_20u_ysyx_24100029            2'b01
 `define imm_20i_ysyx_24100029            2'b10
 `define imm_5u_ysyx_24100029             2'b11
 
-// slave_read_state 
+// slave_read_state
 `define wait_arv_ysyx_24100029           1'b0
-`define wait_rdv_ysyx_24100029           1'b1   
+`define wait_rdv_ysyx_24100029           1'b1
 // slave_write_state
 `define wait_awv_ysyx_24100029           1'b0
 
 // Aribiter
 `define Aribiter_choice_IDLE_ysyx_24100029 2'b00
-`define Aribiter_choice_IFU_ysyx_24100029  2'b01 
+`define Aribiter_choice_IFU_ysyx_24100029  2'b01
 `define Aribiter_choice_LSU_ysyx_24100029  2'b10
-
+//
 `define Performance_Count

@@ -80,29 +80,60 @@ module ysyx_24100029_IFU(
     reg                                 dnpc_flag_reg               ;
     reg                                 pipe_stop_reg               ;
     reg                [  31: 0]        dnpc_reg                    ;
+/****************icache****************/    
+    wire                                ifu_awready                 ;
+    reg                                 ifu_awvalid                 ;
+    reg                [  31: 0]        ifu_awaddr                  ;
+    reg                [   3: 0]        ifu_awid                    ;
+    reg                [   7: 0]        ifu_awlen                   ;
+    reg                [   2: 0]        ifu_awsize                  ;
+    reg                [   1: 0]        ifu_awburst                 ;
+    wire                                ifu_wready                  ;
+    reg                                 ifu_wvalid                  ;
+    reg                [  31: 0]        ifu_wdata                   ;
+    reg                [   3: 0]        ifu_wstrb                   ;
+    reg                                 ifu_wlast                   ;
+    reg                                 ifu_bready                  ;
+    wire                                ifu_bvalid                  ;
+    wire               [   1: 0]        ifu_bresp                   ;
+    wire               [   3: 0]        ifu_bid                     ;
+    wire                                ifu_arready                 ;
+    reg                                 ifu_arvalid                 ;
+    reg                [  31: 0]        ifu_araddr                  ;
+    reg                [   3: 0]        ifu_arid                    ;
+    reg                [   7: 0]        ifu_arlen                   ;
+    reg                [   2: 0]        ifu_arsize                  ;
+    reg                [   1: 0]        ifu_arburst                 ;
+    reg                                 ifu_rready                  ;
+    wire                                ifu_rvalid                  ;
+    wire               [   1: 0]        ifu_rresp                   ;
+    wire               [  31: 0]        ifu_rdata                   ;
+    wire                                ifu_rlast                   ;
+    wire               [   3: 0]        ifu_rid                     ;
+
 
 /************ Axi4 bus ***********/
-    assign                              araddr                      = pc;
-    assign                              arid                        = 0;
-    assign                              arlen                       = 0;// 0+1 = 1 transfer once
-    assign                              arsize                      = 3'b010;// transfer 4 bytes once
-    assign                              arburst                     = 2'b00;// FIXED Burst
+    assign                              ifu_araddr                      = pc;
+    assign                              ifu_arid                        = 0;
+    assign                              ifu_arlen                       = 0;// 0+1 = 1 transfer once
+    assign                              ifu_arsize                      = 3'b010;// transfer 4 bytes once
+    assign                              ifu_arburst                     = 2'b00;// FIXED Burst
 
-    assign                              awvalid                     = 0;
-    assign                              awaddr                      = 0;
-    assign                              awid                        = 0;
-    assign                              awlen                       = 0;
-    assign                              awsize                      = 0;
-    assign                              awburst                     = 0;
+    assign                              ifu_awvalid                     = 0;
+    assign                              ifu_awaddr                      = 0;
+    assign                              ifu_awid                        = 0;
+    assign                              ifu_awlen                       = 0;
+    assign                              ifu_awsize                      = 0;
+    assign                              ifu_awburst                     = 0;
 
-    assign                              wvalid                      = 0;
-    assign                              wdata                       = 0;
-    assign                              wstrb                       = 0;
-    assign                              wlast                       = 0;
+    assign                              ifu_wvalid                      = 0;
+    assign                              ifu_wdata                       = 0;
+    assign                              ifu_wstrb                       = 0;
+    assign                              ifu_wlast                       = 0;
 
-    assign                              bready                      = 0;
+    assign                              ifu_bready                      = 0;
 
-    assign                              rready                      = 1'b1;
+    assign                              ifu_rready                      = 1'b1;
 
   //  check_rresp: assert(rresp != 2'b00) ; 
     localparam                          ResetValue                 = 32'h30000000;
@@ -112,17 +143,17 @@ module ysyx_24100029_IFU(
     always @(posedge clock) begin
         if(reset)
             fetch_inst <= 0;
-        else if(rvalid)
+        else if(ifu_rvalid)
             fetch_inst <= fetch_inst + 1;
     end
-`endif 
+`endif
 
 always @(posedge clock) begin
     if(reset)begin
         valid <= 1'b0;
         inst <= 0;
     end
-    else if(rvalid)begin
+    else if(ifu_rvalid)begin
         valid <= 1'b1;
         inst <= rdata;
     end
@@ -155,11 +186,11 @@ end
 
 always @(posedge clock) begin
     if(reset)
-        arvalid <= 1'b1;
+        ifu_arvalid <= 1'b1;
     else if(valid & ready)
-        arvalid <= 1'b1;
-    else if(arvalid & arready)
-        arvalid <= 1'b0;
+        ifu_arvalid <= 1'b1;
+    else if(ifu_arvalid & ifu_arready)
+        ifu_arvalid <= 1'b0;
 end
 
 always @(posedge clock) begin
@@ -175,7 +206,74 @@ always @(posedge clock) begin
             pc <= pc + 4;
 end
 
-    assign                              req                         = 1'b1;
+    assign                              req                         = ifu_arvalid;
+
+
+ysyx_24100029_icache u_ysyx_24100029_icache(
+    .clock                              (clock                     ),
+    .reset                              (reset                     ),
+
+    .ifu_awready                        (ifu_awready               ),
+    .ifu_awvalid                        (ifu_awvalid               ),
+    .ifu_awaddr                         (ifu_awaddr                ),
+    .ifu_awid                           (ifu_awid                  ),
+    .ifu_awlen                          (ifu_awlen                 ),
+    .ifu_awsize                         (ifu_awsize                ),
+    .ifu_awburst                        (ifu_awburst               ),
+    .ifu_wready                         (ifu_wready                ),
+    .ifu_wvalid                         (ifu_wvalid                ),
+    .ifu_wdata                          (ifu_wdata                 ),
+    .ifu_wstrb                          (ifu_wstrb                 ),
+    .ifu_wlast                          (ifu_wlast                 ),
+    .ifu_bready                         (ifu_bready                ),
+    .ifu_bvalid                         (ifu_bvalid                ),
+    .ifu_bresp                          (ifu_bresp                 ),
+    .ifu_bid                            (ifu_bid                   ),
+    .ifu_arready                        (ifu_arready               ),
+    .ifu_arvalid                        (ifu_arvalid               ),
+    .ifu_araddr                         (ifu_araddr                ),
+    .ifu_arid                           (ifu_arid                  ),
+    .ifu_arlen                          (ifu_arlen                 ),
+    .ifu_arsize                         (ifu_arsize                ),
+    .ifu_arburst                        (ifu_arburst               ),
+    .ifu_rready                         (ifu_rready                ),
+    .ifu_rvalid                         (ifu_rvalid                ),
+    .ifu_rresp                          (ifu_rresp                 ),
+    .ifu_rdata                          (ifu_rdata                 ),
+    .ifu_rlast                          (ifu_rlast                 ),
+    .ifu_rid                            (ifu_rid                   ),
+
+    .icache_awready                     (awready                   ),
+    .icache_awvalid                     (awvalid                   ),
+    .icache_awaddr                      (awaddr                    ),
+    .icache_awid                        (awid                      ),
+    .icache_awlen                       (awlen                     ),
+    .icache_awsize                      (awsize                    ),
+    .icache_awburst                     (awburst                   ),
+    .icache_wready                      (wready                    ),
+    .icache_wvalid                      (wvalid                    ),
+    .icache_wdata                       (wdata                     ),
+    .icache_wstrb                       (wstrb                     ),
+    .icache_wlast                       (wlast                     ),
+    .icache_bready                      (bready                    ),
+    .icache_bvalid                      (bvalid                    ),
+    .icache_bresp                       (bresp                     ),
+    .icache_bid                         (bid                       ),
+    .icache_arready                     (arready                   ),
+    .icache_arvalid                     (arvalid                   ),
+    .icache_araddr                      (araddr                    ),
+    .icache_arid                        (arid                      ),
+    .icache_arlen                       (arlen                     ),
+    .icache_arsize                      (arsize                    ),
+    .icache_arburst                     (arburst                   ),
+    .icache_rready                      (rready                    ),
+    .icache_rvalid                      (rvalid                    ),
+    .icache_rresp                       (rresp                     ),
+    .icache_rdata                       (rdata                     ),
+    .icache_rlast                       (rlast                     ),
+    .icache_rid                         (rid                       ) 
+);
+
 
 
 endmodule

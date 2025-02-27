@@ -1,5 +1,5 @@
 /* verilator lint_off UNUSEDSIGNAL */
-// signal not use
+
 `timescale 1ns / 1ps
     localparam                          i4_NR_KEY                  = 5     ; //键值的个数
     localparam                          i4_KEY_LEN                 = 3     ; //键值的长度
@@ -49,12 +49,12 @@ module ysyx_24100029_LSU (
     output             [  31: 0]           wdata                      ,
     output             [   3: 0]           wstrb                      ,
     output                                 wlast                      ,
-
+     
     output                                 bready                     ,
     input                                  bvalid                     ,
     input              [   1: 0]           bresp                      ,
     input              [   3: 0]           bid                        ,
-    
+     
     input                                  arready                    ,
     output                                 arvalid                    ,
     output             [  31: 0]           araddr                     ,
@@ -62,7 +62,7 @@ module ysyx_24100029_LSU (
     output             [   7: 0]           arlen                      ,
     output             [   2: 0]           arsize                     ,
     output             [   1: 0]           arburst                    ,
-    
+     
     output                                 rready                     ,
     input                                  rvalid                     ,
     input              [   1: 0]           rresp                      ,
