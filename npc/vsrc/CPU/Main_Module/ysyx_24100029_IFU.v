@@ -155,7 +155,7 @@ always @(posedge clock) begin
     end
     else if(ifu_rvalid)begin
         valid <= 1'b1;
-        inst <= rdata;
+        inst <= ifu_rdata;
     end
     else if(valid & ready)begin
         valid <= 1'b0;
