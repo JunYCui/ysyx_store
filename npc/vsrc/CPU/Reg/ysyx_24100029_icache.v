@@ -100,12 +100,16 @@ module ysyx_24100029_icache #(
     input              [   1: 0]           icache_rresp               ,
     input              [  31: 0]           icache_rdata               ,
     input                                  icache_rlast               ,
-    input              [   3: 0]           icache_rid                 
+    input              [   3: 0]           icache_rid                  
 
 );
-    typedef enum logic [1:0] {IDLE,ADDR,MISS,HIT}state_t;
+   
 
-
+    localparam                          IDLE                       = 2'b00 ;
+    localparam                          ADDR                       = 2'b01 ;
+    localparam                          MISS                       = 2'b10 ;
+    localparam                          HIT                        = 2'b11 ;
+    
     localparam                          TAG_WIDTH                  = ADDR_WIDTH - OFFSET_WIDTH - INDEX_WIDTH;
     localparam                          VALID_WIDTH                = 1     ;
     localparam                          CACHE_WIDTH                = DATA_WIDTH + TAG_WIDTH + VALID_WIDTH; 
@@ -117,7 +121,7 @@ module ysyx_24100029_icache #(
     wire                                hit                         ;
 
     reg                [CACHE_WIDTH-1: 0]        icache[2**INDEX_WIDTH-1:0]  ;
-    state_t state;
+    reg                [   1: 0]        state                       ;
 
     assign                              rdata                       = icache[index][CACHE_WIDTH-1:VALID_WIDTH+TAG_WIDTH];
     assign                              tag                         = icache[index][VALID_WIDTH+TAG_WIDTH-1:VALID_WIDTH];
