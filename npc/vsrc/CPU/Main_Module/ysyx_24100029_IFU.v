@@ -206,7 +206,7 @@ always @(posedge clock) begin
             pc <= pc + 4;
 end
 
-    assign                              req                         = ifu_arvalid;
+    assign                              req                         = arvalid;
 
 
 ysyx_24100029_icache u_ysyx_24100029_icache(
