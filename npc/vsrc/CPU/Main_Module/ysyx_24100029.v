@@ -368,10 +368,10 @@ module ysyx_24100029
 
     always @(*)begin
         if(WBU_inst == 32'h00100073) begin
-        $display("\033[0m\033[1;34m | icache addr \t|  sram \t| flash \t| sdram\t| \033[0m");
-        $display("\033[0m\033[1;34m | hit   \t|  %d \t| %d \t| %d\t| \033[0m",sram_hit,flash_hit,sdram_hit);
-        $display("\033[0m\033[1;34m | miss  \t|  %d \t| %d \t| %d\t| \033[0m",sram_miss,flash_miss,sdram_miss);
-        $display("\033[0m\033[1;34m | hit_rate \t|  %d \t| %d \t| %d\t| \033[0m",sram_hit*100/(sram_hit+sram_miss),flash_hit*100/(flash_hit+flash_miss),sdram_hit*100/(sdram_hit+sdram_miss));
+        $display("\033[0m\033[1;34m | icache addr \t| sram \t| flash \t| sdram\t| \033[0m");
+        $display("\033[0m\033[1;34m | hit   \t| %-d \t| %-d \t| %-d\t| \033[0m",sram_hit,flash_hit,sdram_hit);
+        $display("\033[0m\033[1;34m | miss  \t| %-d \t| %-d \t| %-d\t| \033[0m",sram_miss,flash_miss,sdram_miss);
+        $display("\033[0m\033[1;34m | hit_rate \t| %-d \t| %-d \t| %-d\t| \033[0m",sram_hit*100/(sram_hit+sram_miss),flash_hit*100/(flash_hit+flash_miss),sdram_hit*100/(sdram_hit+sdram_miss));
         $display("\033[0m\033[1;34m | total_count \t| InstR_count \t| InstI_count \t| InstS_count \t| InstU_count \t| InstB_count \t| InstJ_count \t| InstM_count \t| \033[0m");
         $display("\033[0m\033[1;34m | %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| \033[0m",total_count,InstR_count,InstI_count,InstS_count, InstU_count,InstB_count,InstJ_count,InstM_count);
         $display("\033[0m\033[1;34m | fetch_inst \t| flush_decoder_i \t| flush_execute_i \t| \033[0m");
