@@ -7,7 +7,7 @@ CSOURCES=$(shell find $(abspath ./csrc/cpu) -name "*.c" -or -name "*.cc" -or -na
 INC_VDEFINE = $(NPC_HOME)/vsrc/CPU/define
 # add ysyxsoc
 
-ifeq ($(findstring soc, $(ARCH)),riscv32e-ysyxsoc)
+ifeq ($(findstring soc, $(ARCH)),)
 	@echo "ysyxsoc"
 endif
 
@@ -61,7 +61,6 @@ NPC_EXEC = $(BIN) $(ARGS) $(IMG)
 
 sim:all
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	@echo "Write this Makefile by your self." 
 	$(NPC_EXEC)
 
 gdb: all
@@ -70,7 +69,6 @@ gdb: all
 
 
 all:$(CSOURCES) $(VSOURCES)  $(NVBOARD_ARCHIVE)
-	@echo "Write this Makefile by your self."
 	@rm -rf $(OBJ_DIR) *.vcd
 	$(VERILATOR) $(VERILATOR_FLAGS) \
 	--top-module $(TOPNAME) \
