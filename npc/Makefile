@@ -7,7 +7,7 @@ CSOURCES=$(shell find $(abspath ./csrc/cpu) -name "*.c" -or -name "*.cc" -or -na
 INC_VDEFINE = $(NPC_HOME)/vsrc/CPU/define
 # add ysyxsoc
 
-ifeq ($(findstring soc, $(ARCH)),)
+ifeq ($(findstring soc, $(ARCH)),riscv32e-ysyxsoc)
 	@echo "ysyxsoc"
 endif
 
@@ -70,7 +70,6 @@ gdb: all
 
 
 all:$(CSOURCES) $(VSOURCES)  $(NVBOARD_ARCHIVE)
-	@echo "$(ARCH)"
 	@echo "Write this Makefile by your self."
 	@rm -rf $(OBJ_DIR) *.vcd
 	$(VERILATOR) $(VERILATOR_FLAGS) \
