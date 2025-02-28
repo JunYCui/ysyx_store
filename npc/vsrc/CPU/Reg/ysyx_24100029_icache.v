@@ -23,7 +23,7 @@
 //
 //----------------------------------------------------------------------------------------
 //****************************************************************************************//
-
+`include "../define/para.v"
 module ysyx_24100029_icache #(
     OFFSET_WIDTH = 2,
     INDEX_WIDTH = 3 ,
@@ -34,6 +34,9 @@ module ysyx_24100029_icache #(
     input                                  clock                      ,
     input                                  reset                      ,
 
+`ifdef Performance_Count
+    output reg         [  31: 0]           flash_hit,flash_miss,sram_hit,sram_miss,sdram_hit,sdram_miss,
+`endif
     output                                 ifu_awready                ,
     input                                  ifu_awvalid                ,
     input              [  31: 0]           ifu_awaddr                 ,
@@ -103,12 +106,55 @@ module ysyx_24100029_icache #(
     input              [   3: 0]           icache_rid                  
 
 );
+   `ifdef Performance_Count
+        always @(posedge clock or posedge reset) begin
+            if(reset)begin
+                flash_hit <= 0;
+                flash_miss <= 0;
+                sdram_hit <= 0;
+                sdram_miss <= 0;
+                sram_hit <= 0;
+                sram_miss <= 0;
+            end
+            else if(ifu_araddr[31:28] == 4'h3)begin
+                if(state == MISS & icache_rvalid)
+                    flash_miss <= flash_miss + 1;
+                else
+                    flash_miss <= flash_miss;
+                if(hit)
+                    flash_hit <= flash_hit + 1;
+                else
+                    flash_hit <= flash_hit;
+            end
+            else if(ifu_araddr[31:24] == 8'h0f)begin
+                if(state == MISS & icache_rvalid)
+                    sram_miss <= sram_miss + 1;
+                else
+                    sram_miss <= sram_miss;
+                if(hit)
+                    sram_hit <= sram_hit + 1;
+                else
+                    sram_hit <= sram_hit;
+            end
+            else if(ifu_araddr[31:28] == 4'ha || ifu_araddr[31:28] == 4'hb)begin
+                if(state == MISS & icache_rvalid)
+                    sdram_miss <= sdram_miss + 1;
+                else
+                    sdram_miss <= sdram_miss;
+                if(hit)
+                    sdram_hit <= sdram_hit + 1;
+                else
+                    sdram_hit <= sdram_hit;
+            end
+        end
    
+   
+   
+   `endif
 
     localparam                          IDLE                       = 2'b00 ;
     localparam                          ADDR                       = 2'b01 ;
     localparam                          MISS                       = 2'b10 ;
-    localparam                          HIT                        = 2'b11 ;
     
     localparam                          TAG_WIDTH                  = ADDR_WIDTH - OFFSET_WIDTH - INDEX_WIDTH;
     localparam                          VALID_WIDTH                = 1     ;
@@ -160,7 +206,7 @@ module ysyx_24100029_icache #(
     assign                              ifu_bresp                   = 0;
     assign                              ifu_bid                     = 0;
     assign                              ifu_arready                 = (state == IDLE);
-    assign                              ifu_rdata                   = (hit)? rdata:icache_rdata;
+    assign                              ifu_rdata                   = (state == MISS)? icache_rdata:rdata;
     assign                              ifu_rvalid                  = hit | ((state == MISS) & icache_rvalid);
     assign                              hit                         = (state == ADDR) & valid & (ifu_araddr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH] == tag) & ifu_rready;
 
@@ -178,17 +224,17 @@ module ysyx_24100029_icache #(
                     end
                 ADDR:begin
                     if(hit)
-                        state <= HIT;
+                        state <= IDLE;
                     else
                         state <= MISS;
                 end
-                HIT: state <= IDLE;
                 MISS:begin
                     if(icache_rvalid)
                         state <= IDLE;
                     else
                         state <= MISS;
                 end
+                default:state <= IDLE;
             endcase
         end
     end

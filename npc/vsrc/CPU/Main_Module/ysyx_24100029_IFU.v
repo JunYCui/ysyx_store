@@ -73,6 +73,7 @@ module ysyx_24100029_IFU(
 
 `ifdef Performance_Count
     output             [  31: 0]           fetch_inst                 ,
+    output             [  31: 0]           flash_hit,flash_miss,sram_hit,sram_miss,sdram_hit,sdram_miss,
 `endif
     output                                 req                         
 );
@@ -80,7 +81,7 @@ module ysyx_24100029_IFU(
     reg                                 dnpc_flag_reg               ;
     reg                                 pipe_stop_reg               ;
     reg                [  31: 0]        dnpc_reg                    ;
-/****************icache****************/    
+/****************icache****************/
     wire                                ifu_awready                 ;
     reg                                 ifu_awvalid                 ;
     reg                [  31: 0]        ifu_awaddr                  ;
@@ -113,27 +114,27 @@ module ysyx_24100029_IFU(
 
 
 /************ Axi4 bus ***********/
-    assign                              ifu_araddr                      = pc;
-    assign                              ifu_arid                        = 0;
-    assign                              ifu_arlen                       = 0;// 0+1 = 1 transfer once
-    assign                              ifu_arsize                      = 3'b010;// transfer 4 bytes once
-    assign                              ifu_arburst                     = 2'b00;// FIXED Burst
+    assign                              ifu_araddr                  = pc;
+    assign                              ifu_arid                    = 0;
+    assign                              ifu_arlen                   = 0;// 0+1 = 1 transfer once
+    assign                              ifu_arsize                  = 3'b010;// transfer 4 bytes once
+    assign                              ifu_arburst                 = 2'b00;// FIXED Burst
 
-    assign                              ifu_awvalid                     = 0;
-    assign                              ifu_awaddr                      = 0;
-    assign                              ifu_awid                        = 0;
-    assign                              ifu_awlen                       = 0;
-    assign                              ifu_awsize                      = 0;
-    assign                              ifu_awburst                     = 0;
+    assign                              ifu_awvalid                 = 0;
+    assign                              ifu_awaddr                  = 0;
+    assign                              ifu_awid                    = 0;
+    assign                              ifu_awlen                   = 0;
+    assign                              ifu_awsize                  = 0;
+    assign                              ifu_awburst                 = 0;
 
-    assign                              ifu_wvalid                      = 0;
-    assign                              ifu_wdata                       = 0;
-    assign                              ifu_wstrb                       = 0;
-    assign                              ifu_wlast                       = 0;
+    assign                              ifu_wvalid                  = 0;
+    assign                              ifu_wdata                   = 0;
+    assign                              ifu_wstrb                   = 0;
+    assign                              ifu_wlast                   = 0;
 
-    assign                              ifu_bready                      = 0;
+    assign                              ifu_bready                  = 0;
 
-    assign                              ifu_rready                      = 1'b1;
+    assign                              ifu_rready                  = 1'b1;
 
   //  check_rresp: assert(rresp != 2'b00) ; 
     localparam                          ResetValue                 = 32'h30000000;
@@ -213,6 +214,14 @@ ysyx_24100029_icache u_ysyx_24100029_icache(
     .clock                              (clock                     ),
     .reset                              (reset                     ),
 
+    `ifdef Performance_Count
+    .flash_hit                          (flash_hit                 ),
+    .flash_miss                         (flash_miss                ),
+    .sram_hit                           (sram_hit                  ),
+    .sram_miss                          (sram_miss                 ),
+    .sdram_hit                          (sdram_hit                 ),
+    .sdram_miss                         (sdram_miss                ),
+    `endif
     .ifu_awready                        (ifu_awready               ),
     .ifu_awvalid                        (ifu_awvalid               ),
     .ifu_awaddr                         (ifu_awaddr                ),
