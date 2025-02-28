@@ -90,6 +90,7 @@ int main(int argc,char* argv[])
     init_monitor(argc, argv);
     nvboard_bind_all_pins(top);
     nvboard_init();
+    printf("env = %s\n",getenv("ARCH"));
 #ifdef WAVE_TRACE
     Verilated::traceEverOn(true);
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下

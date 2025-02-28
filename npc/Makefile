@@ -80,6 +80,13 @@ all:$(CSOURCES) $(VSOURCES)  $(NVBOARD_ARCHIVE)
 clean: 
 	rm -rf $(BUILD_DIR) *.vcd
 
+area:
+	@sed -i '/Performance/d' ./vsrc/CPU/define/para.v
+	@echo "analyse the chip area and frequency"
+	@$(MAKE) -C ~/yosys-sta sta > log.txt 
+	@grep --after-context=1 "Chip area" log.txt > area.txt
+	@grep --after-context=7 "Endpoint" log.txt > frequency.txt 
+	@sed -i '$$a \`define Performance_Count' ./vsrc/CPU/define/para.v
 perf:
 	@sed -i '/Performance/d' ./vsrc/CPU/define/para.v
 	@echo "analyse the chip area and frequency"
