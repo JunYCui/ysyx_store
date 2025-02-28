@@ -1,11 +1,12 @@
 TOPNAME = ysyxSoCFull
 INC_PATH = $(NPC_HOME)/include 
 
-
 VSOURCES=$(shell find $(abspath ./vsrc/CPU) -name "*.v" -or -name "*.sv" )
 CSOURCES=$(shell find $(abspath ./csrc/cpu) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
 INC_VDEFINE = $(NPC_HOME)/vsrc/CPU/define
 # add ysyxsoc
+
+
 VSOURCES += $(shell find $(abspath ../ysyxSoC/perip) -name "*.v" )
 VSOURCES += $(shell find $(abspath ../ysyxSoC/build) -name "*.v" )
 INC_VDEFINE += /home/cjy/ysyx-workbench/ysyxSoC/perip/uart16550/rtl /home/cjy/ysyx-workbench/ysyxSoC/perip/spi/rtl
@@ -53,8 +54,6 @@ override ARGS += $(ARGS_DIFF)
 $(shell mkdir -p $(BUILD_DIR))
 
 NPC_EXEC = $(BIN) $(ARGS) $(IMG)
-
-
 
 sim:all
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
