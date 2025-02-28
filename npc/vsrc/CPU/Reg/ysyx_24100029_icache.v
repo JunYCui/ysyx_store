@@ -155,6 +155,7 @@ module ysyx_24100029_icache #(
     localparam                          IDLE                       = 2'b00 ;
     localparam                          ADDR                       = 2'b01 ;
     localparam                          MISS                       = 2'b10 ;
+    localparam                          DREQ                       = 2'b11 ;
     
     localparam                          TAG_WIDTH                  = ADDR_WIDTH - OFFSET_WIDTH - INDEX_WIDTH;
     localparam                          VALID_WIDTH                = 1     ;
