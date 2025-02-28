@@ -35,7 +35,7 @@ module ysyx_24100029_icache #(
     input                                  reset                      ,
 
 `ifdef Performance_Count
-    output reg         [  31: 0]           flash_hit,flash_miss,sram_hit,sram_miss,sdram_hit,sdram_miss,
+    output reg         [  31: 0]           flash_hit,flash_miss,sdram_hit,sdram_miss,
 `endif
     output                                 ifu_awready                ,
     input                                  ifu_awvalid                ,
@@ -113,35 +113,23 @@ module ysyx_24100029_icache #(
                 flash_miss <= 0;
                 sdram_hit <= 0;
                 sdram_miss <= 0;
-                sram_hit <= 0;
-                sram_miss <= 0;
             end
             else if(ifu_araddr[31:28] == 4'h3)begin
                 if(state == MISS & icache_rvalid)
                     flash_miss <= flash_miss + 1;
                 else
                     flash_miss <= flash_miss;
-                if(hit)
+                if(state == HIT)
                     flash_hit <= flash_hit + 1;
                 else
                     flash_hit <= flash_hit;
-            end
-            else if(ifu_araddr[31:24] == 8'h0f)begin
-                if(state == MISS & icache_rvalid)
-                    sram_miss <= sram_miss + 1;
-                else
-                    sram_miss <= sram_miss;
-                if(hit)
-                    sram_hit <= sram_hit + 1;
-                else
-                    sram_hit <= sram_hit;
             end
             else if(ifu_araddr[31:28] == 4'ha || ifu_araddr[31:28] == 4'hb)begin
                 if(state == MISS & icache_rvalid)
                     sdram_miss <= sdram_miss + 1;
                 else
                     sdram_miss <= sdram_miss;
-                if(hit)
+                if(state == HIT)
                     sdram_hit <= sdram_hit + 1;
                 else
                     sdram_hit <= sdram_hit;

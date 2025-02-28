@@ -73,7 +73,7 @@ module ysyx_24100029_IFU(
 
 `ifdef Performance_Count
     output             [  31: 0]           fetch_inst                 ,
-    output             [  31: 0]           flash_hit,flash_miss,sram_hit,sram_miss,sdram_hit,sdram_miss,
+    output             [  31: 0]           flash_hit,flash_miss,sdram_hit,sdram_miss,
 `endif
     output                                 req                         
 );
@@ -217,8 +217,6 @@ ysyx_24100029_icache u_ysyx_24100029_icache(
     `ifdef Performance_Count
     .flash_hit                          (flash_hit                 ),
     .flash_miss                         (flash_miss                ),
-    .sram_hit                           (sram_hit                  ),
-    .sram_miss                          (sram_miss                 ),
     .sdram_hit                          (sdram_hit                 ),
     .sdram_miss                         (sdram_miss                ),
     `endif
