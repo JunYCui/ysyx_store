@@ -66,6 +66,7 @@ gdb: all
 
 
 all:$(CSOURCES) $(VSOURCES)  $(NVBOARD_ARCHIVE)
+	@echo "$(ARCH)"
 	@echo "Write this Makefile by your self."
 	@rm -rf $(OBJ_DIR) *.vcd
 	$(VERILATOR) $(VERILATOR_FLAGS) \
@@ -96,7 +97,7 @@ perf:
 	@echo "microbench test"
 	@$(MAKE) -C ../am-kernels/benchmarks/microbench ARCH=riscv32e-ysyxsoc mainargs=train run > log1.txt
 	@grep --after-context=9 "total_count" log1.txt > count.txt
-.PHONY: clean all sim
+.PHONY: clean all sim perf
 #waves:*.vcd
 #	gtkwave *.vcd
 
