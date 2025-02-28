@@ -8,15 +8,11 @@ INC_VDEFINE = $(NPC_HOME)/vsrc/CPU/define
 # add ysyxsoc
 
 
-OPTIMIZATION_LEVEL = 3
-
-ifeq ($(OPTIMIZATION_LEVEL), 3)
-CFLAGS += -O3
-endif
-
+ifeq ($(ARCH),riscv32e-ysyxsoc)
 VSOURCES += $(shell find $(abspath ../ysyxSoC/perip) -name "*.v" )
 VSOURCES += $(shell find $(abspath ../ysyxSoC/build) -name "*.v" )
 INC_VDEFINE += /home/cjy/ysyx-workbench/ysyxSoC/perip/uart16550/rtl /home/cjy/ysyx-workbench/ysyxSoC/perip/spi/rtl
+endif
 Warning = UNUSEDSIGNAL ASSIGNDLY DECLFILENAME PINCONNECTEMPTY DEFPARAM UNDRIVEN SYNCASYNCNET UNUSEDPARAM
 VERILATOR_FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
 
