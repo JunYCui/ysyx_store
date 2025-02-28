@@ -155,7 +155,7 @@ module ysyx_24100029_icache #(
     localparam                          IDLE                       = 2'b00 ;
     localparam                          ADDR                       = 2'b01 ;
     localparam                          MISS                       = 2'b10 ;
-    localparam                          DREQ                       = 2'b11 ;
+    localparam                          HIT                        = 2'b11 ;
     
     localparam                          TAG_WIDTH                  = ADDR_WIDTH - OFFSET_WIDTH - INDEX_WIDTH;
     localparam                          VALID_WIDTH                = 1     ;
@@ -199,7 +199,7 @@ module ysyx_24100029_icache #(
 
 
     assign                              ifu_rresp                   = 2'b00;
-    assign                              ifu_rlast                   = ifu_rvalid;
+    assign                              ifu_rlast                   = mux_flag? icache_rlast:ifu_rvalid;
     assign                              ifu_rid                     = 0;
 
 
@@ -210,9 +210,9 @@ module ysyx_24100029_icache #(
     assign                              ifu_bid                     = 0;
     assign                              ifu_arready                 = mux_flag? icache_arready:(state == IDLE);
     assign                              ifu_rdata                   = mux_flag? icache_rdata:(state == MISS)? icache_rdata:rdata;
-    assign                              ifu_rvalid                  = mux_flag? icache_rvalid: hit | ((state == MISS) & icache_rvalid);
+    assign                              ifu_rvalid                  = mux_flag? icache_rvalid: (state == HIT) | ((state == MISS) & icache_rvalid);
     assign                              icache_arvalid              = mux_flag? ifu_arvalid:arvalid;
-    assign                              hit                         = (state == ADDR) & valid & (ifu_araddr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH] == tag) & ifu_rready;
+    assign                              hit                         = valid & (ifu_araddr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH] == tag) & ifu_rready;
     assign                              mux_flag                    = (ifu_araddr[31:24] == 8'h0f);
 
     always @(posedge clock or posedge reset) begin
@@ -229,10 +229,11 @@ module ysyx_24100029_icache #(
                     end
                 ADDR:begin
                     if(hit)
-                        state <= IDLE;
+                        state <= HIT;
                     else
                         state <= MISS;
                 end
+                HIT:state <= IDLE;
                 MISS:begin
                     if(icache_rvalid)
                         state <= IDLE;
