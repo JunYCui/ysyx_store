@@ -7,8 +7,11 @@ CSOURCES=$(shell find $(abspath ./csrc/cpu) -name "*.c" -or -name "*.cc" -or -na
 INC_VDEFINE = $(NPC_HOME)/vsrc/CPU/define
 # add ysyxsoc
 
-ifeq ($(findstring soc, $(ARCH)),)
-	@echo "ysyxsoc"
+
+OPTIMIZATION_LEVEL = 3
+
+ifeq ($(OPTIMIZATION_LEVEL), 3)
+CFLAGS += -O3
 endif
 
 VSOURCES += $(shell find $(abspath ../ysyxSoC/perip) -name "*.v" )
