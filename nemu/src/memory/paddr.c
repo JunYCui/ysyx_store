@@ -95,7 +95,7 @@ void init_mem() {
   sdram = (uint8_t*)malloc(CONFIG_SDRAM_SIZE);  
   psram =  (uint8_t*)malloc(CONFIG_PSRAM_SIZE);  
 #endif
-  IFDEF(CONFIG_MEM_RANDOM, memset(psram, rand(), CONFIG_FLASH_SIZE));
+  IFDEF(CONFIG_MEM_RANDOM, memset(flash, rand(), CONFIG_FLASH_SIZE));
   Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", FLASH_LEFT, FLASH_RIGHT);
 }
 

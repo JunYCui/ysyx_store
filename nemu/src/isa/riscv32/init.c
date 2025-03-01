@@ -16,7 +16,7 @@
 #include <isa.h>
 #include <isa-def.h>
 #include <memory/paddr.h>
-uint8_t* PSRAM_guest_to_host(paddr_t paddr);
+
 // this is not consistent with uint8_t
 // but it is ok since we do not access the array directly
 static const uint32_t img [] = {
@@ -37,7 +37,7 @@ static void restart() {
 
 void init_isa() {
   /* Load built-in image. */
-  memcpy(PSRAM_guest_to_host(RESET_VECTOR), img, sizeof(img));
+  memcpy(guest_to_host(RESET_VECTOR), img, sizeof(img));
 
   /* Initialize this virtual computer system. */
   restart();
