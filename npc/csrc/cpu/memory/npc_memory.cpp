@@ -82,7 +82,7 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
     default: 
     svSetScope(svGetScopeFromName("TOP.ysyx_24100029"));
     GetPC(&pc);
-    printf("wmask      =    %d  pc  = %d \n",wmask,pc);
+    printf("wmask      =    %d  pc  = 0x%x \n",wmask,pc);
     assert(0);
   }
     return;
