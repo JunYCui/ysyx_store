@@ -1,4 +1,11 @@
+ARCH_SPLIT = $(subst -, ,$(ARCH))
+PLATFORM   = $(word 2,$(ARCH_SPLIT))
+
+ifeq ($(PLATFORM),ysyxsoc)
 TOPNAME = ysyxSoCFull
+else ifeq ($(PLATFORM),npc)
+TOPNAME = ysyx_24100029
+endif
 INC_PATH = $(NPC_HOME)/include 
 ARCH ?= 
 
@@ -8,22 +15,23 @@ INC_VDEFINE = $(NPC_HOME)/vsrc/CPU/define
 # add ysyxsoc
 
 
-ifeq ($(ARCH),riscv32e-ysyxsoc)
+ifeq ($(PLATFORM),ysyxsoc)
 VSOURCES += $(shell find $(abspath ../ysyxSoC/perip) -name "*.v" )
 VSOURCES += $(shell find $(abspath ../ysyxSoC/build) -name "*.v" )
 INC_VDEFINE += /home/cjy/ysyx-workbench/ysyxSoC/perip/uart16550/rtl /home/cjy/ysyx-workbench/ysyxSoC/perip/spi/rtl
-endif
-Warning = UNUSEDSIGNAL ASSIGNDLY DECLFILENAME PINCONNECTEMPTY DEFPARAM UNDRIVEN SYNCASYNCNET UNUSEDPARAM
-VERILATOR_FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
-
 CONSTR = constr/$(TOPNAME).nxdc
-BUILD_DIR = $(NPC_HOME)/build
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 $(SRC_AUTO_BIND): $(CONSTR)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
 CSOURCES += $(SRC_AUTO_BIND)
+
+endif
+
+BUILD_DIR = $(NPC_HOME)/build
+Warning = UNUSEDSIGNAL ASSIGNDLY DECLFILENAME PINCONNECTEMPTY DEFPARAM UNDRIVEN SYNCASYNCNET UNUSEDPARAM
+VERILATOR_FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
 
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
@@ -39,12 +47,10 @@ VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)
 
 LDFLAGS = -lSDL2 -lSDL2_image -O2 -lreadline -ldl -pie 
 
-include $(NVBOARD_HOME)/scripts/nvboard.mk
-
 
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 
-CFLAGS  = -O2 -MMD -Wall -DTOP_NAME="\"V$(TOPNAME)\""  $(INCFLAGS) 
+CFLAGS  = -O2 -MMD -Wall $(INCFLAGS) -D__PLATFORM_$(shell echo $(PLATFORM) | tr a-z A-Z)
 
 LDFLAGS += $(shell llvm-config --libs) -fsanitize=address 
 
@@ -65,7 +71,7 @@ sim:all
 gdb: all
 	$(call git_commit, "gdb NEMU")
 	gdb -s $(BIN) --args $(NPC_EXEC)
-
+include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 all:$(CSOURCES) $(VSOURCES)  $(NVBOARD_ARCHIVE)
 	@rm -rf $(OBJ_DIR) *.vcd

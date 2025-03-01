@@ -7,12 +7,14 @@
 #include "string.h"
 #include "assert.h"
 #include "getopt.h"
-#include "VysyxSoCFull.h"
 #include <verilated.h>
 #include <verilated_vcd_c.h>  //VCD波形输出头文件
 #include "svdpi.h"
+#ifdef __PLATFORM_YSYXSOC
+#include "VysyxSoCFull.h"
 #include "VysyxSoCFull__Dpi.h"
-
+#include "nvboard.h"
+#endif
 
 #define CONFIG_MSIZE 0x10000000
 #define CONFIG_MBASE 0x30000000

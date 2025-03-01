@@ -1,5 +1,4 @@
 #include "npc_init.h"
-#include "nvboard.h"
 #include "npc_common.h"
 #include "npc_memory.h"
 #include "npc_cpu_exec.h"
