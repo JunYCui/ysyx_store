@@ -1,20 +1,20 @@
+#get platform
 ARCH_SPLIT = $(subst -, ,$(ARCH))
 PLATFORM   = $(word 2,$(ARCH_SPLIT))
 
+#define TOPNAME
 ifeq ($(PLATFORM),ysyxsoc)
 TOPNAME = ysyxSoCFull
 else ifeq ($(PLATFORM),npc)
 TOPNAME = ysyx_24100029
 endif
 INC_PATH = $(NPC_HOME)/include 
-ARCH ?= 
-
+#add vsrc and csrc
 VSOURCES=$(shell find $(abspath ./vsrc/CPU) -name "*.v" -or -name "*.sv" )
 CSOURCES=$(shell find $(abspath ./csrc/cpu) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
 INC_VDEFINE = $(NPC_HOME)/vsrc/CPU/define
+
 # add ysyxsoc
-
-
 ifeq ($(PLATFORM),ysyxsoc)
 VSOURCES += $(shell find $(abspath ../ysyxSoC/perip) -name "*.v" )
 VSOURCES += $(shell find $(abspath ../ysyxSoC/build) -name "*.v" )
@@ -29,9 +29,17 @@ CSOURCES += $(SRC_AUTO_BIND)
 
 endif
 
+#build directory
 BUILD_DIR = $(NPC_HOME)/build
+$(shell mkdir -p $(BUILD_DIR))
+# lint off warning
 Warning = UNUSEDSIGNAL ASSIGNDLY DECLFILENAME PINCONNECTEMPTY DEFPARAM UNDRIVEN SYNCASYNCNET UNUSEDPARAM
 VERILATOR_FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
+
+ifeq ($(PLATFORM),npc)
+VERILATOR_FLAGS += -GResetValue=0x80000000 -DNPC
+VSOURCES=$(shell find $(abspath ./vsrc/SRAM) -name "*.v" -or -name "*.sv" )
+endif
 
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
@@ -59,8 +67,6 @@ CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D
 IMG ?= 
 
 override ARGS += $(ARGS_DIFF)
-
-$(shell mkdir -p $(BUILD_DIR))
 
 NPC_EXEC = $(BIN) $(ARGS) $(IMG)
 
@@ -97,6 +103,7 @@ area:
 	@grep --after-context=1 "Chip area" log.txt > area.txt
 	@grep --after-context=7 "Endpoint" log.txt > frequency.txt 
 	@sed -i '$$a \`define Performance_Count' ./vsrc/CPU/define/para.v
+
 perf:
 	@sed -i '/Performance/d' ./vsrc/CPU/define/para.v
 	@echo "analyse the chip area and frequency"
@@ -107,7 +114,7 @@ perf:
 	@echo "microbench test"
 	@$(MAKE) -C ../am-kernels/benchmarks/microbench ARCH=riscv32e-ysyxsoc mainargs=train run > log1.txt
 	@grep --after-context=9 "total_count" log1.txt > count.txt
-.PHONY: clean all sim perf
+.PHONY: clean all sim perf area
 #waves:*.vcd
 #	gtkwave *.vcd
 

@@ -24,7 +24,10 @@
 //                         
 //----------------------------------------------------------------------------------------
 //****************************************************************************************//
-module ysyx_24100029_IFU(
+module ysyx_24100029_IFU #(
+    parameter                           ResetValue                 = 32'h30000000
+)
+(
     input                                  clock                      ,
     input                                  reset                      ,
     input              [  31: 0]           dnpc                       ,
@@ -135,10 +138,6 @@ module ysyx_24100029_IFU(
     assign                              ifu_bready                  = 0;
 
     assign                              ifu_rready                  = 1'b1;
-
-  //  check_rresp: assert(rresp != 2'b00) ; 
-    localparam                          ResetValue                 = 32'h30000000;
-
 /************ Axi4 bus ***********/
 `ifdef Performance_Count
     always @(posedge clock) begin

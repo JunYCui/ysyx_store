@@ -3,7 +3,9 @@
 import "DPI-C" function void fi(int val);
 `endif
 
-module ysyx_24100029
+module ysyx_24100029 #(
+    parameter                           ResetValue                 = 32'h30000000
+)
 (
     input                                  clock                      ,
     input                                  reset                      ,
@@ -15,8 +17,8 @@ module ysyx_24100029
     output             [   3: 0]           io_master_awid             ,// adress write ID for transcation order
     output             [   7: 0]           io_master_awlen            ,// burst lenth = awlen[7:0]+ 1
     output             [   2: 0]           io_master_awsize           ,// burst size (Bytes in transfer)
-    output             [   1: 0]           io_master_awburst          ,// burst type, three types 
-                                                              // 1.FIXED 2. incr 3.wrap
+    output             [   1: 0]           io_master_awburst          ,// burst type, three types // 1.FIXED 2. incr 3.wrap
+    
     input                                  io_master_wready           ,
     output                                 io_master_wvalid           ,
     output             [  31: 0]           io_master_wdata            ,
@@ -430,6 +432,43 @@ export "DPI-C" task Getinst;
 
 `endif
 
+`ifdef NPC
+sram u_sram(
+    .clock                              (clock                     ),
+    .reset                              (reset                     ),
+    .awready                            (io_master_awready         ),
+    .awvalid                            (io_master_awvalid         ),
+    .awaddr                             (io_master_awaddr          ),
+    .awid                               (io_master_awid            ),
+    .awlen                              (io_master_awlen           ),
+    .awsize                             (io_master_awsize          ),
+    .awburst                            (io_master_awburst         ),
+    .wready                             (io_master_wready          ),
+    .wvalid                             (io_master_wvalid          ),
+    .wdata                              (io_master_wdata           ),
+    .wstrb                              (io_master_wstrb           ),
+    .wlast                              (io_master_wlast           ),
+    .bready                             (io_master_bready          ),
+    .bvalid                             (io_master_bvalid          ),
+    .bresp                              (io_master_bresp           ),
+    .bid                                (io_master_bid             ),
+    .arready                            (io_master_arready         ),
+    .arvalid                            (io_master_arvalid         ),
+    .araddr                             (io_master_araddr          ),
+    .arid                               (io_master_arid            ),
+    .arlen                              (io_master_arlen           ),
+    .arsize                             (io_master_arsize          ),
+    .arburst                            (io_master_arburst         ),
+    .rready                             (io_master_rready          ),
+    .rvalid                             (io_master_rvalid          ),
+    .rresp                              (io_master_rresp           ),
+    .rdata                              (io_master_rdata           ),
+    .rlast                              (io_master_rlast           ),
+    .rid                                (io_master_rid             ) 
+);
+
+`endif
+
 
 ysyx_24100029_Control Control_inst0(
     .mtvec_out                          (IDU_mtvec_out             ),
@@ -482,7 +521,11 @@ ysyx_24100029_Control Control_inst0(
 
 
 
-ysyx_24100029_IFU IFU_Inst0(
+ysyx_24100029_IFU  #(
+    .ResetValue                         (ResetValue                ) 
+)
+IFU_Inst0
+(
     .clock                              (clock                     ),
     .reset                              (reset                     ),
     .dnpc                               (dnpc                      ),

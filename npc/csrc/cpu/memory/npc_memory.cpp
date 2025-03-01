@@ -76,7 +76,7 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
   }
     switch (wmask)
   {
-    case 1: *(uint8_t  *)guest_to_host(paddr)  = data&(0x000000ff) ; break;
+    case 1: *(uint8_t   *)guest_to_host(paddr) = data&(0x000000ff) ; break;
     case 2: *(uint16_t  *)guest_to_host(paddr) = data&(0x0000ffff) ; break;
     case 4: *(uint32_t  *)guest_to_host(paddr) = data&(0xffffffff) ; break;
     default: 
