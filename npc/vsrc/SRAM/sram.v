@@ -71,7 +71,9 @@ module sram(
     localparam                          addr                       = 2'b10 ;
 
     reg                [   1: 0]        state                       ;
+    reg               [   31: 0]        mem_wdata                   ;
     wire               [   7: 0]        wmask                       ;
+
     assign                              arready                     = (state == idle);
     assign                              awready                     = (state == idle);
     assign                              wready                      = (state == idle);
@@ -80,6 +82,14 @@ module sram(
     assign                              bid                         = 0;
     assign                              rid                         = 0;
     assign                              rresp                       = 0;
+
+    always @(*) begin
+        case(awsize)
+        3'b0:mem_wdata = wdata>>8*awaddr[1:0];
+        3'b1:mem_wdata = wdata>>16*awaddr[1];
+        default:mem_wdata = wdata;
+        endcase
+    end
 
     always @(posedge clock or posedge reset) begin
         if(reset)
@@ -124,7 +134,7 @@ module sram(
         end
         else if(state == idle & awready & awvalid & wready & wvalid)begin
             bvalid <= 1'b1;
-            npc_pmem_write(awaddr,wdata,wmask);
+            npc_pmem_write(awaddr,mem_wdata,wmask);
         end
         else
             bvalid <= 1'b0;
