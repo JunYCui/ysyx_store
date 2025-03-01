@@ -35,6 +35,16 @@ extern "C" int npc_pmem_read(int addr)
 {
   int paddr = addr & ~0x03u;
   int data;
+  if(addr == RTC_ADDR)
+  {
+    data = (uint32_t)get_time();
+    return data;
+  }
+  else if(addr == RTC_ADDR + 4)
+  {
+    data = (uint32_t)(get_time()>>32);
+    return data;
+  }
 #ifdef MTRACE
   printf("Read addr 0x%x \n",paddr);
 #endif 
