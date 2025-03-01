@@ -22,8 +22,6 @@
 #include <math.h>
 #include <npc_reg.h>
 
-extern VysyxSoCFull *top ;
-
 enum {
   TK_NOTYPE = 256,TK_int,TK_HEX,
   TK_AND,TK_NEQ,TK_EQ,

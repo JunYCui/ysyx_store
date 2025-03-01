@@ -10,8 +10,6 @@
   uint32_t screen_size();
   uint16_t height,weight;
   bool vga_flag;
-  extern VysyxSoCFull *top; 
-
 static inline uint32_t host_read(void *addr, int len) {
   switch (len) {
     case 1: return *(uint8_t  *)addr;

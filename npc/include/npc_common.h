@@ -10,7 +10,7 @@
 #include <verilated.h>
 #include <verilated_vcd_c.h>  //VCD波形输出头文件
 #include "svdpi.h"
-#ifdef __PLATFORM_YSYXSOC
+#ifdef __YSYXSOC__
 #include "VysyxSoCFull.h"
 #include "VysyxSoCFull__Dpi.h"
 #include "nvboard.h"
@@ -36,7 +36,6 @@ typedef struct watchpoint {
   uint32_t value;
 } WP;
 
-
-
+extern TOP_NAME *top ;
 
 #endif

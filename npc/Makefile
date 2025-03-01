@@ -50,7 +50,7 @@ LDFLAGS = -lSDL2 -lSDL2_image -O2 -lreadline -ldl -pie
 
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 
-CFLAGS  = -O2 -MMD -Wall $(INCFLAGS) -D__PLATFORM_$(shell echo $(PLATFORM) | tr a-z A-Z)
+CFLAGS  = -O2 -MMD -Wall $(INCFLAGS) -D__$(shell echo $(PLATFORM) | tr a-z A-Z)__ -DTOP_NAME="\"V$(TOPNAME)\""
 
 LDFLAGS += $(shell llvm-config --libs) -fsanitize=address 
 

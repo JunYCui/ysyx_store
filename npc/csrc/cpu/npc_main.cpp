@@ -17,15 +17,14 @@ VerilatedVcdC *m_trace = new VerilatedVcdC;
 // contextp用来保存仿真的时间
 VerilatedContext *contextp = new VerilatedContext;
 
-// 构建一个名为top的仿真模型
-VysyxSoCFull *top = new VysyxSoCFull{contextp};
+TOP_NAME *top ;
 
 
 uint64_t sim_time = 0;
 
 
 /********************function**************/
-void nvboard_bind_all_pins(VysyxSoCFull* top);
+void nvboard_bind_all_pins(TOP_NAME* top);
 
 extern "C" int npc_pmem_read(int addr);
 
