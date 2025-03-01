@@ -44,7 +44,7 @@ extern "C" int npc_pmem_read(int addr)
 
 extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
 {
-
+  uint32_t pc;
   int paddr = addr;
   int data = wdata;
   if(addr == UART_ADDR)
@@ -80,7 +80,9 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
     case 2: *(uint16_t  *)guest_to_host(paddr) = data&(0x0000ffff) ; break;
     case 4: *(uint32_t  *)guest_to_host(paddr) = data&(0xffffffff) ; break;
     default: 
-    printf("wmask      =    %d \n",wmask);
+    svSetScope(svGetScopeFromName("TOP.ysyx_24100029"));
+    GetPC(&pc);
+    printf("wmask      =    %d  pc  = %d \n",wmask,pc);
     assert(0);
   }
     return;
