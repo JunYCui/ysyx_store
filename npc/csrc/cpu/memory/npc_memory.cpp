@@ -69,7 +69,6 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
   }
   else if(addr == VGA_ADDR)
   {
-
     height = wdata&0xffff;
     weight = wdata>>16;
     return;
