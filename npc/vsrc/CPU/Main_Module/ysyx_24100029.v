@@ -9,9 +9,9 @@ module ysyx_24100029 #(
 (
     input                                  clock                      ,
     input                                  reset                      ,
-    input                                  io_interrupt               ,
-
-    input                                  io_master_awready          ,
+    input                                  io_interrupt               
+`ifndef NPC
+    ,input                                  io_master_awready          ,
     output                                 io_master_awvalid          ,
     output             [  31: 0]           io_master_awaddr           ,// writer address
     output             [   3: 0]           io_master_awid             ,// adress write ID for transcation order
@@ -79,7 +79,7 @@ module ysyx_24100029 #(
     input              [  31: 0]           io_slave_rdata             ,
     input              [   1: 0]           io_slave_rresp             ,
     input                                  io_slave_rlast              
-
+`endif
 );
 
     wire               [  31: 0]        IFU_inst                    ;
@@ -433,6 +433,37 @@ export "DPI-C" task Getinst;
 `endif
 
 `ifdef NPC
+
+    wire                                io_master_awready           ;
+    wire                                io_master_awvalid           ;
+    wire               [  31: 0]        io_master_awaddr            ;
+    wire               [   3: 0]        io_master_awid              ;
+    wire               [   7: 0]        io_master_awlen             ;
+    wire               [   2: 0]        io_master_awsize            ;
+    wire               [   1: 0]        io_master_awburst           ;
+    wire                                io_master_wready            ;
+    wire                                io_master_wvalid            ;
+    wire               [  31: 0]        io_master_wdata             ;
+    wire               [   3: 0]        io_master_wstrb             ;
+    wire                                io_master_wlast             ;
+    wire                                io_master_bready            ;
+    wire                                io_master_bvalid            ;
+    wire               [   1: 0]        io_master_bresp             ;
+    wire               [   3: 0]        io_master_bid               ;
+    wire                                io_master_arready           ;
+    wire                                io_master_arvalid           ;
+    wire               [  31: 0]        io_master_araddr            ;
+    wire               [   3: 0]        io_master_arid              ;
+    wire               [   7: 0]        io_master_arlen             ;
+    wire               [   2: 0]        io_master_arsize            ;
+    wire               [   1: 0]        io_master_arburst           ;
+    wire                                io_master_rready            ;
+    wire                                io_master_rvalid            ;
+    wire               [   1: 0]        io_master_rresp             ;
+    wire               [  31: 0]        io_master_rdata             ;
+    wire                                io_master_rlast             ;
+    wire               [   3: 0]        io_master_rid               ;
+
 sram u_sram(
     .clock                              (clock                     ),
     .reset                              (reset                     ),

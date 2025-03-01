@@ -14,6 +14,9 @@
 #include "VysyxSoCFull.h"
 #include "VysyxSoCFull__Dpi.h"
 #include "nvboard.h"
+#else 
+#include "Vysyx_24100029.h"
+#include "Vysyx_24100029__Dpi.h"
 #endif
 
 #define CONFIG_MSIZE 0x10000000
@@ -36,6 +39,6 @@ typedef struct watchpoint {
   uint32_t value;
 } WP;
 
-extern TOP_NAME *top ;
+extern TOP_NAME* top;
 
 #endif

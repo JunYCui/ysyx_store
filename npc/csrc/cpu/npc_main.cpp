@@ -24,7 +24,9 @@ uint64_t sim_time = 0;
 
 
 /********************function**************/
+#ifdef __YSYXSOC__
 void nvboard_bind_all_pins(TOP_NAME* top);
+#endif
 
 extern "C" int npc_pmem_read(int addr);
 
@@ -86,8 +88,11 @@ int main(int argc,char* argv[])
     unsigned char valid;
     Verilated::commandArgs(argc, argv);
     init_monitor(argc, argv);
+#ifdef __YSYXSOC__
     nvboard_bind_all_pins(top);
     nvboard_init();
+#endif
+
 #ifdef WAVE_TRACE
     Verilated::traceEverOn(true);
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下

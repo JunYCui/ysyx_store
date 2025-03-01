@@ -38,7 +38,7 @@ VERILATOR_FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
 
 ifeq ($(PLATFORM),npc)
 VERILATOR_FLAGS += -GResetValue=0x80000000 -DNPC
-VSOURCES=$(shell find $(abspath ./vsrc/SRAM) -name "*.v" -or -name "*.sv" )
+VSOURCES +=$(shell find $(abspath ./vsrc/SRAM) -name "*.v" -or -name "*.sv" )
 endif
 
 OBJ_DIR = $(BUILD_DIR)/obj_dir

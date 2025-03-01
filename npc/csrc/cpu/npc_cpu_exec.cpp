@@ -33,7 +33,9 @@ void fi(int val) {
     printf("\033[0m\033[1;34m cycle=%ld inst_num=%ld  ipc= %.3f \n \033[0m",cycle,inst_num,(float)inst_num/cycle);
     fflush(stdout);
     m_trace->close();
+#ifdef __YSYXSOC__
     nvboard_quit();
+#endif
     exit(val); 
 }
 
@@ -56,7 +58,9 @@ static void exec_once()
     top->eval();
     wave_record();
     }
+#ifdef __YSYXSOC__
     nvboard_update();
+#endif
     cycle++;
 }
 
