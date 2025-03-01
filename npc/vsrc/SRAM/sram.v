@@ -75,7 +75,7 @@ module sram(
     assign                              arready                     = (state == idle);
     assign                              awready                     = (state == idle);
     assign                              wready                      = (state == idle);
-    assign                              wmask                       = {4'b0,awsize,1'b0};
+    assign                              wmask                       = 2**awsize;
     assign                              bresp                       = 0;
     assign                              bid                         = 0;
     assign                              rid                         = 0;
