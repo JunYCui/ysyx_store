@@ -66,8 +66,13 @@ static void exec_once()
 
 void inst_exe(void){
     uint8_t valid;
+#ifdef __YSYXSOC__
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
-        Getvalid(&valid);
+#else
+    svSetScope(svGetScopeFromName("TOP.ysyx_24100029"));
+#endif
+
+    Getvalid(&valid);
     while(!valid)
     {
         exec_once();
@@ -105,7 +110,11 @@ void cpu_exec(uint32_t n)
 }
     for(int i=0;i<n;i++)
     {
+#ifdef __YSYXSOC__
         svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
+#else
+        svSetScope(svGetScopeFromName("TOP.ysyx_24100029"));
+#endif
         GetPC(&s.pc);
         Getinst(&s.inst);
         Getskip_flag(&skip_dif);
@@ -117,7 +126,11 @@ void cpu_exec(uint32_t n)
 
         inst_exe();
         GetPC(&cpu.pc);
-    svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
+#ifdef __YSYXSOC__
+        svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
+#else
+        svSetScope(svGetScopeFromName("TOP.ysyx_24100029.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
+#endif
         for(int j=0;j<32;j++)
         {
             ReadReg(j,&cpu.gpr[j]);
