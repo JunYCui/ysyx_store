@@ -64,6 +64,11 @@ $(shell mkdir -p $(BUILD_DIR))
 
 NPC_EXEC = $(BIN) $(ARGS) $(IMG)
 
+ifeq ($(PLATFORM),ysyxsoc)
+include $(NVBOARD_HOME)/scripts/nvboard.mk
+endif
+NVBOARD_ARCHIVE ?= 
+
 sim:all
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	$(NPC_EXEC)
@@ -71,10 +76,6 @@ sim:all
 gdb: all
 	$(call git_commit, "gdb NEMU")
 	gdb -s $(BIN) --args $(NPC_EXEC)
-
-include $(NVBOARD_HOME)/scripts/nvboard.mk
-
-NVBOARD_ARCHIVE ?= 
 
 all:$(CSOURCES) $(VSOURCES)  $(NVBOARD_ARCHIVE)
 	@rm -rf $(OBJ_DIR) *.vcd
