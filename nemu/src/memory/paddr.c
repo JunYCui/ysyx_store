@@ -95,8 +95,8 @@ void init_mem() {
   sdram = (uint8_t*)malloc(CONFIG_SDRAM_SIZE);  
   psram =  (uint8_t*)malloc(CONFIG_PSRAM_SIZE);  
 #endif
-  IFDEF(CONFIG_MEM_RANDOM, memset(psram, rand(), CONFIG_PSRAM_SIZE));
-  Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PSRAM_LEFT, PSRAM_RIGHT);
+  IFDEF(CONFIG_MEM_RANDOM, memset(psram, rand(), CONFIG_FLASH_SIZE));
+  Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", FLASH_LEFT, FLASH_RIGHT);
 }
 
 word_t paddr_read(paddr_t addr, int len) {
