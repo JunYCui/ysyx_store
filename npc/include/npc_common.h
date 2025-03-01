@@ -20,7 +20,11 @@
 #endif
 
 #define CONFIG_MSIZE 0x10000000
+#ifdef __YSYXSOC__
 #define CONFIG_MBASE 0x30000000
+#else
+#define CONFIG_MBASE 0x80000000
+#endif
 #define RESET_VECTOR CONFIG_MBASE
 
 typedef uint32_t word_t;
