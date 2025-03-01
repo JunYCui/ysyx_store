@@ -17,7 +17,7 @@ VerilatedVcdC *m_trace = new VerilatedVcdC;
 // contextp用来保存仿真的时间
 VerilatedContext *contextp = new VerilatedContext;
 
-TOP_NAME *top ;
+TOP_NAME *top = new TOP_NAME{contextp} ;
 
 
 uint64_t sim_time = 0;
