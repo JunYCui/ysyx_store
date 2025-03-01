@@ -15,8 +15,12 @@ void isa_reg_display()
 {
   uint16_t i;
   uint32_t regvalue;
+#ifdef __YSYXSOC__
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
-  for(i = 0;i<32;i++)
+#else 
+    svSetScope(svGetScopeFromName("TOP.ysyx_24100029.IDU_Inst0.Reg_Stack_inst0.Reg_inst"));
+#endif
+    for(i = 0;i<32;i++)
   {
   ReadReg(i,&regvalue);
   printf("%s: \t 0x%-10x \t %-10d \n",regs[i],regvalue,regvalue);
