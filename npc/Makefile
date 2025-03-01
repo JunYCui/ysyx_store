@@ -71,7 +71,10 @@ sim:all
 gdb: all
 	$(call git_commit, "gdb NEMU")
 	gdb -s $(BIN) --args $(NPC_EXEC)
+
 include $(NVBOARD_HOME)/scripts/nvboard.mk
+
+NVBOARD_ARCHIVE ?= 
 
 all:$(CSOURCES) $(VSOURCES)  $(NVBOARD_ARCHIVE)
 	@rm -rf $(OBJ_DIR) *.vcd
