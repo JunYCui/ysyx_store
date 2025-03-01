@@ -45,7 +45,7 @@ extern "C" int npc_pmem_read(int addr)
 extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
 {
   uint32_t pc;
-  int paddr = addr;
+  int paddr = addr & ~0x03u;
   int data = wdata;
   if(addr == UART_ADDR)
   {
