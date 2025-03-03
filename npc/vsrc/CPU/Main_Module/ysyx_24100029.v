@@ -409,6 +409,7 @@ always @(*) begin
     end
     else
         skip = 0;
+    $display("ok");
 end
 `else
 always @(*) begin
