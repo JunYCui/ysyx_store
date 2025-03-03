@@ -81,7 +81,14 @@ module ysyx_24100029_LSU (
     input              [  31: 0] inst                       ,
     output reg         [  31: 0] inst_next                   
 );
-
+/*
+always @(*) begin
+    if(awaddr >= 32'ha0086fc0 && awaddr < 32'ha0086fc8  && mem_wen_reg)
+        $display("0x%x[pc]:\t 0x%x is written at addr 0x%x ",pc_reg,wdata,awaddr);
+    else if(araddr >= 32'ha0086fc0 && awaddr < 32'ha0086fc8 && mem_ren_reg)
+        $display("0x%x[pc]:\t 0x%x is read at addr 0x%x  ",pc_reg,rdata_ex,araddr);
+end
+*/
     wire               [  31: 0] rdata_8i                   ;
     wire               [  31: 0] rdata_16i                  ;
     wire               [  31: 0] rdata_8u                   ;
@@ -218,12 +225,15 @@ end
     assign                       awsize                    = funct3;
     assign                       awburst                   = 0;
 
-    assign                       wdata                     = rs2_value_reg<<8*Ex_result_reg[1:0];
+    assign                       wdata                     = (funct3_reg == 3'b000)?
+                                                            rs2_value_reg<<8*Ex_result_reg[1:0]:(funct3_reg == 3'b001)?
+                                                            rs2_value_reg<<8*{Ex_result_reg[1],1'b0}:(funct3_reg == 3'b010)?
+                                                            rs2_value_reg:0;
     assign                       rdata_b_choice            = {Ex_result_reg[1:0],3'b0};
     
     assign wstrb = (funct3_reg == 3'b000)                           ?
                     4'b0001<<Ex_result_reg[1:0]:(funct3_reg == 3'b001)     ?
-                    4'b0011<<Ex_result_reg[1:0]:(funct3_reg == 3'b010)     ?
+                    4'b0011<<{Ex_result_reg[1],1'b0}:(funct3_reg == 3'b010)     ?
                     4'b1111:4'b0000;
 
 

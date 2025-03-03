@@ -2,42 +2,48 @@
 // signal not use
 
 module ysyx_24100029_WBU (
-    input                        clock                      ,
-    input                        reset                      ,
+    input                                  clock                      ,
+    input                                  reset                      ,
 
-    input              [  31: 0] MEM_Rdata                  ,
-    input              [  31: 0] Ex_result                  ,
-    input              [  31: 0] csrs                       ,
-    input              [  31: 0] pc                         ,
-    input              [   4: 0] rd                         ,
-    input              [   3: 0] csr_wen                    ,
-    input                        R_wen                      ,
-    input                        mem_ren                    ,
-    input                        jump_flag                  ,
-    input              [  31: 0] inst                       ,
+    input              [  31: 0]           MEM_Rdata                  ,
+    input              [  31: 0]           Ex_result                  ,
+    input              [  31: 0]           csrs                       ,
+    input              [  31: 0]           pc                         ,
+    input              [   4: 0]           rd                         ,
+    input              [   3: 0]           csr_wen                    ,
+    input                                  R_wen                      ,
+    input                                  mem_ren                    ,
+    input                                  jump_flag                  ,
+    input              [  31: 0]           inst                       ,
 
-    input                        valid                      ,
-    output                       ready                      ,
+    input                                  valid                      ,
+    output                                 ready                      ,
 
-    output reg                   valid_next                 ,
-    output reg         [  31: 0] pc_next                    ,
-    output reg         [  31: 0] inst_next                  ,
-    output                       R_wen_next                 ,
-    output             [   3: 0] csr_wen_next               ,
-    output             [  31: 0] csrd                       ,
-    output             [  31: 0] rd_value                   ,
-    output             [   4: 0] rd_next                     
+    output reg                             valid_next                 ,
+    output reg         [  31: 0]           pc_next                    ,
+    output reg         [  31: 0]           inst_next                  ,
+    output                                 R_wen_next                 ,
+    output             [   3: 0]           csr_wen_next               ,
+    output             [  31: 0]           csrd                       ,
+    output             [  31: 0]           rd_value                   ,
+    output             [   4: 0]           rd_next                    ,
+
+    output                                 mem_ren_flag               ,
+    output             [  31: 0]           paddr                       
 );
 
-    reg                [  31: 0] MEM_Rdata_reg              ;
-    reg                [  31: 0] Ex_result_reg              ;
-    reg                [  31: 0] csrs_reg                   ;
-    reg                [  31: 0] pc_reg                     ;
-    reg                [   4: 0] rd_reg                     ;
-    reg                [   3: 0] csr_wen_reg                ;
-    reg                          R_wen_reg                  ;
-    reg                          mem_ren_reg                ;
-    reg                          jump_flag_reg              ;
+    assign                              mem_ren_flag                = mem_ren_reg;
+    assign                              paddr                       = Ex_result_reg;
+
+    reg                [  31: 0]        MEM_Rdata_reg               ;
+    reg                [  31: 0]        Ex_result_reg               ;
+    reg                [  31: 0]        csrs_reg                    ;
+    reg                [  31: 0]        pc_reg                      ;
+    reg                [   4: 0]        rd_reg                      ;
+    reg                [   3: 0]        csr_wen_reg                 ;
+    reg                                 R_wen_reg                   ;
+    reg                                 mem_ren_reg                 ;
+    reg                                 jump_flag_reg               ;
 
     always @(posedge clock) begin
         if(reset)
@@ -86,10 +92,10 @@ end
                                                                 pc_reg+4: (mem_ren_reg == 1'b1)   ?
                                                                 MEM_Rdata_reg:(csr_wen_reg !=4'd0)?
                                                                 csrs_reg:Ex_result_reg;
-    assign                       csrd                      = Ex_result_reg;
-    assign                       csr_wen_next              = csr_wen_reg;
-    assign                       R_wen_next                = R_wen_reg;
-    assign                       rd_next                   = rd_reg;
-    assign                       ready                     = 1'b1;
+    assign                              csrd                        = Ex_result_reg;
+    assign                              csr_wen_next                = csr_wen_reg;
+    assign                              R_wen_next                  = R_wen_reg;
+    assign                              rd_next                     = rd_reg;
+    assign                              ready                       = 1'b1;
 
 endmodule                                                           //WBU

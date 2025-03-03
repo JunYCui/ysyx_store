@@ -2,8 +2,10 @@
 #include "npc_isa.h"
 #include "npc_macro.h"
 #include "npc_define.h"
+#include <iostream>
 
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+extern "C" int npc_pmem_read(int addr);
 extern void ReadReg(int reg_num, svBitVecVal* reg_value);
 void difftest_step(vaddr_t pc, vaddr_t npc);
 void ftrace_exe(Decode* s);
@@ -14,7 +16,6 @@ extern void GetInst(svBitVecVal* inst_exec);
 extern NPCState npc_state;
 extern VerilatedVcdC *m_trace ;
 extern uint64_t sim_time;
-extern uint8_t skip_flag;
 
 CPU_state cpu={};
 
@@ -24,12 +25,8 @@ uint8_t g_print_step;
 
 
 void Cpu_Wp(void);
-static void wave_record(void)
-{
-    //将所有跟踪的信号值写入波形转储文件
-    m_trace->dump(sim_time);
-    sim_time++; // 模拟时钟边沿数加1
-}
+void wave_record(void);
+
 extern VysyxSoCFull *top; 
 
 static void itrace(Decode *s)
@@ -49,6 +46,7 @@ static void exec_once()
     top->eval();
     wave_record();
     }
+
 }
 
 
@@ -70,6 +68,7 @@ static void trace_and_difftest(Decode *s)
 
 void cpu_exec(uint32_t n)
 {
+    uint8_t skip_dif;
     unsigned char valid =1;
     g_print_step = (n < MAX_INST_TO_PRINT);
     switch (npc_state.state) {
@@ -82,9 +81,10 @@ void cpu_exec(uint32_t n)
     {
     svSetScope(svGetScopeFromName("TOP.ysyxSoCFull.asic.cpu.cpu"));
         GetPC(&s.pc);
+        Getskip_flag(&skip_dif);
         cpu.pc = s.pc;
-        s.inst = npc_pmem_read(s.pc);
-        if(skip_flag != 0)
+     //   s.inst = npc_pmem_read(s.pc);
+        if(skip_dif != 0)
         {
             difftest_skip_ref();
         }

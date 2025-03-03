@@ -102,6 +102,7 @@ module ysyx_24100029_IFU(
     assign                       rready                    = 1'b1;
 
   //  check_rresp: assert(rresp != 2'b00) ; 
+    localparam  ResetValue= 32'h30000000;
 
 /************ Axi4 bus ***********/
 always @(posedge clock) begin
@@ -112,6 +113,14 @@ always @(posedge clock) begin
     else if(rvalid)begin
         valid <= 1'b1;
         inst <= rdata;
+        //$fatal;
+        /*
+        assert(rdata!=0 | pc <32'ha0000000) 
+        else begin
+        $error("read inst error!");
+        $fatal;
+        end
+        */
     end
     else if(valid & ready)begin
         valid <= 1'b0;
@@ -157,7 +166,7 @@ end
 
 always @(posedge clock) begin
         if(reset)
-            pc <= 32'h30000000;
+            pc <= ResetValue;   
         else if((pipe_stop| pipe_stop_reg) &valid&ready)
             pc <= pc ;
         else if(dnpc_flag_reg & valid &ready)

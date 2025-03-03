@@ -3,7 +3,7 @@
 #include "npc_memory.h"
 #include "npc_cpu_exec.h"
 #include "npc_sdb.h"
-
+#include "npc_define.h"
 #define FLASH_OFFSET 0X30000000
 extern "C" int npc_pmem_read(int addr);
 
@@ -12,6 +12,7 @@ extern "C" void flash_read(int32_t addr, int32_t *data) {
     return;
 }
 extern "C" void mrom_read(int32_t addr, int32_t *data) {
+   // printf("addr = %x\n",addr);
     *data = npc_pmem_read(addr);
     return ;
 }
@@ -51,11 +52,32 @@ void cpu_reset(void)
     sim_time++;
 }
 
+void new_wave(void)
+{
+    static uint32_t count;
+    char str[30];
+    count ++;
+    if(count > 10){
+        sprintf(str,"wave%d.vcd",count-10);
+        remove(str);
+    }
+    sprintf(str,"wave%d.vcd",count);
+    m_trace->open((const char*)str);
+}
+
 void wave_record(void)
 {
     //将所有跟踪的信号值写入波形转储文件
     m_trace->dump(sim_time);
     sim_time++; // 模拟时钟边沿数加1
+#ifdef WAVE_TRACE
+    if(sim_time%1000000 == 0)
+    {
+        m_trace->flush();
+        m_trace->close();
+        new_wave();
+    }
+#endif
 }
 
 int main(int argc,char* argv[])
@@ -69,7 +91,7 @@ int main(int argc,char* argv[])
     
     // 将 m_trace 与 top 进行关联，其中5表示波形的采样深度为5级以下
     top->trace(m_trace, 5);
-    m_trace->open("waveform.vcd");
+    new_wave();
 #endif
     for( int i=0;i<10;i++)
     cpu_reset();
