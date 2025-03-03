@@ -7,78 +7,78 @@ module ysyx_24100029 #(
     parameter                           ResetValue                 = 32'h30000000
 )
 (
-    input                                  clock                      ,
-    input                                  reset                      ,
-    input                                  io_interrupt               
+    input                               clock                      ,
+    input                               reset                      ,
+    input                               io_interrupt                
 `ifndef NPC
     ,input                                  io_master_awready          ,
-    output                                 io_master_awvalid          ,
-    output             [  31: 0]           io_master_awaddr           ,// writer address
-    output             [   3: 0]           io_master_awid             ,// adress write ID for transcation order
-    output             [   7: 0]           io_master_awlen            ,// burst lenth = awlen[7:0]+ 1
-    output             [   2: 0]           io_master_awsize           ,// burst size (Bytes in transfer)
-    output             [   1: 0]           io_master_awburst          ,// burst type, three types // 1.FIXED 2. incr 3.wrap
+    output                              io_master_awvalid          ,
+    output             [  31: 0]        io_master_awaddr           ,// writer address
+    output             [   3: 0]        io_master_awid             ,// adress write ID for transcation order
+    output             [   7: 0]        io_master_awlen            ,// burst lenth = awlen[7:0]+ 1
+    output             [   2: 0]        io_master_awsize           ,// burst size (Bytes in transfer)
+    output             [   1: 0]        io_master_awburst          ,// burst type, three types // 1.FIXED 2. incr 3.wrap
     
-    input                                  io_master_wready           ,
-    output                                 io_master_wvalid           ,
-    output             [  31: 0]           io_master_wdata            ,
-    output             [   3: 0]           io_master_wstrb            ,// 
-    output                                 io_master_wlast            ,// This signal indicates the last transfer in a write burst
+    input                               io_master_wready           ,
+    output                              io_master_wvalid           ,
+    output             [  31: 0]        io_master_wdata            ,
+    output             [   3: 0]        io_master_wstrb            ,// 
+    output                              io_master_wlast            ,// This signal indicates the last transfer in a write burst
 
-    output                                 io_master_bready           ,
-    input                                  io_master_bvalid           ,
-    input              [   1: 0]           io_master_bresp            ,
-    input              [   3: 0]           io_master_bid              ,
+    output                              io_master_bready           ,
+    input                               io_master_bvalid           ,
+    input              [   1: 0]        io_master_bresp            ,
+    input              [   3: 0]        io_master_bid              ,
 
-    input                                  io_master_arready          ,
-    output                                 io_master_arvalid          ,
-    output             [  31: 0]           io_master_araddr           ,
-    output             [   3: 0]           io_master_arid             ,
-    output             [   7: 0]           io_master_arlen            ,
-    output             [   2: 0]           io_master_arsize           ,
-    output             [   1: 0]           io_master_arburst          ,
+    input                               io_master_arready          ,
+    output                              io_master_arvalid          ,
+    output             [  31: 0]        io_master_araddr           ,
+    output             [   3: 0]        io_master_arid             ,
+    output             [   7: 0]        io_master_arlen            ,
+    output             [   2: 0]        io_master_arsize           ,
+    output             [   1: 0]        io_master_arburst          ,
 
-    output                                 io_master_rready           ,
-    input                                  io_master_rvalid           ,
-    input              [   1: 0]           io_master_rresp            ,
-    input              [  31: 0]           io_master_rdata            ,
-    input                                  io_master_rlast            ,
-    input              [   3: 0]           io_master_rid              ,
+    output                              io_master_rready           ,
+    input                               io_master_rvalid           ,
+    input              [   1: 0]        io_master_rresp            ,
+    input              [  31: 0]        io_master_rdata            ,
+    input                               io_master_rlast            ,
+    input              [   3: 0]        io_master_rid              ,
 
 
-    output                                 io_slave_awready           ,
-    input                                  io_slave_awvalid           ,
-    input              [   3: 0]           io_slave_awid              ,
-    input              [  31: 0]           io_slave_awaddr            ,
-    input              [   7: 0]           io_slave_awlen             ,
-    input              [   2: 0]           io_slave_awsize            ,
-    input              [   1: 0]           io_slave_awburst           ,
+    output                              io_slave_awready           ,
+    input                               io_slave_awvalid           ,
+    input              [   3: 0]        io_slave_awid              ,
+    input              [  31: 0]        io_slave_awaddr            ,
+    input              [   7: 0]        io_slave_awlen             ,
+    input              [   2: 0]        io_slave_awsize            ,
+    input              [   1: 0]        io_slave_awburst           ,
 
-    output                                 io_slave_wready            ,
-    input                                  io_slave_wvalid            ,
-    input              [  31: 0]           io_slave_wdata             ,
-    input              [   3: 0]           io_slave_wstrb             ,
-    input                                  io_slave_wlast             ,
+    output                              io_slave_wready            ,
+    input                               io_slave_wvalid            ,
+    input              [  31: 0]        io_slave_wdata             ,
+    input              [   3: 0]        io_slave_wstrb             ,
+    input                               io_slave_wlast             ,
     
-    input                                  io_slave_bready            ,
-    output                                 io_slave_bvalid            ,
-    output             [   3: 0]           io_slave_bid               ,
-    output             [   1: 0]           io_slave_bresp             ,
+    input                               io_slave_bready            ,
+    output                              io_slave_bvalid            ,
+    output             [   3: 0]        io_slave_bid               ,
+    output             [   1: 0]        io_slave_bresp             ,
     
-    output                                 io_slave_arready           ,
-    input                                  io_slave_arvalid           ,
-    input              [   3: 0]           io_slave_arid              ,
-    input              [  31: 0]           io_slave_araddr            ,
-    input              [   7: 0]           io_slave_arlen             ,
-    input              [   2: 0]           io_slave_arsize            ,
-    input              [   1: 0]           io_slave_arburst           ,
+    output                              io_slave_arready           ,
+    input                               io_slave_arvalid           ,
+    input              [   3: 0]        io_slave_arid              ,
+    input              [  31: 0]        io_slave_araddr            ,
+    input              [   7: 0]        io_slave_arlen             ,
+    input              [   2: 0]        io_slave_arsize            ,
+    input              [   1: 0]        io_slave_arburst           ,
     
-    input                                  io_slave_rready            ,
-    input                                  io_slave_rvalid            ,
-    input              [   3: 0]           io_slave_rid               ,
-    input              [  31: 0]           io_slave_rdata             ,
-    input              [   1: 0]           io_slave_rresp             ,
-    input                                  io_slave_rlast              
+    input                               io_slave_rready            ,
+    input                               io_slave_rvalid            ,
+    input              [   3: 0]        io_slave_rid               ,
+    input              [  31: 0]        io_slave_rdata             ,
+    input              [   1: 0]        io_slave_rresp             ,
+    input                               io_slave_rlast              
 `endif
 );
 
@@ -395,34 +395,50 @@ module ysyx_24100029 #(
 
     reg                                 skip                        ;
     wire                                mem_ren_flag                ;
+    wire                                mem_wen_flag                ;
     wire               [  31: 0]        paddr                       ;
+    wire                                lsu_mem_wen                 ;
 
-
-
+`ifdef NPC
 always @(*) begin
-    if(mem_ren_flag && paddr <=32'h2000008 && paddr >= 32'h2000000 || paddr >= 32'h10000000 && paddr <= 32'h10000fff )
-        skip = 1;
+    if(mem_ren_flag || mem_wen_flag)begin
+        if ((paddr <=32'ha1000000 && paddr >= 32'ha0000000))
+                skip = 1;
+        else 
+                skip = 0;
+    end
     else
         skip = 0;
 end
-
+`else
+always @(*) begin
+    if(mem_ren_flag || mem_wen_flag)begin
+        if ((paddr <=32'h2000008 && paddr >= 32'h2000000) || (paddr >= 32'h10000000 && paddr <= 32'h10000fff))
+                skip = 1;
+        else 
+                skip = 0;
+    end
+    else
+        skip = 0;
+end
+`endif
 task Getinst;
-    output                                 bit[31:0] inst             ;
+    output                              bit[31:0] inst             ;
     inst = WBU_inst;
 endtask
 
 task  GetPC;
-    output                                 bit[31:0]pc                ;
+    output                              bit[31:0]pc                ;
     pc = WBU_pc;
 endtask
 
 task Getvalid;
-    output                                 bit  valid                 ;
+    output                              bit  valid                 ;
     valid = WBU_valid;
 endtask
 
 task Getskip_flag;
-    output                                 bit skip_flag              ;
+    output                              bit skip_flag              ;
     skip_flag = skip;
 endtask
 export "DPI-C" task Getskip_flag;
@@ -726,7 +742,8 @@ ysyx_24100029_EXU EXU_Inst0(
     .inst_next                          (EXU_inst                  ) 
 );
 
-ysyx_24100029_LSU LSU_Inst0(
+ysyx_24100029_LSU LSU_Inst0
+(
     .clock                              (clock                     ),
     .reset                              (reset                     ),
 
@@ -793,13 +810,15 @@ ysyx_24100029_LSU LSU_Inst0(
     .ready_next                         (WBU_ready                 ),
     .valid_next                         (LSU_valid                 ),
 `ifdef Performance_Count
+    .mem_wflag                          (lsu_mem_wen               ),
     .lsu_cycle                          (lsu_cycle                 ),
 `endif
     .inst                               (EXU_inst                  ),
     .inst_next                          (LSU_inst                  ) 
 );
 
-ysyx_24100029_WBU WBU_inst0(
+ysyx_24100029_WBU WBU_inst0
+(
     .clock                              (clock                     ),
     .reset                              (reset                     ),
 
@@ -824,6 +843,8 @@ ysyx_24100029_WBU WBU_inst0(
     .valid                              (LSU_valid                 ),
     .ready                              (WBU_ready                 ),
 `ifdef Performance_Count
+    .mem_wen_reg                        (lsu_mem_wen               ),
+    .mem_wen_flag                       (mem_wen_flag              ),
     .mem_ren_flag                       (mem_ren_flag              ),
     .paddr                              (paddr                     ),
 `endif

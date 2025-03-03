@@ -1,41 +1,40 @@
 /* verilator lint_off UNUSEDSIGNAL */
 // signal not use
-`include "../define/para.v"  
+`include "../define/para.v"
 module ysyx_24100029_WBU (
-    input                                  clock                      ,
-    input                                  reset                      ,
+    input                               clock                      ,
+    input                               reset                      ,
 
-    input              [  31: 0]           MEM_Rdata                  ,
-    input              [  31: 0]           Ex_result                  ,
-    input              [  31: 0]           csrs                       ,
-    input              [  31: 0]           pc                         ,
-    input              [   4: 0]           rd                         ,
-    input              [   3: 0]           csr_wen                    ,
-    input                                  R_wen                      ,
-    input                                  mem_ren                    ,
-    input                                  jump_flag                  ,
-    input              [  31: 0]           inst                       ,
+    input              [  31: 0]        MEM_Rdata                  ,
+    input              [  31: 0]        Ex_result                  ,
+    input              [  31: 0]        csrs                       ,
+    input              [  31: 0]        pc                         ,
+    input              [   4: 0]        rd                         ,
+    input              [   3: 0]        csr_wen                    ,
+    input                               R_wen                      ,
+    input                               mem_ren                    ,
+    input                               jump_flag                  ,
+    input              [  31: 0]        inst                       ,
 
-    input                                  valid                      ,
-    output                                 ready                      ,
+    input                               valid                      ,
+    output                              ready                      ,
 
-    output reg                             valid_next                 ,
-    output reg         [  31: 0]           pc_next                    ,
-    output reg         [  31: 0]           inst_next                  ,
-    output                                 R_wen_next                 ,
-    output             [   3: 0]           csr_wen_next               ,
-    output             [  31: 0]           csrd                       ,
+    output reg                          valid_next                 ,
+    output reg         [  31: 0]        pc_next                    ,
+    output reg         [  31: 0]        inst_next                  ,
+    output                              R_wen_next                 ,
+    output             [   3: 0]        csr_wen_next               ,
+    output             [  31: 0]        csrd                       ,
 `ifdef Performance_Count
-    output                                 mem_ren_flag               ,
-    output             [  31: 0]           paddr                      ,
-`endif  
-    output             [  31: 0]           rd_value                   ,
-    output             [   4: 0]           rd_next                    
+    input                               mem_wen_reg                ,
+    output reg                          mem_wen_flag               ,
+    output                              mem_ren_flag               ,
+    output             [  31: 0]        paddr                      ,
+`endif
+    output             [  31: 0]        rd_value                   ,
+    output             [   4: 0]        rd_next                     
 );
-`ifdef Performance_Count
-    assign                              mem_ren_flag                = mem_ren_reg;
-    assign                              paddr                       = Ex_result_reg;
-`endif  
+
     reg                [  31: 0]        MEM_Rdata_reg               ;
     reg                [  31: 0]        Ex_result_reg               ;
     reg                [  31: 0]        csrs_reg                    ;
@@ -45,6 +44,17 @@ module ysyx_24100029_WBU (
     reg                                 R_wen_reg                   ;
     reg                                 mem_ren_reg                 ;
     reg                                 jump_flag_reg               ;
+
+`ifdef Performance_Count
+    assign                              mem_ren_flag                = mem_ren_reg;
+    assign                              paddr                       = Ex_result_reg;
+always @(posedge clock or negedge reset) begin
+    if(reset)
+        mem_wen_flag <= 0;
+    else if(valid & reset)
+        mem_wen_flag <= mem_wen_reg;
+end
+`endif
 
     always @(posedge clock) begin
         if(reset)

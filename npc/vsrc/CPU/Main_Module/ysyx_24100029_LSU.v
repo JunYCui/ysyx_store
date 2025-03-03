@@ -10,79 +10,80 @@
     localparam                          i5_DATA_LEN                = 4     ; 
 
 module ysyx_24100029_LSU (
-    input                                  clock                      ,
-    input                                  reset                      ,
+    input                               clock                      ,
+    input                               reset                      ,
 
-    input              [  31: 0]           pc                         ,
-    input                                  mem_ren                    ,
-    input                                  mem_wen                    ,
-    input                                  R_wen                      ,
-    input              [   3: 0]           csr_wen                    ,
-    input              [  31: 0]           Ex_result                  ,
-    input              [  31: 0]           csrs                       ,
-    input              [   4: 0]           rd                         ,
-    input              [   2: 0]           funct3                     ,
-    input              [  31: 0]           rs2_value                  ,
-    input                                  jump_flag                  ,
+    input              [  31: 0]        pc                         ,
+    input                               mem_ren                    ,
+    input                               mem_wen                    ,
+    input                               R_wen                      ,
+    input              [   3: 0]        csr_wen                    ,
+    input              [  31: 0]        Ex_result                  ,
+    input              [  31: 0]        csrs                       ,
+    input              [   4: 0]        rd                         ,
+    input              [   2: 0]        funct3                     ,
+    input              [  31: 0]        rs2_value                  ,
+    input                               jump_flag                  ,
 
 
-    output                                 R_wen_next                 ,
-    output reg         [  31: 0]           LSU_Rdata                  ,
-    output             [   3: 0]           csr_wen_next               ,
-    output             [  31: 0]           Ex_result_next             ,
-    output             [  31: 0]           csrs_next                  ,
-    output             [  31: 0]           pc_next                    ,
-    output             [   4: 0]           rd_next                    ,
-    output                                 mem_ren_next               ,
-    output                                 jump_flag_next             ,
+    output                              R_wen_next                 ,
+    output reg         [  31: 0]        LSU_Rdata                  ,
+    output             [   3: 0]        csr_wen_next               ,
+    output             [  31: 0]        Ex_result_next             ,
+    output             [  31: 0]        csrs_next                  ,
+    output             [  31: 0]        pc_next                    ,
+    output             [   4: 0]        rd_next                    ,
+    output                              mem_ren_next               ,
+    output                              jump_flag_next             ,
 
-    input                                  awready                    ,
-    output                                 awvalid                    ,
-    output             [  31: 0]           awaddr                     ,
-    output             [   3: 0]           awid                       ,
-    output             [   7: 0]           awlen                      ,
-    output             [   2: 0]           awsize                     ,
-    output             [   1: 0]           awburst                    ,
+    input                               awready                    ,
+    output                              awvalid                    ,
+    output             [  31: 0]        awaddr                     ,
+    output             [   3: 0]        awid                       ,
+    output             [   7: 0]        awlen                      ,
+    output             [   2: 0]        awsize                     ,
+    output             [   1: 0]        awburst                    ,
 
-    input                                  wready                     ,
-    output                                 wvalid                     ,
-    output             [  31: 0]           wdata                      ,
-    output             [   3: 0]           wstrb                      ,
-    output                                 wlast                      ,
+    input                               wready                     ,
+    output                              wvalid                     ,
+    output             [  31: 0]        wdata                      ,
+    output             [   3: 0]        wstrb                      ,
+    output                              wlast                      ,
      
-    output                                 bready                     ,
-    input                                  bvalid                     ,
-    input              [   1: 0]           bresp                      ,
-    input              [   3: 0]           bid                        ,
+    output                              bready                     ,
+    input                               bvalid                     ,
+    input              [   1: 0]        bresp                      ,
+    input              [   3: 0]        bid                        ,
      
-    input                                  arready                    ,
-    output                                 arvalid                    ,
-    output             [  31: 0]           araddr                     ,
-    output             [   3: 0]           arid                       ,
-    output             [   7: 0]           arlen                      ,
-    output             [   2: 0]           arsize                     ,
-    output             [   1: 0]           arburst                    ,
+    input                               arready                    ,
+    output                              arvalid                    ,
+    output             [  31: 0]        araddr                     ,
+    output             [   3: 0]        arid                       ,
+    output             [   7: 0]        arlen                      ,
+    output             [   2: 0]        arsize                     ,
+    output             [   1: 0]        arburst                    ,
      
-    output                                 rready                     ,
-    input                                  rvalid                     ,
-    input              [   1: 0]           rresp                      ,
-    input              [  31: 0]           rdata                      ,
-    input                                  rlast                      ,
-    input              [   3: 0]           rid                        ,
+    output                              rready                     ,
+    input                               rvalid                     ,
+    input              [   1: 0]        rresp                      ,
+    input              [  31: 0]        rdata                      ,
+    input                               rlast                      ,
+    input              [   3: 0]        rid                        ,
 
-    output reg                             req                        ,
+    output reg                          req                        ,
 
-    input                                  valid_last                 ,
-    output reg                             ready_last                 ,
+    input                               valid_last                 ,
+    output reg                          ready_last                 ,
 
-    input                                  ready_next                 ,
-    output reg                             valid_next                 ,
+    input                               ready_next                 ,
+    output reg                          valid_next                 ,
 
 `ifdef Performance_Count
-    output reg         [  31: 0]           lsu_cycle                  ,
+    output                              mem_wflag                  ,
+    output reg         [  31: 0]        lsu_cycle                  ,
 `endif
-    input              [  31: 0]           inst                       ,
-    output reg         [  31: 0]           inst_next                   
+    input              [  31: 0]        inst                       ,
+    output reg         [  31: 0]        inst_next                   
 );
 /*
 always @(*) begin
@@ -116,6 +117,7 @@ end
 `ifdef Performance_Count
     typedef enum logic {IDLE,WORK} state;
     state state_p;
+    assign                              mem_wflag                   = mem_wen_reg;
     always @(posedge clock or posedge reset) begin
         if(reset)
             state_p <= IDLE;
