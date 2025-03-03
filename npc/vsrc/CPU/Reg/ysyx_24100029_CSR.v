@@ -24,7 +24,7 @@ module ysyx_24100029_CSR #(
     wire               [  31: 0]        mstatus_in                  ;
     wire               [  31: 0]        mtvec_in                    ;
 
-    assign                              mepc_in                     = (ecall_flag)? pc+4 : csrd;
+    assign                              mepc_in                     = (ecall_flag)? pc : csrd;
     assign                              mcause_in                   = (ecall_flag)? 11 : csrd;
     assign                              mstatus_in                  = csrd;
     assign                              mtvec_in                    = csrd;
