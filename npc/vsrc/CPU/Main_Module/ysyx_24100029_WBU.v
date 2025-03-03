@@ -51,7 +51,7 @@ module ysyx_24100029_WBU (
 always @(posedge clock or negedge reset) begin
     if(reset)
         mem_wen_flag <= 0;
-    else if(valid & reset)
+    else if(valid & ready)
         mem_wen_flag <= mem_wen_reg;
 end
 `endif
