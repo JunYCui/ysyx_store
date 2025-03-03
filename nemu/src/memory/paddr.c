@@ -100,21 +100,22 @@ void init_mem() {
 }
 
 word_t paddr_read(paddr_t addr, int len) {
-  IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   if (likely(in_flash(addr))) return flash_read(addr, len);
   else if(likely(in_sram(addr))) return sram_read(addr, len);
   else if(likely(in_sdram(addr))) return sdram_read(addr, len);
   else if(likely(in_psram(addr))) return psram_read(addr, len);
+
+  IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
   return 0;
 }
 
 void paddr_write(paddr_t addr, int len, word_t data) {
-  IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   if (likely(in_flash(addr))) { flash_write(addr,len,data); return;}
   else if(likely(in_sram(addr))){sram_write(addr,len,data); return;}
   else if(likely(in_sdram(addr))){sdram_write(addr,len,data); return;}
   else if(likely(in_psram(addr))){psram_write(addr,len,data); return;}
   else if((addr <0x2000008 && addr > 0x2000000) || (addr > 0x10000000 && addr < 0x10000fff) ) { return; }
+  IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);
 }

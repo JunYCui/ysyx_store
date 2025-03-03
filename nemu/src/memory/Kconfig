@@ -1,5 +1,9 @@
 menu "Memory Configuration"
 
+config MEM_USE
+  bool "use memory"
+  default y
+
 config FLASH_BASE
   hex "flash base address"
   default 0x0        if ISA_x86
