@@ -23,7 +23,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   cpu.csr[MEPC] = epc;
   cpu.csr[MCAUSE] = NO;
 #ifdef CONFIG_ETRACE
-  printf("pc:0x%-10x\t NO:%-4d \ttvec:0x%-10x  \n",epc, NO, csr_reg[MTVEC]);
+  printf("pc:0x%-10x\t NO:%-4d \ttvec:0x%-10x  \n",epc, NO, cpu.csr[MTVEC]);
 #endif
   return cpu.csr[MTVEC];
 }
