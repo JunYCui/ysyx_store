@@ -402,8 +402,8 @@ module ysyx_24100029 #(
 `ifdef NPC
 always @(*) begin
     if(mem_ren_flag || mem_wen_flag)begin
-        if ((paddr <=32'ha1000000 && paddr >= 32'ha0000000))begin
-            $display("ok");    
+                $display("paddr = 0x%x",paddr);    
+        if ((paddr <=32'ha1000000 && paddr >= 32'ha0000000))begin 
                 skip = 1; 
         end
         else 
