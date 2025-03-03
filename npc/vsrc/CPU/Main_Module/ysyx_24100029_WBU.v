@@ -1,6 +1,6 @@
 /* verilator lint_off UNUSEDSIGNAL */
 // signal not use
-
+`include "../define/para.v"  
 module ysyx_24100029_WBU (
     input                                  clock                      ,
     input                                  reset                      ,
