@@ -70,11 +70,11 @@ void device_update();
 extern FILE* log_fp; 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
-  static uint64_t count=0;
-  static bool start = 1;
-  static bool jump_flag;
 #ifdef CONFIG_ITRACE_COND
- if(start){
+static uint64_t count=0;
+static bool start = 1;
+static bool jump_flag; 
+if(start){
   start = 0;
   log_write("pc=0x%x,", _this->pc);
  }
