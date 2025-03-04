@@ -78,6 +78,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
   start = 0;
   log_write("%s", _this->logbuf);
  }
+ if (ITRACE_COND & jump_flag) { fprintf(log_fp,"\n%s", _this->logbuf); jump_flag =0; }
  if(dnpc == _this->pc+4)
   {
     count++;
@@ -88,7 +89,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     fprintf(log_fp,"\t count = %ld ",count);
     count =0;
   }
-  if (ITRACE_COND & jump_flag) { fprintf(log_fp,"\n%s", _this->logbuf); jump_flag =0; }
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
