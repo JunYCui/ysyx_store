@@ -17,10 +17,13 @@
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
+#include <memory/paddr.h>
 
 #define R(i) gpr(i)
 #define Mr vaddr_read
 #define Mw vaddr_write
+
+
 
 enum {
   TYPE_I, TYPE_U,
@@ -69,6 +72,7 @@ static int decode_exec(Decode *s) {
 }
 
 int isa_exec_once(Decode *s) {
+  Cache_decode(s->snpc);
   s->isa.inst.val = inst_fetch(&s->snpc, 4);
   return decode_exec(s);
 }

@@ -61,7 +61,7 @@ void putch(char ch) {
 }
 void __am_uart_rx(AM_UART_RX_T *rx)
 {
-        uint8_t status = inb(LSR) & 0x01; // 1th Bits of LSR 
+    uint8_t status = inb(LSR) & 0x01; // 1th Bits of LSR 
     if(status !=0)
             rx->data = inb(SERIAL_PORT);
     else {
