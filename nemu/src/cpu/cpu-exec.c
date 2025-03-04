@@ -83,8 +83,8 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     count++;
   }
   else {
-    count =0;
     if (ITRACE_COND) { log_write("%s pc_count=%ld\n", _this->logbuf,count); }
+    count =0;
   }
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
