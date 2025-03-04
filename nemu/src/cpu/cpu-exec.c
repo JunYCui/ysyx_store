@@ -76,13 +76,13 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
   {
     if(count == 0)
     {
-      //if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
+      if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
     }  
     count++;
   }
   else {
     count =0;
-   // if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
+    if (ITRACE_COND) { log_write("%s dnpc = 0x%x\n", _this->logbuf,_this->dnpc); }
   }
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
