@@ -73,6 +73,8 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
   static uint64_t count=0;
   static bool start = 1;
   static bool jump_flag;
+  char *fp = strtok(_this->logbuf,"\t");
+  fp = strtok(_this->logbuf,"\t");
 #ifdef CONFIG_ITRACE_COND
  if(start){
   start = 0;
@@ -89,6 +91,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
     fprintf(log_fp,"\t count = %ld ",count);
     count =0;
   }
+  if(strcmp(fp,"00100073")==0){fprintf(log_fp,"\t count = %ld ",count);}
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
