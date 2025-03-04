@@ -70,7 +70,7 @@ void device_update();
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
-  uint64_t count=0;
+  static uint64_t count=0;
 #ifdef CONFIG_ITRACE_COND
   if(dnpc == _this->pc+4)
   {
@@ -82,7 +82,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
   }
   else {
     count =0;
-    if (ITRACE_COND) { log_write("%s dnpc = 0x%x\n", _this->logbuf,_this->dnpc); }
+    if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
   }
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
