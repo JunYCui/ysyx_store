@@ -87,7 +87,7 @@ int main(void)
       uint32_t pc;
       int count;
       //parse_line(line, &pc, &count);
-      pc = 0xa0000030;
+      pc = 0x0f000030;
       count = 5;
       for(int i=0;i<count;i++)
       {
