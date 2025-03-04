@@ -72,17 +72,21 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
 {
   static uint64_t count=0;
   static bool start = 1;
+  static bool jump_flag;
 #ifdef CONFIG_ITRACE_COND
  if(start){
   start = 0;
-  log_write("%s\n", _this->logbuf);
+  log_write("%s", _this->logbuf);
  }
+ if (ITRACE_COND & jump_flag) { fprintf(log_fp,"\n%s", _this->logbuf); }
  if(dnpc == _this->pc+4)
   {
     count++;
   }
   else {
-    if (ITRACE_COND) { fprintf(log_fp,"%ld\n%s\n", count,_this->logbuf); }
+    jump_flag = 1;
+    count++;
+    log_write(" %ld ",count);
     count =0;
   }
 #endif
