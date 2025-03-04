@@ -78,7 +78,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
   start = 0;
   log_write("0x%x", _this->pc);
  }
- if (ITRACE_COND & jump_flag) { fprintf(log_fp,"\n0x%x", _this->pc); jump_flag =0; }
+ if (ITRACE_COND & jump_flag) { fprintf(log_fp,"\npc=0x%x,", _this->pc); jump_flag =0; }
  if(dnpc == _this->pc+4)
   {
     count++;
