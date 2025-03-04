@@ -31,7 +31,7 @@ uint32_t sdram_hit = 0;
 uint32_t sdram_miss = 0; 
 void Cache_decode(uint32_t pc)
 {
-  uint8_t index = (pc >> 2) & 7;
+  uint8_t index = (uint8_t)(pc >> 2) & 7;
   uint32_t tag = pc;
   if(in_flash(pc))
   {
@@ -43,7 +43,6 @@ void Cache_decode(uint32_t pc)
       icache[index].valid = 1;
       icache[index].tag = tag;
       flash_miss++;
-      printf("flash_miss = %u \n",flash_miss);
     }
   }
   else if(in_sdram(pc))
@@ -83,17 +82,14 @@ int main(void)
       fprintf(stderr, "Error opening file: %s\n", strerror(errno));
       return 1;
   }
-  uint32_t line_num;
   char line[1024];
   while (fgets(line, sizeof(line), fp)) {  // 逐行读取
       uint32_t pc = 0;
       int count = 0;
       parse_line(line, &pc, &count);
      // pc = 0x0f000030;
-      count = 5;
       for(int i=0;i<count;i++)
       {
-        line_num ++;
         Cache_decode(pc);
         pc = pc + 4;
       }
@@ -101,6 +97,5 @@ int main(void)
   fclose(fp);
     printf("sdram hit =%u sdram miss =%u\n",sdram_hit,sdram_miss);
     printf("flash hit =%u flash miss =%u\n",flash_hit,flash_miss);
-    printf("line num = %d \n",line_num);
     return 0;
 }
