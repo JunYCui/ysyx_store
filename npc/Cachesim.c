@@ -70,7 +70,7 @@ int parse_line(const char *line,uint32_t *pc, int *count) {
   // 提取pc值（支持16进制）
   if (sscanf(pc_start + 3, "%x", pc) != 1) return 0;  // 跳过"pc="
   // 提取count值（十进制）
-  if (sscanf(count_start + 8, "%d", count) != 1) return 0; // 跳过"count="
+  if (sscanf(count_start + 6, "%d", count) != 1) return 0; // 跳过"count="
 
   return 1;  // 解析成功
 }
@@ -88,6 +88,7 @@ int main(void)
       int count = 0;
       parse_line(line, &pc, &count);
      // pc = 0x0f000030;
+     printf("count = %d\n",count);
       for(int i=0;i<count;i++)
       {
         Cache_decode(pc);
