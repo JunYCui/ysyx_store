@@ -33,6 +33,7 @@ uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
+
 #ifdef CONFIG_IRINGBUF
 struct Ring
 {
@@ -66,13 +67,33 @@ void iringbuf_out()
 #endif
 
 void device_update();
-
+extern FILE* log_fp; 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
-  
 #ifdef CONFIG_ITRACE_COND
-  if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
-#endif
+if (ITRACE_COND ){log_write("%s\n",_this->logbuf);}
+/*
+static uint64_t count=0;
+static bool start = 1;
+static bool jump_flag; 
+if(start){
+  start = 0;
+  log_write("pc=0x%x,", _this->pc);
+ }
+ if (ITRACE_COND & jump_flag) { fprintf(log_fp,"\npc=0x%x,", _this->pc); jump_flag =0; }
+ if(dnpc == _this->pc+4)
+  {
+    count++;
+  }
+  else {
+    jump_flag = 1;
+    count++;
+    fprintf(log_fp,"\t count = %ld ",count);
+    count =0;
+  }
+  if(_this->isa.inst.val == 0x100073){fprintf(log_fp,"\t count = %ld ",count);}
+*/
+  #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   IFDEF(CONFIG_WATCHPOINT, Cpu_Wp());
@@ -135,7 +156,6 @@ static void statistic() {
   Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
   if (g_timer > 0) Log("simulation frequency = " NUMBERIC_FMT " inst/s", g_nr_guest_inst * 1000000 / g_timer);
   else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
-
 }
 
 void assert_fail_msg() {

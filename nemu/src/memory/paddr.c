@@ -18,6 +18,8 @@
 #include <device/mmio.h>
 #include <isa.h>
 
+
+
 #if   defined(CONFIG_PMEM_MALLOC)
 static uint8_t *flash = NULL;
 #else // CONFIG_PMEM_GARRAY
@@ -26,6 +28,7 @@ static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 static uint8_t *sram = NULL;
 static uint8_t *sdram = NULL;
 static uint8_t *psram = NULL;
+
 
 uint8_t* guest_to_host(paddr_t paddr) { return flash + paddr - CONFIG_FLASH_BASE; }
 paddr_t host_to_guest(uint8_t *haddr) { return haddr - flash + CONFIG_FLASH_BASE; }
@@ -100,6 +103,8 @@ void init_mem() {
 }
 
 word_t paddr_read(paddr_t addr, int len) {
+  if((addr>=0x10000000  && addr<0x20000000) || (addr >= 0x2000000 && addr <0x2000008))
+        return 0x0000ffff; 
   if (likely(in_flash(addr))) return flash_read(addr, len);
   else if(likely(in_sram(addr))) return sram_read(addr, len);
   else if(likely(in_sdram(addr))) return sdram_read(addr, len);
@@ -111,6 +116,8 @@ word_t paddr_read(paddr_t addr, int len) {
 }
 
 void paddr_write(paddr_t addr, int len, word_t data) {
+  if((addr>=0x10000000  && addr<0x20000000) || (addr >= 0x2000000 && addr <0x2000008))
+        return ;
   if (likely(in_flash(addr))) { flash_write(addr,len,data); return;}
   else if(likely(in_sram(addr))){sram_write(addr,len,data); return;}
   else if(likely(in_sdram(addr))){sdram_write(addr,len,data); return;}

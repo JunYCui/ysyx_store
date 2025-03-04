@@ -16,7 +16,7 @@ LDFLAGS   += -T $(AM_HOME)/scripts/ysyxsoclinker.ld  #--print-map
 LDFLAGS   += --gc-sections -e _start
 CFLAGS += -DMAINARGS=\"$(mainargs)\" 
 SOCFLAGS = -e $(IMAGE).elf -b
-
+NEMUFLAGS += -l $(shell dirname $(IMAGE).elf)/nemu-log.txt  -e $(IMAGE).elf 
 
 .PHONY: $(AM_HOME)/am/src/riscv/ysyxsoc/trm.c
 
@@ -30,3 +30,6 @@ run: image
 
 gdb: image
 	$(MAKE) -C $(NPC_HOME) ISA=$(ISA) gdb ARGS="$(SOCFLAGS)" IMG=$(IMAGE).bin
+
+cache: image
+	$(MAKE) -C $(NEMU_HOME) ISA=$(ISA) run ARGS="$(NEMUFLAGS)" IMG=$(IMAGE).bin
