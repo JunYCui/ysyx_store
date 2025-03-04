@@ -67,14 +67,14 @@ void iringbuf_out()
 #endif
 
 void device_update();
-
+extern FILE* log_fp; 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
   static uint64_t count=0;
 #ifdef CONFIG_ITRACE_COND
   count++;
   if(count == 100) {
-    if (ITRACE_COND) { _Log("%s\n", _this->logbuf); }
+    if (ITRACE_COND) { fprintf(log_fp,"%s\n", _this->logbuf); }
     count =0;
   }
 #endif
