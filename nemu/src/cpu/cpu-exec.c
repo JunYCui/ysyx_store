@@ -73,7 +73,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
   static uint64_t count=0;
   static bool start = 1;
   static bool jump_flag;
-  char *fp = strtok(_this->logbuf,":");
+  char *fp = strtok(_this->logbuf,"\t");
   fp = strtok(NULL,"\t");
   printf("%s\n",fp);
 #ifdef CONFIG_ITRACE_COND
