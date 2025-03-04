@@ -103,7 +103,7 @@ void init_mem() {
 }
 
 word_t paddr_read(paddr_t addr, int len) {
-  if(addr>=0x10000000  && addr<0x20000000 || addr >= 0x2000000 && addr <0x2000008)
+  if((addr>=0x10000000  && addr<0x20000000) || (addr >= 0x2000000 && addr <0x2000008))
         return 0x0000ffff; 
   if (likely(in_flash(addr))) return flash_read(addr, len);
   else if(likely(in_sram(addr))) return sram_read(addr, len);
@@ -116,7 +116,7 @@ word_t paddr_read(paddr_t addr, int len) {
 }
 
 void paddr_write(paddr_t addr, int len, word_t data) {
-  if(addr>=0x10000000  && addr<0x20000000 || addr >= 0x2000000 && addr <0x2000008)
+  if((addr>=0x10000000  && addr<0x20000000) || (addr >= 0x2000000 && addr <0x2000008))
         return ;
   if (likely(in_flash(addr))) { flash_write(addr,len,data); return;}
   else if(likely(in_sram(addr))){sram_write(addr,len,data); return;}
