@@ -71,6 +71,8 @@ extern FILE* log_fp;
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
 #ifdef CONFIG_ITRACE_COND
+if (ITRACE_COND ){log_write("%s\n",_this->logbuf);}
+/*
 static uint64_t count=0;
 static bool start = 1;
 static bool jump_flag; 
@@ -90,7 +92,8 @@ if(start){
     count =0;
   }
   if(_this->isa.inst.val == 0x100073){fprintf(log_fp,"\t count = %ld ",count);}
-#endif
+*/
+  #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   IFDEF(CONFIG_WATCHPOINT, Cpu_Wp());
