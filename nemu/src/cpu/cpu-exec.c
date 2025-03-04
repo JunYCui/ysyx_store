@@ -71,10 +71,18 @@ extern FILE* log_fp;
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) 
 {
   static uint64_t count=0;
+  static bool start = 1;
 #ifdef CONFIG_ITRACE_COND
-  count++;
-  if(count == 100) {
-    if (ITRACE_COND) { fprintf(log_fp,"%s\n", _this->logbuf); }
+ if(start){
+  start = 0;
+  log_write("%s\n", _this->logbuf);
+ }
+ if(dnpc == _this->pc+4)
+  {
+    count++;
+  }
+  else {
+    if (ITRACE_COND) { fprintf(log_fp,"%ld\n%s\n", count,_this->logbuf); }
     count =0;
   }
 #endif
