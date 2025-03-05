@@ -730,7 +730,9 @@ if (rst_i)
     ack_q   <= 1'b0;
 else
 begin
-    if (rd_q[SDRAM_READ_LATENCY+1])
+    if (state_q == STATE_WRITE0)
+        ack_q <= 1'b1;
+    else if (rd_q[SDRAM_READ_LATENCY+1])
         ack_q <= 1'b1;
     else
         ack_q <= 1'b0;
