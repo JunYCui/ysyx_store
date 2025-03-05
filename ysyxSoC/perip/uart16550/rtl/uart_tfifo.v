@@ -198,13 +198,13 @@ raminfr #(fifo_pointer_w,fifo_width,fifo_depth) tfifo
 always @(posedge clk or posedge wb_rst_i) // synchronous FIFO
 begin
     if (wb_rst_i) begin
-        top    <= #1 'b0;
-        bottom <= #1 'b0;
-        count  <= #1 'b0;
+        top    <= #1 0;
+        bottom <= #1 0;
+        count  <= #1 0;
     end else if (fifo_reset) begin
-        top    <= #1 'b0;
-        bottom <= #1 'b0;
-        count  <= #1 'b0;
+        top    <= #1 0;
+        bottom <= #1 0;
+        count  <= #1 0;
     end else begin
         case ({push, pop})
         2'b10 : if (count<fifo_depth)  // overrun condition

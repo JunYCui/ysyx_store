@@ -15,18 +15,23 @@ module sdram_top_apb (
   output        sdram_clk,
   output        sdram_cke,
   output        sdram_cs,
+  output        sdram_cs1,
   output        sdram_ras,
   output        sdram_cas,
   output        sdram_we,
   output [12:0] sdram_a,
   output [ 1:0] sdram_ba,
   output [ 1:0] sdram_dqm,
-  inout  [15:0] sdram_dq
+  output [ 1:0] sdram_updqm,
+  inout  [15:0] sdram_dq,
+  inout  [15:0] sdram_updq
 );
 
   wire sdram_dout_en;
   wire [15:0] sdram_dout;
+  wire [15:0] sdram_updout;
   assign sdram_dq = sdram_dout_en ? sdram_dout : 16'bz;
+  assign sdram_updq = sdram_dout_en ? sdram_updout : 16'bz;
 
   typedef enum [1:0] { ST_IDLE, ST_WAIT_ACCEPT, ST_WAIT_ACK } state_t;
   reg [1:0] state;
@@ -66,14 +71,18 @@ module sdram_top_apb (
     .sdram_clk_o(sdram_clk),
     .sdram_cke_o(sdram_cke),
     .sdram_cs_o(sdram_cs),
+    .sdram_cs1_o(sdram_cs1),
     .sdram_ras_o(sdram_ras),
     .sdram_cas_o(sdram_cas),
     .sdram_we_o(sdram_we),
     .sdram_dqm_o(sdram_dqm),
+    .sdram_updqm_o(sdram_updqm),
     .sdram_addr_o(sdram_a),
     .sdram_ba_o(sdram_ba),
     .sdram_data_input_i(sdram_dq),
+    .sdram_updata_input_i(sdram_updq),
     .sdram_data_output_o(sdram_dout),
+    .sdram_updata_output_o(sdram_updout),
     .sdram_data_out_en_o(sdram_dout_en)
   );
 
