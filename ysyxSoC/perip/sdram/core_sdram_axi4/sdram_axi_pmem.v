@@ -283,7 +283,7 @@ u_response
 
     // Input
     .data_in_i(ram_read_data_i),
-    .push_i(ram_ack_i & req_out_valid_w),
+    .push_i(ram_ack_i & resp_is_read_w),
     .accept_o(),
 
     // Output
