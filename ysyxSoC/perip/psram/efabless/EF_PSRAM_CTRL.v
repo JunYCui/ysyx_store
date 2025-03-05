@@ -57,9 +57,8 @@ module PSRAM_READER (
     output  wire            douten
 );
 
-    localparam  IDLE = 0,
-                READ = 1;
-                
+    localparam  IDLE = 1'b0,
+                READ = 1'b1;
 
     wire [7:0]  FINAL_COUNT = 19 + size*2; // was 27: Always read 1 word
 
