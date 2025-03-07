@@ -173,9 +173,9 @@ module ysyx_24100029_icache #(
    
     assign                              icache_rready               = 1'b1;
     assign                              icache_arid                 = 0;
-    assign                              icache_arlen                = 2**CacheLine_Width-1;// 0+1 = 1 transfer once
+    assign                              icache_arlen                = mux_flag? 0:2**CacheLine_Width-1;// 0+1 = 1 transfer once
     assign                              icache_arsize               = 3'b010;// transfer 4 bytes once
-    assign                              icache_arburst              = 2'b01;// INCR Burst
+    assign                              icache_arburst              = mux_flag? 2'b00:2'b01;// INCR Burst
     assign                              icache_awvalid              = 0;
     assign                              icache_awaddr               = 0;
     assign                              icache_awid                 = 0;
