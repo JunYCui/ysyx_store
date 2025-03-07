@@ -207,7 +207,7 @@ module ysyx_24100029_icache #(
     assign                              ifu_rvalid                  = mux_flag? icache_rvalid: (state == HIT) | ((state == MISS) & icache_rvalid);
     assign                              icache_arvalid              = mux_flag? ifu_arvalid:arvalid;
     assign                              hit                         = valid & (ifu_araddr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH+CacheLine_Width] == tag) & ifu_rready;
-    assign                              mux_flag                    = (ifu_araddr[31:24] == 8'h0f);// sram addr 
+    assign                              mux_flag                    = ~(ifu_araddr[31:24] == 8'ha0);// sram addr 
 
     always @(posedge clock or posedge reset) begin
         if(reset)
