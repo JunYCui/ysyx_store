@@ -166,7 +166,7 @@ module ysyx_24100029_icache #(
 
     assign                              block_choice                = ifu_araddr[CacheLine_Width+OFFSET_WIDTH-1:OFFSET_WIDTH];
     assign                              block_data                  = icache[index][CACHE_WIDTH-1:VALID_WIDTH+TAG_WIDTH];
-    assign                              rdata                       = icache[index][32*block_choice+:32];
+    assign                              rdata                       = block_data[32*block_choice+:32];
     assign                              tag                         = icache[index][VALID_WIDTH+TAG_WIDTH-1:VALID_WIDTH];
     assign                              valid                       = icache[index][VALID_WIDTH-1:0];
     assign                              index                       = ifu_araddr[OFFSET_WIDTH+CacheLine_Width+INDEX_WIDTH-1:OFFSET_WIDTH+CacheLine_Width];
