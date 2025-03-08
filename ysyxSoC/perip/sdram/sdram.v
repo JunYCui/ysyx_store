@@ -273,7 +273,7 @@ module fifo_r
           r_ptr <= r_ptr + 1;
     end
     always @(posedge clock) begin
-        if(pop)
+        if(push)
           fifo[w_ptr[Depth_Width-1:0]] <= data_in;
     end
 
