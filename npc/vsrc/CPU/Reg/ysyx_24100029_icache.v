@@ -203,7 +203,7 @@ module ysyx_24100029_icache #(
     assign                              ifu_bresp                   = 0;
     assign                              ifu_bid                     = 0;
     assign                              ifu_arready                 = mux_flag? icache_arready:(state == IDLE);
-    assign                              ifu_rdata                   = mux_flag? icache_rdata:(state == MISS)? icache_rdata:rdata;
+    assign                              ifu_rdata                   = mux_flag? icache_rdata:rdata;
     assign                              ifu_rvalid                  = mux_flag? icache_rvalid: (state == HIT) | ((state == MISS) & icache_rvalid & icache_rlast);
     assign                              icache_arvalid              = mux_flag? ifu_arvalid:arvalid;
     assign                              hit                         = valid & (ifu_araddr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH+CacheLine_Width] == tag) & ifu_rready;
