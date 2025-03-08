@@ -259,7 +259,7 @@ end
 
 always @(posedge clock) begin
     if(state == ADDR & ~hit)
-        icache[index] <= {{(2**CacheLine_Width){32'd0}},tag,1'b1};
+        icache[index] <= {{(2**CacheLine_Width){32'd0}},ifu_araddr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH+CacheLine_Width],1'b1};
     else if(icache_rvalid)
         icache[index][TAG_WIDTH + VALID_WIDTH + 32*count+:32] <= icache_rdata;
 end
