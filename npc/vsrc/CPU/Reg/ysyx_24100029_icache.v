@@ -189,7 +189,7 @@ module ysyx_24100029_icache #(
     assign                              icache_wlast                = 0;
 
     assign                              icache_bready               = 0;
-    assign                              icache_araddr               = ifu_araddr;
+    assign                              icache_araddr               = {ifu_araddr[ADDR_WIDTH-1:CacheLine_Width+OFFSET_WIDTH],{(CacheLine_Width+OFFSET_WIDTH){1'b0}}};
 
 
     assign                              ifu_rresp                   = 2'b00;
