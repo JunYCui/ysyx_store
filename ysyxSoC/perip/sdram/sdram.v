@@ -106,6 +106,8 @@ module sdram(
     always @(posedge clk or negedge cke ) begin
           if(!cke)
             counter <= 0;
+          else if(state == idle)
+            counter <= 0;
           else if(counter == cas_latency + burst_lenth - 1)
             counter <= counter;
           else if( state == work_r | state == work_w | state == data_o )
