@@ -84,8 +84,14 @@ module sdram(
     always @(posedge clk or negedge cke) begin
         if(!cke)
           bank_addr <= 0;
-        else if((counter == cas_latency + burst_lenth - 1) & ~empty )
-          bank_addr <= ba_fifo;
+        else if((counter == cas_latency + burst_lenth - 1))begin
+            if(~empty)
+              bank_addr <= ba_fifo;
+            else if(read_cmd)
+              bank_addr <= ba;
+            else 
+              bank_addr <= bank_addr; 
+        end
         else if((state == idle)& (read_cmd | write_cmd))
           bank_addr <= ba;
     end
@@ -130,7 +136,9 @@ module sdram(
                 else
                   next_state = work_w;
         data_o:if(counter == cas_latency + burst_lenth - 1)
-                  if(empty)
+                  if(read_cmd)
+                    next_state = data_o;
+                  else if(empty)
                     next_state = idle;
                   else
                     next_state = data_o;
@@ -153,8 +161,14 @@ module sdram(
                 else 
                   col_addr <= col_addr;
           work_w:col_addr <= col_addr + 1;
-          data_o:if((counter == cas_latency + burst_lenth - 1) & ~empty  )
-                    col_addr <= col_fifo;
+          data_o:if((counter == cas_latency + burst_lenth - 1))begin
+                      if(~empty)
+                        col_addr <= col_fifo;
+                      else if(read_cmd)
+                        col_addr <= {a[11],a[9:0]};
+                      else 
+                        col_addr <= col_addr;
+                  end
                  else
                     col_addr <= col_addr + 1;
           default: 
