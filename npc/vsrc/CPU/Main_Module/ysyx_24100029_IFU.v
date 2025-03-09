@@ -139,14 +139,30 @@ module ysyx_24100029_IFU #(
 
     assign                              ifu_rready                  = 1'b1;
 /************ Axi4 bus ***********/
+
 `ifdef Performance_Count
+reg [31:0] valid_count;
     always @(posedge clock) begin
         if(reset)
             fetch_inst <= 0;
         else if(ifu_rvalid)
             fetch_inst <= fetch_inst + 1;
     end
+
+    always @(posedge clock or posedge reset) begin
+        if(reset)
+            valid_count <= 0;
+        else if(~valid)begin
+            valid_count <= valid_count + 1;
+            assert(valid_count > 100);
+        end
+        else 
+            valid_count <= 0;
+    end
+
 `endif
+
+
 
 always @(posedge clock) begin
     if(reset)begin
