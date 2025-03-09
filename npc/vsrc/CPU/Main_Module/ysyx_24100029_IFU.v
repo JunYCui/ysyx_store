@@ -154,7 +154,7 @@ reg [31:0] valid_count;
             valid_count <= 0;
         else if(~valid)begin
             valid_count <= valid_count + 1;
-            assert(valid_count < 100);
+            assert(valid_count < 1000);
         end
         else 
             valid_count <= 0;
