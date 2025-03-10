@@ -69,7 +69,9 @@ module axi4_delayer(
 
   localparam IDLE = 2'b00;
   localparam REQ = 2'b01;
-  localparam WAIT = 2'b10;
+  localparam READ = 2'b10;
+  localparam WRITE = 2'b11;
+
   reg [1:0] state;
   reg [9:0] count;
   reg [9:0] burst_count;
@@ -108,22 +110,27 @@ module axi4_delayer(
                       state <= REQ;
               else 
                       state <= IDLE;
-        REQ:  if((out_rvalid & out_rlast & in_rready) | (out_bvalid & in_bready))
-                      state <= WAIT;
-              else 
+        REQ:  if((out_rvalid & out_rlast & in_rready))
+                      state <= READ;
+              else if((out_bvalid & in_bready))
+                      state <= WRITE;
+              else
                       state <= REQ;
-        WAIT:if(count == 1)
+        READ:if(count == 1)
                       state <= IDLE;
               else 
-                      state <= WAIT;
-        default: state <= IDLE;
+                      state <= READ;
+        WRITE:if(count == 1)
+                      state <= IDLE;
+              else 
+                      state <= READ;
         endcase
   end
 
   always @(posedge clock or posedge reset) begin
       if(reset)
         burst_count <= 0;
-      else if(state == REQ & (out_rvalid & out_rlast & out_rready))
+      else if(state == IDLE)
         burst_count <= 0;
       else if(out_rvalid & out_rready)
         burst_count <= burst_count + 1;
@@ -133,11 +140,11 @@ module axi4_delayer(
         if(reset | state == IDLE)begin
           count <= 0;
         end
-        else if(state == WAIT) begin
+        else if(state == READ || state == WRITE) begin
           count <= count - 1;
         end
         else if(state == REQ & ((out_rvalid & out_rlast & out_rready) | (out_bvalid & out_bready)))begin
-          count <= (count >> $clog2(s)) - 1 ;
+          count <= ((count + (r<<$clog2(s))) >> $clog2(s)) - 1 ;
         end
         else if(state == REQ)begin
           count <= count + (r<<$clog2(s)) ;
@@ -156,16 +163,16 @@ module axi4_delayer(
 
   assign out_bready = (state == IDLE)? in_bready : (state == REQ)? 1'b1:1'b0;
 
-  assign in_bvalid = (state == IDLE)? out_bvalid :(state == WAIT && count == 1)? 1'b1:1'b0 ;
-  assign in_bid = (state == WAIT && count == 1)? bid:out_bid ;
+  assign in_bvalid = (state == IDLE)? out_bvalid :(state == WRITE && count == 1)? 1'b1:1'b0 ;
+  assign in_bid = (state == WRITE && count == 1)? bid:out_bid ;
   assign in_bresp = out_bresp;
 
-  assign out_rready =   (state == IDLE)? in_rready : 1'b1;
-  assign in_rvalid =(state == IDLE)? out_rvalid : (state == WAIT && (burst_count >= count))? 1'b1:1'b0;
+  assign out_rready = (state == IDLE)? in_rready : 1'b1;
+  assign in_rvalid =(state == IDLE)? out_rvalid : (state == READ && (burst_count >= count))? 1'b1:1'b0;
   assign in_rid = out_rid;
-  assign in_rdata = (state == WAIT && (burst_count >= count))? ram[burst_count[2:0]-count[2:0]] : out_rdata ;
+  assign in_rdata = (state == READ && (burst_count >= count))? ram[burst_count[2:0]-count[2:0]] : out_rdata ;
   assign in_rresp = out_rresp;
-  assign in_rlast = (state == IDLE)? out_rlast :(state == WAIT && count == 1)? 1'b1:1'b0 ;;
+  assign in_rlast = (state == IDLE)? out_rlast :(state == READ && count == 1)? 1'b1:1'b0 ;;
 
 
 endmodule
