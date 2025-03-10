@@ -149,7 +149,7 @@ module axi4_delayer(
     end
 
 
-  assign out_bready = in_bready;
+  assign out_bready = (state == IDLE)? in_bready : (state == REQ)? 1'b1:1'b0;
 
   assign in_bvalid = (state == IDLE)? out_bvalid :(state == WAIT && count == 1)? 1'b1:1'b0 ;
   assign in_bid = out_bid;
