@@ -77,6 +77,7 @@ module axi4_delayer(
   reg [9:0] burst_count;
   reg [31:0] ram [7:0];
   reg [3:0] bid;
+  reg [3:0] rid;
 
   assign in_arready = out_arready;
   assign out_arvalid = in_arvalid;
@@ -161,6 +162,11 @@ module axi4_delayer(
           bid <= out_bid;
   end
 
+  always @(posedge clock) begin
+      if((state == REQ) & (out_rvalid & in_rready & out_rlast) )
+          rid <= out_bid;
+  end
+
   assign out_bready = (state == IDLE)? in_bready : (state == REQ)? 1'b1:1'b0;
 
   assign in_bvalid = (state == IDLE)? out_bvalid :(state == WRITE && count == 1)? 1'b1:1'b0 ;
@@ -169,7 +175,7 @@ module axi4_delayer(
 
   assign out_rready = (state == IDLE)? in_rready : 1'b1;
   assign in_rvalid =(state == IDLE)? out_rvalid : (state == READ && (burst_count >= count))? 1'b1:1'b0;
-  assign in_rid = out_rid;
+  assign in_rid = (state == READ && (burst_count >= count))? rid:out_rid;
   assign in_rdata = (state == READ && (burst_count >= count))? ram[burst_count[2:0]-count[2:0]] : out_rdata ;
   assign in_rresp = out_rresp;
   assign in_rlast = (state == IDLE)? out_rlast :(state == READ && count == 1)? 1'b1:1'b0 ;;
