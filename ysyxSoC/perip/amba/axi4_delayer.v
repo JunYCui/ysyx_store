@@ -149,18 +149,18 @@ module axi4_delayer(
     end
 
 
-  assign out_bready = (state == IDLE)? in_bready : (state == REQ)? 1'b1:1'b0;
+  assign out_bready = in_bready ; //(state == IDLE)? in_bready : (state == REQ)? 1'b1:1'b0;
 
-  assign in_bvalid = (state == IDLE)? out_bvalid :(state == WAIT && count == 1)? 1'b1:1'b0 ;
+  assign in_bvalid = out_bvalid  ;//(state == IDLE)? out_bvalid :(state == WAIT && count == 1)? 1'b1:1'b0 ;
   assign in_bid = out_bid;
   assign in_bresp = out_bresp;
 
-  assign out_rready = (state == IDLE)? in_rready : 1'b1;
-  assign in_rvalid = (state == IDLE)? out_rvalid : (state == WAIT && (burst_count >= count))? 1'b1:1'b0;
+  assign out_rready =  in_rready;// (state == IDLE)? in_rready : 1'b1;
+  assign in_rvalid = out_rvalid; //(state == IDLE)? out_rvalid : (state == WAIT && (burst_count >= count))? 1'b1:1'b0;
   assign in_rid = out_rid;
-  assign in_rdata = (state == WAIT && (burst_count >= count))? ram[burst_count[2:0]-count[2:0]] : out_rdata ;
+  assign in_rdata = out_rdata; //(state == WAIT && (burst_count >= count))? ram[burst_count[2:0]-count[2:0]] : out_rdata ;
   assign in_rresp = out_rresp;
-  assign in_rlast = (state == IDLE)? out_rlast :(state == WAIT && count == 1)? 1'b1:1'b0 ;;
+  assign in_rlast = out_rlast; //(state == IDLE)? out_rlast :(state == WAIT && count == 1)? 1'b1:1'b0 ;;
 
 
 endmodule
