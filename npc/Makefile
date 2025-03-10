@@ -19,11 +19,9 @@ ifeq ($(PLATFORM),ysyxsoc)
 VSOURCES += $(shell find $(abspath ../ysyxSoC/perip) -name "*.v" )
 VSOURCES += $(shell find $(abspath ../ysyxSoC/build) -name "*.v" )
 INC_VDEFINE += /home/cjy/ysyx-workbench/ysyxSoC/perip/uart16550/rtl /home/cjy/ysyx-workbench/ysyxSoC/perip/spi/rtl
-CONSTR = constr/$(TOPNAME).nxdc
+CONSTR = $(NPC_HOME)/constr/$(TOPNAME).nxdc
 
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
-$(SRC_AUTO_BIND): $(CONSTR)
-	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
 CSOURCES += $(SRC_AUTO_BIND)
 
@@ -114,6 +112,11 @@ perf:
 	@echo "microbench test"
 	@$(MAKE) -C ../am-kernels/benchmarks/microbench ARCH=riscv32e-ysyxsoc mainargs=train run > log1.txt
 	@grep --after-context=9 "total_count" log1.txt > count.txt
+
+ifeq ($(PLATFORM),ysyxsoc)
+$(SRC_AUTO_BIND): $(CONSTR)
+	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
+endif
 .PHONY: clean all sim perf area
 #waves:*.vcd
 #	gtkwave *.vcd
