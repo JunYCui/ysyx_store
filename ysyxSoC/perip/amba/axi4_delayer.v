@@ -63,6 +63,18 @@ module axi4_delayer(
   input  [1:0]  out_bresp
 );
 
+    parameter                           r                          = 4     ; // main frequency vs slave frequency
+    parameter                           s                          = 8     ; //  ratio
+
+
+  localparam IDLE = 2'b00;
+  localparam REQ = 2'b01;
+  localparam WAIT = 2'b10;
+  reg [1:0] state;
+  reg [9:0] count;
+  reg [9:0] burst_count;
+  reg [31:0] ram [7:0];
+
   assign in_arready = out_arready;
   assign out_arvalid = in_arvalid;
   assign out_arid = in_arid;
@@ -70,12 +82,7 @@ module axi4_delayer(
   assign out_arlen = in_arlen;
   assign out_arsize = in_arsize;
   assign out_arburst = in_arburst;
-  assign out_rready = in_rready;
-  assign in_rvalid = out_rvalid;
-  assign in_rid = out_rid;
-  assign in_rdata = out_rdata;
-  assign in_rresp = out_rresp;
-  assign in_rlast = out_rlast;
+
   assign in_awready = out_awready;
   assign out_awvalid = in_awvalid;
   assign out_awid = in_awid;
@@ -83,14 +90,77 @@ module axi4_delayer(
   assign out_awlen = in_awlen;
   assign out_awsize = in_awsize;
   assign out_awburst = in_awburst;
+
   assign in_wready = out_wready;
   assign out_wvalid = in_wvalid;
   assign out_wdata = in_wdata;
   assign out_wstrb = in_wstrb;
   assign out_wlast = in_wlast;
+
+
+  always @(posedge clock or posedge reset) begin
+      if(reset)
+        state <= IDLE;
+      else 
+        case(state)
+        IDLE: if(((in_arready & out_arvalid) | (in_awready & out_awvalid))& ((in_araddr[31:28]>=4'ha & in_araddr[31:28] < 4'hc) | (in_awaddr[31:28]>=4'ha & in_awaddr[31:28] < 4'hc)))
+                      state <= REQ;
+              else 
+                      state <= IDLE;
+        REQ:  if((out_rvalid & out_rlast & in_rready) | (out_bvalid & in_bready))
+                      state <= WAIT;
+              else 
+                      state <= REQ;
+        WAIT:if(count == 1)
+                      state <= IDLE;
+              else 
+                      state <= WAIT;
+        default: state <= IDLE;
+        endcase
+  end
+
+  always @(posedge clock or posedge reset) begin
+      if(reset)
+        burst_count <= 0;
+      else if(state == REQ & (out_rvalid & out_rlast & out_rready))
+        burst_count <= 0;
+      else if(out_rvalid & out_rready)
+        burst_count <= burst_count + 1;
+  end
+
+    always @(posedge clock or posedge reset) begin
+        if(reset | state == IDLE)begin
+          count <= 0;
+        end
+        else if(state == WAIT) begin
+          count <= count - 1;
+        end
+        else if(state == REQ & ((out_rvalid & out_rlast & out_rready) | (out_bvalid & out_bready)))begin
+          count <= (count >> $clog2(s)) - 1 ;
+        end
+        else if(state == REQ)begin
+          count <= count + (r<<$clog2(s)) ;
+        end
+    end
+
+    always @(posedge clock) begin
+        if(state == REQ & out_rvalid & out_rready)
+            ram[burst_count[2:0]] <= out_rdata;
+    end
+
+
   assign out_bready = in_bready;
-  assign in_bvalid = out_bvalid;
+
+  assign in_bvalid = (state == IDLE)? out_bvalid :(state == WAIT && count == 1)? 1'b1:1'b0 ;
   assign in_bid = out_bid;
   assign in_bresp = out_bresp;
+
+  assign out_rready = (state == IDLE)? in_rready : 1'b1;
+  assign in_rvalid = (state == IDLE)? out_rvalid : (state == WAIT && (burst_count >= count))? 1'b1:1'b0;
+  assign in_rid = out_rid;
+  assign in_rdata = (state == WAIT && (burst_count >= count))? ram[burst_count[2:0]-count[2:0]] : out_rdata ;
+  assign in_rresp = out_rresp;
+  assign in_rlast = (state == IDLE)? out_rlast :(state == WAIT && count == 1)? 1'b1:1'b0 ;;
+
 
 endmodule
