@@ -123,7 +123,7 @@ module axi4_delayer(
         WRITE:if(count == 1)
                       state <= IDLE;
               else 
-                      state <= READ;
+                      state <= WRITE;
         endcase
   end
 
