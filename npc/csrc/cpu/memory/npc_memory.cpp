@@ -1,6 +1,9 @@
 #include "npc_memory.h"
 #include "npc_define.h"
 #include "npc_device.h"
+
+#define DEVICE_BASE 0xa0000000
+#define RTC_ADDR  (DEVICE_BASE + 0x0000048)
   uint64_t npc_time;
   extern uint8_t* pmem;
   extern uint32_t *vmem ;
@@ -38,7 +41,15 @@ extern "C" int npc_pmem_read(int addr)
 #ifdef MTRACE
   printf("Read addr 0x%x \n",paddr);
 #endif 
-   data = *(int*)guest_to_host(paddr);   
+  if(addr == RTC_ADDR)
+  {
+    return (uint32_t)get_time();
+  }
+  else if(addr == RTC_ADDR + 4)
+  {
+    return (uint32_t)(get_time()>>32);
+  }
+  data = *(int*)guest_to_host(paddr);   
   return data;
 }
 
