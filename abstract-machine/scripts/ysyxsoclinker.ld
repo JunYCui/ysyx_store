@@ -12,27 +12,33 @@ MEMORY{
 SECTIONS {
   . = ORIGIN(flash);
   .fsbl : {
+    . = ALIGN(4);
     *(entry)
     *(.fsbl*)
+    . = ALIGN(4);
   } >flash AT>flash : fsbl
   .ssbl : {
+    . = ALIGN(4);
     _ssbl_start = .;
     *(.ssbl*)
+    . = ALIGN(4);
   } > sram AT> flash : ssbl
   .text : {
+    . = ALIGN(4);
     text_start = . ;
     *(.text*)
-    . = ALIGN(8);
+    . = ALIGN(4);
   } > sdram AT> flash : text
   .data : {
+    . = ALIGN(4);
     *(.sdata*)
     *(.data*)
-      . = ALIGN(8);
+      . = ALIGN(4);
   } > sdram AT> flash : data
   .rodata : {
     *(.srodata*)
     *(.rodata*)
-    . = ALIGN(8);
+    . = ALIGN(4);
   } > sdram AT > flash : rodata
   .bss : {    	
     *(.bss*)
