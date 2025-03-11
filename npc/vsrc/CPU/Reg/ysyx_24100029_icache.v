@@ -34,7 +34,7 @@ module ysyx_24100029_icache #(
 (
     input                               clock                      ,
     input                               reset                      ,
-
+    input                               clr                        ,
 `ifdef Performance_Count
     output reg         [  31: 0]        flash_hit,flash_miss,sdram_hit,sdram_miss,
 `endif
@@ -162,7 +162,7 @@ module ysyx_24100029_icache #(
     reg                [CACHE_WIDTH-1: 0]        icache[2**INDEX_WIDTH-1:0]  ;
     reg                [   1: 0]        state                       ;
     reg                                 arvalid                     ;
-    reg                [ 2: 0]        count                       ;
+    reg                [   2: 0]        count                       ;
 
     assign                              block_choice                = ifu_araddr[CacheLine_Width+OFFSET_WIDTH-1:OFFSET_WIDTH];
     assign                              block_data                  = icache[index][CACHE_WIDTH-1:VALID_WIDTH+TAG_WIDTH];
@@ -189,7 +189,7 @@ module ysyx_24100029_icache #(
     assign                              icache_wlast                = 0;
 
     assign                              icache_bready               = 0;
-    assign                              icache_araddr               =mux_flag? ifu_araddr:{ifu_araddr[ADDR_WIDTH-1:CacheLine_Width+OFFSET_WIDTH],{(CacheLine_Width+OFFSET_WIDTH){1'b0}}};
+    assign                              icache_araddr               = mux_flag? ifu_araddr:{ifu_araddr[ADDR_WIDTH-1:CacheLine_Width+OFFSET_WIDTH],{(CacheLine_Width+OFFSET_WIDTH){1'b0}}};
 
 
     assign                              ifu_rresp                   = 2'b00;
@@ -258,8 +258,12 @@ always @(posedge clock or posedge reset) begin
 end
 
 always @(posedge clock) begin
-    if(state == ADDR & ~hit)
-        icache[index] <= {{(2**CacheLine_Width){32'd0}},ifu_araddr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH+CacheLine_Width],1'b1};
+    if (clr) begin
+        for(integer i=0;i<2**INDEX_WIDTH;i++)
+            icache[i][0] <= 1'b0;
+    end
+    else if(state == ADDR & ~hit)
+        icache[index][TAG_WIDTH+VALID_WIDTH-1:0] <= {ifu_araddr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH+CacheLine_Width],1'b1};
     else if(icache_rvalid)
         icache[index][TAG_WIDTH + VALID_WIDTH + 32*count+:32] <= icache_rdata;
 end

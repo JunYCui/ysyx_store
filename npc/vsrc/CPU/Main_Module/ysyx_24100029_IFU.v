@@ -28,57 +28,57 @@ module ysyx_24100029_IFU #(
     parameter                           ResetValue                 = 32'h30000000
 )
 (
-    input                                  clock                      ,
-    input                                  reset                      ,
-    input              [  31: 0]           dnpc                       ,
-    input                                  dnpc_flag                  ,
-    input                                  pipe_stop                  ,
+    input                               clock                      ,
+    input                               reset                      ,
+    input              [  31: 0]        dnpc                       ,
+    input                               dnpc_flag                  ,
+    input                               pipe_stop                  ,
 
-    output reg         [  31: 0]           pc                         ,
-    output reg         [  31: 0]           inst                       ,
+    output reg         [  31: 0]        pc                         ,
+    output reg         [  31: 0]        inst                       ,
 
-    input                                  ready                      ,
-    output reg                             valid                      ,
+    input                               ready                      ,
+    output reg                          valid                      ,
 
-    input                                  awready                    ,
-    output                                 awvalid                    ,
-    output             [  31: 0]           awaddr                     ,
-    output             [   3: 0]           awid                       ,
-    output             [   7: 0]           awlen                      ,
-    output             [   2: 0]           awsize                     ,
-    output             [   1: 0]           awburst                    ,
+    input                               awready                    ,
+    output                              awvalid                    ,
+    output             [  31: 0]        awaddr                     ,
+    output             [   3: 0]        awid                       ,
+    output             [   7: 0]        awlen                      ,
+    output             [   2: 0]        awsize                     ,
+    output             [   1: 0]        awburst                    ,
 
-    input                                  wready                     ,
-    output                                 wvalid                     ,
-    output             [  31: 0]           wdata                      ,
-    output             [   3: 0]           wstrb                      ,
-    output                                 wlast                      ,
+    input                               wready                     ,
+    output                              wvalid                     ,
+    output             [  31: 0]        wdata                      ,
+    output             [   3: 0]        wstrb                      ,
+    output                              wlast                      ,
 
-    output                                 bready                     ,
-    input                                  bvalid                     ,
-    input              [   1: 0]           bresp                      ,
-    input              [   3: 0]           bid                        ,
+    output                              bready                     ,
+    input                               bvalid                     ,
+    input              [   1: 0]        bresp                      ,
+    input              [   3: 0]        bid                        ,
 
-    input                                  arready                    ,
-    output                                 arvalid                    ,
-    output             [  31: 0]           araddr                     ,
-    output             [   3: 0]           arid                       ,
-    output             [   7: 0]           arlen                      ,
-    output             [   2: 0]           arsize                     ,
-    output             [   1: 0]           arburst                    ,
+    input                               arready                    ,
+    output                              arvalid                    ,
+    output             [  31: 0]        araddr                     ,
+    output             [   3: 0]        arid                       ,
+    output             [   7: 0]        arlen                      ,
+    output             [   2: 0]        arsize                     ,
+    output             [   1: 0]        arburst                    ,
 
-    output                                 rready                     ,
-    input                                  rvalid                     ,
-    input              [   1: 0]           rresp                      ,
-    input              [  31: 0]           rdata                      ,
-    input                                  rlast                      ,
-    input              [   3: 0]           rid                        ,
+    output                              rready                     ,
+    input                               rvalid                     ,
+    input              [   1: 0]        rresp                      ,
+    input              [  31: 0]        rdata                      ,
+    input                               rlast                      ,
+    input              [   3: 0]        rid                        ,
 
 `ifdef Performance_Count
-    output             [  31: 0]           fetch_inst                 ,
-    output             [  31: 0]           flash_hit,flash_miss,sdram_hit,sdram_miss,
+    output             [  31: 0]        fetch_inst                 ,
+    output             [  31: 0]        flash_hit,flash_miss,sdram_hit,sdram_miss,
 `endif
-    output                                 req                         
+    output                              req                         
 );
 
     reg                                 dnpc_flag_reg               ;
@@ -115,6 +115,7 @@ module ysyx_24100029_IFU #(
     wire                                ifu_rlast                   ;
     wire               [   3: 0]        ifu_rid                     ;
 
+    wire                                clr                         ;
 
 /************ Axi4 bus ***********/
     assign                              ifu_araddr                  = pc;
@@ -138,10 +139,11 @@ module ysyx_24100029_IFU #(
     assign                              ifu_bready                  = 0;
 
     assign                              ifu_rready                  = 1'b1;
+    assign                              clr                         = rvalid&(ifu_rdata == 32'b00000000000000000001000000001111);
 /************ Axi4 bus ***********/
 
 `ifdef Performance_Count
-reg [31:0] valid_count;
+    reg                [  31: 0]        valid_count                 ;
     always @(posedge clock) begin
         if(reset)
             fetch_inst <= 0;
@@ -156,7 +158,7 @@ reg [31:0] valid_count;
             valid_count <= valid_count + 1;
             assert(valid_count < 1000);
         end
-        else 
+        else
             valid_count <= 0;
     end
 
@@ -228,7 +230,7 @@ end
 ysyx_24100029_icache u_ysyx_24100029_icache(
     .clock                              (clock                     ),
     .reset                              (reset                     ),
-
+    .clr                                (clr                       ),
     `ifdef Performance_Count
     .flash_hit                          (flash_hit                 ),
     .flash_miss                         (flash_miss                ),
