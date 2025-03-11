@@ -137,8 +137,6 @@ module ysyx_24100029_IDU(
     always@(posedge clock)begin
         if(reset)
             pc_reg <= 0;
-        else if(valid_last & ready_last)
-            pc_reg <= pc_reg;
         else if(ready_last & valid_last)
             pc_reg <= pc;
     end

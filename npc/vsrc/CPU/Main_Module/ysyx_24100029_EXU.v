@@ -100,8 +100,6 @@ module ysyx_24100029_EXU (
         if(reset)
             valid_next <= 1'b0;
         else if(ready_last & valid_last)
-            valid_next <= 1'b0;
-        else if(ready_last & valid_last)
             valid_next <= 1'b1;
         else
             valid_next <= 1'b0;
