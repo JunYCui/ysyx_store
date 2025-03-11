@@ -132,8 +132,6 @@ module ysyx_24100029_IDU(
         else if((inst_clear | inst_clear_reg) & valid_last & ready_last)
             inst_reg <= 0;
         else if(valid_last & ready_last)
-            inst_reg <= inst_reg;
-        else if(valid_last & ready_last)
             inst_reg <= inst;
     end
     always@(posedge clock)begin
