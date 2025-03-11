@@ -257,9 +257,11 @@ always @(posedge clock or posedge reset) begin
         count <= count + 1;
 end
 
+integer i ;
+
 always @(posedge clock) begin
     if (clr) begin
-        for(integer i=0;i<2**INDEX_WIDTH;i++)
+        for(i=0;i<2**INDEX_WIDTH;i++)
             icache[i][0] <= 1'b0;
     end
     else if(state == ADDR & ~hit)
