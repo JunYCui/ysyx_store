@@ -2,58 +2,58 @@
 //`include "/home/cjy/ysyx-workbench/npc/vsrc/CPU/define/para.v"
 
 module ysyx_24100029_EXU (
-    input                                  clock                      ,
-    input                                  reset                      ,
+    input                               clock                      ,
+    input                               reset                      ,
 
-    /* control signal */
-    input                                  inst_clear                 ,
+    input              [  31: 0]        pc                         ,
+    input              [   3: 0]        csr_wen                    ,
+    input                               R_wen                      ,
+    input                               mem_wen                    ,
+    input                               mem_ren                    ,
+    input              [   4: 0]        rd                         ,
+    input              [   2: 0]        funct3                     ,
 
-    input              [  31: 0]           pc                         ,
-    input              [   3: 0]           csr_wen                    ,
-    input                                  R_wen                      ,
-    input                                  mem_wen                    ,
-    input                                  mem_ren                    ,
-    input              [   4: 0]           rd                         ,
-    input              [   2: 0]           funct3                     ,
+    input              [  31: 0]        imm                        ,
+    input              [   1: 0]        imm_opcode                 ,
+    input              [   3: 0]        alu_opcode                 ,
+    input                               inv_flag                   ,
+    input                               jump_flag                  ,
+    input                               branch_flag                ,
+    input                               fetch_i_flag               ,
 
-    input              [  31: 0]           imm                        ,
-    input              [   1: 0]           imm_opcode                 ,
-    input              [   3: 0]           alu_opcode                 ,
-    input                                  inv_flag                   ,
-    input                                  jump_flag                  ,
-    input                                  branch_flag                ,
+    input              [   1: 0]        add1_choice                ,
+    input              [   1: 0]        add2_choice                ,
 
-    input              [   1: 0]           add1_choice                ,
-    input              [   1: 0]           add2_choice                ,
+    input              [  31: 0]        rs1_value                  ,
+    input              [  31: 0]        rs2_value                  ,
+    input              [  31: 0]        csrs                       ,
 
-    input              [  31: 0]           rs1_value                  ,
-    input              [  31: 0]           rs2_value                  ,
-    input              [  31: 0]           csrs                       ,
+    output                              fetch_i_flag_next          ,
+    output                              branch_flag_next           ,
+    output                              jump_flag_next             ,
+    output             [   2: 0]        funct3_next                ,
+    output             [  31: 0]        rs2_value_next             ,
+    output             [  31: 0]        imm_next                   ,
+    output             [   4: 0]        rd_next                    ,
+    output             [  31: 0]        csrs_next                  ,
+    output             [   3: 0]        csr_wen_next               ,
+    output                              R_wen_next                 ,
+    output                              mem_wen_next               ,
+    output                              mem_ren_next               ,
+    output             [  31: 0]        pc_next                    ,
+    output             [  31: 0]        EX_result                  ,
 
-    output                                 branch_flag_next           ,
-    output                                 jump_flag_next             ,
-    output             [   2: 0]           funct3_next                ,
-    output             [  31: 0]           rs2_value_next             ,
-    output             [  31: 0]           imm_next                   ,
-    output             [   4: 0]           rd_next                    ,
-    output             [  31: 0]           csrs_next                  ,
-    output             [   3: 0]           csr_wen_next               ,
-    output                                 R_wen_next                 ,
-    output                                 mem_wen_next               ,
-    output                                 mem_ren_next               ,
-    output             [  31: 0]           pc_next                    ,
-    output             [  31: 0]           EX_result                  ,
 
-    input                                  valid_last                 ,
-    output                                 ready_last                 ,
+    input                               valid_last                 ,
+    output                              ready_last                 ,
 
-    input                                  ready_next                 ,
-    output reg                             valid_next                 ,
+    input                               ready_next                 ,
+    output reg                          valid_next                 ,
 `ifdef Performance_Count
-    output reg         [  31: 0]           Exu_count                  ,
+    output reg         [  31: 0]        Exu_count                  ,
 `endif
-    input              [  31: 0]           inst                       ,
-    output reg         [  31: 0]           inst_next                   
+    input              [  31: 0]        inst                       ,
+    output reg         [  31: 0]        inst_next                   
 );
 
 `ifdef Performance_Count
@@ -63,7 +63,7 @@ module ysyx_24100029_EXU (
         else if(valid_last)
             Exu_count <= Exu_count + 1;
     end
-`endif 
+`endif
 
     localparam                          NR_KEY_add1                = 3     ;
     localparam                          KEY_LEN_add1               = 2     ;
@@ -93,16 +93,13 @@ module ysyx_24100029_EXU (
     reg                [  31: 0]        rs1_value_reg               ;
     reg                [  31: 0]        rs2_value_reg               ;
     reg                [  31: 0]        csrs_reg                    ;
-
-
-    assign                              ready_last                  = ready_next;
-
+    reg                                 fetch_i_reg                 ;
 
 
     always @(posedge clock) begin
         if(reset)
             valid_next <= 1'b0;
-        else if(ready_last & valid_last & inst_clear)
+        else if(ready_last & valid_last)
             valid_next <= 1'b0;
         else if(ready_last & valid_last)
             valid_next <= 1'b1;
@@ -159,14 +156,6 @@ always @(posedge clock) begin
         jump_flag_reg   <= 0;
         branch_flag_reg <= 0;
     end
-    else if(inst_clear &valid_last&ready_last)begin
-        mem_ren_reg     <= 0;
-        csr_wen_reg     <= 0;
-        R_wen_reg       <= 0;
-        mem_wen_reg     <= 0;
-        jump_flag_reg   <= 0;
-        branch_flag_reg <= 0;
-    end
     else if(valid_last & ready_next) begin
         mem_ren_reg     <= mem_ren;
         csr_wen_reg     <= csr_wen;
@@ -174,13 +163,12 @@ always @(posedge clock) begin
         mem_wen_reg     <= mem_wen;
         jump_flag_reg   <= jump_flag;
         branch_flag_reg <= branch_flag;
+        fetch_i_reg     <= fetch_i_flag;
     end
 end
 
 always @(posedge clock) begin
     if(reset)
-        inst_next <=0;
-    else if(inst_clear)
         inst_next <=0;
     else if(valid_last & ready_next)
         inst_next <= inst;
@@ -213,6 +201,8 @@ end
     assign                              rs2_value_next              = rs2_value_reg;
     assign                              branch_flag_next            = branch_flag_reg;
     assign                              imm_next                    = imm_reg;
+    assign                              ready_last                  = ready_next;
+    assign                              fetch_i_flag_next           = fetch_i_reg;
 
     always@(*)begin
         case(imm_opcode_reg)

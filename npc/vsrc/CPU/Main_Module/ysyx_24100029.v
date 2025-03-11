@@ -153,6 +153,7 @@ module ysyx_24100029 #(
     wire                                IDU_valid                   ;
     wire                                IDU_ready                   ;
     wire               [  31: 0]        IDU_inst                    ;//debug
+    wire                                IDU_fence_i_flag            ;
 /************************* EXU ********************/
     wire                                EXU_jump_flag               ;
     wire               [   2: 0]        EXU_funct3                  ;
@@ -169,6 +170,7 @@ module ysyx_24100029 #(
     wire               [  31: 0]        EXU_rs1_in                  ;
     wire               [  31: 0]        EXU_rs2_in                  ;
     wire               [  31: 0]        EXU_imm                     ;
+    wire                                EXU_fence_i_flag            ;
 
     wire                                EXU_valid                   ;
     wire                                EXU_ready                   ;
@@ -264,12 +266,9 @@ module ysyx_24100029 #(
 /*            PERSONAL              */
 
     wire                                dnpc_flag                   ;
-    wire                                IDU_pipe_s                  ;
-    wire                                IFU_pipe_s                  ;
     wire                                IDU_inst_clear              ;
-    wire                                EXU_inst_clear              ;
     wire               [  31: 0]        dnpc                        ;
-
+    wire                                icache_clr                  ;
 /********************Aribiter**************/
 
     wire                                Aribiter_awready            ;
@@ -339,7 +338,6 @@ module ysyx_24100029 #(
 /***************Performance Count*********************/
 `ifdef Performance_Count
     wire               [  31: 0]        fetch_inst                  ;
-    reg                [  31: 0]        inste_clr_num               ;// excute clear num
     reg                [  31: 0]        instd_clr_num               ;// decode clear num
     wire               [  31: 0]        InstR_count                 ;
     wire               [  31: 0]        InstI_count                 ;
@@ -361,12 +359,6 @@ module ysyx_24100029 #(
         else if(IDU_inst_clear)
             instd_clr_num <= instd_clr_num + 32'd1 ;
     end
-    always @(posedge clock) begin
-        if(reset)
-            inste_clr_num <= 0;
-        else if(EXU_inst_clear & EXU_ready & IDU_valid)
-            inste_clr_num <= inste_clr_num + 32'd1 ;
-    end
 
     always @(*)begin
         if(WBU_inst == 32'h00100073) begin
@@ -376,8 +368,8 @@ module ysyx_24100029 #(
         $display("\033[0m\033[1;34m | hit_rate    \t| %-d     \t| %-d     \t| \033[0m",flash_hit*100/(flash_hit+flash_miss),sdram_hit*100/(sdram_hit+sdram_miss));
         $display("\033[0m\033[1;34m | total_count \t| InstR_count \t| InstI_count \t| InstS_count \t| InstU_count \t| InstB_count \t| InstJ_count \t| InstM_count \t| \033[0m");
         $display("\033[0m\033[1;34m | %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| \033[0m",total_count,InstR_count,InstI_count,InstS_count, InstU_count,InstB_count,InstJ_count,InstM_count);
-        $display("\033[0m\033[1;34m | fetch_inst \t| flush_decoder_i \t| flush_execute_i \t| \033[0m");
-        $display("\033[0m\033[1;34m | %d \t| %d \t\t| %d \t\t| \033[0m",fetch_inst,instd_clr_num,inste_clr_num);
+        $display("\033[0m\033[1;34m | fetch_inst \t| flush_decoder_i \t| \033[0m");
+        $display("\033[0m\033[1;34m | %d \t| %d \t\t|\033[0m",fetch_inst,instd_clr_num);
         $display("\033[0m\033[1;34m | exu_cycle \t| lsu_cycle \t| \033[0m");
         $display("\033[0m\033[1;34m | %d \t| %d \t| \033[0m",Exu_count,lsu_cycle);
             if(IDU_a0_value == 0)begin
@@ -401,11 +393,11 @@ module ysyx_24100029 #(
 
 `ifdef NPC
 always @(*) begin
-    if(mem_ren_flag || mem_wen_flag)begin 
-        if ((paddr <=32'ha1000000 && paddr >= 32'ha0000000))begin 
-                skip = 1; 
+    if(mem_ren_flag || mem_wen_flag)begin
+        if ((paddr <=32'ha1000000 && paddr >= 32'ha0000000))begin
+                skip = 1;
         end
-        else 
+        else
                 skip = 0;
     end
     else
@@ -416,7 +408,7 @@ always @(*) begin
     if(mem_ren_flag || mem_wen_flag)begin
         if ((paddr <=32'h2000008 && paddr >= 32'h2000000) || (paddr >= 32'h10000000 && paddr <= 32'h10000fff))
                 skip = 1;
-        else 
+        else
                 skip = 0;
     end
     else
@@ -535,6 +527,8 @@ ysyx_24100029_Control Control_inst0(
     .jump_flag                          (EXU_jump_flag             ),
     .mret_flag                          (IDU_mret_flag             ),
     .ecall_flag                         (IDU_ecall_flag            ),
+    .fence_i_flag                       (EXU_fence_i_flag          ),
+
     .EXU_mem_ren                        (EXU_mem_ren               ),
     .MEM_mem_ren                        (LSU_mem_ren               ),
 
@@ -556,11 +550,9 @@ ysyx_24100029_Control Control_inst0(
 
     .EXU_rs1_in                         (EXU_rs1_in                ),
     .EXU_rs2_in                         (EXU_rs2_in                ),
-    .IFU_pipe_s                         (IFU_pipe_s                ),
-    .IDU_pipe_s                         (IDU_pipe_s                ),
-    .IDU_inst_clear                     (IDU_inst_clear            ),
-    .EXU_inst_clear                     (EXU_inst_clear            ),
     .dnpc                               (dnpc                      ),
+    .IDU_inst_clear                     (IDU_inst_clear            ),
+    .icache_clr                         (icache_clr                ),
     .dnpc_flag                          (dnpc_flag                 ) 
 );
 
@@ -578,9 +570,9 @@ IFU_Inst0
     .reset                              (reset                     ),
     .dnpc                               (dnpc                      ),
     .dnpc_flag                          (dnpc_flag                 ),
-    .pipe_stop                          (IFU_pipe_s                ),
     .pc                                 (IFU_pc                    ),
     .inst                               (IFU_inst                  ),
+    .icache_clr                         (icache_clr                ),
 
     .awready                            (IFU_awready               ),
     .awvalid                            (IFU_awvalid               ),
@@ -633,7 +625,6 @@ ysyx_24100029_IDU IDU_Inst0(
     .reset                              (reset                     ),
 
     .inst_clear                         (IDU_inst_clear            ),
-    .pipe_stop                          (IDU_pipe_s                ),
 
     .inst                               (IFU_inst                  ),
     .pc                                 (IFU_pc                    ),
@@ -649,6 +640,7 @@ ysyx_24100029_IDU IDU_Inst0(
     .funct3                             (IDU_funct3                ),
     .mret_flag                          (IDU_mret_flag             ),
     .ecall_flag                         (IDU_ecall_flag            ),
+    .fence_i_flag                       (IDU_fence_i_flag          ),
 
     .rs1_value                          (IDU_rs1_value             ),
     .rs2_value                          (IDU_rs2_value             ),
@@ -693,8 +685,6 @@ ysyx_24100029_EXU EXU_Inst0(
     .clock                              (clock                     ),
     .reset                              (reset                     ),
 
-    .inst_clear                         (EXU_inst_clear            ),
-
     .funct3                             (IDU_funct3                ),
     .pc                                 (IDU_pc                    ),
     .csr_wen                            (IDU_csr_wen               ),
@@ -708,6 +698,7 @@ ysyx_24100029_EXU EXU_Inst0(
     .inv_flag                           (IDU_inv_flag              ),
     .jump_flag                          (IDU_jump_flag             ),
     .branch_flag                        (IDU_branch_flag           ),
+    .fetch_i_flag                       (IDU_fence_i_flag          ),
 
     .add1_choice                        (IDU_add1_choice           ),
     .add2_choice                        (IDU_add2_choice           ),
@@ -728,6 +719,7 @@ ysyx_24100029_EXU EXU_Inst0(
     .mem_ren_next                       (EXU_mem_ren               ),
     .pc_next                            (EXU_pc                    ),
     .EX_result                          (EXU_Ex_result             ),
+    .fetch_i_flag_next                  (EXU_fence_i_flag          ),
 
     .valid_last                         (IDU_valid                 ),
     .ready_last                         (EXU_ready                 ),

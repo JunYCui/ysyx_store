@@ -7,67 +7,67 @@
     
 
 module ysyx_24100029_IDU(
-    input                                  clock                      ,
-    input                                  reset                      ,
+    input                               clock                      ,
+    input                               reset                      ,
 
     /* contorl signal */
-    input                                  inst_clear                 ,
-    input                                  pipe_stop                  ,
+    input                               inst_clear                 ,
 
-    input              [  31: 0]           inst                       ,
-    input              [  31: 0]           pc                         ,
+    input              [  31: 0]        inst                       ,
+    input              [  31: 0]        pc                         ,
 
-    input              [  31: 0]           rd_value                   ,
-    input              [  31: 0]           csrd                       ,
-    input              [   4: 0]           rd                         ,
-    input                                  R_wen                      ,
-    input              [   3: 0]           csr_wen                    ,
+    input              [  31: 0]        rd_value                   ,
+    input              [  31: 0]        csrd                       ,
+    input              [   4: 0]        rd                         ,
+    input                               R_wen                      ,
+    input              [   3: 0]        csr_wen                    ,
 
-    output             [  31: 0]           pc_next                    ,
-    output             [   4: 0]           rd_next                    ,
-    output             [  31: 0]           imm                        ,
-    output             [   2: 0]           funct3                     ,
-    output                                 mret_flag                  ,
-    output                                 ecall_flag                 ,
+    output             [  31: 0]        pc_next                    ,
+    output             [   4: 0]        rd_next                    ,
+    output             [  31: 0]        imm                        ,
+    output             [   2: 0]        funct3                     ,
+    output                              mret_flag                  ,
+    output                              ecall_flag                 ,
+    output                              fence_i_flag               ,
 
-    output             [  31: 0]           rs1_value                  ,
-    output             [  31: 0]           rs2_value                  ,
-    output             [   3: 0]           csr_wen_next               ,
-    output                                 R_wen_next                 ,
-    output             [  31: 0]           csrs                       ,
+    output             [  31: 0]        rs1_value                  ,
+    output             [  31: 0]        rs2_value                  ,
+    output             [   3: 0]        csr_wen_next               ,
+    output                              R_wen_next                 ,
+    output             [  31: 0]        csrs                       ,
 
-    output                                 mem_wen                    ,
-    output                                 mem_ren                    ,
-    output             [   1: 0]           add1_choice                ,
-    output             [   1: 0]           add2_choice                ,
-    output                                 inv_flag                   ,
-    output                                 branch_flag                ,
-    output                                 jump_flag                  ,
-    output             [   1: 0]           imm_opcode                 ,
-    output             [   3: 0]           alu_opcode                 ,
+    output                              mem_wen                    ,
+    output                              mem_ren                    ,
+    output             [   1: 0]        add1_choice                ,
+    output             [   1: 0]        add2_choice                ,
+    output                              inv_flag                   ,
+    output                              branch_flag                ,
+    output                              jump_flag                  ,
+    output             [   1: 0]        imm_opcode                 ,
+    output             [   3: 0]        alu_opcode                 ,
 
-    output             [  31: 0]           inst_next                  ,
-    output             [   4: 0]           rs1                        ,
-    output             [   4: 0]           rs2                        ,
-    output             [  31: 0]           a0_value                   ,
-    output             [  31: 0]           mepc_out                   ,
-    output             [  31: 0]           mtvec_out                  ,
+    output             [  31: 0]        inst_next                  ,
+    output             [   4: 0]        rs1                        ,
+    output             [   4: 0]        rs2                        ,
+    output             [  31: 0]        a0_value                   ,
+    output             [  31: 0]        mepc_out                   ,
+    output             [  31: 0]        mtvec_out                  ,
 
 `ifdef Performance_Count
-    output reg         [  31: 0]           InstR_count                ,
-    output reg         [  31: 0]           InstI_count                ,
-    output reg         [  31: 0]           InstS_count                ,
-    output reg         [  31: 0]           InstB_count                ,
-    output reg         [  31: 0]           InstU_count                ,
-    output reg         [  31: 0]           InstJ_count                ,
-    output reg         [  31: 0]           InstM_count                ,
+    output reg         [  31: 0]        InstR_count                ,
+    output reg         [  31: 0]        InstI_count                ,
+    output reg         [  31: 0]        InstS_count                ,
+    output reg         [  31: 0]        InstB_count                ,
+    output reg         [  31: 0]        InstU_count                ,
+    output reg         [  31: 0]        InstJ_count                ,
+    output reg         [  31: 0]        InstM_count                ,
 
 `endif
-    input                                  valid_last                 ,
-    output                                 ready_last                 ,
+    input                               valid_last                 ,
+    output                              ready_last                 ,
 
-    input                                  ready_next                 ,
-    output reg                             valid_next                  
+    input                               ready_next                 ,
+    output reg                          valid_next                  
 );
 `ifdef Performance_Count
     always @(posedge clock) begin
@@ -103,19 +103,8 @@ module ysyx_24100029_IDU(
     reg                [  31: 0]        pc_reg                      ;
 
     reg                                 inst_clear_reg              ;
-    reg                                 pipe_stop_reg               ;
 
     assign                              ready_last                  = ready_next;
-
-    always @(posedge clock) begin
-        if(reset)
-            pipe_stop_reg <= 0;
-        else if((~valid_last | ~ready_last) & ~pipe_stop)
-            pipe_stop_reg <= pipe_stop;
-        else if(valid_last & ready_last)
-            pipe_stop_reg <= 0;
-    end
-
 
     always @(posedge clock) begin
         if(reset)
@@ -142,7 +131,7 @@ module ysyx_24100029_IDU(
             inst_reg <= 0;
         else if((inst_clear | inst_clear_reg) & valid_last & ready_last)
             inst_reg <= 0;
-        else if((pipe_stop_reg | pipe_stop) & valid_last & ready_last)
+        else if(valid_last & ready_last)
             inst_reg <= inst_reg;
         else if(valid_last & ready_last)
             inst_reg <= inst;
@@ -150,7 +139,7 @@ module ysyx_24100029_IDU(
     always@(posedge clock)begin
         if(reset)
             pc_reg <= 0;
-        else if((pipe_stop_reg | pipe_stop)& valid_last & ready_last)
+        else if(valid_last & ready_last)
             pc_reg <= pc_reg;
         else if(ready_last & valid_last)
             pc_reg <= pc;
@@ -167,6 +156,7 @@ module ysyx_24100029_IDU(
 
     assign                              ecall_flag                  = (inst_reg == 32'b00000000000000000000000001110011);//ecall
     assign                              mret_flag                   = (inst_reg == 32'b00110000001000000000000001110011);// mret
+    assign                              fence_i_flag                = (inst_reg == 32'b00000000000000000001000000001111);
 
     assign                              csr_wen_next[0]             = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h341);
     assign                              csr_wen_next[1]             = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h342);
