@@ -1,5 +1,6 @@
 #include "npc_init.h"
 #include "npc_memory.h"
+#include "npc_define.h"
 
 void init_map();
 void init_sdb();
@@ -98,9 +99,9 @@ void init_monitor(int argc, char *argv[])
   init_sdb();
 
   npc_cpu_init();
-
+#ifdef DIFFTEST
   init_difftest(diff_so_file, img_size, difftest_port);
-  
+#endif
   init_disasm("riscv32""-pc-linux-gnu");
 
   //device_init();
