@@ -415,6 +415,7 @@ always @(*) begin
         skip = 0;
 end
 `endif
+
 task Getinst;
     output                              bit[31:0] inst             ;
     inst = WBU_inst;
@@ -658,7 +659,6 @@ ysyx_24100029_IDU IDU_Inst0(
     .imm_opcode                         (IDU_imm_opcode            ),
     .alu_opcode                         (IDU_alu_opcode            ),
 
-    .inst_next                          (IDU_inst                  ),
     .rs1                                (IDU_rs1                   ),
     .rs2                                (IDU_rs2                   ),
     .a0_value                           (IDU_a0_value              ),
@@ -675,6 +675,7 @@ ysyx_24100029_IDU IDU_Inst0(
     .InstU_count                        (InstU_count               ),
     .InstJ_count                        (InstJ_count               ),
     .InstM_count                        (InstM_count               ),
+    .inst_next                          (IDU_inst                  ),
 `endif
     .ready_next                         (EXU_ready                 ),
     .valid_next                         (IDU_valid                 ) 
@@ -721,18 +722,18 @@ ysyx_24100029_EXU EXU_Inst0(
     .EX_result                          (EXU_Ex_result             ),
     .fetch_i_flag_next                  (EXU_fence_i_flag          ),
 
+`ifdef Performance_Count
+    .Exu_count                          (Exu_count                 ),
+    .inst                               (IDU_inst                  ),
+    .inst_next                          (EXU_inst                  ), 
+`endif
     .valid_last                         (IDU_valid                 ),
     .ready_last                         (EXU_ready                 ),
 
     .ready_next                         (LSU_ready                 ),
-    .valid_next                         (EXU_valid                 ),
+    .valid_next                         (EXU_valid                 )
 
-`ifdef Performance_Count
-    .Exu_count                          (Exu_count                 ),
 
-`endif
-    .inst                               (IDU_inst                  ),
-    .inst_next                          (EXU_inst                  ) 
 );
 
 ysyx_24100029_LSU LSU_Inst0
@@ -797,17 +798,18 @@ ysyx_24100029_LSU LSU_Inst0
     
     .req                                (LSU_req                   ),
 
+`ifdef Performance_Count
+    .mem_wflag                          (lsu_mem_wen               ),
+    .lsu_cycle                          (lsu_cycle                 ),
+    .inst                               (EXU_inst                  ),
+    .inst_next                          (LSU_inst                  ), 
+`endif
     .valid_last                         (EXU_valid                 ),
     .ready_last                         (LSU_ready                 ),
 
     .ready_next                         (WBU_ready                 ),
-    .valid_next                         (LSU_valid                 ),
-`ifdef Performance_Count
-    .mem_wflag                          (lsu_mem_wen               ),
-    .lsu_cycle                          (lsu_cycle                 ),
-`endif
-    .inst                               (EXU_inst                  ),
-    .inst_next                          (LSU_inst                  ) 
+    .valid_next                         (LSU_valid                 )
+
 );
 
 ysyx_24100029_WBU WBU_inst0
@@ -824,14 +826,12 @@ ysyx_24100029_WBU WBU_inst0
     .R_wen                              (LSU_R_wen                 ),
     .mem_ren                            (LSU_mem_ren               ),
     .jump_flag                          (LSU_jump_flag             ),
-    .inst                               (LSU_inst                  ),
 
     .pc_next                            (WBU_pc                    ),
     .R_wen_next                         (WBU_R_wen                 ),
     .csr_wen_next                       (WBU_csr_wen               ),
     .csrd                               (WBU_csrd                  ),
     .rd_value                           (WBU_rd_value              ),
-    .inst_next                          (WBU_inst                  ),
 
     .valid                              (LSU_valid                 ),
     .ready                              (WBU_ready                 ),
@@ -840,6 +840,8 @@ ysyx_24100029_WBU WBU_inst0
     .mem_wen_flag                       (mem_wen_flag              ),
     .mem_ren_flag                       (mem_ren_flag              ),
     .paddr                              (paddr                     ),
+    .inst                               (LSU_inst                  ),
+    .inst_next                          (WBU_inst                  ),
 `endif
     .rd_next                            (WBU_rd                    ),
     .valid_next                         (WBU_valid                 ) 

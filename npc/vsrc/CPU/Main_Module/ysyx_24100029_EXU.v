@@ -44,16 +44,18 @@ module ysyx_24100029_EXU (
     output             [  31: 0]        EX_result                  ,
 
 
+`ifdef Performance_Count
+    output reg         [  31: 0]        Exu_count                  ,
+    input              [  31: 0]        inst                       ,
+    output reg         [  31: 0]        inst_next                  , 
+`endif
+
     input                               valid_last                 ,
     output                              ready_last                 ,
 
     input                               ready_next                 ,
-    output reg                          valid_next                 ,
-`ifdef Performance_Count
-    output reg         [  31: 0]        Exu_count                  ,
-`endif
-    input              [  31: 0]        inst                       ,
-    output reg         [  31: 0]        inst_next                   
+    output reg                          valid_next                 
+
 );
 
 `ifdef Performance_Count
@@ -62,6 +64,12 @@ module ysyx_24100029_EXU (
             Exu_count <= 0;
         else if(valid_last)
             Exu_count <= Exu_count + 1;
+    end
+    always @(posedge clock) begin
+        if(reset)
+            inst_next <=0;
+        else if(valid_last & ready_next)
+            inst_next <= inst;
     end
 `endif
 
@@ -104,8 +112,6 @@ module ysyx_24100029_EXU (
         else
             valid_next <= 1'b0;
     end
-
-
 
     always @(posedge clock) begin
         if(reset)begin
@@ -163,13 +169,6 @@ always @(posedge clock) begin
         branch_flag_reg <= branch_flag;
         fetch_i_reg     <= fetch_i_flag;
     end
-end
-
-always @(posedge clock) begin
-    if(reset)
-        inst_next <=0;
-    else if(valid_last & ready_next)
-        inst_next <= inst;
 end
 
 

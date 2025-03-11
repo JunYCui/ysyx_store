@@ -46,7 +46,6 @@ module ysyx_24100029_IDU(
     output             [   1: 0]        imm_opcode                 ,
     output             [   3: 0]        alu_opcode                 ,
 
-    output             [  31: 0]        inst_next                  ,
     output             [   4: 0]        rs1                        ,
     output             [   4: 0]        rs2                        ,
     output             [  31: 0]        a0_value                   ,
@@ -61,6 +60,7 @@ module ysyx_24100029_IDU(
     output reg         [  31: 0]        InstU_count                ,
     output reg         [  31: 0]        InstJ_count                ,
     output reg         [  31: 0]        InstM_count                ,
+    output             [  31: 0]        inst_next                  ,
 
 `endif
     input                               valid_last                 ,
@@ -90,7 +90,7 @@ module ysyx_24100029_IDU(
             InstM_count <= (opcode == `M_opcode_ysyx_24100029)? InstM_count + 1 : InstM_count;
         end
     end
-
+    assign                              inst_next                   = inst_reg;
 
 `endif
 
@@ -172,7 +172,6 @@ module ysyx_24100029_IDU(
     assign                              branch_flag                 = (opcode == `B_opcode_ysyx_24100029)? 1'b1:1'b0;
  
     assign                              csr_addr                    = imm;
-    assign                              inst_next                   = inst_reg;
     
     assign imm_opcode = (opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )                            ?
                         `imm_20u_ysyx_24100029:(opcode == `J_opcode_ysyx_24100029)                                             ?

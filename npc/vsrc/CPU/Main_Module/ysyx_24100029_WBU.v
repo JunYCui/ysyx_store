@@ -14,14 +14,13 @@ module ysyx_24100029_WBU (
     input                               R_wen                      ,
     input                               mem_ren                    ,
     input                               jump_flag                  ,
-    input              [  31: 0]        inst                       ,
+
 
     input                               valid                      ,
     output                              ready                      ,
 
     output reg                          valid_next                 ,
     output reg         [  31: 0]        pc_next                    ,
-    output reg         [  31: 0]        inst_next                  ,
     output                              R_wen_next                 ,
     output             [   3: 0]        csr_wen_next               ,
     output             [  31: 0]        csrd                       ,
@@ -30,6 +29,8 @@ module ysyx_24100029_WBU (
     output reg                          mem_wen_flag               ,
     output                              mem_ren_flag               ,
     output             [  31: 0]        paddr                      ,
+    input              [  31: 0]        inst                       ,
+    output reg         [  31: 0]        inst_next                  ,
 `endif
     output             [  31: 0]        rd_value                   ,
     output             [   4: 0]        rd_next                     
@@ -48,12 +49,19 @@ module ysyx_24100029_WBU (
 `ifdef Performance_Count
     assign                              mem_ren_flag                = mem_ren_reg;
     assign                              paddr                       = Ex_result_reg;
-always @(posedge clock or negedge reset) begin
-    if(reset)
-        mem_wen_flag <= 0;
-    else if(valid & ready)
-        mem_wen_flag <= mem_wen_reg;
-end
+    always @(posedge clock or negedge reset) begin
+        if(reset)
+            mem_wen_flag <= 0;
+        else if(valid & ready)
+            mem_wen_flag <= mem_wen_reg;
+    end
+    always @(posedge clock or negedge reset) begin
+        if(reset)
+            inst_next <= 0;
+        else 
+            inst_next <= inst;
+    end
+
 `endif
 
     always @(posedge clock) begin
@@ -64,11 +72,9 @@ end
     end
     always @(posedge clock) begin
         if(reset)begin
-            inst_next <= 0;
             pc_next <= 0;
         end
         else if(valid & ready)begin
-            inst_next <= inst;
             pc_next <= pc;
         end
     end

@@ -72,18 +72,20 @@ module ysyx_24100029_LSU (
 
     output reg                          req                        ,
 
+`ifdef Performance_Count
+    output                              mem_wflag                  ,
+    output reg         [  31: 0]        lsu_cycle                  ,
+    input              [  31: 0]        inst                       ,
+    output reg         [  31: 0]        inst_next                  ,
+`endif
+
     input                               valid_last                 ,
     output reg                          ready_last                 ,
 
     input                               ready_next                 ,
-    output reg                          valid_next                 ,
+    output reg                          valid_next                 
 
-`ifdef Performance_Count
-    output                              mem_wflag                  ,
-    output reg         [  31: 0]        lsu_cycle                  ,
-`endif
-    input              [  31: 0]        inst                       ,
-    output reg         [  31: 0]        inst_next                   
+
 );
 /*
 always @(*) begin
@@ -137,6 +139,13 @@ end
             lsu_cycle <= lsu_cycle + 1;
         else if(state_p == WORK)
             lsu_cycle <= lsu_cycle + 1;
+    end
+
+    always @(posedge clock) begin
+        if(reset)
+            inst_next <=0;
+        else if(valid_last & ready_last)
+            inst_next <= inst;
     end
 
 `endif
@@ -331,12 +340,6 @@ end
 
     assign                              req                         = ~ready_last;
 
-    always @(posedge clock) begin
-        if(reset)
-            inst_next <=0;
-        else if(valid_last & ready_last)
-            inst_next <= inst;
-    end
 
 
 
