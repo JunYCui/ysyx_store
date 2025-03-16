@@ -1,5 +1,5 @@
 `include "../define/para.v"
-module ysyx_24100029_RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
+module ysyx_24100029_RegisterFile #(ADDR_WIDTH = 5, DATA_WIDTH = 32) (
     input                        clock                        ,
     input              [DATA_WIDTH-1: 0]wdata               ,
     input              [ADDR_WIDTH-1: 0]waddr               ,
