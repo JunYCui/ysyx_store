@@ -35,17 +35,17 @@ SECTIONS {
     *(.data*)
       . = ALIGN(4);
   } > sdram AT> flash : data
-  .rodata : {
-    *(.srodata*)
-    *(.rodata*)
-    . = ALIGN(4);
-  } > sdram AT > flash : rodata
   .bss : {    	
     *(.bss*)
     *(.sbss*)
     *(.scommon)
     data_end = .;
   } > sdram AT> flash 
+  .rodata : {
+    *(.srodata*)
+    *(.rodata*)
+    . = ALIGN(4);
+  } > sdram AT > flash : rodata
   _ssbl_loadstart = LOADADDR(.ssbl);
   _ssbl_size = SIZEOF(.ssbl);
   text_load_start = LOADADDR(.text);
