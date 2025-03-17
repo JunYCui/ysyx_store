@@ -2,10 +2,9 @@
 #define ARCH_H__
 
 #ifndef __USE_GNU
-# define __USE_GNU
+#define __USE_GNU
 #endif
-
-#include <ucontext.h>
+#include <sys/ucontext.h>
 
 struct Context {
   uintptr_t ksp;
