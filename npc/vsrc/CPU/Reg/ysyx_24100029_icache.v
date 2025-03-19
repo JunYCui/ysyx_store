@@ -25,9 +25,9 @@
 //****************************************************************************************//
 `include "../define/para.v"
 module ysyx_24100029_icache #(
-    CacheLine_Width = 2,
+    CacheLine_Width = 1,
     OFFSET_WIDTH = 2,
-    INDEX_WIDTH = 3 ,
+    INDEX_WIDTH = 2,
     ADDR_WIDTH = 32 ,
     DATA_WIDTH = 32
 )
@@ -203,7 +203,7 @@ module ysyx_24100029_icache #(
     assign                              ifu_bresp                   = 0;
     assign                              ifu_bid                     = 0;
     assign                              ifu_arready                 = mux_flag? icache_arready:(state == IDLE);
-    assign                              ifu_rdata                   = mux_flag? icache_rdata:(state == MISS & block_choice == 2'b11)? icache_rdata:rdata;
+    assign                              ifu_rdata                   = mux_flag? icache_rdata:(state == MISS & block_choice == {CacheLine_Width{1'b1}})? icache_rdata:rdata;
     assign                              ifu_rvalid                  = mux_flag? icache_rvalid: (state == HIT) | ((state == MISS) & icache_rvalid & icache_rlast);
     assign                              icache_arvalid              = mux_flag? ifu_arvalid:arvalid;
     assign                              hit                         = valid & (ifu_araddr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH+CacheLine_Width] == tag) & ifu_rready;
