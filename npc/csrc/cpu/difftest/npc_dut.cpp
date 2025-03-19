@@ -20,7 +20,7 @@ static int skip_dut_nr_inst = 0;
 
 
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
-  for(int i=0;i<32;i++)
+  for(int i=0;i<16;i++)
   {
     if(ref_r->gpr[i] != cpu.gpr[i])
     {

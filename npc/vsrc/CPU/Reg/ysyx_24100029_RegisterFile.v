@@ -20,7 +20,7 @@ module ysyx_24100029_RegisterFile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
 
   always @(posedge clock)begin
       if(reset)
-      rf[0] <= 32'd0;
+      rf[0] <= 0;
   end
 
 `ifdef Performance_Count
