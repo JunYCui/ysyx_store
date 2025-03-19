@@ -193,7 +193,7 @@ end
     assign                              R_wen_next                  = R_wen_reg;
     assign                              mem_wen_next                = mem_wen_reg;
     assign                              mem_ren_next                = mem_ren_reg;
-    assign                              EX_result                   = {alu_res[31:1],alu_res[0]^inv_flag};
+    assign                              EX_result                   = alu_res ^{31'd0,inv_flag_reg};
     assign                              rs2_value_next              = rs2_value_reg;
     assign                              branch_flag_next            = branch_flag_reg;
     assign                              imm_next                    = imm_reg;

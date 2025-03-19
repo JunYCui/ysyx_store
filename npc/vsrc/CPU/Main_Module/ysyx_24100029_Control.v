@@ -55,14 +55,16 @@ module ysyx_24100029_Control (
     assign                              icache_clr                  = fence_i_flag&EXU_valid;
 
 
-    assign                       dnpc                      = (jump_flag&EXU_valid)                                                  ?                                                                         
+    assign                       dnpc                      = EXU_valid?  (jump_flag? EXU_pc+EXU_imm : branch_flag?  EXU_pc+EXU_imm: EXU_pc+4)
+                                                            : mret_flag ? mepc_out:mtvec_out;
+    /*(jump_flag&EXU_valid)                                                  ?                                                                         
                                                             Ex_result:(branch_flag&EXU_valid&(Ex_result[0]))                   ?
                                                              EXU_pc+EXU_imm:(mret_flag&IDU_valid)                                   ?
                                                             mepc_out:(ecall_flag&IDU_valid)                                         ?
                                                             mtvec_out:(fence_i_flag&EXU_valid)?
                                                             EXU_pc+4:0 ;
 
-
+*/
     assign EXU_rs1_in = (IDU_rs1_choice == 3'b001)? Ex_result:
                         (IDU_rs1_choice == 3'b010)? WBU_rd_value:
                         (IDU_rs1_choice == 3'b011)? MEM_Rdata:
