@@ -19,7 +19,7 @@
 #include <common.h>
 
 #define FLASH_LEFT  ((paddr_t)CONFIG_FLASH_BASE)
-#define FLASH_RIGHT ((paddr_t)CONFIG_FLASH_BASE + CONFIG_FLASH_BASE - 1)
+#define FLASH_RIGHT ((paddr_t)CONFIG_FLASH_BASE + CONFIG_FLASH_SIZE - 1)
 #define SRAM_LEFT  ((paddr_t)CONFIG_SRAM_BASE)
 #define SRAM_RIGHT ((paddr_t)CONFIG_SRAM_BASE + CONFIG_SRAM_SIZE - 1)
 #define SDRAM_LEFT  ((paddr_t)CONFIG_SDRAM_BASE)
