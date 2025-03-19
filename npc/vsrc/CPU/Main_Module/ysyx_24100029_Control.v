@@ -55,8 +55,8 @@ module ysyx_24100029_Control (
     assign                              icache_clr                  = fence_i_flag&EXU_valid;
 
 
-    assign                       dnpc                      = EXU_valid?  (jump_flag? EXU_pc+EXU_imm : branch_flag?  EXU_pc+EXU_imm: EXU_pc+4)
-                                                            : mret_flag ? mepc_out:mtvec_out;
+    assign                       dnpc                      = EXU_valid?  (jump_flag? Ex_result : branch_flag?  EXU_pc+EXU_imm: EXU_pc+4)
+                                                            : mret_flag? mepc_out:mtvec_out;
     /*(jump_flag&EXU_valid)                                                  ?                                                                         
                                                             Ex_result:(branch_flag&EXU_valid&(Ex_result[0]))                   ?
                                                              EXU_pc+EXU_imm:(mret_flag&IDU_valid)                                   ?
