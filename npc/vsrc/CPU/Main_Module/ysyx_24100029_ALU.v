@@ -40,6 +40,7 @@ module ysyx_24100029_ALU
 
 always@(*)
     begin
+    res = 0;
     case(choice)
     `alu_add_ysyx_24100029: begin                                   //加法
             choose_add_sub = 1'b0;
