@@ -49,14 +49,14 @@ module ysyx_24100029_Control (
     wire               [   2: 0]        IDU_rs1_choice              ;
     wire               [   2: 0]        IDU_rs2_choice              ;
 
-    assign                              dnpc_flag                   = ((mret_flag&IDU_valid) || (ecall_flag&IDU_valid) || (jump_flag&EXU_valid) || (branch_flag&EXU_valid&Ex_result[0] != 0) || (fence_i_flag&EXU_valid) );
+    assign                              dnpc_flag                   = ((mret_flag&IDU_valid) || (ecall_flag&IDU_valid) || (jump_flag&EXU_valid) || (branch_flag&EXU_valid&Ex_result[0]) || (fence_i_flag&EXU_valid) );
 
-    assign                              IDU_inst_clear              = ((mret_flag&IDU_valid) || (ecall_flag&IDU_valid) || (jump_flag&EXU_valid) || (branch_flag&EXU_valid&Ex_result[0] != 0) || (fence_i_flag&EXU_valid) );
+    assign                              IDU_inst_clear              = ((mret_flag&IDU_valid) || (ecall_flag&IDU_valid) || (jump_flag&EXU_valid) || (branch_flag&EXU_valid&Ex_result[0]) || (fence_i_flag&EXU_valid) );
     assign                              icache_clr                  = fence_i_flag&EXU_valid;
 
 
     assign                       dnpc                      = (jump_flag&EXU_valid)                                                  ?                                                                         
-                                                            Ex_result:(branch_flag&EXU_valid&(Ex_result[0] != 0))                   ?
+                                                            Ex_result:(branch_flag&EXU_valid&(Ex_result[0]))                   ?
                                                              EXU_pc+EXU_imm:(mret_flag&IDU_valid)                                   ?
                                                             mepc_out:(ecall_flag&IDU_valid)                                         ?
                                                             mtvec_out:(fence_i_flag&EXU_valid)?
