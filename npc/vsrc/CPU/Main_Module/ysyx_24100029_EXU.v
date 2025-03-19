@@ -47,14 +47,14 @@ module ysyx_24100029_EXU (
 `ifdef Performance_Count
     output reg         [  31: 0]        Exu_count                  ,
     input              [  31: 0]        inst                       ,
-    output reg         [  31: 0]        inst_next                  , 
+    output reg         [  31: 0]        inst_next                  ,
 `endif
 
     input                               valid_last                 ,
     output                              ready_last                 ,
 
     input                               ready_next                 ,
-    output reg                          valid_next                 
+    output reg                          valid_next                  
 
 );
 
@@ -179,7 +179,6 @@ end
     wire               [  31: 0]        imm_12i                     ;
     wire               [  31: 0]        imm_20i                     ;
 /* verilator lint_off UNUSEDSIGNAL */
-    wire                                overflow                    ;
     wire               [  31: 0]        alu_res                     ;
 
     reg                [  31: 0]        imm_add                     ;
@@ -235,15 +234,13 @@ ysyx_24100029_MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (
 
 /* verilator lint_off PINMISSING */
 ysyx_24100029_ALU #(
-    .BW                                 (6'd32                     ) 
+    .BW                                 (32                        ) 
 ) ALU_i0
 (
     .d1                                 (add_1                     ),
     .d2                                 (add_2                     ),
     .choice                             (alu_opcode_reg            ),
-    .res                                (alu_res                   ),
-    .overflow                           (overflow                  ) 
-
+    .res                                (alu_res                   )
 );
 
 ysyx_24100029_sext #(
