@@ -63,14 +63,14 @@ ysyx_24100029_CSR #(32,0) CSR_inst(
 
 );
 
-ysyx_24100029_RegisterFile #(5, 32) Reg_inst(
+ysyx_24100029_RegisterFile #(4, 32) Reg_inst(
     .clock                              (clock                     ),
     .wdata                              (wdata                     ),
-    .waddr                              (rd                        ),
+    .waddr                              (rd[3:0]                        ),
     .wen                                (R_wen                     ),
     .reset                              (reset                     ),
-    .rs1_addr                           (rs1                       ),
-    .rs2_addr                           (rs2                       ),
+    .rs1_addr                           (rs1[3:0]                       ),
+    .rs2_addr                           (rs2[3:0]                       ),
 
     .rs1_value                          (rs1_value                 ),
     .rs2_value                          (rs2_value                 ),

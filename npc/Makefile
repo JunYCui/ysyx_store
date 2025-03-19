@@ -97,21 +97,21 @@ clean:
 area:
 	@sed -i '/Performance/d' ./vsrc/CPU/define/para.v
 	@echo "analyse the chip area and frequency"
-	@$(MAKE) -C ~/yosys-sta sta > log.txt 
-	@grep --after-context=1 "Chip area" log.txt > area.txt
-	@grep --after-context=7 "Endpoint" log.txt > frequency.txt 
+	@$(MAKE) -C ~/yosys-sta sta > log/log.txt 
+	@grep --after-context=1 "Chip area" log/log.txt  > log/area.txt
+	@grep --after-context=7 "Endpoint" log/log.txt > log/frequency.txt 
 	@sed -i '$$a \`define Performance_Count' ./vsrc/CPU/define/para.v
 
 perf:
 	@sed -i '/Performance/d' ./vsrc/CPU/define/para.v
 	@echo "analyse the chip area and frequency"
-	@$(MAKE) -C ~/yosys-sta sta > log.txt 
-	@grep --after-context=1 "Chip area for top module " log.txt > area.txt
-	@grep --after-context=7 "Endpoint" log.txt > frequency.txt 
+	@$(MAKE) -C ~/yosys-sta sta > log/log.txt 
+	@grep --after-context=1 "Chip area for top module " log/log.txt > log/area.txt
+	@grep --after-context=7 "Endpoint" log/log.txt > log/frequency.txt 
 	@sed -i '$$a \`define Performance_Count' ./vsrc/CPU/define/para.v
 	@echo "microbench test"
-	@$(MAKE) -C ../am-kernels/benchmarks/microbench ARCH=riscv32e-ysyxsoc mainargs=train run > log1.txt
-	@grep --after-context=9 "total_count" log1.txt > count.txt
+	@$(MAKE) -C ../am-kernels/benchmarks/microbench ARCH=riscv32e-ysyxsoc mainargs=train run > log/log1.txt
+	@grep --after-context=9 "total_count" log/log1.txt > log/count.txt
 
 ifeq ($(PLATFORM),ysyxsoc)
 $(SRC_AUTO_BIND): $(CONSTR)
