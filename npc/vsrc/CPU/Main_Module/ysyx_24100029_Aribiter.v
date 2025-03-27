@@ -133,7 +133,7 @@ module ysyx_24100029_Aribiter #(
         else begin
             case(state)
             IDLE:if(|req)
-                    state <= IDLE; 
+                    state <= WORK; 
             WORK:if((rvalid & rlast) | bvalid)
                     state <= IDLE; 
             endcase
