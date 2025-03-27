@@ -519,7 +519,6 @@ ysyx_24100029_Control Control_inst0(
     .EXU_pc                             (EXU_pc                    ),
     .Ex_result                          (EXU_Ex_result             ),
     .MEM_Ex_result                      (LSU_Ex_result             ),
-    .WBU_rd_value                       (WBU_rd_value              ),
     .IDU_rs1_value                      (IDU_rs1_value             ),
     .IDU_rs2_value                      (IDU_rs2_value             ),
     .MEM_Rdata                          (LSU_Rdata                 ),
@@ -539,14 +538,11 @@ ysyx_24100029_Control Control_inst0(
     .IDU_valid                          (IDU_valid                 ),
     .EXU_valid                          (EXU_valid                 ),
     .MEM_valid                          (LSU_valid                 ),
-    .WBU_valid                          (WBU_valid                 ),
 
     .EXU_rd                             (EXU_rd                    ),
-    .WBU_rd                             (WBU_rd                    ),
     .MEM_rd                             (LSU_rd                    ),
 
     .EXU_R_Wen                          (EXU_R_wen                 ),
-    .WBU_R_Wen                          (WBU_R_wen                 ),
     .MEM_R_Wen                          (LSU_R_wen                 ),
 
     .EXU_rs1_in                         (EXU_rs1_in                ),

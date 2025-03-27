@@ -8,7 +8,6 @@ module ysyx_24100029_Control (
     input              [  31: 0]        MEM_Ex_result              ,
 
     input              [  31: 0]        MEM_Rdata                  ,
-    input              [  31: 0]        WBU_rd_value               ,
     input              [  31: 0]        IDU_rs1_value              ,
     input              [  31: 0]        IDU_rs2_value              ,
 
@@ -26,30 +25,27 @@ module ysyx_24100029_Control (
     input                               IDU_valid                  ,
     input                               EXU_valid                  ,
     input                               MEM_valid                  ,
-    input                               WBU_valid                  ,
 
     input              [   4: 0]        EXU_rd                     ,
     input              [   4: 0]        MEM_rd                     ,
-    input              [   4: 0]        WBU_rd                     ,
 
     input                               EXU_R_Wen                  ,
     input                               MEM_R_Wen                  ,
-    input                               WBU_R_Wen                  ,
 
     output             [  31: 0]        EXU_rs1_in                 ,
     output             [  31: 0]        EXU_rs2_in                 ,
 
     output                              icache_clr                 ,
     output                              IDU_inst_clear             ,
-    output reg         [  31: 0]        dnpc                       ,
-    output reg                          dnpc_flag                   
+    output             [  31: 0]        dnpc                       ,
+    output                              dnpc_flag                   
 );
 
 
-    wire               [   2: 0]        IDU_rs1_choice              ;
-    wire               [   2: 0]        IDU_rs2_choice              ;
+    wire               [   1: 0]        IDU_rs1_choice              ;
+    wire               [   1: 0]        IDU_rs2_choice              ;
 
-    assign                              dnpc_flag                   =( EXU_valid& (jump_flag|fence_i_flag|(branch_flag&Ex_result[0]))) || (IDU_valid & (mret_flag|ecall_flag));
+    assign                              dnpc_flag                   = ( EXU_valid& (jump_flag|fence_i_flag|(branch_flag&Ex_result[0]))) || (IDU_valid & (mret_flag|ecall_flag));
 
     assign                              IDU_inst_clear              = (EXU_valid& (jump_flag|fence_i_flag|(branch_flag&Ex_result[0]))) || (IDU_valid & (mret_flag|ecall_flag));
     assign                              icache_clr                  = fence_i_flag&EXU_valid;
@@ -65,16 +61,14 @@ module ysyx_24100029_Control (
                                                             EXU_pc+4:0 ;
 
 */
-    assign EXU_rs1_in = (IDU_rs1_choice == 3'b001)? Ex_result:
-                        (IDU_rs1_choice == 3'b010)? WBU_rd_value:
-                        (IDU_rs1_choice == 3'b011)? MEM_Rdata:
-                        (IDU_rs1_choice == 3'b100)? MEM_Ex_result:
+    assign EXU_rs1_in = (IDU_rs1_choice == 2'b01)? Ex_result:
+                        (IDU_rs1_choice == 2'b11)? MEM_Rdata:
+                        (IDU_rs1_choice == 2'b10)? MEM_Ex_result:
                         IDU_rs1_value;
 
-    assign EXU_rs2_in = (IDU_rs2_choice == 3'b001)? Ex_result:
-                        (IDU_rs2_choice == 3'b010)? WBU_rd_value:
-                        (IDU_rs2_choice == 3'b011)? MEM_Rdata:
-                        (IDU_rs2_choice == 3'b100)? MEM_Ex_result:
+    assign EXU_rs2_in = (IDU_rs2_choice == 2'b01)? Ex_result:
+                        (IDU_rs2_choice == 2'b11)? MEM_Rdata:
+                        (IDU_rs2_choice == 2'b10)? MEM_Ex_result:
                         IDU_rs2_value;
 
 
@@ -84,16 +78,13 @@ ysyx_24100029_Data_hazard Data_hazard_inst(
 
     .EXU_rd                             (EXU_rd                    ),
     .MEM_rd                             (MEM_rd                    ),
-    .WBU_rd                             (WBU_rd                    ),
 
     .MEM_valid                          (MEM_valid                 ),
     .EXU_valid                          (EXU_valid                 ),
-    .WBU_valid                          (WBU_valid                 ),
     .IDU_valid                          (IDU_valid                 ),
 
     .MEM_mem_ren                        (MEM_mem_ren               ),
     .EXU_R_Wen                          (EXU_R_Wen                 ),
-    .WBU_R_Wen                          (WBU_R_Wen                 ),
     .MEM_R_Wen                          (MEM_R_Wen                 ),
 
     .IDU_rs1_choice                     (IDU_rs1_choice            ),
