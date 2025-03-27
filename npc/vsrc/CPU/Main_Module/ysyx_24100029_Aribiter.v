@@ -121,29 +121,26 @@ module ysyx_24100029_Aribiter #(
     localparam                          WORK                       = 1'b1  ;
     localparam                          IDLE                       = 1'b0  ;
 
-    reg                [   1: 0]        ari_choice                  ;
-    wire               [   1: 0]        req                         ;
+    reg                                 ari_choice                  ;
     reg                                 state                       ;
-
-    assign                              req                         = {LSU_req,IFU_req};
 
     always @(posedge clock ) begin
         if(reset)
             state <= IDLE;
         else begin
             case(state)
-            IDLE:if(|req)
-                    state <= WORK; 
+            IDLE:if(LSU_req|IFU_req)
+                    state <= WORK;
             WORK:if((rvalid & rlast) | bvalid)
-                    state <= IDLE; 
+                    state <= IDLE;
             endcase
         end
     end
     always @(posedge clock) begin
         if(reset)
             ari_choice <= 0;
-        else if(|req & (state ==IDLE))
-            ari_choice   <= req & (~req + 1'b1);
+        else if(state ==IDLE)
+            ari_choice  <= LSU_req;
     end
 
 /*
@@ -175,53 +172,7 @@ module ysyx_24100029_Aribiter #(
 
     always @(*) begin
         if(state == WORK)
-            if(ari_choice[0])begin
-                IFU_awready =awready;
-                LSU_awready = 0;
-                awvalid     = IFU_awvalid ;
-                awaddr      = IFU_awaddr  ;
-                awid        = IFU_awid    ;
-                awlen       = IFU_awlen   ;
-                awsize      = IFU_awsize  ;
-                awburst     = IFU_awburst ;
-
-                IFU_wready = wready;
-                LSU_wready = 0;
-                wvalid  = IFU_wvalid ;
-                wdata   = IFU_wdata  ;
-                wstrb   = IFU_wstrb  ;
-                wlast   = IFU_wlast  ;
-
-                bready  = IFU_bready;
-                IFU_bvalid = bvalid;
-                IFU_bresp  = bresp ;
-                IFU_bid    = bid   ;
-                LSU_bvalid = 0     ;
-                LSU_bresp  = 0     ;
-                LSU_bid    = 0     ;
-
-                IFU_arready = arready;
-                LSU_arready = 0;
-                arvalid = IFU_arvalid ;
-                araddr  = IFU_araddr  ;
-                arid    = IFU_arid    ;
-                arlen   = IFU_arlen   ;
-                arsize  = IFU_arsize  ;
-                arburst = IFU_arburst ;
-
-                rready  = IFU_rready;
-                IFU_rvalid = rvalid;
-                IFU_rresp  = rresp ;
-                IFU_rdata  = rdata ;
-                IFU_rlast  = rlast ;
-                IFU_rid    = rid   ;
-                LSU_rvalid = 0;
-                LSU_rresp  = 0;
-                LSU_rdata  = 0;
-                LSU_rlast  = 0;
-                LSU_rid    = 0;
-            end
-        else begin
+            if(ari_choice)begin
             LSU_awready =awready    ;
             IFU_awready = 0         ;
             awvalid = LSU_awvalid ;
@@ -266,7 +217,53 @@ module ysyx_24100029_Aribiter #(
             IFU_rdata  = 0;
             IFU_rlast  = 0;
             IFU_rid    = 0;
-        end 
+            end
+        else begin
+                IFU_awready =awready;
+                LSU_awready = 0;
+                awvalid     = IFU_awvalid ;
+                awaddr      = IFU_awaddr  ;
+                awid        = IFU_awid    ;
+                awlen       = IFU_awlen   ;
+                awsize      = IFU_awsize  ;
+                awburst     = IFU_awburst ;
+
+                IFU_wready = wready;
+                LSU_wready = 0;
+                wvalid  = IFU_wvalid ;
+                wdata   = IFU_wdata  ;
+                wstrb   = IFU_wstrb  ;
+                wlast   = IFU_wlast  ;
+
+                bready  = IFU_bready;
+                IFU_bvalid = bvalid;
+                IFU_bresp  = bresp ;
+                IFU_bid    = bid   ;
+                LSU_bvalid = 0     ;
+                LSU_bresp  = 0     ;
+                LSU_bid    = 0     ;
+
+                IFU_arready = arready;
+                LSU_arready = 0;
+                arvalid = IFU_arvalid ;
+                araddr  = IFU_araddr  ;
+                arid    = IFU_arid    ;
+                arlen   = IFU_arlen   ;
+                arsize  = IFU_arsize  ;
+                arburst = IFU_arburst ;
+
+                rready  = IFU_rready;
+                IFU_rvalid = rvalid;
+                IFU_rresp  = rresp ;
+                IFU_rdata  = rdata ;
+                IFU_rlast  = rlast ;
+                IFU_rid    = rid   ;
+                LSU_rvalid = 0;
+                LSU_rresp  = 0;
+                LSU_rdata  = 0;
+                LSU_rlast  = 0;
+                LSU_rid    = 0;
+        end
         else begin
             LSU_awready =0;
             IFU_awready = 0;
