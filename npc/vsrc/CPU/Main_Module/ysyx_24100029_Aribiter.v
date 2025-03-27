@@ -142,34 +142,6 @@ module ysyx_24100029_Aribiter #(
         else if(state ==IDLE)
             ari_choice  <= LSU_req;
     end
-
-/*
-    always @(posedge clock) begin
-        if(reset)
-            ari_choice <= `Aribiter_choice_IDLE_ysyx_24100029;
-        else if(ari_choice == `Aribiter_choice_IDLE_ysyx_24100029)begin
-            if(LSU_req)
-                ari_choice <= `Aribiter_choice_LSU_ysyx_24100029;
-            else if(IFU_req)
-                ari_choice <= `Aribiter_choice_IFU_ysyx_24100029;
-            else
-                ari_choice <= ari_choice;
-        end
-        else if(ari_choice == `Aribiter_choice_IFU_ysyx_24100029)begin
-            if(LSU_req & ((rvalid & rlast) | bvalid))
-                ari_choice <= `Aribiter_choice_LSU_ysyx_24100029;
-            else if((rvalid & rlast)  | bvalid)
-                ari_choice <= `Aribiter_choice_IDLE_ysyx_24100029;
-        end
-        else if(ari_choice == `Aribiter_choice_LSU_ysyx_24100029)begin
-            if(IFU_req & ((rvalid & rlast )| bvalid))
-                ari_choice <= `Aribiter_choice_IFU_ysyx_24100029;
-            else if((rvalid & rlast)  | bvalid)
-                ari_choice <= `Aribiter_choice_IDLE_ysyx_24100029;
-        end
-    end
-*/
-
     always @(*) begin
         if(state == WORK)
             if(ari_choice)begin

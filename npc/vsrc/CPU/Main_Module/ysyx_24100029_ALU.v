@@ -25,18 +25,22 @@
 //                         
 //----------------------------------------------------------------------------------------
 //****************************************************************************************//
-module ysyx_24100029_ALU
-#(
+module ysyx_24100029_ALU #(
     parameter                           BW                         = 32    
 )
 (
+    input                               clock                      ,
     input              [BW-1: 0]        d1                         ,
     input              [BW-1: 0]        d2                         ,
     input              [   3: 0]        choice                     ,
     output reg         [BW-1: 0]        res                         
 );
+
     reg                                 choose_add_sub              ;
     wire               [BW-1: 0]        result                      ;
+    wire               [BW-1: 0]        d2_inv                      ;
+    assign                              d2_inv                      = ~d2;
+
 
 always@(*)
     begin
@@ -87,8 +91,8 @@ always@(*)
                     res[0] = 0;
             end
     `alu_equal_ysyx_24100029:begin                                  //是否相等
-            choose_add_sub = 1'b1;
-            if( |result == 1)
+            choose_add_sub = 1'b0;
+            if(d1 == d2)
                 res[0] =  1;
             else
                 res[0] =  0;
@@ -122,6 +126,7 @@ ysyx_24100029_add
     .choose_add_sub                     (choose_add_sub            ),
     .add_1                              (d1                        ),
     .add_2                              (d2                        ),
+    .add_2_inv                          (d2_inv                    ),
     .result                             (result                    ) 
 );
 

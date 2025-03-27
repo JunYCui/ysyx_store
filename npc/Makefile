@@ -120,6 +120,12 @@ perf:
 	@$(MAKE) -C ../am-kernels/benchmarks/microbench ARCH=riscv32e-ysyxsoc mainargs=train run > log/log1.txt
 	@grep --after-context=9 "total_count" log/log1.txt > log/count.txt
 
+alu: 
+	@sed -i '/Performance/d' ./vsrc/CPU/define/para.v
+	@$(MAKE) -C ~/yosys-sta DESIGN=ysyx_24100029_ALU SDC_FILE=$(SDC_FILE) RTL_FILES="$(VSOURCES)" CLK_FREQ_MHZ=1000 sta  > log/log.txt 
+	@grep --after-context=1 "Chip area" log/log.txt  > log/area.txt
+	@grep --after-context=7 "Endpoint" log/log.txt > log/frequency.txt 
+	@sed -i '$$a \`define Performance_Count' ./vsrc/CPU/define/para.v
 ifeq ($(PLATFORM),ysyxsoc)
 $(SRC_AUTO_BIND): $(CONSTR)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
