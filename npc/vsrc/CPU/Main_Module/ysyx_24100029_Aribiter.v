@@ -2,125 +2,129 @@
 //`include "/home/cjy/ysyx-workbench/npc/vsrc/CPU/define/para.v"
 
 module ysyx_24100029_Aribiter #(
-    parameter                    DATA_WIDTH                = 32    ,
-    parameter                    ADDR_WIDTH                = 32    
+    parameter                           DATA_WIDTH                 = 32    ,
+    parameter                           ADDR_WIDTH                 = 32    
 )(
-    input                        clock                      ,
-    input                        reset                      ,
+    input                               clock                      ,
+    input                               reset                      ,
     
-    input                        IFU_req                    ,
-    input                        LSU_req                    ,
+    input                               IFU_req                    ,
+    input                               LSU_req                    ,
 
-    input              [ADDR_WIDTH-1: 0]IFU_araddr          ,
-    input                        IFU_arvalid                ,
-    output reg                   IFU_arready                ,
-    input              [   3: 0] IFU_arid                   ,
-    input              [   7: 0] IFU_arlen                  ,
-    input              [   2: 0] IFU_arsize                 ,
-    input              [   1: 0] IFU_arburst                ,
+    input              [ADDR_WIDTH-1: 0]        IFU_araddr                 ,
+    input                               IFU_arvalid                ,
+    output reg                          IFU_arready                ,
+    input              [   3: 0]        IFU_arid                   ,
+    input              [   7: 0]        IFU_arlen                  ,
+    input              [   2: 0]        IFU_arsize                 ,
+    input              [   1: 0]        IFU_arburst                ,
 
-    input                        IFU_rready                 ,
-    output reg         [DATA_WIDTH-1: 0]IFU_rdata           ,
-    output reg         [   1: 0] IFU_rresp                  ,
-    output reg                   IFU_rvalid                 ,
-    output reg                   IFU_rlast                  ,
-    output reg         [   3: 0] IFU_rid                    ,
-
-
-    input              [ADDR_WIDTH-1: 0]IFU_awaddr          ,
-    input                        IFU_awvalid                ,
-    output                       IFU_awready                ,
-    input              [   3: 0] IFU_awid                   ,
-    input              [   7: 0] IFU_awlen                  ,
-    input              [   2: 0] IFU_awsize                 ,
-    input              [   1: 0] IFU_awburst                ,
-
-    input              [DATA_WIDTH-1: 0]IFU_wdata           ,
-    input              [   3: 0] IFU_wstrb                  ,
-    input                        IFU_wvalid                 ,
-    output                       IFU_wready                 ,
-    input                        IFU_wlast                  ,
-
-    output             [   1: 0] IFU_bresp                  ,
-    output                       IFU_bvalid                 ,
-    input                        IFU_bready                 ,
-    output             [   3: 0] IFU_bid                    ,
-
-    input              [ADDR_WIDTH-1: 0]LSU_araddr          ,
-    input                        LSU_arvalid                ,
-    output reg                   LSU_arready                ,
-    input              [   3: 0] LSU_arid                   ,
-    input              [   7: 0] LSU_arlen                  ,
-    input              [   2: 0] LSU_arsize                 ,
-    input              [   1: 0] LSU_arburst                ,
+    input                               IFU_rready                 ,
+    output reg         [DATA_WIDTH-1: 0]        IFU_rdata                  ,
+    output reg         [   1: 0]        IFU_rresp                  ,
+    output reg                          IFU_rvalid                 ,
+    output reg                          IFU_rlast                  ,
+    output reg         [   3: 0]        IFU_rid                    ,
 
 
-    input                        LSU_rready                 ,
-    output reg         [DATA_WIDTH-1: 0]LSU_rdata           ,
-    output reg         [   1: 0] LSU_rresp                  ,
-    output reg                   LSU_rvalid                 ,
-    output reg                   LSU_rlast                  ,
-    output reg         [   3: 0] LSU_rid                    ,
+    input              [ADDR_WIDTH-1: 0]        IFU_awaddr                 ,
+    input                               IFU_awvalid                ,
+    output                              IFU_awready                ,
+    input              [   3: 0]        IFU_awid                   ,
+    input              [   7: 0]        IFU_awlen                  ,
+    input              [   2: 0]        IFU_awsize                 ,
+    input              [   1: 0]        IFU_awburst                ,
 
-    input              [ADDR_WIDTH-1: 0]LSU_awaddr          ,
-    input                        LSU_awvalid                ,
-    output                       LSU_awready                ,
-    input              [   3: 0] LSU_awid                   ,
-    input              [   7: 0] LSU_awlen                  ,
-    input              [   2: 0] LSU_awsize                 ,
-    input              [   1: 0] LSU_awburst                ,
+    input              [DATA_WIDTH-1: 0]        IFU_wdata                  ,
+    input              [   3: 0]        IFU_wstrb                  ,
+    input                               IFU_wvalid                 ,
+    output                              IFU_wready                 ,
+    input                               IFU_wlast                  ,
+
+    output             [   1: 0]        IFU_bresp                  ,
+    output                              IFU_bvalid                 ,
+    input                               IFU_bready                 ,
+    output             [   3: 0]        IFU_bid                    ,
+
+    input              [ADDR_WIDTH-1: 0]        LSU_araddr                 ,
+    input                               LSU_arvalid                ,
+    output reg                          LSU_arready                ,
+    input              [   3: 0]        LSU_arid                   ,
+    input              [   7: 0]        LSU_arlen                  ,
+    input              [   2: 0]        LSU_arsize                 ,
+    input              [   1: 0]        LSU_arburst                ,
+
+
+    input                               LSU_rready                 ,
+    output reg         [DATA_WIDTH-1: 0]        LSU_rdata                  ,
+    output reg         [   1: 0]        LSU_rresp                  ,
+    output reg                          LSU_rvalid                 ,
+    output reg                          LSU_rlast                  ,
+    output reg         [   3: 0]        LSU_rid                    ,
+
+    input              [ADDR_WIDTH-1: 0]        LSU_awaddr                 ,
+    input                               LSU_awvalid                ,
+    output                              LSU_awready                ,
+    input              [   3: 0]        LSU_awid                   ,
+    input              [   7: 0]        LSU_awlen                  ,
+    input              [   2: 0]        LSU_awsize                 ,
+    input              [   1: 0]        LSU_awburst                ,
     
-    input              [DATA_WIDTH-1: 0]LSU_wdata           ,
-    input              [   3: 0] LSU_wstrb                  ,
-    input                        LSU_wvalid                 ,
-    output                       LSU_wready                 ,
-    input                        LSU_wlast                  ,
+    input              [DATA_WIDTH-1: 0]        LSU_wdata                  ,
+    input              [   3: 0]        LSU_wstrb                  ,
+    input                               LSU_wvalid                 ,
+    output                              LSU_wready                 ,
+    input                               LSU_wlast                  ,
     
-    output             [   1: 0] LSU_bresp                  ,
-    output                       LSU_bvalid                 ,
-    input                        LSU_bready                 ,
-    output             [   3: 0] LSU_bid                    ,
+    output             [   1: 0]        LSU_bresp                  ,
+    output                              LSU_bvalid                 ,
+    input                               LSU_bready                 ,
+    output             [   3: 0]        LSU_bid                    ,
 
-    input                        awready                    ,
-    output                       awvalid                    ,
-    output             [  31: 0] awaddr                     ,
-    output             [   3: 0] awid                       ,
-    output             [   7: 0] awlen                      ,
-    output             [   2: 0] awsize                     ,
-    output             [   1: 0] awburst                    ,
+    input                               awready                    ,
+    output                              awvalid                    ,
+    output             [  31: 0]        awaddr                     ,
+    output             [   3: 0]        awid                       ,
+    output             [   7: 0]        awlen                      ,
+    output             [   2: 0]        awsize                     ,
+    output             [   1: 0]        awburst                    ,
 
-    input                        wready                     ,
-    output                       wvalid                     ,
-    output             [  31: 0] wdata                      ,
-    output             [   3: 0] wstrb                      ,
-    output                       wlast                      ,
+    input                               wready                     ,
+    output                              wvalid                     ,
+    output             [  31: 0]        wdata                      ,
+    output             [   3: 0]        wstrb                      ,
+    output                              wlast                      ,
 
-    output                       bready                     ,
-    input                        bvalid                     ,
-    input              [   1: 0] bresp                      ,
-    input              [   3: 0] bid                        ,
+    output                              bready                     ,
+    input                               bvalid                     ,
+    input              [   1: 0]        bresp                      ,
+    input              [   3: 0]        bid                        ,
     
-    input                        arready                    ,
-    output                       arvalid                    ,
-    output             [  31: 0] araddr                     ,
-    output             [   3: 0] arid                       ,
-    output             [   7: 0] arlen                      ,
-    output             [   2: 0] arsize                     ,
-    output             [   1: 0] arburst                    ,
+    input                               arready                    ,
+    output                              arvalid                    ,
+    output             [  31: 0]        araddr                     ,
+    output             [   3: 0]        arid                       ,
+    output             [   7: 0]        arlen                      ,
+    output             [   2: 0]        arsize                     ,
+    output             [   1: 0]        arburst                    ,
 
-    output                       rready                     ,
-    input                        rvalid                     ,
-    input              [   1: 0] rresp                      ,
-    input              [  31: 0] rdata                      ,
-    input                        rlast                      ,
-    input              [   3: 0] rid                         
+    output                              rready                     ,
+    input                               rvalid                     ,
+    input              [   1: 0]        rresp                      ,
+    input              [  31: 0]        rdata                      ,
+    input                               rlast                      ,
+    input              [   3: 0]        rid                         
     
     
 
 );
 
-    reg                [   1: 0] ari_choice                 ;
+    wire               [   1: 0]        ari_choice                  ;
+    wire               [   1: 0]        req                         ;
 
+    assign                              req                         = {LSU_req,IFU_req};
+    assign                              ari_choice                  = req & (~req + 1'b1);
+/*
     always @(posedge clock) begin
         if(reset)
             ari_choice <= `Aribiter_choice_IDLE_ysyx_24100029;
@@ -145,10 +149,10 @@ module ysyx_24100029_Aribiter #(
                 ari_choice <= `Aribiter_choice_IDLE_ysyx_24100029;
         end
     end
-
+*/
 
     always @(*) begin
-        if(ari_choice == `Aribiter_choice_IFU_ysyx_24100029)begin
+        if(ari_choice[0])begin
             IFU_awready =awready;
             LSU_awready = 0;
             awvalid = IFU_awvalid ;
@@ -194,7 +198,7 @@ module ysyx_24100029_Aribiter #(
             LSU_rlast  = 0;
             LSU_rid    = 0;
         end
-        else if(ari_choice == `Aribiter_choice_LSU_ysyx_24100029)   begin
+        else if(ari_choice[1])   begin
             LSU_awready =awready;
             IFU_awready = 0;
             awvalid = LSU_awvalid ;
@@ -284,7 +288,6 @@ module ysyx_24100029_Aribiter #(
             IFU_rlast  = 0;
             IFU_rid    = 0;
         end
-
     end
 
 
