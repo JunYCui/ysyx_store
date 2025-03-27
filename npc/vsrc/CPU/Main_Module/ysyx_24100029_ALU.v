@@ -50,12 +50,6 @@ always@(*)
             choose_add_sub = 1'b1;
             res =result;
             end
-    `alu_not_ysyx_24100029: begin                                   //取反
-        /* verilator lint_off WIDTHEXPAND */
-            res = ~d1 + 1'b1;
-        /* verilator lint_on WIDTHEXPAND */
-            choose_add_sub = 1'b0;
-            end
     `alu_and_ysyx_24100029: begin                                   //与
             res = d1 & d2;
             choose_add_sub = 1'b0;
