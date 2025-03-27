@@ -58,9 +58,14 @@ INCFLAGS = $(addprefix -I, $(INC_PATH))
 
 CFLAGS  = -O2 -MMD -Wall $(INCFLAGS) -D__$(shell echo $(PLATFORM) | tr a-z A-Z)__ -DTOP_NAME="\"V$(TOPNAME)\""
 
+# llvm lib
 LDFLAGS += $(shell llvm-config --libs) -fsanitize=address 
 
 CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE -rdynamic
+
+# yosys file
+SDC_FILE = $(NPC_HOME)/sdc/top.sdc
+
 
 IMG ?= 
 
@@ -71,6 +76,7 @@ NPC_EXEC = $(BIN) $(ARGS) $(IMG)
 ifeq ($(PLATFORM),ysyxsoc)
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 endif
+
 NVBOARD_ARCHIVE ?= 
 
 sim:all
@@ -93,11 +99,12 @@ all:$(CSOURCES) $(VSOURCES)  $(NVBOARD_ARCHIVE)
 
 clean: 
 	rm -rf $(BUILD_DIR) *.vcd
+	$(MAKE) -C ~/yosys-sta clean
 
 area:
 	@sed -i '/Performance/d' ./vsrc/CPU/define/para.v
 	@echo "analyse the chip area and frequency"
-	@$(MAKE) -C ~/yosys-sta sta > log/log.txt 
+	@$(MAKE) -C ~/yosys-sta DESIGN=ysyx_24100029 SDC_FILE=$(SDC_FILE) RTL_FILES="$(VSOURCES)"  sta  > log/log.txt 
 	@grep --after-context=1 "Chip area" log/log.txt  > log/area.txt
 	@grep --after-context=7 "Endpoint" log/log.txt > log/frequency.txt 
 	@sed -i '$$a \`define Performance_Count' ./vsrc/CPU/define/para.v
@@ -118,10 +125,5 @@ $(SRC_AUTO_BIND): $(CONSTR)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 endif
 .PHONY: clean all sim perf area
-#waves:*.vcd
-#	gtkwave *.vcd
 
-#.PHONY:clean
-#clean:
-#	@rm -rf ./obj_dir *.vcd
 include ../Makefile

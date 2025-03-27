@@ -827,7 +827,6 @@ ysyx_24100029_WBU WBU_inst0
     .mem_ren                            (LSU_mem_ren               ),
     .jump_flag                          (LSU_jump_flag             ),
 
-    .pc_next                            (WBU_pc                    ),
     .R_wen_next                         (WBU_R_wen                 ),
     .csr_wen_next                       (WBU_csr_wen               ),
     .csrd                               (WBU_csrd                  ),
@@ -836,6 +835,7 @@ ysyx_24100029_WBU WBU_inst0
     .valid                              (LSU_valid                 ),
     .ready                              (WBU_ready                 ),
 `ifdef Performance_Count
+    .pc_next                            (WBU_pc                    ),
     .mem_wen_reg                        (lsu_mem_wen               ),
     .mem_wen_flag                       (mem_wen_flag              ),
     .mem_ren_flag                       (mem_ren_flag              ),
