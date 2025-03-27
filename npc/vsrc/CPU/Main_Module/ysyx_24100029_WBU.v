@@ -52,7 +52,7 @@ module ysyx_24100029_WBU (
                                                                 csrs:Ex_result;
     assign                              csrd                        = Ex_result;
     assign                              csr_wen_next                = csr_wen;
-    assign                              R_wen_next                  = R_wen;
+    assign                              R_wen_next                  = R_wen&valid;
     assign                              rd_next                     = rd;
     assign                              ready                       = 1'b1;
 
