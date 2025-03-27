@@ -118,12 +118,34 @@ module ysyx_24100029_Aribiter #(
     
 
 );
+    localparam                          WORK                       = 1'b1  ;
+    localparam                          IDLE                       = 1'b0  ;
 
-    wire               [   1: 0]        ari_choice                  ;
+    reg                [   1: 0]        ari_choice                  ;
     wire               [   1: 0]        req                         ;
+    reg                                 state                       ;
 
     assign                              req                         = {LSU_req,IFU_req};
-    assign                              ari_choice                  = req & (~req + 1'b1);
+
+    always @(posedge clock ) begin
+        if(reset)
+            state <= IDLE;
+        else begin
+            case(state)
+            IDLE:if(|req)
+                    state <= IDLE; 
+            WORK:if((rvalid & rlast) | bvalid)
+                    state <= IDLE; 
+            endcase
+        end
+    end
+    always @(posedge clock) begin
+        if(reset)
+            ari_choice <= 0;
+        else if(|req & (state ==IDLE))
+            ari_choice   <= req & (~req + 1'b1);
+    end
+
 /*
     always @(posedge clock) begin
         if(reset)
