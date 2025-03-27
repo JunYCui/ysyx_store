@@ -30,7 +30,7 @@ module ysyx_24100029_WBU (
     output                              mem_ren_flag               ,
     output             [  31: 0]        paddr                      ,
     input              [  31: 0]        inst                       ,
-    output reg         [  31: 0]        inst_next                  ,
+    output             [  31: 0]        inst_next                  ,
 `endif
     output             [  31: 0]        rd_value                   ,
     output             [   4: 0]        rd_next                     
@@ -42,13 +42,7 @@ module ysyx_24100029_WBU (
     assign                              paddr                       = Ex_result;
     assign                              mem_wen_flag                = mem_wen_reg;
     assign                              pc_next                     = pc;
-    always @(posedge clock or negedge reset) begin
-        if(reset)
-            inst_next <= 0;
-        else
-            inst_next <= inst;
-    end
-
+    assign                              inst_next                   = inst;
 `endif
 
     assign                              valid_next                  = valid;
