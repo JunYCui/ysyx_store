@@ -156,7 +156,7 @@ module ysyx_24100029_icache #(
     wire               [DATA_WIDTH-1: 0]        rdata                       ;
     wire                                hit                         ;
     wire                                mux_flag                    ;
-    wire               [CacheLine_Width-1: 0]        block_choice                ;
+    wire               [(CacheLine_Width==0)? CacheLine_Width-1:0 : 0]        block_choice                ;
     wire               [32*2**CacheLine_Width-1: 0]        block_data                  ;
 
     reg                [CACHE_WIDTH-1: 0]        icache[2**INDEX_WIDTH-1:0]  ;
