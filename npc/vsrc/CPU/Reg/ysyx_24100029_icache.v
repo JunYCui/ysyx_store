@@ -25,7 +25,7 @@
 //****************************************************************************************//
 `include "../define/para.v"
 module ysyx_24100029_icache #(
-    CacheLine_Width = 1,
+    CacheLine_Width = 0,
     OFFSET_WIDTH = 2,
     INDEX_WIDTH = 2,
     ADDR_WIDTH = 32 ,
@@ -141,6 +141,7 @@ module ysyx_24100029_icache #(
    
    `endif
 
+`define IS_CacheLine_Width_0 CacheLine_Width==0
 
     localparam                          IDLE                       = 2'b00 ;
     localparam                          ADDR                       = 2'b01 ;
@@ -157,15 +158,16 @@ module ysyx_24100029_icache #(
     wire               [DATA_WIDTH-1: 0]        rdata                       ;
     wire                                hit                         ;
     wire                                mux_flag                    ;
-    wire               [(CacheLine_Width==0)? CacheLine_Width-1:0 : 0]        block_choice                ;
+    wire               [`IS_CacheLine_Width_0? 0:CacheLine_Width-1 : 0]        block_choice                ;
     wire               [32*2**CacheLine_Width-1: 0]        block_data                  ;
 
     reg                [CACHE_WIDTH-1: 0]        icache[2**INDEX_WIDTH-1:0]  ;
     reg                [   1: 0]        state                       ;
     reg                                 arvalid                     ;
     reg                [   2: 0]        count                       ;
-
-    assign                              block_choice                = ifu_araddr[CacheLine_Width+OFFSET_WIDTH-1:OFFSET_WIDTH];
+/* verilator lint_off SELRANGE */
+/* verilator lint_off WIDTHTRUNC */
+    assign                              block_choice                = `IS_CacheLine_Width_0? 0 : ifu_araddr[CacheLine_Width+OFFSET_WIDTH-1:OFFSET_WIDTH];
     assign                              block_data                  = icache[index][CACHE_WIDTH-1:VALID_WIDTH+TAG_WIDTH];
     assign                              rdata                       = block_data[32*block_choice+:32];
     assign                              tag                         = icache[index][VALID_WIDTH+TAG_WIDTH-1:VALID_WIDTH];
@@ -204,7 +206,7 @@ module ysyx_24100029_icache #(
     assign                              ifu_bresp                   = 0;
     assign                              ifu_bid                     = 0;
     assign                              ifu_arready                 = mux_flag? icache_arready:(state == IDLE);
-    assign                              ifu_rdata                   = mux_flag? icache_rdata:(state == MISS & block_choice == {CacheLine_Width{1'b1}})? icache_rdata:rdata;
+    assign                              ifu_rdata                   = mux_flag? icache_rdata:(state == MISS & `IS_CacheLine_Width_0? 1:~block_choice == 0)? icache_rdata:rdata;
     assign                              ifu_rvalid                  = mux_flag? icache_rvalid: (state == HIT) | ((state == MISS) & icache_rvalid & icache_rlast);
     assign                              icache_arvalid              = mux_flag? ifu_arvalid:arvalid;
     assign                              hit                         = valid & (ifu_araddr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH+CacheLine_Width] == tag) & ifu_rready;
