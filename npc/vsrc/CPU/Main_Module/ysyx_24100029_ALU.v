@@ -46,26 +46,6 @@ always@(*)
     begin
     res = 0;
     case(choice)
-    `alu_add_ysyx_24100029: begin                                   //加法
-            choose_add_sub = 1'b0;
-            res =result;
-            end
-    `alu_sub_ysyx_24100029: begin                                   //减法
-            choose_add_sub = 1'b1;
-            res =result;
-            end
-    `alu_and_ysyx_24100029: begin                                   //与
-            res = d1 & d2;
-            choose_add_sub = 1'b0;
-            end
-    `alu_or_ysyx_24100029: begin                                    //或
-            res = d1 | d2;
-            choose_add_sub = 1'b0;
-            end
-    `alu_xor_ysyx_24100029: begin                                   //异或
-            res = d1 ^ d2;
-            choose_add_sub = 1'b0;
-            end
     `alu_signed_comparator_ysyx_24100029:begin                      // 比较大小
             choose_add_sub = 1'b1;
             if(d1[BW-1] != d2[BW-1])
@@ -89,6 +69,26 @@ always@(*)
                     res[0] = 1;
                 else
                     res[0] = 0;
+            end
+    `alu_add_ysyx_24100029: begin                                   //加法
+            choose_add_sub = 1'b0;
+            res =result;
+            end
+    `alu_sub_ysyx_24100029: begin                                   //减法
+            choose_add_sub = 1'b1;
+            res =result;
+            end
+    `alu_and_ysyx_24100029: begin                                   //与
+            res = d1 & d2;
+            choose_add_sub = 1'b0;
+            end
+    `alu_or_ysyx_24100029: begin                                    //或
+            res = d1 | d2;
+            choose_add_sub = 1'b0;
+            end
+    `alu_xor_ysyx_24100029: begin                                   //异或
+            res = d1 ^ d2;
+            choose_add_sub = 1'b0;
             end
     `alu_equal_ysyx_24100029:begin                                  //是否相等
             choose_add_sub = 1'b0;
