@@ -44,15 +44,19 @@ module ysyx_24100029_Control (
 
     wire               [   1: 0]        IDU_rs1_choice              ;
     wire               [   1: 0]        IDU_rs2_choice              ;
+    wire                                exu_clear_cond            =jump_flag | fence_i_flag | (branch_flag & Ex_result[0]);
+    wire                                idu_clear_cond            =mret_flag | ecall_flag;
+    wire [31:0] exu_pc_plus_imm;
+    assign                              IDU_inst_clear              = (EXU_valid & exu_clear_cond) | (IDU_valid & idu_clear_cond);
 
-    assign                              dnpc_flag                   = ( EXU_valid& (jump_flag|fence_i_flag|(branch_flag&Ex_result[0]))) || (IDU_valid & (mret_flag|ecall_flag));
 
-    assign                              IDU_inst_clear              = (EXU_valid& (jump_flag|fence_i_flag|(branch_flag&Ex_result[0]))) || (IDU_valid & (mret_flag|ecall_flag));
+    assign                              dnpc_flag                   = IDU_inst_clear;
     assign                              icache_clr                  = fence_i_flag&EXU_valid;
 
-
-   assign                       dnpc                      = EXU_valid?  (jump_flag? Ex_result : branch_flag?  EXU_pc+EXU_imm: 0)
-                                                            : mret_flag? mepc_out:mtvec_out;
+    assign exu_pc_plus_imm = EXU_pc + EXU_imm;  // 独立计算
+    assign dnpc = (~EXU_valid) ? (mret_flag ? mepc_out : mtvec_out) :
+                    jump_flag   ? Ex_result :
+                    branch_flag ? exu_pc_plus_imm : 32'b0;
 
 
 
