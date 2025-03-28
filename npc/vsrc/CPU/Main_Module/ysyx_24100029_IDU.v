@@ -43,7 +43,7 @@ module ysyx_24100029_IDU(
     output                              inv_flag                   ,
     output                              branch_flag                ,
     output                              jump_flag                  ,
-    output             [   1: 0]        imm_opcode                 ,
+//    output             [   1: 0]        imm_opcode                 ,
     output             [   3: 0]        alu_opcode                 ,
 
     output             [   4: 0]        rs1                        ,
@@ -172,11 +172,12 @@ module ysyx_24100029_IDU(
     assign                              branch_flag                 = (opcode == `B_opcode_ysyx_24100029)? 1'b1:1'b0;
  
     assign                              csr_addr                    = imm;
-    
+ /*   
     assign imm_opcode = (opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )                            ?
                         `imm_20u_ysyx_24100029:(opcode == `J_opcode_ysyx_24100029)                                             ?
                         `imm_20i_ysyx_24100029:(opcode == `I1_opcode_ysyx_24100029 && (funct3 == 3'b001 || funct3 == 3'b101))  ?
                         `imm_5u_ysyx_24100029 : `imm_12i_ysyx_24100029                                                         ;
+ */
     assign add1_choice  =  (opcode == `U0_opcode_ysyx_24100029)                                                                ?
                         `rs1_dist_para_ysyx_24100029:(opcode == `J_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )?
                         `rs1_dist_pc_ysyx_24100029   : `rs1_dist_reg_ysyx_24100029                                             ;
@@ -220,13 +221,13 @@ module ysyx_24100029_IDU(
 /* imm 处理*/
 ysyx_24100029_MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, opcode, {i1_DATA_LEN{1'b0}},
 {`R_opcode_ysyx_24100029 ,    {25'd0,inst_reg[31:25]},
- `I0_opcode_ysyx_24100029,    {20'd0,inst_reg[31:20]},
- `I1_opcode_ysyx_24100029,    {20'd0,inst_reg[31:20]},
- `I2_opcode_ysyx_24100029,    {20'd0,inst_reg[31:20]},
- `U0_opcode_ysyx_24100029,    {12'd0,inst_reg[31:12]},
- `U1_opcode_ysyx_24100029,    {12'd0,inst_reg[31:12]},
- `J_opcode_ysyx_24100029 ,    {12'd0,inst_reg[31],inst_reg[19:12],inst_reg[20],inst_reg[30:21]},
- `B_opcode_ysyx_24100029 ,    {{20{inst_reg[31]}},inst_reg[31],inst_reg[7],inst_reg[30:25],inst_reg[11:8]}<<1,
+ `I0_opcode_ysyx_24100029,    {{20{inst_reg[31]}},inst_reg[31:20]},
+ `I1_opcode_ysyx_24100029,    {{20{inst_reg[31]}},inst_reg[31:20]},
+ `I2_opcode_ysyx_24100029,    {{20{inst_reg[31]}},inst_reg[31:20]},
+ `U0_opcode_ysyx_24100029,    {inst_reg[31:12],12'd0},
+ `U1_opcode_ysyx_24100029,    {inst_reg[31:12],12'd0},
+ `J_opcode_ysyx_24100029 ,    {{11{inst_reg[31]}},inst_reg[31],inst_reg[19:12],inst_reg[20],inst_reg[30:21],1'd0},
+ `B_opcode_ysyx_24100029 ,    {{19{inst_reg[31]}},inst_reg[31],inst_reg[7],inst_reg[30:25],inst_reg[11:8],1'd0},
  `S_opcode_ysyx_24100029 ,    {20'd0,inst_reg[31:25],inst_reg[11:7]},
  `M_opcode_ysyx_24100029 ,    {20'd0,inst_reg[31:20]}
  });

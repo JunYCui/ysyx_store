@@ -14,7 +14,6 @@ module ysyx_24100029_EXU (
     input              [   2: 0]        funct3                     ,
 
     input              [  31: 0]        imm                        ,
-    input              [   1: 0]        imm_opcode                 ,
     input              [   3: 0]        alu_opcode                 ,
     input                               inv_flag                   ,
     input                               jump_flag                  ,
@@ -90,7 +89,7 @@ module ysyx_24100029_EXU (
     reg                [   2: 0]        funct3_reg                  ;
 
     reg                [  31: 0]        imm_reg                     ;
-    reg                [   1: 0]        imm_opcode_reg              ;
+//    reg                [   1: 0]        imm_opcode_reg              ;
     reg                [   3: 0]        alu_opcode_reg              ;
     reg                                 inv_flag_reg                ;
     reg                                 jump_flag_reg               ;
@@ -119,7 +118,7 @@ module ysyx_24100029_EXU (
             funct3_reg      <= 0;
             rd_reg          <= 0;
             imm_reg         <= 0;
-            imm_opcode_reg  <= 0;
+ //           imm_opcode_reg  <= 0;
             alu_opcode_reg  <= 0;
             inv_flag_reg    <= 0;
             jump_flag_reg   <= 0;
@@ -138,7 +137,7 @@ module ysyx_24100029_EXU (
             rd_reg          <= rd;
 
             imm_reg         <= imm          ;
-            imm_opcode_reg  <= imm_opcode   ;
+//            imm_opcode_reg  <= imm_opcode   ;
             alu_opcode_reg  <= alu_opcode   ;
             inv_flag_reg    <= inv_flag     ;
 
@@ -199,7 +198,7 @@ end
     assign                              imm_next                    = imm_reg;
     assign                              ready_last                  = ready_next;
     assign                              fetch_i_flag_next           = fetch_i_reg;
-
+/*
     always@(*)begin
         case(imm_opcode_reg)
         `imm_12i_ysyx_24100029: imm_add = imm_12i;
@@ -210,10 +209,12 @@ end
         endcase
     end
 
-
+*/
 
 
 /* verilator lint_off IMPLICIT */
+
+    assign                              imm_add                     = imm_reg;
 
 ysyx_24100029_MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, add2_choice_reg, {DATA_LEN_add2{1'b0}},
 {
@@ -240,9 +241,9 @@ ysyx_24100029_ALU #(
     .d1                                 (add_1                     ),
     .d2                                 (add_2                     ),
     .choice                             (alu_opcode_reg            ),
-    .res                                (alu_res                   )
+    .res                                (alu_res                   ) 
 );
-
+/*
 ysyx_24100029_sext #(
     .DATA_WIDTH                         (12                        ),
     .OUT_WIDTH                          (32                        ) 
@@ -260,7 +261,7 @@ ysyx_24100029_sext #(
     .data                               (imm_reg[19:0]             ),
     .sext_data                          (imm_20i                   ) 
 );
-
+*/
 
 
 endmodule

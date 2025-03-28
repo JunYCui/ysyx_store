@@ -652,7 +652,7 @@ ysyx_24100029_IDU IDU_Inst0(
     .inv_flag                           (IDU_inv_flag              ),
     .branch_flag                        (IDU_branch_flag           ),
     .jump_flag                          (IDU_jump_flag             ),
-    .imm_opcode                         (IDU_imm_opcode            ),
+  //  .imm_opcode                         (IDU_imm_opcode            ),
     .alu_opcode                         (IDU_alu_opcode            ),
 
     .rs1                                (IDU_rs1                   ),
@@ -690,7 +690,7 @@ ysyx_24100029_EXU EXU_Inst0(
     .mem_ren                            (IDU_mem_ren               ),
     .rd                                 (IDU_rd                    ),
     .imm                                (IDU_imm                   ),
-    .imm_opcode                         (IDU_imm_opcode            ),
+  //  .imm_opcode                         (IDU_imm_opcode            ),
     .alu_opcode                         (IDU_alu_opcode            ),
     .inv_flag                           (IDU_inv_flag              ),
     .jump_flag                          (IDU_jump_flag             ),
