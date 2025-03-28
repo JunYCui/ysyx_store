@@ -228,8 +228,8 @@ ysyx_24100029_MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, o
  `U1_opcode_ysyx_24100029,    {inst_reg[31:12],12'd0},
  `J_opcode_ysyx_24100029 ,    {{11{inst_reg[31]}},inst_reg[31],inst_reg[19:12],inst_reg[20],inst_reg[30:21],1'd0},
  `B_opcode_ysyx_24100029 ,    {{19{inst_reg[31]}},inst_reg[31],inst_reg[7],inst_reg[30:25],inst_reg[11:8],1'd0},
- `S_opcode_ysyx_24100029 ,    {20'd0,inst_reg[31:25],inst_reg[11:7]},
- `M_opcode_ysyx_24100029 ,    {20'd0,inst_reg[31:20]}
+ `S_opcode_ysyx_24100029 ,    {{20{inst_reg[31]}},inst_reg[31:25],inst_reg[11:7]},
+ `M_opcode_ysyx_24100029 ,    {{20{inst_reg[31]}},inst_reg[31:20]}
  });
 
 ysyx_24100029_Reg_Stack Reg_Stack_inst0(
