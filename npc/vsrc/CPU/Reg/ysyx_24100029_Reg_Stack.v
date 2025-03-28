@@ -4,9 +4,9 @@ module ysyx_24100029_Reg_Stack(
     input              [  31: 0]           pc                         ,
     input                                  ecall_flag                 ,
 
-    input              [   4: 0]           rs1                        ,
-    input              [   4: 0]           rs2                        ,
-    input              [   4: 0]           rd                         ,
+    input              [   3: 0]           rs1                        ,
+    input              [   3: 0]           rs2                        ,
+    input              [   3: 0]           rd                         ,
     input              [  31: 0]           rd_value                   ,
 
 
@@ -31,7 +31,7 @@ module ysyx_24100029_Reg_Stack(
     wire               [  31: 0]        marchid_out                 ;
 
 
-    assign                              wdata                       = (rd == 5'd0)? 32'd0:rd_value;
+    assign                              wdata                       = (rd == 4'd0)? 32'd0:rd_value;
 
     assign                       csrs                      = (csr_addr == 32'h341)? mepc_out        :
                                                              (csr_addr == 32'h342)? mcause_out      :
@@ -66,11 +66,11 @@ ysyx_24100029_CSR #(32,0) CSR_inst(
 ysyx_24100029_RegisterFile #(4, 32) Reg_inst(
     .clock                              (clock                     ),
     .wdata                              (wdata                     ),
-    .waddr                              (rd[3:0]                        ),
+    .waddr                              (rd                        ),
     .wen                                (R_wen                     ),
     .reset                              (reset                     ),
-    .rs1_addr                           (rs1[3:0]                       ),
-    .rs2_addr                           (rs2[3:0]                       ),
+    .rs1_addr                           (rs1                       ),
+    .rs2_addr                           (rs2                       ),
 
     .rs1_value                          (rs1_value                 ),
     .rs2_value                          (rs2_value                 ),

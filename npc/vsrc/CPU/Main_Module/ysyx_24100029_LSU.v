@@ -100,9 +100,9 @@ end
     wire               [  31: 0]        rdata_8u                    ;
     wire               [  31: 0]        rdata_16u                   ;
 
-    wire               [  31: 0]        rdata_ex                    ;
     wire               [   4: 0]        rdata_b_choice              ;
 
+    reg               [  31: 0]        rdata_ex                     ;
     reg                [  31: 0]        pc_reg                      ;
     reg                                 mem_ren_reg                 ;
     reg                                 mem_wen_reg                 ;
@@ -343,13 +343,16 @@ end
 
 
 
-ysyx_24100029_MuxKeyInternal #(i4_NR_KEY, i4_KEY_LEN, i4_DATA_LEN) i4 (rdata_ex, funct3_reg, {i4_DATA_LEN{1'b0}},{
-  3'b000,rdata_8i,                                                  // lb
-  3'b001,rdata_16i,                                                 // lh
-  3'b010,rdata,                                                     // lw
-  3'b100,rdata_8u,                                                  // 1bu
-  3'b101,rdata_16u                                                  // 1hu
-});
+always @(*) begin
+    case(funct3_reg)
+        3'b000:rdata_ex = rdata_8i;   // lb
+        3'b001:rdata_ex = rdata_16i; // lh
+        3'b010:rdata_ex = rdata; // lw
+        3'b100:rdata_ex = rdata_8u; // lbu
+        3'b101:rdata_ex = rdata_16u; // lhu
+        default:rdata_ex = 0;
+    endcase
+end
 
     assign                              rdata_8u                    = {24'd0,rdata[rdata_b_choice +: 8]};
     assign                              rdata_16u                   = {16'd0,rdata[rdata_b_choice +: 16]};

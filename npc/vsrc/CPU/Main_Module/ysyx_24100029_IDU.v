@@ -237,9 +237,9 @@ ysyx_24100029_Reg_Stack Reg_Stack_inst0(
     .pc                                 (pc_reg                    ),
     .ecall_flag                         (ecall_flag                ),
 
-    .rs1                                (rs1                       ),
-    .rs2                                (rs2                       ),
-    .rd                                 (rd                        ),
+    .rs1                                (rs1[3:0]                       ),
+    .rs2                                (rs2[3:0]                       ),
+    .rd                                 (rd[3:0]                        ),
     .rd_value                           (rd_value                  ),
 
     .csr_addr                           (csr_addr                  ),
