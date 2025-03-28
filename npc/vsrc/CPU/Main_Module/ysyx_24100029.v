@@ -529,7 +529,6 @@ ysyx_24100029_Control Control_inst0(
     .ecall_flag                         (IDU_ecall_flag            ),
     .fence_i_flag                       (EXU_fence_i_flag          ),
 
-    .EXU_mem_ren                        (EXU_mem_ren               ),
     .MEM_mem_ren                        (LSU_mem_ren               ),
 
     .IDU_rs1                            (IDU_rs1                   ),

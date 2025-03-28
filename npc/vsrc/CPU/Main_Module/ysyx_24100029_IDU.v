@@ -205,31 +205,35 @@ module ysyx_24100029_IDU(
                         (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b111 )                                                    ?
                         `alu_and_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b001  )                          ||
                         (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b001 )                                                    ?
-                        `alu_sll_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand == 7'b0000000)    ||
-                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand == 7'b0000000)                             ?
-                        `alu_srl_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand != 7'b0000000)    ||
-                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand != 7'b0000000)                             ?
-                        `alu_sra_ysyx_24100029 : (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b000 && oprand != 7'b0000000)    ?
+                        `alu_sll_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand[5] == 1'b0)    ||
+                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand[5] == 1'b0)                             ?
+                        `alu_srl_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand[5] == 1'b1)    ||
+                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand[5] == 1'b1)                             ?
+                        `alu_sra_ysyx_24100029 : (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b000 && oprand[5] == 1'b1)    ?
                         `alu_sub_ysyx_24100029 : (opcode == `B_opcode_ysyx_24100029 && funct3[2:1] == 2'b00)                        ?
                         `alu_equal_ysyx_24100029:`alu_add_ysyx_24100029;
 
 
-
-
+wire [31:0] imm_I =  {{20{inst_reg[31]}},inst_reg[31:20]};
+wire [31:0] imm_U = {inst_reg[31:12],12'd0};
+wire [31:0] imm_R = {25'd0,inst_reg[31:25]};
+wire [31:0] imm_S = {{20{inst_reg[31]}},inst_reg[31:25],inst_reg[11:7]};
+wire [31:0] imm_B = {imm_S[31:11],imm_S[9:0],imm_S[10]}<<1;
+wire [31:0] imm_J =  {{11{inst_reg[31]}},inst_reg[31],inst_reg[19:12],inst_reg[20],inst_reg[30:21]}<<1;
 /* verilator lint_off IMPLICIT */
 
 /* imm 处理*/
 ysyx_24100029_MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, opcode, {i1_DATA_LEN{1'b0}},
-{`R_opcode_ysyx_24100029 ,    {25'd0,inst_reg[31:25]},
- `I0_opcode_ysyx_24100029,    {{20{inst_reg[31]}},inst_reg[31:20]},
- `I1_opcode_ysyx_24100029,    {{20{inst_reg[31]}},inst_reg[31:20]},
- `I2_opcode_ysyx_24100029,    {{20{inst_reg[31]}},inst_reg[31:20]},
- `U0_opcode_ysyx_24100029,    {inst_reg[31:12],12'd0},
- `U1_opcode_ysyx_24100029,    {inst_reg[31:12],12'd0},
- `J_opcode_ysyx_24100029 ,    {{11{inst_reg[31]}},inst_reg[31],inst_reg[19:12],inst_reg[20],inst_reg[30:21],1'd0},
- `B_opcode_ysyx_24100029 ,    {{19{inst_reg[31]}},inst_reg[31],inst_reg[7],inst_reg[30:25],inst_reg[11:8],1'd0},
- `S_opcode_ysyx_24100029 ,    {{20{inst_reg[31]}},inst_reg[31:25],inst_reg[11:7]},
- `M_opcode_ysyx_24100029 ,    {{20{inst_reg[31]}},inst_reg[31:20]}
+{`R_opcode_ysyx_24100029 ,    imm_R,
+ `I0_opcode_ysyx_24100029,    imm_I,
+ `I1_opcode_ysyx_24100029,    imm_I,
+ `I2_opcode_ysyx_24100029,    imm_I,
+ `U0_opcode_ysyx_24100029,    imm_U,
+ `U1_opcode_ysyx_24100029,    imm_U,
+ `J_opcode_ysyx_24100029 ,    imm_J,
+ `B_opcode_ysyx_24100029 ,    imm_B,
+ `S_opcode_ysyx_24100029 ,    imm_S,
+ `M_opcode_ysyx_24100029 ,    imm_I
  });
 
 ysyx_24100029_Reg_Stack Reg_Stack_inst0(

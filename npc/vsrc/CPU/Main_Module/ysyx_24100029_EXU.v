@@ -118,7 +118,6 @@ module ysyx_24100029_EXU (
             funct3_reg      <= 0;
             rd_reg          <= 0;
             imm_reg         <= 0;
- //           imm_opcode_reg  <= 0;
             alu_opcode_reg  <= 0;
             inv_flag_reg    <= 0;
             jump_flag_reg   <= 0;
@@ -137,7 +136,6 @@ module ysyx_24100029_EXU (
             rd_reg          <= rd;
 
             imm_reg         <= imm          ;
-//            imm_opcode_reg  <= imm_opcode   ;
             alu_opcode_reg  <= alu_opcode   ;
             inv_flag_reg    <= inv_flag     ;
 
@@ -174,13 +172,8 @@ end
     wire               [  31: 0]        add_1                       ;
     wire               [  31: 0]        add_2                       ;
 
-
-    wire               [  31: 0]        imm_12i                     ;
-    wire               [  31: 0]        imm_20i                     ;
 /* verilator lint_off UNUSEDSIGNAL */
     wire               [  31: 0]        alu_res                     ;
-
-    reg                [  31: 0]        imm_add                     ;
     
 
     assign                              jump_flag_next              = jump_flag_reg;
@@ -214,11 +207,9 @@ end
 
 /* verilator lint_off IMPLICIT */
 
-    assign                              imm_add                     = imm_reg;
-
 ysyx_24100029_MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, add2_choice_reg, {DATA_LEN_add2{1'b0}},
 {
-2'd0, imm_add   ,
+2'd0, imm_reg   ,
 2'd1, rs2_value_reg ,
 2'd2, csrs_reg      ,
 2'd3, 32'd0

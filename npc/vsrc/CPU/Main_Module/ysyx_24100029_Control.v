@@ -15,7 +15,6 @@ module ysyx_24100029_Control (
     input                               jump_flag                  ,
     input                               mret_flag                  ,
     input                               ecall_flag                 ,
-    input                               EXU_mem_ren                ,
     input                               MEM_mem_ren                ,
     input                               fence_i_flag               ,
 
