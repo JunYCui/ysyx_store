@@ -218,7 +218,7 @@ wire [31:0] imm_I =  {{20{inst_reg[31]}},inst_reg[31:20]};
 wire [31:0] imm_U = {inst_reg[31:12],12'd0};
 wire [31:0] imm_R = {25'd0,inst_reg[31:25]};
 wire [31:0] imm_S = {{20{inst_reg[31]}},inst_reg[31:25],inst_reg[11:7]};
-wire [31:0] imm_B = {imm_S[31:11],imm_S[9:0],imm_S[10]}<<1;
+wire [31:0] imm_B = {imm_S[31:11],imm_S[0],imm_S[10:1]}<<1;
 wire [31:0] imm_J =  {{11{inst_reg[31]}},inst_reg[31],inst_reg[19:12],inst_reg[20],inst_reg[30:21]}<<1;
 /* verilator lint_off IMPLICIT */
 
