@@ -141,6 +141,7 @@ module ysyx_24100029_icache #(
    
    `endif
 
+
     localparam                          IDLE                       = 2'b00 ;
     localparam                          ADDR                       = 2'b01 ;
     localparam                          MISS                       = 2'b10 ;
