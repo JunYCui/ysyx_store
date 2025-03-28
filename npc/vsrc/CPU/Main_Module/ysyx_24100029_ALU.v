@@ -92,7 +92,7 @@ always@(*)
             end
     `alu_equal_ysyx_24100029:begin                                  //是否相等
             choose_add_sub = 1'b0;
-            if(d1 == d2)
+            if(d1 != d2)
                 res[0] =  1;
             else
                 res[0] =  0;
