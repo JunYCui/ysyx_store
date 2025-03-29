@@ -105,7 +105,7 @@ module ysyx_24100029_EXU (
 
 
     always @(posedge clock) begin
-        if(reset | EXU_inst_clr)
+        if(reset)
             valid_next <= 1'b0;
         else if(ready_last & valid_last)
             valid_next <= 1'b1;
@@ -114,7 +114,7 @@ module ysyx_24100029_EXU (
     end
 
     always @(posedge clock) begin
-        if(reset | EXU_inst_clr)begin
+        if(reset)begin
             pc_reg          <= 0;
             funct3_reg      <= 0;
             rd_reg          <= 0;
@@ -150,7 +150,7 @@ module ysyx_24100029_EXU (
     end
 
 always @(posedge clock) begin
-    if(reset | EXU_inst_clr)begin
+    if(reset)begin
         mem_ren_reg     <= 0;
         csr_wen_reg     <= 0;
         R_wen_reg       <= 0;

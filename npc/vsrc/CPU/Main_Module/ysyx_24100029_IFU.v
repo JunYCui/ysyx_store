@@ -170,7 +170,7 @@ module ysyx_24100029_IFU #(
 
 
 always @(posedge clock) begin
-    if(reset)begin
+    if(reset|dnpc_flag|dnpc_flag_reg)begin
         valid <= 1'b0;
         inst <= 0;
     end
