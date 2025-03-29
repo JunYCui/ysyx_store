@@ -190,7 +190,6 @@ end
     assign                              ready_last                  = ready_next;
     assign                              fetch_i_flag_next           = fetch_i_reg;
 
-
     assign                              add_1                       = add1_value_reg;
     assign                              add_2                       = add2_value_reg;
 

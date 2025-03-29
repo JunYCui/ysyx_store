@@ -137,8 +137,7 @@ module ysyx_24100029 #(
     wire               [  31: 0]        IDU_rd_value                ;
     wire                                IDU_mem_wen                 ;
     wire                                IDU_mem_ren                 ;
-    wire               [   1: 0]        IDU_add1_choice             ;
-    wire               [   1: 0]        IDU_add2_choice             ;
+
     wire                                IDU_inv_flag                ;
     wire                                IDU_branch_flag             ;
     wire                                IDU_jump_flag               ;

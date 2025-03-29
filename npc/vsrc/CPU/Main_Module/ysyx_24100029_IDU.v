@@ -34,7 +34,7 @@ module ysyx_24100029_IDU(
 
     output             [  31: 0]        rs1_value                  ,
     output             [  31: 0]        rs2_value                  ,
-
+    
     output             [  31: 0]        add1_value                 ,
     output             [  31: 0]        add2_value                 ,
     output             [   3: 0]        csr_wen_next               ,
@@ -108,6 +108,7 @@ module ysyx_24100029_IDU(
     wire               [  31: 0]        imm_B                       ;
     wire               [  31: 0]        imm_J                       ;
     wire               [  31: 0]        csrs                        ;
+
 
     assign                              ready_last                  = ready_next;
     assign                              valid_next                  = valid_last;
