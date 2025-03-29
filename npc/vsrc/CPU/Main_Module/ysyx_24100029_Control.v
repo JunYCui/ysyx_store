@@ -47,7 +47,7 @@ module ysyx_24100029_Control (
 
 
     assign                              dnpc_flag                   = ((jump_flag|fence_i_flag|(branch_flag&Ex_result[0]))) || (mret_flag|ecall_flag);
-    assign                              EXU_inst_clear              = ((jump_flag|fence_i_flag|(branch_flag&Ex_result[0]))) || (mret_flag|ecall_flag);
+    assign                              EXU_inst_clear              = jump_flag|fence_i_flag|(branch_flag&Ex_result[0]);
 
 
     assign                              icache_clr                  = fence_i_flag&EXU_valid;
