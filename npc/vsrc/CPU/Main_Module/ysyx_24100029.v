@@ -715,11 +715,11 @@ ysyx_24100029_EXU EXU_Inst0(
     .R_wen_next                         (EXU_R_wen                 ),
     .mem_wen_next                       (EXU_mem_wen               ),
     .mem_ren_next                       (EXU_mem_ren               ),
-    .pc_next                            (EXU_pc                    ),
     .EX_result                          (EXU_Ex_result             ),
     .fetch_i_flag_next                  (EXU_fence_i_flag          ),
 
 `ifdef Performance_Count
+    .pc_next                            (EXU_pc                    ),
     .pc                                 (IDU_pc                    ),
     .Exu_count                          (Exu_count                 ),
     .inst                               (IDU_inst                  ),

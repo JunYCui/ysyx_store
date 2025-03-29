@@ -120,7 +120,6 @@ module ysyx_24100029_EXU (
 
     always @(posedge clock) begin
         if(reset)begin
-            pc_reg          <= 0;
             funct3_reg      <= 0;
             rd_reg          <= 0;
             imm_reg         <= 0;
@@ -135,7 +134,6 @@ module ysyx_24100029_EXU (
         end
         else if(valid_last & ready_next)
         begin
-            pc_reg          <= pc           ;
             funct3_reg      <= funct3       ;
             rd_reg          <= rd;
 
