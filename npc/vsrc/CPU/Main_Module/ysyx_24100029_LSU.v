@@ -1,13 +1,6 @@
 /* verilator lint_off UNUSEDSIGNAL */
 
 `timescale 1ns / 1ps
-    localparam                          i4_NR_KEY                  = 5     ; //键值的个数
-    localparam                          i4_KEY_LEN                 = 3     ; //键值的长度
-    localparam                          i4_DATA_LEN                = 32    ; //数据的长度
-
-    localparam                          i5_NR_KEY                  = 3     ; 
-    localparam                          i5_KEY_LEN                 = 3     ; 
-    localparam                          i5_DATA_LEN                = 4     ; 
 
 module ysyx_24100029_LSU (
     input                               clock                      ,
