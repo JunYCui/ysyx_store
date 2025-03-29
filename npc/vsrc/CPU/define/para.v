@@ -28,4 +28,3 @@
 `define alu_sra_ysyx_24100029                   4'b1010
 
 `define Performance_Count
-

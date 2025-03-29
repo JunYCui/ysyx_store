@@ -6,7 +6,6 @@ module ysyx_24100029_EXU (
     input                               reset                      ,
 
     input                               EXU_inst_clr               ,
-    input              [  31: 0]        pc                         ,
     input              [   3: 0]        csr_wen                    ,
     input                               R_wen                      ,
     input                               mem_wen                    ,
@@ -42,6 +41,7 @@ module ysyx_24100029_EXU (
 
 
 `ifdef Performance_Count
+    input              [  31: 0]        pc                         ,
     output             [  31: 0]        pc_next                    ,
     output reg         [  31: 0]        Exu_count                  ,
     input              [  31: 0]        inst                       ,
@@ -77,14 +77,6 @@ module ysyx_24100029_EXU (
     assign                              pc_next                     = pc_reg;
 
 `endif
-
-    localparam                          NR_KEY_add1                = 3     ;
-    localparam                          KEY_LEN_add1               = 2     ;
-    localparam                          DATA_LEN_add1              = 32    ;
-
-    localparam                          NR_KEY_add2                = 4     ;
-    localparam                          KEY_LEN_add2               = 2     ;
-    localparam                          DATA_LEN_add2              = 32    ;
 
     reg                [   3: 0]        csr_wen_reg                 ;
     reg                                 R_wen_reg                   ;
@@ -125,8 +117,6 @@ module ysyx_24100029_EXU (
             imm_reg         <= 0;
             alu_opcode_reg  <= 0;
             inv_flag_reg    <= 0;
-            jump_flag_reg   <= 0;
-            branch_flag_reg <= 0;
             rs2_value_reg   <= 0;
             add1_value_reg   <= 0;
             add2_value_reg   <= 0;
@@ -136,11 +126,9 @@ module ysyx_24100029_EXU (
         begin
             funct3_reg      <= funct3       ;
             rd_reg          <= rd;
-
             imm_reg         <= imm          ;
             alu_opcode_reg  <= alu_opcode   ;
             inv_flag_reg    <= inv_flag     ;
-
             rs2_value_reg   <= rs2_value;
             add1_value_reg   <= add1_value    ;
             add2_value_reg   <= add2_value    ;
@@ -157,6 +145,7 @@ always @(posedge clock) begin
         mem_wen_reg     <= 0;
         jump_flag_reg   <= 0;
         branch_flag_reg <= 0;
+        fetch_i_reg <= 0;
     end
     else if(valid_last & ready_next& EXU_inst_clr)begin
         mem_ren_reg     <= 0;
@@ -165,6 +154,7 @@ always @(posedge clock) begin
         mem_wen_reg     <= 0;
         jump_flag_reg   <= 0;
         branch_flag_reg <= 0;
+        fetch_i_reg <= 0;
     end
     else if(valid_last & ready_next) begin
         mem_ren_reg     <= mem_ren;
@@ -199,39 +189,7 @@ end
     assign                              imm_next                    = imm_reg;
     assign                              ready_last                  = ready_next;
     assign                              fetch_i_flag_next           = fetch_i_reg;
-/*
-    always@(*)begin
-        case(imm_opcode_reg)
-        `imm_12i_ysyx_24100029: imm_add = imm_12i;
-        `imm_20u_ysyx_24100029: imm_add = {imm_reg[19:0] , 12'd0} ;
-        `imm_20i_ysyx_24100029: imm_add = imm_20i << 1;
-        `imm_5u_ysyx_24100029:  imm_add = {27'd0,imm_reg[4:0]};
-        default: imm_add = 32'd0;
-        endcase
-    end
 
-*/
-
-
-/* verilator lint_off IMPLICIT */
-/*
-ysyx_24100029_MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, add2_choice_reg, {DATA_LEN_add2{1'b0}},
-{
-2'd0, imm_reg   ,
-2'd1, rs2_value_reg ,
-2'd2, rd_value_reg      ,
-2'd3, 32'd0
-}
-);
-
-ysyx_24100029_MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (add_1, add1_choice_reg, {DATA_LEN_add1{1'b0}},
-{
-`rs1_dist_reg_ysyx_24100029,    rs1_value_reg,
-`rs1_dist_pc_ysyx_24100029,     pc_reg,
-`rs1_dist_para_ysyx_24100029,   32'd0
-}
-);
-*/
 
     assign                              add_1                       = add1_value_reg;
     assign                              add_2                       = add2_value_reg;
