@@ -167,7 +167,7 @@ module ysyx_24100029_IFU #(
 
 
 always @(posedge clock) begin
-    if(reset|dnpc_flag)begin
+    if(reset)begin
         valid <= 1'b0;
         inst <= 0;
     end
@@ -184,7 +184,7 @@ end
 always @(posedge clock) begin
     if(reset)
         ifu_arvalid <= 1'b1;
-    else if(valid & ready | dnpc_flag)
+    else if(valid & ready)
         ifu_arvalid <= 1'b1;
     else if(ifu_arvalid & ifu_arready)
         ifu_arvalid <= 1'b0;
