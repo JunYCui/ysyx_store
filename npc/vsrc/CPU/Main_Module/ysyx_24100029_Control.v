@@ -35,6 +35,7 @@ module ysyx_24100029_Control (
     output             [  31: 0]        EXU_rs2_in                 ,
 
     output                              icache_clr                 ,
+    output                              EXU_inst_clear             ,
     output             [  31: 0]        dnpc                       ,
     output                              dnpc_flag                   
 );
@@ -46,6 +47,8 @@ module ysyx_24100029_Control (
 
 
     assign                              dnpc_flag                   = ( EXU_valid& (jump_flag|fence_i_flag|(branch_flag&Ex_result[0]))) || (IDU_valid & (mret_flag|ecall_flag));
+    assign                              EXU_inst_clear              = ( EXU_valid& (jump_flag|fence_i_flag|(branch_flag&Ex_result[0]))) || (IDU_valid & (mret_flag|ecall_flag));
+
 
     assign                              icache_clr                  = fence_i_flag&EXU_valid;
 

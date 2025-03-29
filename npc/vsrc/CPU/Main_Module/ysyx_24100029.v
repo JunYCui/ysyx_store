@@ -267,6 +267,7 @@ module ysyx_24100029 #(
 /*            PERSONAL              */
 
     wire                                dnpc_flag                   ;
+    wire                                EXU_inst_clear              ;
     wire               [  31: 0]        dnpc                        ;
     wire                                icache_clr                  ;
 /********************Aribiter**************/
@@ -353,6 +354,12 @@ module ysyx_24100029 #(
 
     assign                              total_count                 = InstR_count + InstI_count + InstS_count + InstB_count + InstU_count + InstJ_count + InstM_count;
 
+    always @(posedge clock) begin
+        if(reset)
+            instd_clr_num <= 0;
+        else if(EXU_inst_clear)
+            instd_clr_num <= instd_clr_num + 32'd1 ;
+    end
 
     always @(*)begin
         if(WBU_inst == 32'h00100073) begin
@@ -362,8 +369,8 @@ module ysyx_24100029 #(
         $display("\033[0m\033[1;34m | hit_rate    \t| %-d     \t| %-d     \t| \033[0m",flash_hit*100/(flash_hit+flash_miss),sdram_hit*100/(sdram_hit+sdram_miss));
         $display("\033[0m\033[1;34m | total_count \t| InstR_count \t| InstI_count \t| InstS_count \t| InstU_count \t| InstB_count \t| InstJ_count \t| InstM_count \t| \033[0m");
         $display("\033[0m\033[1;34m | %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| \033[0m",total_count,InstR_count,InstI_count,InstS_count, InstU_count,InstB_count,InstJ_count,InstM_count);
-        $display("\033[0m\033[1;34m | fetch_inst \t| \033[0m");
-        $display("\033[0m\033[1;34m | %d \t|\033[0m",fetch_inst);
+        $display("\033[0m\033[1;34m | fetch_inst \t| flush_decoder_i \t| \033[0m");
+        $display("\033[0m\033[1;34m | %d \t| %d \t\t|\033[0m",fetch_inst,instd_clr_num);
         $display("\033[0m\033[1;34m | exu_cycle \t| lsu_cycle \t| \033[0m");
         $display("\033[0m\033[1;34m | %d \t| %d \t| \033[0m",Exu_count,lsu_cycle);
             if(IDU_a0_value == 0)begin
@@ -542,6 +549,7 @@ ysyx_24100029_Control Control_inst0(
     .EXU_rs2_in                         (EXU_rs2_in                ),
     .dnpc                               (dnpc                      ),
     .icache_clr                         (icache_clr                ),
+    .EXU_inst_clear                     (EXU_inst_clear            ),
     .dnpc_flag                          (dnpc_flag                 ) 
 );
 
@@ -557,11 +565,10 @@ IFU_Inst0
 (
     .clock                              (clock                     ),
     .reset                              (reset                     ),
-
-    .snpc                               (IFU_snpc                  ),
     .dnpc                               (dnpc                      ),
     .dnpc_flag                          (dnpc_flag                 ),
     .pc                                 (IFU_pc                    ),
+    .snpc                               (IFU_snpc                  ),
     .inst                               (IFU_inst                  ),
     .icache_clr                         (icache_clr                ),
 
@@ -674,6 +681,7 @@ ysyx_24100029_IDU IDU_Inst0(
 ysyx_24100029_EXU EXU_Inst0(
     .clock                              (clock                     ),
     .reset                              (reset                     ),
+    .EXU_inst_clr                       (EXU_inst_clear            ),
 
     .funct3                             (IDU_funct3                ),
     .pc                                 (IDU_pc                    ),

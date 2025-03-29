@@ -5,6 +5,7 @@ module ysyx_24100029_EXU (
     input                               clock                      ,
     input                               reset                      ,
 
+    input                               EXU_inst_clr               ,
     input              [  31: 0]        pc                         ,
     input              [   3: 0]        csr_wen                    ,
     input                               R_wen                      ,
@@ -104,7 +105,7 @@ module ysyx_24100029_EXU (
 
 
     always @(posedge clock) begin
-        if(reset)
+        if(reset | EXU_inst_clr)
             valid_next <= 1'b0;
         else if(ready_last & valid_last)
             valid_next <= 1'b1;
@@ -113,7 +114,7 @@ module ysyx_24100029_EXU (
     end
 
     always @(posedge clock) begin
-        if(reset)begin
+        if(reset | EXU_inst_clr)begin
             pc_reg          <= 0;
             funct3_reg      <= 0;
             rd_reg          <= 0;
@@ -149,7 +150,7 @@ module ysyx_24100029_EXU (
     end
 
 always @(posedge clock) begin
-    if(reset)begin
+    if(reset | EXU_inst_clr)begin
         mem_ren_reg     <= 0;
         csr_wen_reg     <= 0;
         R_wen_reg       <= 0;
