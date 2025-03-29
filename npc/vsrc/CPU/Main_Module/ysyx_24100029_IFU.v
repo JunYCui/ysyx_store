@@ -82,9 +82,6 @@ module ysyx_24100029_IFU #(
     output                              req                         
 );
 
-    reg                                 dnpc_flag_reg               ;
-    reg                [  31: 0]        dnpc_reg                    ;
-    reg                                 icache_clr_reg              ;
 
 /****************icache****************/
     wire                                ifu_awready                 ;
@@ -170,7 +167,7 @@ module ysyx_24100029_IFU #(
 
 
 always @(posedge clock) begin
-    if(reset|dnpc_flag|dnpc_flag_reg)begin
+    if(reset|dnpc_flag)begin
         valid <= 1'b0;
         inst <= 0;
     end
@@ -184,28 +181,10 @@ always @(posedge clock) begin
     end
 
 end
-
-
-always @(posedge clock) begin
-    if(reset)begin
-        dnpc_flag_reg <= 0;
-        dnpc_reg <=0;
-    end
-    else if((~ready | ~valid) & (~dnpc_flag_reg) )begin
-        dnpc_flag_reg <= dnpc_flag;
-        dnpc_reg <= dnpc;
-    end
-    else if(ready & valid)begin
-        dnpc_reg <= 0;
-        dnpc_flag_reg <= 0;
-    end
-
-end
-
 always @(posedge clock) begin
     if(reset)
         ifu_arvalid <= 1'b1;
-    else if(valid & ready)
+    else if(valid & ready | dnpc_flag)
         ifu_arvalid <= 1'b1;
     else if(ifu_arvalid & ifu_arready)
         ifu_arvalid <= 1'b0;
@@ -214,22 +193,12 @@ end
 always @(posedge clock) begin
         if(reset)
             pc <= ResetValue;
-        else if(dnpc_flag_reg & valid &ready)
-            pc <= dnpc_reg;
         else if(dnpc_flag&valid&ready)
             pc <= dnpc;
         else if(valid & ready)
             pc <= snpc;
 end
 
-always @(posedge clock) begin
-    if(reset)
-        icache_clr_reg <= 0;
-    else if(ifu_rvalid)
-        icache_clr_reg <= 0;
-    else
-        icache_clr_reg <= icache_clr;
-end
 
     assign                              req                         = arvalid;
 
@@ -237,7 +206,7 @@ end
 ysyx_24100029_icache u_ysyx_24100029_icache(
     .clock                              (clock                     ),
     .reset                              (reset                     ),
-    .clr                                ((icache_clr_reg &ifu_rvalid) | (icache_clr & ifu_rvalid)),
+    .clr                                ((icache_clr&ifu_rvalid)   ),
     `ifdef Performance_Count
     .flash_hit                          (flash_hit                 ),
     .flash_miss                         (flash_miss                ),
