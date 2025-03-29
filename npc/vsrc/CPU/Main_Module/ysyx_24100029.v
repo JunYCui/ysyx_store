@@ -86,6 +86,7 @@ module ysyx_24100029 #(
     wire                                IFU_valid                   ;
     wire                                IFU_req                     ;
     wire               [  31: 0]        IFU_pc                      ;
+    wire               [  31: 0]        IFU_snpc                    ;
 
     wire                                IFU_awready                 ;
     wire                                IFU_awvalid                 ;
@@ -133,7 +134,7 @@ module ysyx_24100029 #(
     wire               [  31: 0]        IDU_rs2_value               ;
     wire               [   3: 0]        IDU_csr_wen                 ;
     wire                                IDU_R_wen                   ;
-    wire               [  31: 0]        IDU_csrs                    ;
+    wire               [  31: 0]        IDU_rd_value                ;
     wire                                IDU_mem_wen                 ;
     wire                                IDU_mem_ren                 ;
     wire               [   1: 0]        IDU_add1_choice             ;
@@ -159,7 +160,7 @@ module ysyx_24100029 #(
     wire               [   2: 0]        EXU_funct3                  ;
     wire               [  31: 0]        EXU_rs2_value               ;
     wire               [   4: 0]        EXU_rd                      ;
-    wire               [  31: 0]        EXU_csrs                    ;
+    wire               [  31: 0]        EXU_rd_value                ;
     wire               [   3: 0]        EXU_csr_wen                 ;
     wire                                EXU_R_wen                   ;
     wire                                EXU_mem_wen                 ;
@@ -181,7 +182,7 @@ module ysyx_24100029 #(
     wire               [  31: 0]        LSU_Rdata                   ;
     wire               [   3: 0]        LSU_csr_wen                 ;
     wire               [  31: 0]        LSU_Ex_result               ;
-    wire               [  31: 0]        LSU_csrs                    ;
+    wire               [  31: 0]        LSU_rd_value                ;
     wire               [  31: 0]        LSU_pc                      ;
 
     wire               [   4: 0]        LSU_rd                      ;
@@ -266,7 +267,6 @@ module ysyx_24100029 #(
 /*            PERSONAL              */
 
     wire                                dnpc_flag                   ;
-    wire                                IDU_inst_clear              ;
     wire               [  31: 0]        dnpc                        ;
     wire                                icache_clr                  ;
 /********************Aribiter**************/
@@ -353,12 +353,6 @@ module ysyx_24100029 #(
 
     assign                              total_count                 = InstR_count + InstI_count + InstS_count + InstB_count + InstU_count + InstJ_count + InstM_count;
 
-    always @(posedge clock) begin
-        if(reset)
-            instd_clr_num <= 0;
-        else if(IDU_inst_clear)
-            instd_clr_num <= instd_clr_num + 32'd1 ;
-    end
 
     always @(*)begin
         if(WBU_inst == 32'h00100073) begin
@@ -368,8 +362,8 @@ module ysyx_24100029 #(
         $display("\033[0m\033[1;34m | hit_rate    \t| %-d     \t| %-d     \t| \033[0m",flash_hit*100/(flash_hit+flash_miss),sdram_hit*100/(sdram_hit+sdram_miss));
         $display("\033[0m\033[1;34m | total_count \t| InstR_count \t| InstI_count \t| InstS_count \t| InstU_count \t| InstB_count \t| InstJ_count \t| InstM_count \t| \033[0m");
         $display("\033[0m\033[1;34m | %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| \033[0m",total_count,InstR_count,InstI_count,InstS_count, InstU_count,InstB_count,InstJ_count,InstM_count);
-        $display("\033[0m\033[1;34m | fetch_inst \t| flush_decoder_i \t| \033[0m");
-        $display("\033[0m\033[1;34m | %d \t| %d \t\t|\033[0m",fetch_inst,instd_clr_num);
+        $display("\033[0m\033[1;34m | fetch_inst \t| \033[0m");
+        $display("\033[0m\033[1;34m | %d \t|\033[0m",fetch_inst);
         $display("\033[0m\033[1;34m | exu_cycle \t| lsu_cycle \t| \033[0m");
         $display("\033[0m\033[1;34m | %d \t| %d \t| \033[0m",Exu_count,lsu_cycle);
             if(IDU_a0_value == 0)begin
@@ -547,7 +541,6 @@ ysyx_24100029_Control Control_inst0(
     .EXU_rs1_in                         (EXU_rs1_in                ),
     .EXU_rs2_in                         (EXU_rs2_in                ),
     .dnpc                               (dnpc                      ),
-    .IDU_inst_clear                     (IDU_inst_clear            ),
     .icache_clr                         (icache_clr                ),
     .dnpc_flag                          (dnpc_flag                 ) 
 );
@@ -564,6 +557,8 @@ IFU_Inst0
 (
     .clock                              (clock                     ),
     .reset                              (reset                     ),
+
+    .snpc                               (IFU_snpc                  ),
     .dnpc                               (dnpc                      ),
     .dnpc_flag                          (dnpc_flag                 ),
     .pc                                 (IFU_pc                    ),
@@ -620,8 +615,7 @@ ysyx_24100029_IDU IDU_Inst0(
     .clock                              (clock                     ),
     .reset                              (reset                     ),
 
-    .inst_clear                         (IDU_inst_clear            ),
-
+    .snpc                               (IFU_snpc                  ),
     .inst                               (IFU_inst                  ),
     .pc                                 (IFU_pc                    ),
     .rd_value                           (WBU_rd_value              ),
@@ -642,7 +636,7 @@ ysyx_24100029_IDU IDU_Inst0(
     .rs2_value                          (IDU_rs2_value             ),
     .csr_wen_next                       (IDU_csr_wen               ),
     .R_wen_next                         (IDU_R_wen                 ),
-    .csrs                               (IDU_csrs                  ),
+    .rd_value_next                      (IDU_rd_value              ),
 
     .mem_wen                            (IDU_mem_wen               ),
     .mem_ren                            (IDU_mem_ren               ),
@@ -700,7 +694,7 @@ ysyx_24100029_EXU EXU_Inst0(
     .add2_choice                        (IDU_add2_choice           ),
     .rs1_value                          (EXU_rs1_in                ),
     .rs2_value                          (EXU_rs2_in                ),
-    .csrs                               (IDU_csrs                  ),
+    .rd_value                           (IDU_rd_value              ),
 
     .imm_next                           (EXU_imm                   ),
     .branch_flag_next                   (EXU_branch_flag           ),
@@ -708,7 +702,7 @@ ysyx_24100029_EXU EXU_Inst0(
     .funct3_next                        (EXU_funct3                ),
     .rs2_value_next                     (EXU_rs2_value             ),
     .rd_next                            (EXU_rd                    ),
-    .csrs_next                          (EXU_csrs                  ),
+    .rd_value_next                      (EXU_rd_value              ),
     .csr_wen_next                       (EXU_csr_wen               ),
     .R_wen_next                         (EXU_R_wen                 ),
     .mem_wen_next                       (EXU_mem_wen               ),
@@ -720,13 +714,13 @@ ysyx_24100029_EXU EXU_Inst0(
 `ifdef Performance_Count
     .Exu_count                          (Exu_count                 ),
     .inst                               (IDU_inst                  ),
-    .inst_next                          (EXU_inst                  ), 
+    .inst_next                          (EXU_inst                  ),
 `endif
     .valid_last                         (IDU_valid                 ),
     .ready_last                         (EXU_ready                 ),
 
     .ready_next                         (LSU_ready                 ),
-    .valid_next                         (EXU_valid                 )
+    .valid_next                         (EXU_valid                 ) 
 
 
 );
@@ -736,13 +730,12 @@ ysyx_24100029_LSU LSU_Inst0
     .clock                              (clock                     ),
     .reset                              (reset                     ),
 
-    .pc                                 (EXU_pc                    ),
     .mem_ren                            (EXU_mem_ren               ),
     .mem_wen                            (EXU_mem_wen               ),
     .R_wen                              (EXU_R_wen                 ),
     .csr_wen                            (EXU_csr_wen               ),
     .Ex_result                          (EXU_Ex_result             ),
-    .csrs                               (EXU_csrs                  ),
+    .rd_value                           (EXU_rd_value              ),
     .rd                                 (EXU_rd                    ),
     .funct3                             (EXU_funct3                ),
     .rs2_value                          (EXU_rs2_value             ),
@@ -752,8 +745,7 @@ ysyx_24100029_LSU LSU_Inst0
     .LSU_Rdata                          (LSU_Rdata                 ),
     .csr_wen_next                       (LSU_csr_wen               ),
     .Ex_result_next                     (LSU_Ex_result             ),
-    .csrs_next                          (LSU_csrs                  ),
-    .pc_next                            (LSU_pc                    ),
+    .rd_value_next                      (LSU_rd_value              ),
     .rd_next                            (LSU_rd                    ),
     .mem_ren_next                       (LSU_mem_ren               ),
     .jump_flag_next                     (LSU_jump_flag             ),
@@ -794,16 +786,18 @@ ysyx_24100029_LSU LSU_Inst0
     .req                                (LSU_req                   ),
 
 `ifdef Performance_Count
+    .pc_next                            (LSU_pc                    ),
+    .pc                                 (EXU_pc                    ),
     .mem_wflag                          (lsu_mem_wen               ),
     .lsu_cycle                          (lsu_cycle                 ),
     .inst                               (EXU_inst                  ),
-    .inst_next                          (LSU_inst                  ), 
+    .inst_next                          (LSU_inst                  ),
 `endif
     .valid_last                         (EXU_valid                 ),
     .ready_last                         (LSU_ready                 ),
 
     .ready_next                         (WBU_ready                 ),
-    .valid_next                         (LSU_valid                 )
+    .valid_next                         (LSU_valid                 ) 
 
 );
 
@@ -814,8 +808,7 @@ ysyx_24100029_WBU WBU_inst0
 
     .MEM_Rdata                          (LSU_Rdata                 ),
     .Ex_result                          (LSU_Ex_result             ),
-    .csrs                               (LSU_csrs                  ),
-    .pc                                 (LSU_pc                    ),
+    .rd_value                           (LSU_rd_value              ),
     .rd                                 (LSU_rd                    ),
     .csr_wen                            (LSU_csr_wen               ),
     .R_wen                              (LSU_R_wen                 ),
@@ -825,11 +818,12 @@ ysyx_24100029_WBU WBU_inst0
     .R_wen_next                         (WBU_R_wen                 ),
     .csr_wen_next                       (WBU_csr_wen               ),
     .csrd                               (WBU_csrd                  ),
-    .rd_value                           (WBU_rd_value              ),
+    .rd_value_next                      (WBU_rd_value              ),
 
     .valid                              (LSU_valid                 ),
     .ready                              (WBU_ready                 ),
 `ifdef Performance_Count
+    .pc                                 (LSU_pc                    ),
     .pc_next                            (WBU_pc                    ),
     .mem_wen_reg                        (lsu_mem_wen               ),
     .mem_wen_flag                       (mem_wen_flag              ),

@@ -7,8 +7,7 @@ module ysyx_24100029_WBU (
 
     input              [  31: 0]        MEM_Rdata                  ,
     input              [  31: 0]        Ex_result                  ,
-    input              [  31: 0]        csrs                       ,
-    input              [  31: 0]        pc                         ,
+    input              [  31: 0]        rd_value                   ,
     input              [   4: 0]        rd                         ,
     input              [   3: 0]        csr_wen                    ,
     input                               R_wen                      ,
@@ -24,6 +23,7 @@ module ysyx_24100029_WBU (
     output             [   3: 0]        csr_wen_next               ,
     output             [  31: 0]        csrd                       ,
 `ifdef Performance_Count
+    input              [  31: 0]        pc                         ,
     output             [  31: 0]        pc_next                    ,
     input                               mem_wen_reg                ,
     output                              mem_wen_flag               ,
@@ -32,7 +32,7 @@ module ysyx_24100029_WBU (
     input              [  31: 0]        inst                       ,
     output             [  31: 0]        inst_next                  ,
 `endif
-    output             [  31: 0]        rd_value                   ,
+    output             [  31: 0]        rd_value_next              ,
     output             [   4: 0]        rd_next                     
 );
 
@@ -46,10 +46,9 @@ module ysyx_24100029_WBU (
 `endif
 
     assign                              valid_next                  = valid;
-    assign                       rd_value                  =    (jump_flag == 1'd1)           ? 
-                                                                pc+4: (mem_ren == 1'b1)   ?
-                                                                MEM_Rdata:(csr_wen !=4'd0)?
-                                                                csrs:Ex_result;
+    assign                              rd_value_next               = (jump_flag | (|csr_wen) )? 
+                                                                        rd_value : (mem_ren)   ?
+                                                                        MEM_Rdata: Ex_result;
     assign                              csrd                        = Ex_result;
     assign                              csr_wen_next                = csr_wen;
     assign                              R_wen_next                  = R_wen&valid;

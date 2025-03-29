@@ -10,10 +10,8 @@ module ysyx_24100029_IDU(
     input                               clock                      ,
     input                               reset                      ,
 
-    /* contorl signal */
-    input                               inst_clear                 ,
-
     input              [  31: 0]        inst                       ,
+    input              [  31: 0]        snpc                       ,
     input              [  31: 0]        pc                         ,
 
     input              [  31: 0]        rd_value                   ,
@@ -34,7 +32,7 @@ module ysyx_24100029_IDU(
     output             [  31: 0]        rs2_value                  ,
     output             [   3: 0]        csr_wen_next               ,
     output                              R_wen_next                 ,
-    output             [  31: 0]        csrs                       ,
+    output             [  31: 0]        rd_value_next              ,
 
     output                              mem_wen                    ,
     output                              mem_ren                    ,
@@ -43,7 +41,7 @@ module ysyx_24100029_IDU(
     output                              inv_flag                   ,
     output                              branch_flag                ,
     output                              jump_flag                  ,
-//    output             [   1: 0]        imm_opcode                 ,
+
     output             [   3: 0]        alu_opcode                 ,
 
     output             [   4: 0]        rs1                        ,
@@ -67,7 +65,7 @@ module ysyx_24100029_IDU(
     output                              ready_last                 ,
 
     input                               ready_next                 ,
-    output reg                          valid_next                  
+    output                              valid_next                  
 );
 `ifdef Performance_Count
     always @(posedge clock) begin
@@ -90,7 +88,7 @@ module ysyx_24100029_IDU(
             InstM_count <= (opcode == `M_opcode_ysyx_24100029)? InstM_count + 1 : InstM_count;
         end
     end
-    assign                              inst_next                   = inst_reg;
+    assign                              inst_next                   = inst;
 
 `endif
 
@@ -98,61 +96,32 @@ module ysyx_24100029_IDU(
     wire               [   6: 0]        oprand                      ;
     wire               [   6: 0]        opcode                      ;
 
+    wire               [  31: 0]        imm_I                       ;
+    wire               [  31: 0]        imm_U                       ;
+    wire               [  31: 0]        imm_R                       ;
+    wire               [  31: 0]        imm_S                       ;
+    wire               [  31: 0]        imm_B                       ;
+    wire               [  31: 0]        imm_J                       ;
+    wire               [  31: 0]        csrs                        ;
 
-    reg                [  31: 0]        inst_reg                    ;
-    reg                [  31: 0]        pc_reg                      ;
 
-    reg                                 inst_clear_reg              ;
 
     assign                              ready_last                  = ready_next;
-
-    always @(posedge clock) begin
-        if(reset)
-            inst_clear_reg <= 0;
-        else if((~valid_last | ~ready_last) & ~inst_clear_reg)
-            inst_clear_reg <= inst_clear;
-        else if(valid_last & ready_last)
-            inst_clear_reg <= 0;
-    end
-
-    always @(posedge clock) begin
-        if(reset)
-            valid_next <= 1'b0;
-        else if(ready_last & valid_last & (inst_clear | inst_clear_reg))
-            valid_next <= 1'b0;
-        else if(ready_last & valid_last)
-            valid_next <= 1'b1 ;
-        else
-            valid_next <= 1'b0;
-    end
-
-    always@(posedge clock)begin
-        if(reset)
-            inst_reg <= 0;
-        else if((inst_clear | inst_clear_reg) & valid_last & ready_last)
-            inst_reg <= 0;
-        else if(valid_last & ready_last)
-            inst_reg <= inst;
-    end
-    always@(posedge clock)begin
-        if(reset)
-            pc_reg <= 0;
-        else if(ready_last & valid_last)
-            pc_reg <= pc;
-    end
+    assign                              valid_next                  = valid_last;
 
 
-    assign                              oprand                      = inst_reg[31:25];
-    assign                              opcode                      = inst_reg[6:0];
-    assign                              rs1                         = inst_reg[19:15];
-    assign                              rs2                         = inst_reg[24:20];
-    assign                              funct3                      = inst_reg[14:12];
-    assign                              rd_next                     = inst_reg[11:7];
-    assign                              pc_next                     = pc_reg;
 
-    assign                              ecall_flag                  = (inst_reg == 32'b00000000000000000000000001110011);//ecall
-    assign                              mret_flag                   = (inst_reg == 32'b00110000001000000000000001110011);// mret
-    assign                              fence_i_flag                = (inst_reg == 32'b00000000000000000001000000001111);
+    assign                              oprand                      = inst[31:25];
+    assign                              opcode                      = inst[6:0];
+    assign                              rs1                         = inst[19:15];
+    assign                              rs2                         = inst[24:20];
+    assign                              funct3                      = inst[14:12];
+    assign                              rd_next                     = inst[11:7];
+    assign                              pc_next                     = pc;
+
+    assign                              ecall_flag                  = (inst == 32'b00000000000000000000000001110011);//ecall
+    assign                              mret_flag                   = (inst == 32'b00110000001000000000000001110011);// mret
+    assign                              fence_i_flag                = (inst == 32'b00000000000000000001000000001111);
 
     assign                              csr_wen_next[0]             = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h341);
     assign                              csr_wen_next[1]             = (opcode == `M_opcode_ysyx_24100029 && imm == 32'h342);
@@ -165,14 +134,20 @@ module ysyx_24100029_IDU(
 
     assign                              jump_flag                   = (opcode == `I2_opcode_ysyx_24100029 || opcode == `J_opcode_ysyx_24100029)? 1'b1:1'b0;
 
-    assign                       add2_choice               = (opcode == `R_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029)? 2'd1:
-                                                             (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b010)? 2'd2:
-                                                             (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b001)? 2'd3:2'd0;
+    assign                              add2_choice                =  (opcode == `R_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029)? 2'd1:
+                                                                      (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b010)? 2'd2:
+                                                                      (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b001)? 2'd3:2'd0;
     assign                              inv_flag                    = (opcode == `B_opcode_ysyx_24100029 && (funct3 == 3'b101 || funct3 == 3'b111 || funct3 == 3'b000 ))? 1'b1:1'b0;
     assign                              branch_flag                 = (opcode == `B_opcode_ysyx_24100029)? 1'b1:1'b0;
  
     assign                              csr_addr                    = imm;
- /*   
+
+    assign                              rd_value_next               = jump_flag? snpc: 
+                                                                    (|csr_wen_next)? csrs:
+                                                                    0;
+ 
+ 
+ /*
     assign imm_opcode = (opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )                            ?
                         `imm_20u_ysyx_24100029:(opcode == `J_opcode_ysyx_24100029)                                             ?
                         `imm_20i_ysyx_24100029:(opcode == `I1_opcode_ysyx_24100029 && (funct3 == 3'b001 || funct3 == 3'b101))  ?
@@ -214,12 +189,12 @@ module ysyx_24100029_IDU(
                         `alu_equal_ysyx_24100029:`alu_add_ysyx_24100029;
 
 
-wire [31:0] imm_I =  {{20{inst_reg[31]}},inst_reg[31:20]};
-wire [31:0] imm_U = {inst_reg[31:12],12'd0};
-wire [31:0] imm_R = {25'd0,inst_reg[31:25]};
-wire [31:0] imm_S = {{20{inst_reg[31]}},inst_reg[31:25],inst_reg[11:7]};
-wire [31:0] imm_B = {imm_S[31:11],imm_S[0],imm_S[10:1]}<<1;
-wire [31:0] imm_J =  {{11{inst_reg[31]}},inst_reg[31],inst_reg[19:12],inst_reg[20],inst_reg[30:21]}<<1;
+    assign                              imm_I                       = {{20{inst[31]}},inst[31:20]};
+    assign                              imm_U                       = {inst[31:12],12'd0};
+    assign                              imm_R                       = {25'd0,inst[31:25]};
+    assign                              imm_S                       = {{20{inst[31]}},inst[31:25],inst[11:7]};
+    assign                              imm_B                       = {imm_S[31:11],imm_S[0],imm_S[10:1]}<<1;
+    assign                              imm_J                       = {{11{inst[31]}},inst[31],inst[19:12],inst[20],inst[30:21]}<<1;
 /* verilator lint_off IMPLICIT */
 
 /* imm 处理*/
@@ -239,12 +214,12 @@ ysyx_24100029_MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, o
 ysyx_24100029_Reg_Stack Reg_Stack_inst0(
     .reset                              (reset                     ),
     .clock                              (clock                     ),
-    .pc                                 (pc_reg                    ),
+    .pc                                 (pc                        ),
     .ecall_flag                         (ecall_flag                ),
 
-    .rs1                                (rs1[3:0]                       ),
-    .rs2                                (rs2[3:0]                       ),
-    .rd                                 (rd[3:0]                        ),
+    .rs1                                (rs1[3:0]                  ),
+    .rs2                                (rs2[3:0]                  ),
+    .rd                                 (rd[3:0]                   ),
     .rd_value                           (rd_value                  ),
 
     .csr_addr                           (csr_addr                  ),

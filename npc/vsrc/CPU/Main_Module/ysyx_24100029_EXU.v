@@ -25,8 +25,9 @@ module ysyx_24100029_EXU (
 
     input              [  31: 0]        rs1_value                  ,
     input              [  31: 0]        rs2_value                  ,
-    input              [  31: 0]        csrs                       ,
+    input              [  31: 0]        rd_value                   ,
 
+    output             [  31: 0]        rd_value_next              ,
     output                              fetch_i_flag_next          ,
     output                              branch_flag_next           ,
     output                              jump_flag_next             ,
@@ -34,7 +35,6 @@ module ysyx_24100029_EXU (
     output             [  31: 0]        rs2_value_next             ,
     output             [  31: 0]        imm_next                   ,
     output             [   4: 0]        rd_next                    ,
-    output             [  31: 0]        csrs_next                  ,
     output             [   3: 0]        csr_wen_next               ,
     output                              R_wen_next                 ,
     output                              mem_wen_next               ,
@@ -99,7 +99,7 @@ module ysyx_24100029_EXU (
     reg                [   1: 0]        add2_choice_reg             ;
     reg                [  31: 0]        rs1_value_reg               ;
     reg                [  31: 0]        rs2_value_reg               ;
-    reg                [  31: 0]        csrs_reg                    ;
+    reg                [  31: 0]        rd_value_reg                ;
     reg                                 fetch_i_reg                 ;
 
 
@@ -127,7 +127,7 @@ module ysyx_24100029_EXU (
             add2_choice_reg <= 0;
             rs1_value_reg   <= 0;
             rs2_value_reg   <= 0;
-            csrs_reg        <= 0;
+            rd_value_reg        <= 0;
         end
         else if(valid_last & ready_next)
         begin
@@ -143,7 +143,7 @@ module ysyx_24100029_EXU (
             add2_choice_reg <= add2_choice  ;
             rs1_value_reg   <= rs1_value    ;
             rs2_value_reg   <= rs2_value    ;
-            csrs_reg        <= csrs         ;
+            rd_value_reg    <= rd_value         ;
 
         end
     end
@@ -180,7 +180,7 @@ end
     assign                              funct3_next                 = funct3_reg;
     assign                              pc_next                     = pc_reg;
     assign                              rd_next                     = rd_reg;
-    assign                              csrs_next                   = csrs_reg;
+    assign                              rd_value_next               = rd_value_reg;
     assign                              csr_wen_next                = csr_wen_reg;
     assign                              R_wen_next                  = R_wen_reg;
     assign                              mem_wen_next                = mem_wen_reg;
@@ -211,7 +211,7 @@ ysyx_24100029_MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (
 {
 2'd0, imm_reg   ,
 2'd1, rs2_value_reg ,
-2'd2, csrs_reg      ,
+2'd2, rd_value_reg      ,
 2'd3, 32'd0
 }
 );

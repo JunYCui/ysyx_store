@@ -34,8 +34,9 @@ module ysyx_24100029_IFU #(
     input                               dnpc_flag                  ,
     input                               icache_clr                 ,
 
+    output             [  31: 0]        snpc                       ,
     output reg         [  31: 0]        pc                         ,
-    output reg         [  31: 0]        inst                       ,
+    output             [  31: 0]        inst                       ,
 
     input                               ready                      ,
     output reg                          valid                      ,
@@ -140,6 +141,8 @@ module ysyx_24100029_IFU #(
     assign                              ifu_bready                  = 0;
 
     assign                              ifu_rready                  = 1'b1;
+    assign                              snpc                        = pc + 4;
+
 /************ Axi4 bus ***********/
 
 `ifdef Performance_Count
@@ -216,7 +219,7 @@ always @(posedge clock) begin
         else if(dnpc_flag&valid&ready)
             pc <= dnpc;
         else if(valid & ready)
-            pc <= pc + 4;
+            pc <= snpc;
 end
 
 always @(posedge clock) begin
