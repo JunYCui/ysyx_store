@@ -130,8 +130,8 @@ module ysyx_24100029 #(
     wire               [   2: 0]        IDU_funct3                  ;
     wire                                IDU_mret_flag               ;
     wire                                IDU_ecall_flag              ;
-    wire               [  31: 0]        IDU_rs1_value               ;
     wire               [  31: 0]        IDU_rs2_value               ;
+    wire               [  31: 0]        IDU_rs1_value               ;
     wire               [   3: 0]        IDU_csr_wen                 ;
     wire                                IDU_R_wen                   ;
     wire               [  31: 0]        IDU_rd_value                ;
@@ -142,9 +142,9 @@ module ysyx_24100029 #(
     wire                                IDU_inv_flag                ;
     wire                                IDU_branch_flag             ;
     wire                                IDU_jump_flag               ;
-    wire               [   1: 0]        IDU_imm_opcode              ;
+    wire               [  31: 0]        IDU_add1_value              ;
+    wire               [  31: 0]        IDU_add2_value              ;
     wire               [   3: 0]        IDU_alu_opcode              ;
-
     wire               [   4: 0]        IDU_rs1                     ;
     wire               [   4: 0]        IDU_rs2                     ;
     wire               [  31: 0]        IDU_a0_value                ;
@@ -631,6 +631,8 @@ ysyx_24100029_IDU IDU_Inst0(
     .R_wen                              (WBU_R_wen                 ),
     .csr_wen                            (WBU_csr_wen               ),
 
+    .EXU_rs1_in                         (EXU_rs1_in                ),
+    .EXU_rs2_in                         (EXU_rs2_in                ),
     .pc_next                            (IDU_pc                    ),
     .rd_next                            (IDU_rd                    ),
     .imm                                (IDU_imm                   ),
@@ -639,6 +641,8 @@ ysyx_24100029_IDU IDU_Inst0(
     .ecall_flag                         (IDU_ecall_flag            ),
     .fence_i_flag                       (IDU_fence_i_flag          ),
 
+    .add2_value                         (IDU_add2_value            ),
+    .add1_value                         (IDU_add1_value            ),
     .rs1_value                          (IDU_rs1_value             ),
     .rs2_value                          (IDU_rs2_value             ),
     .csr_wen_next                       (IDU_csr_wen               ),
@@ -647,8 +651,6 @@ ysyx_24100029_IDU IDU_Inst0(
 
     .mem_wen                            (IDU_mem_wen               ),
     .mem_ren                            (IDU_mem_ren               ),
-    .add1_choice                        (IDU_add1_choice           ),
-    .add2_choice                        (IDU_add2_choice           ),
     .inv_flag                           (IDU_inv_flag              ),
     .branch_flag                        (IDU_branch_flag           ),
     .jump_flag                          (IDU_jump_flag             ),
@@ -684,7 +686,6 @@ ysyx_24100029_EXU EXU_Inst0(
     .EXU_inst_clr                       (EXU_inst_clear            ),
 
     .funct3                             (IDU_funct3                ),
-    .pc                                 (IDU_pc                    ),
     .csr_wen                            (IDU_csr_wen               ),
     .R_wen                              (IDU_R_wen                 ),
     .mem_wen                            (IDU_mem_wen               ),
@@ -698,9 +699,8 @@ ysyx_24100029_EXU EXU_Inst0(
     .branch_flag                        (IDU_branch_flag           ),
     .fetch_i_flag                       (IDU_fence_i_flag          ),
 
-    .add1_choice                        (IDU_add1_choice           ),
-    .add2_choice                        (IDU_add2_choice           ),
-    .rs1_value                          (EXU_rs1_in                ),
+    .add2_value                         (IDU_add2_value            ),
+    .add1_value                         (IDU_add1_value            ),
     .rs2_value                          (EXU_rs2_in                ),
     .rd_value                           (IDU_rd_value              ),
 
@@ -720,6 +720,7 @@ ysyx_24100029_EXU EXU_Inst0(
     .fetch_i_flag_next                  (EXU_fence_i_flag          ),
 
 `ifdef Performance_Count
+    .pc                                 (IDU_pc                    ),
     .Exu_count                          (Exu_count                 ),
     .inst                               (IDU_inst                  ),
     .inst_next                          (EXU_inst                  ),

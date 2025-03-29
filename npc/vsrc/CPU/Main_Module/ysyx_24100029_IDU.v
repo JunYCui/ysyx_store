@@ -20,6 +20,9 @@ module ysyx_24100029_IDU(
     input                               R_wen                      ,
     input              [   3: 0]        csr_wen                    ,
 
+    input              [  31: 0]        EXU_rs1_in                 ,
+    input              [  31: 0]        EXU_rs2_in                 ,
+
     output             [  31: 0]        pc_next                    ,
     output             [   4: 0]        rd_next                    ,
     output             [  31: 0]        imm                        ,
@@ -28,16 +31,18 @@ module ysyx_24100029_IDU(
     output                              ecall_flag                 ,
     output                              fence_i_flag               ,
 
+
     output             [  31: 0]        rs1_value                  ,
     output             [  31: 0]        rs2_value                  ,
+
+    output             [  31: 0]        add1_value                 ,
+    output             [  31: 0]        add2_value                 ,
     output             [   3: 0]        csr_wen_next               ,
     output                              R_wen_next                 ,
     output             [  31: 0]        rd_value_next              ,
 
     output                              mem_wen                    ,
     output                              mem_ren                    ,
-    output             [   1: 0]        add1_choice                ,
-    output             [   1: 0]        add2_choice                ,
     output                              inv_flag                   ,
     output                              branch_flag                ,
     output                              jump_flag                  ,
@@ -104,8 +109,6 @@ module ysyx_24100029_IDU(
     wire               [  31: 0]        imm_J                       ;
     wire               [  31: 0]        csrs                        ;
 
-
-
     assign                              ready_last                  = ready_next;
     assign                              valid_next                  = valid_last;
 
@@ -134,9 +137,6 @@ module ysyx_24100029_IDU(
 
     assign                              jump_flag                   = (opcode == `I2_opcode_ysyx_24100029 || opcode == `J_opcode_ysyx_24100029)? 1'b1:1'b0;
 
-    assign                              add2_choice                =  (opcode == `R_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029)? 2'd1:
-                                                                      (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b010)? 2'd2:
-                                                                      (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b001)? 2'd3:2'd0;
     assign                              inv_flag                    = (opcode == `B_opcode_ysyx_24100029 && (funct3 == 3'b101 || funct3 == 3'b111 || funct3 == 3'b000 ))? 1'b1:1'b0;
     assign                              branch_flag                 = (opcode == `B_opcode_ysyx_24100029)? 1'b1:1'b0;
  
@@ -146,16 +146,15 @@ module ysyx_24100029_IDU(
                                                                     (|csr_wen_next)? csrs:
                                                                     0;
  
+
+    assign add1_value = (opcode == `U0_opcode_ysyx_24100029)? 0 :
+                        (opcode == `J_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )? pc :
+                        EXU_rs1_in;
+
+    assign add2_value = (opcode == `R_opcode_ysyx_24100029 || opcode == `B_opcode_ysyx_24100029)?  EXU_rs2_in :
+                        (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b010)? rd_value_next :
+                        (opcode == `M_opcode_ysyx_24100029 && funct3 == 3'b001)? 0 : imm;
  
- /*
-    assign imm_opcode = (opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )                            ?
-                        `imm_20u_ysyx_24100029:(opcode == `J_opcode_ysyx_24100029)                                             ?
-                        `imm_20i_ysyx_24100029:(opcode == `I1_opcode_ysyx_24100029 && (funct3 == 3'b001 || funct3 == 3'b101))  ?
-                        `imm_5u_ysyx_24100029 : `imm_12i_ysyx_24100029                                                         ;
- */
-    assign add1_choice  =  (opcode == `U0_opcode_ysyx_24100029)                                                                ?
-                        `rs1_dist_para_ysyx_24100029:(opcode == `J_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )?
-                        `rs1_dist_pc_ysyx_24100029   : `rs1_dist_reg_ysyx_24100029                                             ;
 
     assign alu_opcode = (opcode == `S_opcode_ysyx_24100029 ||  opcode == `I0_opcode_ysyx_24100029 
                         || opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029

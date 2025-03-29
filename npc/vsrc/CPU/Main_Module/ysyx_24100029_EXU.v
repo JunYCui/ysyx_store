@@ -21,11 +21,9 @@ module ysyx_24100029_EXU (
     input                               branch_flag                ,
     input                               fetch_i_flag               ,
 
-    input              [   1: 0]        add1_choice                ,
-    input              [   1: 0]        add2_choice                ,
-
-    input              [  31: 0]        rs1_value                  ,
     input              [  31: 0]        rs2_value                  ,
+    input              [  31: 0]        add1_value                 ,
+    input              [  31: 0]        add2_value                 ,
     input              [  31: 0]        rd_value                   ,
 
     output             [  31: 0]        rd_value_next              ,
@@ -40,11 +38,11 @@ module ysyx_24100029_EXU (
     output                              R_wen_next                 ,
     output                              mem_wen_next               ,
     output                              mem_ren_next               ,
-    output             [  31: 0]        pc_next                    ,
     output             [  31: 0]        EX_result                  ,
 
 
 `ifdef Performance_Count
+    output             [  31: 0]        pc_next                    ,
     output reg         [  31: 0]        Exu_count                  ,
     input              [  31: 0]        inst                       ,
     output reg         [  31: 0]        inst_next                  ,
@@ -59,6 +57,7 @@ module ysyx_24100029_EXU (
 );
 
 `ifdef Performance_Count
+    reg                [  31: 0]        pc_reg                      ;
     always @(posedge clock or posedge reset) begin
         if(reset)
             Exu_count <= 0;
@@ -66,11 +65,17 @@ module ysyx_24100029_EXU (
             Exu_count <= Exu_count + 1;
     end
     always @(posedge clock) begin
-        if(reset)
+        if(reset)begin
             inst_next <=0;
-        else if(valid_last & ready_next)
+            pc_reg <= 0;
+        end
+        else if(valid_last & ready_next)begin
             inst_next <= inst;
+            pc_reg <= pc;
+        end
     end
+    assign                              pc_next                     = pc_reg;
+
 `endif
 
     localparam                          NR_KEY_add1                = 3     ;
@@ -81,7 +86,6 @@ module ysyx_24100029_EXU (
     localparam                          KEY_LEN_add2               = 2     ;
     localparam                          DATA_LEN_add2              = 32    ;
 
-    reg                [  31: 0]        pc_reg                      ;
     reg                [   3: 0]        csr_wen_reg                 ;
     reg                                 R_wen_reg                   ;
     reg                                 mem_wen_reg                 ;
@@ -90,16 +94,15 @@ module ysyx_24100029_EXU (
     reg                [   2: 0]        funct3_reg                  ;
 
     reg                [  31: 0]        imm_reg                     ;
-//    reg                [   1: 0]        imm_opcode_reg              ;
     reg                [   3: 0]        alu_opcode_reg              ;
     reg                                 inv_flag_reg                ;
     reg                                 jump_flag_reg               ;
     reg                                 branch_flag_reg             ;
 
-    reg                [   1: 0]        add1_choice_reg             ;
-    reg                [   1: 0]        add2_choice_reg             ;
-    reg                [  31: 0]        rs1_value_reg               ;
     reg                [  31: 0]        rs2_value_reg               ;
+
+    reg                [  31: 0]        add1_value_reg              ;
+    reg                [  31: 0]        add2_value_reg              ;
     reg                [  31: 0]        rd_value_reg                ;
     reg                                 fetch_i_reg                 ;
 
@@ -125,12 +128,10 @@ module ysyx_24100029_EXU (
             inv_flag_reg    <= 0;
             jump_flag_reg   <= 0;
             branch_flag_reg <= 0;
-
-            add1_choice_reg <= 0;
-            add2_choice_reg <= 0;
-            rs1_value_reg   <= 0;
             rs2_value_reg   <= 0;
-            rd_value_reg        <= 0;
+            add1_value_reg   <= 0;
+            add2_value_reg   <= 0;
+            rd_value_reg    <= 0;
         end
         else if(valid_last & ready_next)
         begin
@@ -142,11 +143,10 @@ module ysyx_24100029_EXU (
             alu_opcode_reg  <= alu_opcode   ;
             inv_flag_reg    <= inv_flag     ;
 
-            add1_choice_reg <= add1_choice  ;
-            add2_choice_reg <= add2_choice  ;
-            rs1_value_reg   <= rs1_value    ;
-            rs2_value_reg   <= rs2_value    ;
-            rd_value_reg    <= rd_value         ;
+            rs2_value_reg   <= rs2_value;
+            add1_value_reg   <= add1_value    ;
+            add2_value_reg   <= add2_value    ;
+            rd_value_reg    <= rd_value     ;
 
         end
     end
@@ -166,7 +166,7 @@ always @(posedge clock) begin
         R_wen_reg       <= 0;
         mem_wen_reg     <= 0;
         jump_flag_reg   <= 0;
-        branch_flag_reg <= 0; 
+        branch_flag_reg <= 0;
     end
     else if(valid_last & ready_next) begin
         mem_ren_reg     <= mem_ren;
@@ -189,7 +189,6 @@ end
 
     assign                              jump_flag_next              = jump_flag_reg;
     assign                              funct3_next                 = funct3_reg;
-    assign                              pc_next                     = pc_reg;
     assign                              rd_next                     = rd_reg;
     assign                              rd_value_next               = rd_value_reg;
     assign                              csr_wen_next                = csr_wen_reg;
@@ -217,7 +216,7 @@ end
 
 
 /* verilator lint_off IMPLICIT */
-
+/*
 ysyx_24100029_MuxKeyInternal #(NR_KEY_add2, KEY_LEN_add2, DATA_LEN_add2, 0) i1 (add_2, add2_choice_reg, {DATA_LEN_add2{1'b0}},
 {
 2'd0, imm_reg   ,
@@ -234,6 +233,10 @@ ysyx_24100029_MuxKeyInternal #(NR_KEY_add1, KEY_LEN_add1, DATA_LEN_add1, 0) i2 (
 `rs1_dist_para_ysyx_24100029,   32'd0
 }
 );
+*/
+
+    assign                              add_1                       = add1_value_reg;
+    assign                              add_2                       = add2_value_reg;
 
 /* verilator lint_off PINMISSING */
 ysyx_24100029_ALU #(
@@ -245,26 +248,6 @@ ysyx_24100029_ALU #(
     .choice                             (alu_opcode_reg            ),
     .res                                (alu_res                   ) 
 );
-/*
-ysyx_24100029_sext #(
-    .DATA_WIDTH                         (12                        ),
-    .OUT_WIDTH                          (32                        ) 
-) sext_i12
-(
-    .data                               (imm_reg[11:0]             ),
-    .sext_data                          (imm_12i                   ) 
-);
-
-ysyx_24100029_sext #(
-    .DATA_WIDTH                         (20                        ),
-    .OUT_WIDTH                          (32                        ) 
-) sext_i20
-(
-    .data                               (imm_reg[19:0]             ),
-    .sext_data                          (imm_20i                   ) 
-);
-*/
-
 
 endmodule
 

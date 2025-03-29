@@ -27,23 +27,7 @@
 `define alu_srl_ysyx_24100029                   4'b1001
 `define alu_sra_ysyx_24100029                   4'b1010
 
-// rs1_dist
-`define rs1_dist_reg_ysyx_24100029       2'b00
-`define rs1_dist_pc_ysyx_24100029        2'b01
-`define rs1_dist_para_ysyx_24100029      2'b10
 
-// imm_opcode
-
-`define imm_12i_ysyx_24100029            2'b00
-`define imm_20u_ysyx_24100029            2'b01
-`define imm_20i_ysyx_24100029            2'b10
-`define imm_5u_ysyx_24100029             2'b11
-
-// slave_read_state
-`define wait_arv_ysyx_24100029           1'b0
-`define wait_rdv_ysyx_24100029           1'b1
-// slave_write_state
-`define wait_awv_ysyx_24100029           1'b0
 
 
 //
