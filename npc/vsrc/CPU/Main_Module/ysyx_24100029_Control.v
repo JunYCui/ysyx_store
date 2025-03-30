@@ -6,8 +6,7 @@ module ysyx_24100029_Control (
     input              [  31: 0]        mtvec_out                  ,
     input              [  31: 0]        mepc_out                   ,
 
-    input              [  31: 0]        EXU_imm                    ,
-    input              [  31: 0]        EXU_pc                     ,
+    input              [  31: 0]        branch_pc                  ,
     input              [  31: 0]        Ex_result                  ,
     input              [  31: 0]        MEM_Ex_result              ,
 
@@ -57,7 +56,7 @@ module ysyx_24100029_Control (
     assign                              icache_clr                  = fence_i_flag&EXU_valid;
 
 
-    assign                              dnpc                        = (jump_flag? Ex_result : branch_flag?  EXU_pc+EXU_imm: mret_flag? mepc_out:mtvec_out);
+    assign                              dnpc                        = (jump_flag? Ex_result : branch_flag?  branch_pc: mret_flag? mepc_out:mtvec_out);
 
 
 

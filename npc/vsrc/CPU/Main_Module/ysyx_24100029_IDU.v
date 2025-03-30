@@ -23,15 +23,13 @@ module ysyx_24100029_IDU(
     input              [  31: 0]        EXU_rs1_in                 ,
     input              [  31: 0]        EXU_rs2_in                 ,
 
-    output             [  31: 0]        pc_next                    ,
     output             [   4: 0]        rd_next                    ,
-    output             [  31: 0]        imm                        ,
     output             [   2: 0]        funct3                     ,
     output                              mret_flag                  ,
     output                              ecall_flag                 ,
     output                              fence_i_flag               ,
 
-
+    output             [  31: 0]        branch_pc                  ,
     output             [  31: 0]        rs1_value                  ,
     output             [  31: 0]        rs2_value                  ,
     
@@ -56,6 +54,7 @@ module ysyx_24100029_IDU(
     output             [  31: 0]        mtvec_out                  ,
 
 `ifdef Performance_Count
+    output             [  31: 0]        pc_next                    ,
     output reg         [  31: 0]        InstR_count                ,
     output reg         [  31: 0]        InstI_count                ,
     output reg         [  31: 0]        InstS_count                ,
@@ -94,6 +93,7 @@ module ysyx_24100029_IDU(
         end
     end
     assign                              inst_next                   = inst;
+    assign                              pc_next                     = pc;
 
 `endif
 
@@ -108,7 +108,7 @@ module ysyx_24100029_IDU(
     wire               [  31: 0]        imm_B                       ;
     wire               [  31: 0]        imm_J                       ;
     wire               [  31: 0]        csrs                        ;
-
+    wire               [  31: 0]        imm                         ;
 
     assign                              ready_last                  = ready_next;
     assign                              valid_next                  = valid_last;
@@ -121,7 +121,6 @@ module ysyx_24100029_IDU(
     assign                              rs2                         = inst[24:20];
     assign                              funct3                      = inst[14:12];
     assign                              rd_next                     = inst[11:7];
-    assign                              pc_next                     = pc;
 
     assign                              ecall_flag                  = (inst == 32'b00000000000000000000000001110011);//ecall
     assign                              mret_flag                   = (inst == 32'b00110000001000000000000001110011);// mret
@@ -146,7 +145,8 @@ module ysyx_24100029_IDU(
     assign                              rd_value_next               = jump_flag? snpc: 
                                                                     (|csr_wen_next)? csrs:
                                                                     0;
- 
+    assign                              branch_pc                   = pc + imm;
+
 
     assign add1_value = (opcode == `U0_opcode_ysyx_24100029)? 0 :
                         (opcode == `J_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029 )? pc :
