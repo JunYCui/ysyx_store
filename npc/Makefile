@@ -31,7 +31,7 @@ endif
 BUILD_DIR = $(NPC_HOME)/build
 $(shell mkdir -p $(BUILD_DIR))
 # lint off warning
-Warning = ASSIGNDLY DECLFILENAME PINCONNECTEMPTY  UNDRIVEN SYNCASYNCNET  UNUSEDSIGNAL
+Warning = ASSIGNDLY DECLFILENAME PINCONNECTEMPTY  UNDRIVEN SYNCASYNCNET  UNUSEDSIGNAL DEFPARAM UNUSEDPARAM
 VERILATOR_FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
 
 ifeq ($(PLATFORM),npc)
@@ -122,7 +122,7 @@ perf:
 
 alu: 
 	@sed -i '/Performance/d' ./vsrc/CPU/define/para.v
-	@$(MAKE) -C ~/yosys-sta DESIGN=ysyx_24100029_Control SDC_FILE=$(SDC_FILE) RTL_FILES="$(VSOURCES)" CLK_FREQ_MHZ=1000 sta  > log/log.txt 
+	@$(MAKE) -C ~/yosys-sta DESIGN=ysyx_24100029_EXU SDC_FILE=$(SDC_FILE) RTL_FILES="$(VSOURCES)" CLK_FREQ_MHZ=1000 sta  > log/log.txt 
 	@grep --after-context=1 "Chip area" log/log.txt  > log/area.txt
 	@grep --after-context=7 "Endpoint" log/log.txt > log/frequency.txt 
 	@sed -i '$$a \`define Performance_Count' ./vsrc/CPU/define/para.v
