@@ -263,7 +263,7 @@ end
 
     assign                       wdata                     = (funct3_reg == 3'b000)?
                                                             rs2_value_reg<<rdata_b_choice:(funct3_reg == 3'b001)?
-                                                            rs2_value_reg<<8*{Ex_result_reg[1],1'b0}:(funct3_reg == 3'b010)?
+                                                            rs2_value_reg<<{Ex_result_reg[1],4'b0}:(funct3_reg == 3'b010)?
                                                             rs2_value_reg:0;
     assign                              rdata_b_choice              = {Ex_result_reg[1:0],3'b0};
     
@@ -276,11 +276,14 @@ end
     assign                              arid                        = 0;
     assign                              arlen                       = 0;
 
-    assign                       arsize                    = (funct3_reg == 3'b000 | funct3_reg == 3'b100)? 
-                                                            3'b000:(funct3_reg == 3'b001 | funct3_reg == 3'b101)?
-                                                            3'b001:3'b010;
+    assign                          arsize                    = {1'b0,funct3_reg[1:0]};
 
     assign                              arburst                     = 0;
+
+
+
+
+
 
 /*
     assert (rresp == 2'b00)
