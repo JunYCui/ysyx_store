@@ -27,7 +27,7 @@
 module ysyx_24100029_icache #(
     CacheLine_Width = 0,
     OFFSET_WIDTH = 2,
-    INDEX_WIDTH = 3,
+    INDEX_WIDTH = 2,
     ADDR_WIDTH = 32 ,
     DATA_WIDTH = 32
 )
@@ -164,7 +164,7 @@ module ysyx_24100029_icache #(
     reg                [CACHE_WIDTH-1: 0]        icache[2**INDEX_WIDTH-1:0]  ;
     reg                [   1: 0]        state                       ;
     reg                                 arvalid                     ;
-    reg                [   2: 0]        count                       ;
+    reg                [CacheLine_Width: 0]        count                       ;
 /* verilator lint_off SELRANGE */
 /* verilator lint_off WIDTHTRUNC */
     assign                              block_choice                = `IS_CacheLine_Width_0? 0 : ifu_araddr[CacheLine_Width+OFFSET_WIDTH-1:OFFSET_WIDTH];
@@ -210,7 +210,7 @@ module ysyx_24100029_icache #(
     assign                              ifu_rvalid                  = mux_flag? icache_rvalid: (state == HIT) | ((state == MISS) & icache_rvalid & icache_rlast);
     assign                              icache_arvalid              = mux_flag? ifu_arvalid:arvalid;
     assign                              hit                         = valid & (ifu_araddr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH+CacheLine_Width] == tag) & ifu_rready;
-    assign                              mux_flag                    = ~(ifu_araddr[31:24] == 8'ha0);// sram addr 
+    assign                              mux_flag                    = ~(ifu_araddr[31:28] == 4'ha);// sram addr 
 
     always @(posedge clock or posedge reset) begin
         if(reset)

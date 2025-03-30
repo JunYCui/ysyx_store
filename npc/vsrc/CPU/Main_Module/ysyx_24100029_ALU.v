@@ -39,8 +39,9 @@ module ysyx_24100029_ALU #(
     reg                                 choose_add_sub              ;
     wire               [BW-1: 0]        result                      ;
     wire               [BW-1: 0]        d2_inv                      ;
+    wire               [BW-1: 0]        d1_inv                      ;
     assign                              d2_inv                      = ~d2;
-
+    assign                              d1_inv                      = ~d1;
 
 always@(*)
     begin
@@ -87,7 +88,7 @@ always@(*)
             choose_add_sub = 1'b0;
             end
     `alu_xor_ysyx_24100029: begin                                   //异或
-            res = d1 ^ d2;
+            res = (d1 & d2_inv) | (d1_inv & d2) ;
             choose_add_sub = 1'b0;
             end
     `alu_equal_ysyx_24100029:begin                                  //是否相等

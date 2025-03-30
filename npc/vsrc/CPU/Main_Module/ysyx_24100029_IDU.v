@@ -161,7 +161,7 @@ module ysyx_24100029_IDU(
                         || opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029
                         || opcode == `J_opcode_ysyx_24100029 || opcode == `I2_opcode_ysyx_24100029
                         || (opcode ==`I1_opcode_ysyx_24100029  &&  funct3 == 3'b000)  || (opcode == `R_opcode_ysyx_24100029         &&
-                        funct3 == 3'b000 && oprand == 7'b0000000) || (opcode == `B_opcode_ysyx_24100029                             &&
+                        funct3 == 3'b000 && oprand[5] == 1'b0) || (opcode == `B_opcode_ysyx_24100029                             &&
                         funct3[2:1] == 2'b01                 ))                                                                     ?
                         `alu_add_ysyx_24100029 :(opcode == `I1_opcode_ysyx_24100029 && funct3 == 3'b010)                            ||
                         (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b010)                                                     ||
@@ -197,7 +197,15 @@ module ysyx_24100029_IDU(
     assign                              imm_J                       = {{11{inst[31]}},inst[31],inst[19:12],inst[20],inst[30:21]}<<1;
 /* verilator lint_off IMPLICIT */
 
+    assign imm = (opcode == `I0_opcode_ysyx_24100029 || opcode == `I1_opcode_ysyx_24100029 || opcode == `I2_opcode_ysyx_24100029 || opcode == `M_opcode_ysyx_24100029)? imm_I:
+                 (opcode == `U0_opcode_ysyx_24100029 || opcode == `U1_opcode_ysyx_24100029)? imm_U:
+                 (opcode == `J_opcode_ysyx_24100029)? imm_J:
+                 (opcode == `B_opcode_ysyx_24100029)? imm_B:
+                 (opcode == `S_opcode_ysyx_24100029)? imm_S: 
+                 (opcode == `S_opcode_ysyx_24100029)? imm_R :
+                  0;
 /* imm 处理*/
+/*
 ysyx_24100029_MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, opcode, {i1_DATA_LEN{1'b0}},
 {`R_opcode_ysyx_24100029 ,    imm_R,
  `I0_opcode_ysyx_24100029,    imm_I,
@@ -210,7 +218,7 @@ ysyx_24100029_MuxKeyInternal #(i1_NR_KEY, i1_KEY_LEN, i1_DATA_LEN, 0) i1 (imm, o
  `S_opcode_ysyx_24100029 ,    imm_S,
  `M_opcode_ysyx_24100029 ,    imm_I
  });
-
+*/
 ysyx_24100029_Reg_Stack Reg_Stack_inst0(
     .reset                              (reset                     ),
     .clock                              (clock                     ),
