@@ -21,8 +21,8 @@ module ysyx_24100029_EXU (
     input                               fetch_i_flag               ,
 
     input              [  31: 0]        rs2_value                  ,
-    input              [  31: 0]        add1_value                 ,
-    input              [  31: 0]        add2_value                 ,
+    input              [  31: 0]        add1                       ,
+    input              [  31: 0]        add2                       ,
     input              [  31: 0]        rd_value                   ,
 
     output             [  31: 0]        rd_value_next              ,
@@ -38,11 +38,9 @@ module ysyx_24100029_EXU (
     output                              mem_wen_next               ,
     output                              mem_ren_next               ,
     output             [  31: 0]        EX_result                  ,
-
-
-`ifdef Performance_Count
     input              [  31: 0]        pc                         ,
     output             [  31: 0]        pc_next                    ,
+`ifdef Performance_Count
     output reg         [  31: 0]        Exu_count                  ,
     input              [  31: 0]        inst                       ,
     output reg         [  31: 0]        inst_next                  ,
@@ -55,9 +53,9 @@ module ysyx_24100029_EXU (
     output reg                          valid_next                  
 
 );
-
-`ifdef Performance_Count
     reg                [  31: 0]        pc_reg                      ;
+    assign                              pc_next                     = pc_reg;
+`ifdef Performance_Count
     always @(posedge clock or posedge reset) begin
         if(reset)
             Exu_count <= 0;
@@ -67,14 +65,11 @@ module ysyx_24100029_EXU (
     always @(posedge clock) begin
         if(reset)begin
             inst_next <=0;
-            pc_reg <= 0;
         end
         else if(valid_last & ready_next)begin
             inst_next <= inst;
-            pc_reg <= pc;
         end
     end
-    assign                              pc_next                     = pc_reg;
 
 `endif
 
@@ -93,8 +88,9 @@ module ysyx_24100029_EXU (
 
     reg                [  31: 0]        rs2_value_reg               ;
 
-    reg                [  31: 0]        add1_value_reg              ;
-    reg                [  31: 0]        add2_value_reg              ;
+    reg                [  31: 0]        add1_reg                    ;
+    reg                [  31: 0]        add2_reg                    ;
+
     reg                [  31: 0]        rd_value_reg                ;
     reg                                 fetch_i_reg                 ;
 
@@ -112,14 +108,15 @@ module ysyx_24100029_EXU (
 
     always @(posedge clock) begin
         if(reset)begin
+             pc_reg <= 0;
             funct3_reg      <= 0;
             rd_reg          <= 0;
             imm_reg         <= 0;
             alu_opcode_reg  <= 0;
             inv_flag_reg    <= 0;
             rs2_value_reg   <= 0;
-            add1_value_reg   <= 0;
-            add2_value_reg   <= 0;
+            add1_reg   <= 0;
+            add2_reg   <= 0;
             rd_value_reg    <= 0;
         end
         else if(valid_last & ready_next)
@@ -130,10 +127,10 @@ module ysyx_24100029_EXU (
             alu_opcode_reg  <= alu_opcode   ;
             inv_flag_reg    <= inv_flag     ;
             rs2_value_reg   <= rs2_value;
-            add1_value_reg   <= add1_value    ;
-            add2_value_reg   <= add2_value    ;
+            add1_reg        <= add1     ;
+            add2_reg        <= add2     ;
             rd_value_reg    <= rd_value     ;
-
+            pc_reg          <= pc;
         end
     end
 
@@ -168,10 +165,6 @@ always @(posedge clock) begin
 end
 
 
-    wire               [  31: 0]        add_1                       ;
-    wire               [  31: 0]        add_2                       ;
-
-/* verilator lint_off UNUSEDSIGNAL */
     wire               [  31: 0]        alu_res                     ;
     
 
@@ -190,16 +183,15 @@ end
     assign                              ready_last                  = ready_next;
     assign                              fetch_i_flag_next           = fetch_i_reg;
 
-    assign                              add_1                       = add1_value_reg;
-    assign                              add_2                       = add2_value_reg;
+
 
 /* verilator lint_off PINMISSING */
 ysyx_24100029_ALU #(
     .BW                                 (32                        ) 
 ) ALU_i0
 (
-    .d1                                 (add_1                     ),
-    .d2                                 (add_2                     ),
+    .d1                                 (add1_reg                  ),
+    .d2                                 (add2_reg                  ),
     .choice                             (alu_opcode_reg            ),
     .res                                (alu_res                   ) 
 );

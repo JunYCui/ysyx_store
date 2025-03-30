@@ -512,6 +512,9 @@ sram u_sram(
 
 
 ysyx_24100029_Control Control_inst0(
+
+    .clock                              (clock                     ),
+    .reset                              (reset                     ),
     .mtvec_out                          (IDU_mtvec_out             ),
     .mepc_out                           (IDU_mepc_out              ),
 
@@ -698,8 +701,8 @@ ysyx_24100029_EXU EXU_Inst0(
     .branch_flag                        (IDU_branch_flag           ),
     .fetch_i_flag                       (IDU_fence_i_flag          ),
 
-    .add2_value                         (IDU_add2_value            ),
-    .add1_value                         (IDU_add1_value            ),
+    .add2                               (IDU_add2_value            ),
+    .add1                               (IDU_add1_value            ),
     .rs2_value                          (EXU_rs2_in                ),
     .rd_value                           (IDU_rd_value              ),
 
@@ -716,9 +719,8 @@ ysyx_24100029_EXU EXU_Inst0(
     .mem_ren_next                       (EXU_mem_ren               ),
     .EX_result                          (EXU_Ex_result             ),
     .fetch_i_flag_next                  (EXU_fence_i_flag          ),
-
-`ifdef Performance_Count
     .pc_next                            (EXU_pc                    ),
+`ifdef Performance_Count
     .pc                                 (IDU_pc                    ),
     .Exu_count                          (Exu_count                 ),
     .inst                               (IDU_inst                  ),
@@ -1094,5 +1096,6 @@ ysyx_24100029_Xbar Xbar(
     .SOC_rlast                          (io_master_rlast           ),
     .SOC_rid                            (io_master_rid             ) 
 );
+
 endmodule
 
