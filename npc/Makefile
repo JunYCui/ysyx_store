@@ -113,7 +113,7 @@ area:
 perf:
 	@sed -i '/Performance/d' ./vsrc/CPU/define/para.v
 	@echo "analyse the chip area and frequency"
-	@$(MAKE) -C ~/yosys-sta sta > log/log.txt 
+	@$(MAKE) -C ~/yosys-sta DESIGN=ysyx_24100029 SDC_FILE=$(SDC_FILE) RTL_FILES="$(VSOURCES)" CLK_FREQ_MHZ=1000  sta  > log/log.txt 
 	@grep --after-context=1 "Chip area for top module " log/log.txt > log/area.txt
 	@grep --after-context=7 "Endpoint" log/log.txt > log/frequency.txt 
 	@sed -i '$$a \`define Performance_Count' ./vsrc/CPU/define/para.v
