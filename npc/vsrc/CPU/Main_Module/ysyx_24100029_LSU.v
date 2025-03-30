@@ -262,7 +262,7 @@ end
     assign                              awburst                     = 0;
 
     assign                       wdata                     = (funct3_reg == 3'b000)?
-                                                            rs2_value_reg<<8*Ex_result_reg[1:0]:(funct3_reg == 3'b001)?
+                                                            rs2_value_reg<<rdata_b_choice:(funct3_reg == 3'b001)?
                                                             rs2_value_reg<<8*{Ex_result_reg[1],1'b0}:(funct3_reg == 3'b010)?
                                                             rs2_value_reg:0;
     assign                              rdata_b_choice              = {Ex_result_reg[1:0],3'b0};
@@ -296,13 +296,9 @@ end
     always @(posedge clock) begin
         if(reset)
             ready_last <= 1'b1;
-        else if(mem_ren & valid_last & ready_last)
+        else if((mem_ren | mem_wen) & valid_last & ready_last)
             ready_last <= 1'b0;
-        else if(mem_wen & valid_last & ready_last)
-            ready_last <= 1'b0;
-        else if(bready & bvalid)
-            ready_last <= 1'b1;
-        else if(rvalid)
+        else if((bready & bvalid) | rvalid)
             ready_last <= 1'b1;
     end
 
@@ -310,13 +306,9 @@ end
     always @(posedge clock) begin
         if(reset)
             valid_next <= 0;
-        else if(mem_ren & valid_last & ready_last)
+        else if((mem_ren | mem_wen) & valid_last & ready_last)
             valid_next <= 1'b0;
-        else if(mem_wen & valid_last & ready_last)
-            valid_next <= 1'b0;
-        else if(bready & bvalid)
-            valid_next <= 1'b1;
-        else if(rvalid)
+        else if((bready & bvalid) | rvalid)
             valid_next <= 1'b1;
         else if(ready_last)
             valid_next <= valid_last;

@@ -27,7 +27,7 @@
 module ysyx_24100029_icache #(
     CacheLine_Width = 0,
     OFFSET_WIDTH = 2,
-    INDEX_WIDTH = 2,
+    INDEX_WIDTH = 3,
     ADDR_WIDTH = 32 ,
     DATA_WIDTH = 32
 )
