@@ -25,7 +25,8 @@
 //----------------------------------------------------------------------------------------
 //****************************************************************************************//
 module ysyx_24100029_IFU #(
-    parameter                           ResetValue                 = 32'h30000000
+    parameter                           ResetValue                 = 32'h30000000,
+    parameter                           Issue_Num                  = 4     
 )
 (
     input                               clock                      ,
@@ -138,7 +139,9 @@ module ysyx_24100029_IFU #(
     assign                              ifu_bready                  = 0;
 
     assign                              ifu_rready                  = 1'b1;
-    assign                              snpc                        = pc + 4;
+
+    // snpc = pc 对于 Issue_Num 的向上取余
+    assign                              snpc                        = (pc[$clog2(4*Issue_Num)-1:0] == 0)? pc + 4*Issue_Num : {{pc[31:$clog2(4*Issue_Num)]+1'd1},{4*Issue_Num{1'b0}}} ;
 
 /************ Axi4 bus ***********/
 
@@ -201,6 +204,8 @@ end
 
 
     assign                              req                         = arvalid;
+
+
 
 
 ysyx_24100029_icache u_ysyx_24100029_icache(
