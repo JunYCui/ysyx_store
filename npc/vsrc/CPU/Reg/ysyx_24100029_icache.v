@@ -25,7 +25,7 @@
 //****************************************************************************************//
 `include "../define/para.v"
 module ysyx_24100029_icache #(
-    CacheLine_Width = 0,
+    CacheLine_Width = 2,
     OFFSET_WIDTH = 2,
     INDEX_WIDTH = 2,
     ADDR_WIDTH = 32 ,
