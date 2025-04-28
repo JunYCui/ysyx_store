@@ -143,7 +143,7 @@ module ysyx_24100029_IFU #(
     // snpc = pc 对于 Issue_Num 的向上取余
     assign                              snpc                        = (pc[$clog2(4*Issue_Num)-1:0] == 0)? pc + 4*Issue_Num : {{pc[31:$clog2(4*Issue_Num)]+1'd1},{4*Issue_Num{1'b0}}} ;
 
-/************ Axi4 bus ***********/
+
 
 `ifdef Performance_Count
     reg                [  31: 0]        valid_count                 ;
