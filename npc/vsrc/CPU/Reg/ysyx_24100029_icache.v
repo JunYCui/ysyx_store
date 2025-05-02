@@ -23,58 +23,33 @@
 //
 //----------------------------------------------------------------------------------------
 //****************************************************************************************//
-`include "../define/para.v"
 module ysyx_24100029_icache #(
-    CacheLine_Width = 2,
-    OFFSET_WIDTH = 2,
+    CacheLine_Width = 0,
+    OFFSET_WIDTH = 4,
     INDEX_WIDTH = 2,
     ADDR_WIDTH = 32 ,
-    DATA_WIDTH = 32
+    INST_WIDTH = 128
 )
 (
     input                               clock                      ,
     input                               reset                      ,
     input                               clr                        ,
+
 `ifdef Performance_Count
     output reg         [  31: 0]        flash_hit,flash_miss,sdram_hit,sdram_miss,
 `endif
-    output                              ifu_awready                ,
-    input                               ifu_awvalid                ,
-    input              [  31: 0]        ifu_awaddr                 ,
-    input              [   3: 0]        ifu_awid                   ,
-    input              [   7: 0]        ifu_awlen                  ,
-    input              [   2: 0]        ifu_awsize                 ,
-    input              [   1: 0]        ifu_awburst                ,
 
-    output                              ifu_wready                 ,
-    input                               ifu_wvalid                 ,
-    input              [  31: 0]        ifu_wdata                  ,
-    input              [   3: 0]        ifu_wstrb                  ,
-    input                               ifu_wlast                  ,
-
-    input                               ifu_bready                 ,
-    output                              ifu_bvalid                 ,
-    output             [   1: 0]        ifu_bresp                  ,
-    output             [   3: 0]        ifu_bid                    ,
-
-    output                              ifu_arready                ,
-    input                               ifu_arvalid                ,
-    input              [  31: 0]        ifu_araddr                 ,
-    input              [   3: 0]        ifu_arid                   ,
-    input              [   7: 0]        ifu_arlen                  ,
-    input              [   2: 0]        ifu_arsize                 ,
-    input              [   1: 0]        ifu_arburst                ,
-
-    input                               ifu_rready                 ,
-    output                              ifu_rvalid                 ,
-    output             [   1: 0]        ifu_rresp                  ,
-    output             [  31: 0]        ifu_rdata                  ,
-    output                              ifu_rlast                  ,
-    output             [   3: 0]        ifu_rid                    ,
+    input              [ADDR_WIDTH-1: 0]        addr                       ,
+    input                               arvalid                    ,
+    output                              arready                    ,
+    
+    input                               rready                     ,
+    output             [INST_WIDTH-1: 0]        inst                       ,
+    output                              rvalid                     ,
 
     input                               icache_awready             ,
     output                              icache_awvalid             ,
-    output             [  31: 0]        icache_awaddr              ,
+    output             [ADDR_WIDTH-1: 0]        icache_awaddr              ,
     output             [   3: 0]        icache_awid                ,
     output             [   7: 0]        icache_awlen               ,
     output             [   2: 0]        icache_awsize              ,
@@ -93,7 +68,7 @@ module ysyx_24100029_icache #(
 
     input                               icache_arready             ,
     output reg                          icache_arvalid             ,
-    output             [  31: 0]        icache_araddr              ,
+    output             [ADDR_WIDTH-1: 0]        icache_araddr              ,
     output             [   3: 0]        icache_arid                ,
     output             [   7: 0]        icache_arlen               ,
     output             [   2: 0]        icache_arsize              ,
@@ -107,6 +82,7 @@ module ysyx_24100029_icache #(
     input              [   3: 0]        icache_rid                  
 
 );
+
    `ifdef Performance_Count
         always @(posedge clock or posedge reset) begin
             if(reset)begin
@@ -115,7 +91,7 @@ module ysyx_24100029_icache #(
                 sdram_hit <= 0;
                 sdram_miss <= 0;
             end
-            else if(ifu_araddr[31:28] == 4'h3)begin
+            else if(addr[31:28] == 4'h3)begin
                 if(state == MISS & icache_rvalid)
                     flash_miss <= flash_miss + 1;
                 else
@@ -125,7 +101,7 @@ module ysyx_24100029_icache #(
                 else
                     flash_hit <= flash_hit;
             end
-            else if(ifu_araddr[31:28] == 4'ha || ifu_araddr[31:28] == 4'hb)begin
+            else if(addr[31:28] == 4'ha || addr[31:28] == 4'hb)begin
                 if(state == MISS & icache_rvalid)
                     sdram_miss <= sdram_miss + 1;
                 else
@@ -150,35 +126,123 @@ module ysyx_24100029_icache #(
     
     localparam                          TAG_WIDTH                  = ADDR_WIDTH - OFFSET_WIDTH - INDEX_WIDTH - CacheLine_Width;
     localparam                          VALID_WIDTH                = 1     ;
-    localparam                          CACHE_WIDTH                = DATA_WIDTH*(2**CacheLine_Width) + TAG_WIDTH + VALID_WIDTH; 
+    localparam                          CACHE_WIDTH                = INST_WIDTH*(2**CacheLine_Width) + TAG_WIDTH + VALID_WIDTH; 
 
     wire               [VALID_WIDTH-1: 0]        valid                       ;
-    wire               [INDEX_WIDTH-1: 0]        index                       ;
     wire               [TAG_WIDTH-1: 0]        tag                         ;
-    wire               [DATA_WIDTH-1: 0]        rdata                       ;
-    wire                                hit                         ;
-    wire                                mux_flag                    ;
     wire               [`IS_CacheLine_Width_0? 0:CacheLine_Width-1 : 0]        block_choice                ;
-    wire               [32*2**CacheLine_Width-1: 0]        block_data                  ;
+    wire               [INST_WIDTH*2**CacheLine_Width-1: 0]        block_data                  ;
+    wire                                hit                         ;
+    wire               [INDEX_WIDTH-1: 0]        index                       ;
 
     reg                [CACHE_WIDTH-1: 0]        icache[2**INDEX_WIDTH-1:0]  ;
     reg                [   1: 0]        state                       ;
-    reg                                 arvalid                     ;
-    reg                [CacheLine_Width: 0]        count                       ;
+    reg                [   7: 0]        count                       ;
+    reg                                 hit_r                       ;
+    reg                [INDEX_WIDTH-1: 0]        index_r                     ;
 /* verilator lint_off SELRANGE */
 /* verilator lint_off WIDTHTRUNC */
-    assign                              block_choice                = `IS_CacheLine_Width_0? 0 : ifu_araddr[CacheLine_Width+OFFSET_WIDTH-1:OFFSET_WIDTH];
-    assign                              block_data                  = icache[index][CACHE_WIDTH-1:VALID_WIDTH+TAG_WIDTH];
-    assign                              rdata                       = block_data[32*block_choice+:32];
+ 
+    always @(posedge clock) begin
+        if(reset)
+            hit_r <= 0;
+        else if(arvalid & arready)
+            hit_r <= #1 valid & hit;
+    end
+
+    always @(posedge clock) begin
+        if(reset)
+            index_r <= 0;
+        else if(arvalid & arready)
+            index_r <= #1 index;
+    end
+
+
+
+    always @(posedge clock) begin
+        if(reset)
+            state <= IDLE;
+        else begin
+            case(state)
+                IDLE:begin
+                    if(arvalid & arready)
+                        state <= #1 ADDR;
+                    else begin
+                        state <= #1 IDLE;
+                    end
+                    end
+                ADDR:begin
+                    if(hit_r)
+                        state <= #1 HIT;
+                    else
+                        state <= #1 MISS;
+                end
+                HIT:if(rready & rvalid) state <= #1 IDLE;
+                MISS:begin
+                    if(icache_rlast & icache_rvalid)
+                        state <= #1 HIT;
+                    else
+                        state <= #1 MISS;
+                end
+                default:state <= IDLE;
+            endcase
+        end
+    end
+
+always @(posedge clock) begin
+    if(reset)
+        icache_arvalid <= 1'b0;
+    else if(state == ADDR & ~hit_r)
+        icache_arvalid <= 1'b1;
+    else if(icache_arvalid & icache_arready)
+        icache_arvalid <= 1'b0;
+end
+
+always @(posedge clock) begin
+    if(reset)
+        count <= 0;
+    else if(state == ADDR & ~hit_r)
+        count <= 0;
+    else if(icache_rvalid)
+        count <= count + 1;
+end
+
+    integer                             i                           ;
+
+always @(posedge clock) begin
+    if (clr) begin
+        for(i=0;i<2**INDEX_WIDTH;i++)
+            icache[i][0] <= 1'b0;
+    end
+    else if(arvalid & arready)
+        icache[index][TAG_WIDTH+VALID_WIDTH-1:0] <= {addr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH+CacheLine_Width],1'b1};
+    else if(icache_rvalid)
+        icache[index_r][TAG_WIDTH + VALID_WIDTH + 32*count+:32] <= icache_rdata;
+end
+
+
+
+
+    assign                              arready                     = state == IDLE;
+
+
+    assign                              block_choice                = `IS_CacheLine_Width_0? 0 : addr[CacheLine_Width+OFFSET_WIDTH-1:OFFSET_WIDTH];
+    assign                              block_data                  = icache[index_r][CACHE_WIDTH-1:VALID_WIDTH+TAG_WIDTH];
+    assign                              inst                        = block_data[INST_WIDTH*block_choice+:INST_WIDTH];
     assign                              tag                         = icache[index][VALID_WIDTH+TAG_WIDTH-1:VALID_WIDTH];
     assign                              valid                       = icache[index][VALID_WIDTH-1:0];
-    assign                              index                       = ifu_araddr[OFFSET_WIDTH+CacheLine_Width+INDEX_WIDTH-1:OFFSET_WIDTH+CacheLine_Width];
-   
-    assign                              icache_rready               = 1'b1;
+    assign                              rvalid                      = state == HIT;
+
+
+    assign                              hit                         = (addr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH+CacheLine_Width] == tag);
+    assign                              index                       = addr[OFFSET_WIDTH+CacheLine_Width+INDEX_WIDTH-1:OFFSET_WIDTH+CacheLine_Width];
+
+
+    assign                              icache_rready               = state == MISS;
     assign                              icache_arid                 = 0;
-    assign                              icache_arlen                = mux_flag? 0:2**CacheLine_Width-1;// 0+1 = 1 transfer once
+    assign                              icache_arlen                = 2**CacheLine_Width*INST_WIDTH/32-1;// 0+1 = 1 transfer once
     assign                              icache_arsize               = 3'b010;// transfer 4 bytes once
-    assign                              icache_arburst              = mux_flag? 2'b00:2'b01;// INCR Burst
+    assign                              icache_arburst              = 2'b01;// INCR
     assign                              icache_awvalid              = 0;
     assign                              icache_awaddr               = 0;
     assign                              icache_awid                 = 0;
@@ -192,85 +256,11 @@ module ysyx_24100029_icache #(
     assign                              icache_wlast                = 0;
 
     assign                              icache_bready               = 0;
-    assign                              icache_araddr               = mux_flag? ifu_araddr:{ifu_araddr[ADDR_WIDTH-1:CacheLine_Width+OFFSET_WIDTH],{(CacheLine_Width+OFFSET_WIDTH){1'b0}}};
+    assign                              icache_araddr               = {addr[ADDR_WIDTH-1:CacheLine_Width+OFFSET_WIDTH],{(CacheLine_Width+OFFSET_WIDTH){1'b0}}};
 
 
-    assign                              ifu_rresp                   = 2'b00;
-    assign                              ifu_rlast                   = mux_flag? icache_rlast:ifu_rvalid;
-    assign                              ifu_rid                     = 0;
 
 
-    assign                              ifu_awready                 = 0;
-    assign                              ifu_wready                  = 0;
-    assign                              ifu_bvalid                  = 0;
-    assign                              ifu_bresp                   = 0;
-    assign                              ifu_bid                     = 0;
-    assign                              ifu_arready                 = mux_flag? icache_arready:(state == IDLE);
-    assign                              ifu_rdata                   = mux_flag? icache_rdata:(state == MISS & `IS_CacheLine_Width_0? 1:~block_choice == 0)? icache_rdata:rdata;
-    assign                              ifu_rvalid                  = mux_flag? icache_rvalid: (state == HIT) | ((state == MISS) & icache_rvalid & icache_rlast);
-    assign                              icache_arvalid              = mux_flag? ifu_arvalid:arvalid;
-    assign                              hit                         = valid & (ifu_araddr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH+CacheLine_Width] == tag) & ifu_rready;
-    assign                              mux_flag                    = ~(ifu_araddr[31:28] == 4'ha);// sram addr 
 
-    always @(posedge clock or posedge reset) begin
-        if(reset)
-            state <= IDLE;
-        else begin
-            case(state)
-                IDLE:begin
-                    if(ifu_arvalid & ifu_arready&~mux_flag)
-                        state <= ADDR;
-                    else begin
-                        state <= IDLE;
-                    end
-                    end
-                ADDR:begin
-                    if(hit)
-                        state <= HIT;
-                    else
-                        state <= MISS;
-                end
-                HIT:state <= IDLE;
-                MISS:begin
-                    if(icache_rlast & icache_rvalid)
-                        state <= IDLE;
-                    else
-                        state <= MISS;
-                end
-                default:state <= IDLE;
-            endcase
-        end
-    end
-
-always @(posedge clock or posedge reset) begin
-    if(reset)
-        arvalid <= 1'b0;
-    else if(state == ADDR & ~hit)
-        arvalid <= 1'b1;
-    else if(arvalid & icache_arready)
-        arvalid <= 1'b0;
-end
-
-always @(posedge clock or posedge reset) begin
-    if(reset)
-        count <= 0;
-    else if(state == ADDR & ~hit)
-        count <= 0;
-    else if(icache_rvalid)
-        count <= count + 1;
-end
-
-integer i ;
-
-always @(posedge clock) begin
-    if (clr) begin
-        for(i=0;i<2**INDEX_WIDTH;i++)
-            icache[i][0] <= 1'b0;
-    end
-    else if(state == ADDR & ~hit)
-        icache[index][TAG_WIDTH+VALID_WIDTH-1:0] <= {ifu_araddr[ADDR_WIDTH-1:OFFSET_WIDTH+INDEX_WIDTH+CacheLine_Width],1'b1};
-    else if(icache_rvalid)
-        icache[index][TAG_WIDTH + VALID_WIDTH + 32*count+:32] <= icache_rdata;
-end
 
 endmodule

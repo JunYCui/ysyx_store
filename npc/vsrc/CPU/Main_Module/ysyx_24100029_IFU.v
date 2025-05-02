@@ -26,25 +26,34 @@
 //****************************************************************************************//
 module ysyx_24100029_IFU #(
     parameter                           ResetValue                 = 32'h30000000,
-    parameter                           Issue_Num                  = 4     
+    parameter                           Issue_Num                  = 4     ,
+    parameter                           ADDR_WIDTH                 = 32    
 )
 (
     input                               clock                      ,
     input                               reset                      ,
     input              [  31: 0]        dnpc                       ,
-    input                               dnpc_flag                  ,
+    input                               dnpc_valid                 ,
     input                               icache_clr                 ,
+    input                               clr                        ,
 
-    output             [  31: 0]        snpc                       ,
-    output reg         [  31: 0]        pc                         ,
-    output             [  31: 0]        inst                       ,
+    input              [   3: 0]        inst_ren                   ,
 
-    input                               ready                      ,
-    output reg                          valid                      ,
+    output             [  31: 0]        inst1_o                    ,
+    output             [  31: 0]        inst2_o                    ,
+    output             [  31: 0]        inst3_o                    ,
+    output             [  31: 0]        inst4_o                    ,
+    output             [ADDR_WIDTH-1: 0]        pc1_o                      ,
+    output             [ADDR_WIDTH-1: 0]        pc2_o                      ,
+    output             [ADDR_WIDTH-1: 0]        pc3_o                      ,
+    output             [ADDR_WIDTH-1: 0]        pc4_o                      ,
+    output             [   3: 0]        inst_count                 ,
+
+
 
     input                               awready                    ,
     output                              awvalid                    ,
-    output             [  31: 0]        awaddr                     ,
+    output             [ADDR_WIDTH-1: 0]        awaddr                     ,
     output             [   3: 0]        awid                       ,
     output             [   7: 0]        awlen                      ,
     output             [   2: 0]        awsize                     ,
@@ -63,7 +72,7 @@ module ysyx_24100029_IFU #(
 
     input                               arready                    ,
     output                              arvalid                    ,
-    output             [  31: 0]        araddr                     ,
+    output             [ADDR_WIDTH-1: 0]        araddr                     ,
     output             [   3: 0]        arid                       ,
     output             [   7: 0]        arlen                      ,
     output             [   2: 0]        arsize                     ,
@@ -85,65 +94,27 @@ module ysyx_24100029_IFU #(
 
 
 /****************icache****************/
-    wire                                ifu_awready                 ;
-    reg                                 ifu_awvalid                 ;
-    reg                [  31: 0]        ifu_awaddr                  ;
-    reg                [   3: 0]        ifu_awid                    ;
-    reg                [   7: 0]        ifu_awlen                   ;
-    reg                [   2: 0]        ifu_awsize                  ;
-    reg                [   1: 0]        ifu_awburst                 ;
-    wire                                ifu_wready                  ;
-    reg                                 ifu_wvalid                  ;
-    reg                [  31: 0]        ifu_wdata                   ;
-    reg                [   3: 0]        ifu_wstrb                   ;
-    reg                                 ifu_wlast                   ;
-    reg                                 ifu_bready                  ;
-    wire                                ifu_bvalid                  ;
-    wire               [   1: 0]        ifu_bresp                   ;
-    wire               [   3: 0]        ifu_bid                     ;
-    wire                                ifu_arready                 ;
-    reg                                 ifu_arvalid                 ;
-    reg                [  31: 0]        ifu_araddr                  ;
-    reg                [   3: 0]        ifu_arid                    ;
-    reg                [   7: 0]        ifu_arlen                   ;
-    reg                [   2: 0]        ifu_arsize                  ;
-    reg                [   1: 0]        ifu_arburst                 ;
-    reg                                 ifu_rready                  ;
-    wire                                ifu_rvalid                  ;
-    wire               [   1: 0]        ifu_rresp                   ;
-    wire               [  31: 0]        ifu_rdata                   ;
-    wire                                ifu_rlast                   ;
-    wire               [   3: 0]        ifu_rid                     ;
+    wire               [ADDR_WIDTH-1: 0]        pc                          ;
+    wire               [ADDR_WIDTH-1: 0]        pc1_i                       ;
+    wire               [ADDR_WIDTH-1: 0]        pc2_i                       ;
+    wire               [ADDR_WIDTH-1: 0]        pc3_i                       ;
+    wire               [ADDR_WIDTH-1: 0]        pc4_i                       ;
+    wire               [  31: 0]        inst1_i                     ;
+    wire               [  31: 0]        inst2_i                     ;
+    wire               [  31: 0]        inst3_i                     ;
+    wire               [  31: 0]        inst4_i                     ;
+    wire               [   3: 0]        inst_wen                    ;
 
-    wire                                clr                         ;
+    wire               [  31: 0]        icache_addr                 ;
+    wire                                icache_arvalid              ;
+    wire                                icache_arready              ;
+    wire                                icache_rready               ;
+    wire               [Issue_Num*32-1: 0]        icache_inst                 ;
+    wire                                icache_rvalid               ;
 
-/************ Axi4 bus ***********/
-    assign                              ifu_araddr                  = pc;
-    assign                              ifu_arid                    = 0;
-    assign                              ifu_arlen                   = 0;// 0+1 = 1 transfer once
-    assign                              ifu_arsize                  = 3'b010;// transfer 4 bytes once
-    assign                              ifu_arburst                 = 2'b00;// FIXED Burst
-
-    assign                              ifu_awvalid                 = 0;
-    assign                              ifu_awaddr                  = 0;
-    assign                              ifu_awid                    = 0;
-    assign                              ifu_awlen                   = 0;
-    assign                              ifu_awsize                  = 0;
-    assign                              ifu_awburst                 = 0;
-
-    assign                              ifu_wvalid                  = 0;
-    assign                              ifu_wdata                   = 0;
-    assign                              ifu_wstrb                   = 0;
-    assign                              ifu_wlast                   = 0;
-
-    assign                              ifu_bready                  = 0;
-
-    assign                              ifu_rready                  = 1'b1;
-
-    // snpc = pc 对于 Issue_Num 的向上取余
-    assign                              snpc                        = (pc[$clog2(4*Issue_Num)-1:0] == 0)? pc + 4*Issue_Num : {{pc[31:$clog2(4*Issue_Num)]+1'd1},{4*Issue_Num{1'b0}}} ;
-
-
+    wire                                pc_update                   ;
+    wire               [   2: 0]        inst_issue_count            ;
+    wire                                inst_buffer_clr             ;
 
 `ifdef Performance_Count
     reg                [  31: 0]        valid_count                 ;
@@ -169,41 +140,83 @@ module ysyx_24100029_IFU #(
 
 
 
-always @(posedge clock) begin
-    if(reset)begin
-        valid <= 1'b0;
-        inst <= 0;
-    end
-    else if(ifu_rvalid)begin
-        valid <= 1'b1;
-        inst <= ifu_rdata;
-    end
-    else if(valid & ready)begin
-        valid <= 1'b0;
-        inst <= 0;
-    end
-
-end
-always @(posedge clock) begin
-    if(reset)
-        ifu_arvalid <= 1'b1;
-    else if(valid & ready)
-        ifu_arvalid <= 1'b1;
-    else if(ifu_arvalid & ifu_arready)
-        ifu_arvalid <= 1'b0;
-end
-
-always @(posedge clock) begin
-        if(reset)
-            pc <= ResetValue;
-        else if(dnpc_flag&valid&ready)
-            pc <= dnpc;
-        else if(valid & ready)
-            pc <= snpc;
-end
-
-
     assign                              req                         = arvalid;
+
+
+    assign                              inst_wen[0]                 = icache_rvalid & icache_rready;
+    assign                              inst_wen[1]                 = icache_rvalid & icache_rready & ~(inst_issue_count < 2);
+    assign                              inst_wen[2]                 = icache_rvalid & icache_rready & ~(inst_issue_count < 3);
+    assign                              inst_wen[3]                 = icache_rvalid & icache_rready & ~(inst_issue_count < 4);
+    assign                              pc1_i                       = pc;
+    assign                              pc2_i                       = pc + 4;
+    assign                              pc3_i                       = pc + 8;
+    assign                              pc4_i                       = pc + 12;
+    
+    
+    assign                              inst1_i                     = inst_issue_count < 2 ? icache_inst[127:96] : (inst_issue_count < 3)? icache_inst[95:64] : (inst_issue_count < 4)? icache_inst[63:32]:icache_inst[31:0];
+    assign                              inst2_i                     = (inst_issue_count < 3)? icache_inst[127:96] : (inst_issue_count < 4)? icache_inst[95:64]:icache_inst[63:32];
+    assign                              inst3_i                     = (inst_issue_count < 4)? icache_inst[127:96] : icache_inst[95:64];
+    assign                              inst4_i                     = icache_inst[127:96];
+
+    assign                              icache_rready               = inst_count + inst_issue_count < 17;
+    assign                              inst_issue_count            = Issue_Num -  pc[2+:$clog2(Issue_Num)];
+    assign                              inst_buffer_clr             = dnpc_valid;
+
+    assign                              pc_update                   = icache_rvalid & icache_rready;
+    assign                              icache_arvalid              = 1'b1;
+    assign                              icache_addr                 = pc;
+
+
+
+npc_generate #(
+    .ResetValue                         (ResetValue                ),
+    .Issue_Num                          (Issue_Num                 ) 
+)
+u_npc_generate(
+    .clock                              (clock                     ),
+    .reset                              (reset                     ),
+    .dnpc                               (dnpc                      ),
+    .dnpc_valid                         (dnpc_valid                ),
+    .pc_update                          (pc_update                 ),
+    .pc                                 (pc                        ) 
+);
+
+
+
+
+Inst_Buffer #(
+    .DATA_WIDTH                         (32                        ),
+    .ADDR_WIDTH                         (ADDR_WIDTH                ),
+    .Depth                              (16  )                     ) 
+u_Inst_Buffer(
+    .clk                                (clock                     ),
+    .rst                                (reset                     ),
+    .clr                                (inst_buffer_clr           ),
+
+    .inst1_i                            (inst1_i                   ),
+    .inst2_i                            (inst2_i                   ),
+    .inst3_i                            (inst3_i                   ),
+    .inst4_i                            (inst4_i                   ),
+    .pc1_i                              (pc1_i                     ),
+    .pc2_i                              (pc2_i                     ),
+    .pc3_i                              (pc3_i                     ),
+    .pc4_i                              (pc4_i                     ),
+    .inst_wen                           (inst_wen                  ),
+
+    .inst_ren                           (inst_ren                  ),
+    .inst1_o                            (inst1_o                   ),
+    .inst2_o                            (inst2_o                   ),
+    .inst3_o                            (inst3_o                   ),
+    .inst4_o                            (inst4_o                   ),
+    .pc1_o                              (pc1_o                     ),
+    .pc2_o                              (pc2_o                     ),
+    .pc3_o                              (pc3_o                     ),
+    .pc4_o                              (pc4_o                     ),
+    .inst_count                         (inst_count                ) 
+
+);
+
+
 
 
 
@@ -211,42 +224,22 @@ end
 ysyx_24100029_icache u_ysyx_24100029_icache(
     .clock                              (clock                     ),
     .reset                              (reset                     ),
-    .clr                                ((icache_clr&ifu_rvalid)   ),
-    `ifdef Performance_Count
+    .clr                                (clr                       ),
+
+    .addr                               (icache_addr               ),
+    .arvalid                            (icache_arvalid            ),
+    .arready                            (icache_arready            ),
+    .rready                             (icache_rready             ),
+    .inst                               (icache_inst               ),
+    .rvalid                             (icache_rvalid             ),
+
+`ifdef Performance_Count
     .flash_hit                          (flash_hit                 ),
     .flash_miss                         (flash_miss                ),
     .sdram_hit                          (sdram_hit                 ),
     .sdram_miss                         (sdram_miss                ),
-    `endif
-    .ifu_awready                        (ifu_awready               ),
-    .ifu_awvalid                        (ifu_awvalid               ),
-    .ifu_awaddr                         (ifu_awaddr                ),
-    .ifu_awid                           (ifu_awid                  ),
-    .ifu_awlen                          (ifu_awlen                 ),
-    .ifu_awsize                         (ifu_awsize                ),
-    .ifu_awburst                        (ifu_awburst               ),
-    .ifu_wready                         (ifu_wready                ),
-    .ifu_wvalid                         (ifu_wvalid                ),
-    .ifu_wdata                          (ifu_wdata                 ),
-    .ifu_wstrb                          (ifu_wstrb                 ),
-    .ifu_wlast                          (ifu_wlast                 ),
-    .ifu_bready                         (ifu_bready                ),
-    .ifu_bvalid                         (ifu_bvalid                ),
-    .ifu_bresp                          (ifu_bresp                 ),
-    .ifu_bid                            (ifu_bid                   ),
-    .ifu_arready                        (ifu_arready               ),
-    .ifu_arvalid                        (ifu_arvalid               ),
-    .ifu_araddr                         (ifu_araddr                ),
-    .ifu_arid                           (ifu_arid                  ),
-    .ifu_arlen                          (ifu_arlen                 ),
-    .ifu_arsize                         (ifu_arsize                ),
-    .ifu_arburst                        (ifu_arburst               ),
-    .ifu_rready                         (ifu_rready                ),
-    .ifu_rvalid                         (ifu_rvalid                ),
-    .ifu_rresp                          (ifu_rresp                 ),
-    .ifu_rdata                          (ifu_rdata                 ),
-    .ifu_rlast                          (ifu_rlast                 ),
-    .ifu_rid                            (ifu_rid                   ),
+`endif
+
 
     .icache_awready                     (awready                   ),
     .icache_awvalid                     (awvalid                   ),

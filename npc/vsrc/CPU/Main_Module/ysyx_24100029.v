@@ -558,7 +558,7 @@ ysyx_24100029_Control Control_inst0(
 
 
 
-
+/*
 ysyx_24100029_IFU  #(
     .ResetValue                         (ResetValue                ) 
 )
@@ -618,7 +618,7 @@ IFU_Inst0
     .ready                              (IDU_ready                 ),
     .valid                              (IFU_valid                 ) 
 );
-
+*/
 ysyx_24100029_IDU IDU_Inst0(
     .clock                              (clock                     ),
     .reset                              (reset                     ),

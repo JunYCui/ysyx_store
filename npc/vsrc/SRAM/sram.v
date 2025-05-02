@@ -24,9 +24,10 @@
 //----------------------------------------------------------------------------------------
 //****************************************************************************************//
 /* function test */
+`ifdef Performance_Count
 import "DPI-C" function int npc_pmem_read(int addr);
 import "DPI-C" function void npc_pmem_write(int addr, int wdata,byte wmask);
-
+`endif 
 module sram(
     input                                  clock                      ,
     input                                  reset                      ,
@@ -120,7 +121,9 @@ module sram(
         if(state == idle & arready & arvalid)begin
             rlast <= 1'b1;
             rvalid <= 1'b1;
-            rdata <= npc_pmem_read(araddr);
+            `ifdef Performance_Count
+                rdata <= npc_pmem_read(araddr);
+            `endif 
         end
         else begin
             rlast <= 1'b0;
@@ -134,7 +137,9 @@ module sram(
         end
         else if(state == idle & awready & awvalid & wready & wvalid)begin
             bvalid <= 1'b1;
-            npc_pmem_write(awaddr,mem_wdata,wmask);
+            `ifdef Performance_Count
+                npc_pmem_write(awaddr,mem_wdata,wmask);
+            `endif 
         end
         else
             bvalid <= 1'b0;

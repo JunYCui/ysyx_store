@@ -85,7 +85,7 @@ sim:all
 	$(NPC_EXEC)
 
 gdb: all
-	$(call git_commit, "gdb NEMU")
+	$(call git_commit, "gdb NPC")
 	gdb -s $(BIN) --args $(NPC_EXEC)
 
 all:$(CSOURCES) $(VSOURCES)  $(NVBOARD_ARCHIVE)
@@ -127,10 +127,12 @@ alu:
 	@grep --after-context=1 "Chip area" log/log.txt  > log/area.txt
 	@grep --after-context=7 "Endpoint" log/log.txt > log/frequency.txt 
 	@sed -i '$$a \`define Performance_Count' ./vsrc/CPU/define/para.v
+
+
 ifeq ($(PLATFORM),ysyxsoc)
 $(SRC_AUTO_BIND): $(CONSTR)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 endif
-.PHONY: clean all sim perf area
+.PHONY: clean all sim perf area alu 
 
 include ../Makefile
