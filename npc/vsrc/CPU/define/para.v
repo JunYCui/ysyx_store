@@ -4,13 +4,13 @@
 // __opcode__
 
 `define R_opcode_ysyx_24100029  7'b0110011
-`define I0_opcode_ysyx_24100029 7'b0000011                          //lw
-`define I1_opcode_ysyx_24100029 7'b0010011                          //addi
-`define I2_opcode_ysyx_24100029 7'b1100111                          //jalr
+`define LOAD_opcode_ysyx_24100029 7'b0000011                          //lw
+`define I_opcode_ysyx_24100029 7'b0010011                          //addi
+`define JALR_opcode_ysyx_24100029 7'b1100111                          //jalr
 `define S_opcode_ysyx_24100029  7'b0100011
 `define B_opcode_ysyx_24100029  7'b1100011
-`define U0_opcode_ysyx_24100029 7'b0110111                          //lui
-`define U1_opcode_ysyx_24100029 7'b0010111                          //auipc
+`define LUI_opcode_ysyx_24100029 7'b0110111                          //lui
+`define AUIPC_opcode_ysyx_24100029 7'b0010111                          //auipc
 `define J_opcode_ysyx_24100029  7'b1101111                          //jal
 `define M_opcode_ysyx_24100029  7'b1110011
 
