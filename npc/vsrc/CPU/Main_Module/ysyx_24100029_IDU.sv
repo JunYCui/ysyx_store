@@ -23,9 +23,8 @@ module ysyx_24100029_IDU(
     logic [3:0] alu_op;
     rv_op_e inst_op;
     logic [2:0] funct3;
-
-
     logic               [   6: 0]        oprand                      ;
+    
     logic               [   6: 0]        opcode                      ;
 
     logic               [  31: 0]        imm_I                       ;
@@ -108,13 +107,15 @@ logic fence_i_flag;
                         (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b111 )                                                    ?
                         `alu_and_ysyx_24100029 :(opcode == `I_opcode_ysyx_24100029 && funct3 == 3'b001  )                          ||
                         (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b001 )                                                    ?
-                        `alu_sll_ysyx_24100029 :(opcode == `I_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand[5] == 1'b0)    ||
-                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand[5] == 1'b0)                             ?
-                        `alu_srl_ysyx_24100029 :(opcode == `I_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand[5] == 1'b1)    ||
-                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand[5] == 1'b1)                             ?
-                        `alu_sra_ysyx_24100029 : (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b000 && oprand[5] == 1'b1)    ?
-                        `alu_sub_ysyx_24100029 : (opcode == `B_opcode_ysyx_24100029 && funct3[2:1] == 2'b00)                        ?
-                        `alu_equal_ysyx_24100029:`alu_add_ysyx_24100029;
+                        `alu_sll_ysyx_24100029 :(opcode == `I_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand == 7'b0000000)    ||
+                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand == 7'b0000000)                             ?
+                        `alu_srl_ysyx_24100029 :(opcode == `I_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand == 7'b0100000)    ||
+                        (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b101 && oprand == 7'b0100000)                             ?
+                        `alu_sra_ysyx_24100029 : (opcode == `R_opcode_ysyx_24100029 && funct3 == 3'b000 && oprand == 7'b0100000)    ?
+                        `alu_sub_ysyx_24100029 : (opcode == `B_opcode_ysyx_24100029 && funct3[2:1] == 2'b00)                     ?
+                        `alu_equal_ysyx_24100029: (opcode == `R_opcode_ysyx_24100029 && oprand == 7'b0000001 && ~funct3[2])?
+                        `alu_mul_ysyx_24100029:(opcode == `R_opcode_ysyx_24100029 && oprand == 7'b0000001 && funct3[2])?
+                        `alu_div_ysyx_24100029:`alu_add_ysyx_24100029;
 
 
     assign inst_op = (opcode == `R_opcode_ysyx_24100029)? OP_REG:

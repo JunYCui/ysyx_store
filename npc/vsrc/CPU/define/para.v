@@ -26,6 +26,7 @@
 `define alu_sll_ysyx_24100029                   4'b1000
 `define alu_srl_ysyx_24100029                   4'b1001
 `define alu_sra_ysyx_24100029                   4'b1010
-
+`define alu_mul_ysyx_24100029                   4'b1011
+`define alu_div_ysyx_24100029                   4'b1100
 
 //`define Performance_Count
