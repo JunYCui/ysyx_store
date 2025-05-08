@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 1ns
 //****************************************VSCODE PLUG-IN**********************************//
 //----------------------------------------------------------------------------------------
 // IDE :                   VSCODE     
@@ -38,7 +38,6 @@ module ysyx_24100029_IFU_tb ();
 
   logic [ADDR_WIDTH-1:0] dnpc;
   logic                  dnpc_valid;
-  logic                  icache_clr;
   logic [           3:0] inst_ren;
   logic                  clr;
 
@@ -51,16 +50,27 @@ module ysyx_24100029_IFU_tb ();
   logic [3:0]valid;
   logic [3:0]ready;
   logic [7:0]count;
+  
+  logic commit_valid    ;
+  logic commit_is_taken ;
+  logic [31:0]commit_pc       ;
+  logic [1:0] commit_pc_type  ;
+  logic [31:0]commit_npc      ;
+
 
   initial begin
     clock = 0;
     reset = 1;
-    icache_clr = 0;
     clr = 0;
     dnpc = 0;
     dnpc_valid = 0;
     ready = 4'b1111;
     count = 1;
+    commit_valid = 0   ;
+    commit_is_taken = 0 ;
+    commit_pc    = 0;    
+    commit_pc_type = 0;
+    commit_npc  =0 ;    
     #10 reset = 0;
     #10
     repeat (100) begin
@@ -97,34 +107,38 @@ module ysyx_24100029_IFU_tb ();
 
 
 
+ysyx_24100029_IFU #(
+  .ResetValue 	(32'h80000000  ),
+  .Issue_Num  	(4         ),
+  .ADDR_WIDTH 	(32        ))
+u_ysyx_24100029_IFU(
+  .clock           	(clock            ),
+  .reset           	(reset            ),
+  .dnpc            	(dnpc             ),
+  .dnpc_valid      	(dnpc_valid       ),
+  .clr             	(clr              ),
 
-  ysyx_24100029_IFU #(
-      .ResetValue(32'h8000_0000),
-      .Issue_Num (4),
-      .ADDR_WIDTH(32)
-  ) u_ysyx_24100029_IFU (
-      .clock(clock),
-      .reset(reset),
+  .inst1_o         	(inst1_o          ),
+  .inst2_o         	(inst2_o          ),
+  .inst3_o         	(inst3_o          ),
+  .inst4_o         	(inst4_o          ),
+  .pc1_o           	(pc1_o            ),
+  .pc2_o           	(pc2_o            ),
+  .pc3_o           	(pc3_o            ),
+  .pc4_o           	(pc4_o            ),
+  .valid           	(valid            ),
+  .ready           	(ready            ),
+  .ifu_axi         	(bus.master       ),
 
-      .dnpc      (dnpc),
-      .dnpc_valid(dnpc_valid),
-      .icache_clr(icache_clr),
-      .clr       (clr),
+  .req             	(req              ),
 
-      .valid     (valid),
-      .ready     (ready),
-      .inst1_o   (inst1_o),
-      .inst2_o   (inst2_o),
-      .inst3_o   (inst3_o),
-      .inst4_o   (inst4_o),
-      .pc1_o     (pc1_o),
-      .pc2_o     (pc2_o),
-      .pc3_o     (pc3_o),
-      .pc4_o     (pc4_o),
+  .commit_valid    	(commit_valid     ),
+  .commit_is_taken 	(commit_is_taken  ),
+  .commit_pc       	(commit_pc        ),
+  .commit_pc_type  	(commit_pc_type   ),
+  .commit_npc      	(commit_npc       )
+);
 
-      .ifu_axi(bus.master),
-      .req    (req)
-  );
 
 
 

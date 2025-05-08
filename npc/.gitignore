@@ -7,6 +7,5 @@
 !*.v
 !*.cc
 !*.cpp
-!.gitignore
-!README.md
+.gitignore
 build/

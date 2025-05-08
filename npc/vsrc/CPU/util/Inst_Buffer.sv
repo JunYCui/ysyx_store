@@ -27,16 +27,17 @@
 module Inst_Buffer #(
     parameter DATA_WIDTH = 32,
     parameter ADDR_WIDTH = 32,
-    parameter Depth      = 32
+    parameter Depth      = 32,
+    parameter Fetch_NUM  = 4
 ) (
     input clk,
     input rst,
     input clr,
 
-    input [DATA_WIDTH-1:0] inst_i[7:0],
-    input [DATA_WIDTH-1:0] pc_i  [7:0],
+    input [DATA_WIDTH-1:0] inst_i[Fetch_NUM-1:0],
+    input [DATA_WIDTH-1:0] pc_i  [Fetch_NUM-1:0],
 
-    input [7:0] inst_wen,
+    input [Fetch_NUM-1:0] inst_wen,
 
 
     input  [           3:0] inst_ren,
@@ -60,11 +61,11 @@ module Inst_Buffer #(
   reg  [   ADDR_WIDTH-1:0] pc_fifo      [Depth-1:0];
 
 
-  wire [              3:0] count_input;
+  wire [              $clog2(Fetch_NUM+1)-1:0] count_input;
   wire [              2:0] count_output;
   genvar i;
   generate
-    for (i = 0; i < 8; i = i + 1) begin
+    for (i = 0; i < Fetch_NUM; i = i + 1) begin
       always @(posedge clk)
         if (|inst_wen) begin
           fifo[w_ptr+i] <= inst_wen[i] ? inst_i[i] : fifo[w_ptr+i];
@@ -107,7 +108,7 @@ module Inst_Buffer #(
 
 
   count_ones #(
-      .DATA_WIDTH(8)
+      .DATA_WIDTH(Fetch_NUM)
   ) u_count_ones (
       .data_in  (inst_wen),
       .count_out(count_input)
