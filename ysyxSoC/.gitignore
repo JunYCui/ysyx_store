@@ -1,8 +1,8 @@
 *.*
 *
-!patch/*
-!rock/*
-!build/*
-!spec/*
-!src/*
+!/patch/*
+!/rock/*
+!/build/*
+!/spec/*
+!/src/*
 out/

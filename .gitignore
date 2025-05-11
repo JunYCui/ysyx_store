@@ -6,11 +6,11 @@
 !/nanos-lite/*
 !/navy-apps/*
 !/npc/*
+!/ysyxSoC/*
+!/fceux-am/*
+!/nvboard/*
+!/am-kernels/*
 !Makefile
 !README.md
 !.gitignore
 !init.sh
-!ysyxSoC/*
-!/fceux-am/*
-!/nvboard/*
-!/am-kernels/*
