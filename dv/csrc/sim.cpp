@@ -2,7 +2,7 @@
 #include "stdlib.h"
 #include "assert.h"
 
-#include"Vysyx_24100029_IFU_tb.h"
+#include"VSimTop.h"
 #include <verilated.h>
 #include <verilated_vcd_c.h>  //VCD波形输出头文件
 
@@ -12,7 +12,7 @@
     VerilatedContext *contextp = new VerilatedContext;
 
 // 构建一个名为top的仿真模型
-    Vtop *top = new Vtop{contextp};
+    VSimTop *top = new VSimTop{contextp};
 
 vluint64_t sim_time = 0;
 

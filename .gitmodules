@@ -1,0 +1,3 @@
+[submodule "dv/uvm-verilator"]
+	path = dv/uvm-verilator
+	url = https://github.com/verilator/uvm.git

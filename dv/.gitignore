@@ -9,5 +9,6 @@
 !*.cpp
 !.gitignore
 !README.md
+!/uvm-verilator/
 build/*
 wave/*
