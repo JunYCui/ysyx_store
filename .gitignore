@@ -7,10 +7,10 @@
 !/navy-apps/*
 !/ysyxSoC/*
 !/npc/*
+!/nvboard/*
 !Makefile
 !README.md
 !.gitignore
 !init.sh
 !/fceux-am
-!/nvboard
 !/am-kernels
