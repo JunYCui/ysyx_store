@@ -108,7 +108,22 @@ interface axi4_if #(
 
 endinterface
 
+interface sRAT_if();
+    logic w_en;
+    logic [4:0]arch_reg;
+    logic [6:0]phy_reg;
 
+    modport wr_ch(
+        input  w_en,
+        input  arch_reg,
+        input  phy_reg
+    );
+    modport re_ch(
+        input  arch_reg,
+        output phy_reg
+    );
+
+endinterface
 
 `endif
 

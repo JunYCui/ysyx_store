@@ -27,7 +27,17 @@ typedef struct packed {
     logic ecall_flag;
     logic mret_flag;
     logic fence_i_flag;
+    logic pred_res;
 } rv_decode_pkt_t;
+
+
+typedef enum logic[1:0] {  
+    BR_TYPE_JAL,
+    BR_TYPE_CALL,
+    BR_TYPE_RET
+} rv_br_type;
+
+
 
 `endif
 

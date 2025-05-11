@@ -26,35 +26,38 @@
 
 module count_ones #(
     DATA_WIDTH = 8
-)
-(
-    input              [   DATA_WIDTH-1: 0]        data_in                    ,
-    output             [   $clog2(DATA_WIDTH+1)-1: 0]        count_out                   
+) (
+    input  [          DATA_WIDTH-1:0] data_in,
+    output [$clog2(DATA_WIDTH+1)-1:0] count_out
 );
 
 
-    generate
-        if (DATA_WIDTH == 1) begin:COUNT
-            // 基本情况：1位输入
-            assign count_out = data_in;
-        end else begin:recursive
-            // 递归情况：分成两部分
-            wire [$clog2(DATA_WIDTH/2+1)-1:0] count_low;
-            wire [$clog2(DATA_WIDTH-DATA_WIDTH/2+1)-1:0] count_high;
-            
-            count_ones #(.DATA_WIDTH(DATA_WIDTH/2)) low (
-                .data_in(data_in[DATA_WIDTH/2-1:0]),
-                .count_out(count_low)
-            );
-            
-            count_ones #(.DATA_WIDTH(DATA_WIDTH-DATA_WIDTH/2)) high (
-                .data_in(data_in[DATA_WIDTH-1:DATA_WIDTH/2]),
-                .count_out(count_high)
-            );
-            
-            assign count_out = count_low + count_high;
-        end
-    endgenerate
+  generate
+    if (DATA_WIDTH == 1) begin : COUNT
+      // 基本情况：1位输入
+      assign count_out = data_in;
+    end else begin : recursive
+      // 递归情况：分成两部分
+      wire [$clog2(DATA_WIDTH/2+1)-1:0] count_low;
+      wire [$clog2(DATA_WIDTH-DATA_WIDTH/2+1)-1:0] count_high;
+
+      count_ones #(
+          .DATA_WIDTH(DATA_WIDTH / 2)
+      ) low (
+          .data_in  (data_in[DATA_WIDTH/2-1:0]),
+          .count_out(count_low)
+      );
+
+      count_ones #(
+          .DATA_WIDTH(DATA_WIDTH - DATA_WIDTH / 2)
+      ) high (
+          .data_in  (data_in[DATA_WIDTH-1:DATA_WIDTH/2]),
+          .count_out(count_high)
+      );
+
+      assign count_out = count_low + count_high;
+    end
+  endgenerate
 
 
 
