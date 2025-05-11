@@ -10,6 +10,7 @@
 !README.md
 !.gitignore
 !init.sh
-/fceux-am
-/nvboard
-/am-kernels
+!ysyxSoC/*
+!/fceux-am/*
+!/nvboard/*
+!/am-kernels/*
