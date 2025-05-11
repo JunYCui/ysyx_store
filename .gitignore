@@ -5,6 +5,7 @@
 !/nexus-am/*
 !/nanos-lite/*
 !/navy-apps/*
+!/ysyxSoC/*
 !/npc/*
 !Makefile
 !README.md
