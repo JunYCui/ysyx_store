@@ -32,8 +32,6 @@ module ysyx_24100029_IFU #(
 ) (
     input        clock,
     input        reset,
-    input [31:0] dnpc,
-    input        dnpc_valid,
     input        icache_clr,
 
     output [          31:0] inst1_o,
@@ -64,8 +62,10 @@ module ysyx_24100029_IFU #(
 `endif
     output        req,
 
+    output       br_ready,
+    input        br_valid,
+
     input        br_error,
-    input        br_commit,
     input        br_is_taken,
     input [31:0] br_pc,
     input [ 1:0] br_pc_type,
@@ -73,12 +73,15 @@ module ysyx_24100029_IFU #(
 );
 
   localparam FETCH_NUM = Issue_Num;
+  localparam IDLE = 1'b0;
+  localparam WORK = 1'b1;
 
   logic [  ADDR_WIDTH-1:0] pc;
   logic [  ADDR_WIDTH-1:0] pc_i             [FETCH_NUM-1:0];
   logic [            31:0] inst_i           [FETCH_NUM-1:0];
   logic [   FETCH_NUM-1:0] pred_res_i;
   logic [   Issue_Num-1:0] inst_wen;
+  logic [  $clog2(Issue_Num+1)-1:0] inst_wen_count;
 
   logic [            31:0] icache_addr;
   logic                    icache_arvalid;
@@ -99,6 +102,10 @@ module ysyx_24100029_IFU #(
   logic                    npc_valid;
   logic [   FETCH_NUM-1:0] inst_keilled;
   logic [   FETCH_NUM-1:0] pred_res;
+
+
+
+
 
 `ifdef Performance_Count
 
@@ -124,9 +131,9 @@ module ysyx_24100029_IFU #(
     for (i = 0; i < FETCH_NUM; i++) begin
       always_comb begin
         if (i == 0) begin
-          inst_wen[i] = icache_rvalid & icache_rready & inst_keilled[i];
+          inst_wen[i] = icache_rvalid & icache_rready & ~inst_keilled[i];
         end else begin
-          inst_wen[i] = icache_rvalid & icache_rready & inst_keilled[i] & (inst_fetch_count > i[3:0]);
+          inst_wen[i] = icache_rvalid & icache_rready & ~inst_keilled[i] & (inst_fetch_count > i[3:0]);
         end
       end
       assign pc_i[i]   = pc + 4 * i;
@@ -137,22 +144,27 @@ module ysyx_24100029_IFU #(
 
   always @(posedge clock) begin
     if (reset) pc <= ResetValue;
+    else if (br_valid & br_ready & br_error) pc <= br_npc;
     else if (pc_update & npc_valid) pc <= npc;
   end
 
   always @(posedge clock) begin
-    if (reset) icache_arvalid <= 1'b1;
-    else if (icache_arvalid & icache_arready) icache_arvalid <= 1'b0;
-    else if (pc_update & npc_valid) icache_arvalid <= 1'b1;
+      if(reset)
+        icache_arvalid <= 1'b1;
+      else if(icache_arvalid & icache_arready) 
+        icache_arvalid <= 1'b0;
+      else if(pc_update)
+        icache_arvalid <= 1'b1;
   end
 
 
 
-  assign pred_res_i = pred_res >> inst_fetch_count;
+  assign br_ready = pc_update ;
+  assign pred_res_i = pred_res ;
   assign req = ifu_axi.arvalid;
   assign icache_rready = (inst_count + inst_fetch_count) < 33;
   assign inst_fetch_count = FETCH_NUM - pc[2+:$clog2(FETCH_NUM)];
-  assign inst_buffer_clr = dnpc_valid;
+  assign inst_buffer_clr = br_valid & br_ready & br_error;
 
   assign pc_update = icache_rvalid & icache_rready;
   assign icache_addr = pc;
@@ -163,12 +175,20 @@ module ysyx_24100029_IFU #(
   assign inst_ren = ready & valid;
 
 
+
+
+
+
+
+
   Br_Pred #(
       .BHR_WIDTH(3)
   ) u_Br_Pred (
       .clock      (clock),
       .reset      (reset),
-      .br_commit  (br_commit),
+
+      .br_valid   (br_valid),
+      .br_ready   (br_ready),
       .br_is_taken(br_is_taken),
       .br_pc      (br_pc),
       .br_pc_type (br_pc_type),
