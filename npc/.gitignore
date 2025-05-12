@@ -8,5 +8,6 @@
 !*.cc
 !*.cpp
 !.gitignore
+!*.nxdc
 !README.md
 build/
