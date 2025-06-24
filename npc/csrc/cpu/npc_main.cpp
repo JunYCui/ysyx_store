@@ -61,10 +61,10 @@ void new_wave(void)
     char str[30];
     count ++;
     if(count > 10){
-        sprintf(str,"wave%d.vcd",count-10);
+        sprintf(str,"wave/wave%d.vcd",count-10);
         remove(str);
     }
-    sprintf(str,"wave%d.vcd",count);
+    sprintf(str,"wave/wave%d.vcd",count);
     m_trace->open((const char*)str);
 }
 
@@ -99,8 +99,11 @@ int main(int argc,char* argv[])
     top->trace(m_trace, 5);
     new_wave();
 #endif
-    for( int i=0;i<10;i++)
-    cpu_reset();
+    for( int i=0;i<10;i++){
+        cpu_reset();
+        wave_record();
+    }
+
 
     inst_exe(); // execute first instruction
     sdb_mainloop();

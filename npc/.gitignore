@@ -1,12 +1,15 @@
 *.*
 *
+!/vsrc/*
 !*/
 !Makefile
 !*.mk
 !*.[cSh]
 !*.v
+!*.sv
 !*.cc
 !*.cpp
 !.gitignore
+!*.nxdc
 !README.md
 build/

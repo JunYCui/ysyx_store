@@ -8,7 +8,7 @@ TOPNAME = ysyxSoCFull
 else ifeq ($(PLATFORM),npc)
 TOPNAME = ysyx_24100029
 endif
-INC_PATH = $(NPC_HOME)/include 
+INC_PATH = $(NPC_HOME)/csrc/include 
 #add vsrc and csrc
 VSOURCES=$(shell find $(abspath ./vsrc/CPU) -name "*.v" -or -name "*.sv" )
 CSOURCES=$(shell find $(abspath ./csrc/cpu) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
@@ -47,7 +47,7 @@ ARGS_DIFF = -d $(DIFF_REF_SO)
 
 VERILATOR = verilator
 # -- assert allows all assert -sv allows SV parses
-VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)) --assert  \
+VERILATOR_FLAGS += -Wall --cc -MMD --build --trace $(addprefix -Wno-, $(Warning)) --assert   \
 			-O2 --x-assign fast --x-initial fast  $(addprefix -I, $(INC_VDEFINE))
 
 
@@ -61,7 +61,7 @@ CFLAGS  = -O2 -MMD -Wall $(INCFLAGS) -D__$(shell echo $(PLATFORM) | tr a-z A-Z)_
 # llvm lib
 LDFLAGS += $(shell llvm-config --libs) -fsanitize=address 
 
-CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE -rdynamic
+CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fno-exceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE -rdynamic -g
 
 # yosys file
 SDC_FILE = $(NPC_HOME)/sdc/top.sdc
@@ -85,7 +85,7 @@ sim:all
 	$(NPC_EXEC)
 
 gdb: all
-	$(call git_commit, "gdb NEMU")
+	$(call git_commit, "gdb NPC")
 	gdb -s $(BIN) --args $(NPC_EXEC)
 
 all:$(CSOURCES) $(VSOURCES)  $(NVBOARD_ARCHIVE)

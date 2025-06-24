@@ -46,8 +46,8 @@ static char* rl_gets() {
 static int cmd_help(char *args);
 
 static int cmd_c(char *args) {
+  npc_state.state = NPC_RUNNING;  
   cpu_exec(-1);
-  npc_state.state = NPC_RUNNING;
   return 0;
 }
 
