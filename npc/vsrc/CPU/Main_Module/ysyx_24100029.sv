@@ -344,7 +344,7 @@ module ysyx_24100029 #(
     end
 
     always @(*)begin
-        if(WBU_inst == 32'h00100073) begin
+        if(WBU_inst == 32'h00100073 & WBU_valid) begin
         $display("\033[0m\033[1;34m | icache addr \t| flash   \t| sdram   \t| \033[0m");
         $display("\033[0m\033[1;34m | hit         \t| %-d     \t| %-d     \t| \033[0m",flash_hit,sdram_hit);
         $display("\033[0m\033[1;34m | miss        \t| %-d     \t| %-d     \t| \033[0m",flash_miss,sdram_miss);
