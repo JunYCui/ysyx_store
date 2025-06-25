@@ -1,16 +1,14 @@
 module ysyx_24100029_dmux4to1 #(
     parameter  DATA_WIDTH = 32,
     parameter  Is_One_Hot = 1'b1,
-    localparam SEL_WIDTH  = Is_One_Hot ? 4 : 2,
-    localparam type data_t = logic [DATA_WIDTH-1:0],
-    localparam type sel_t = logic [SEL_WIDTH-1:0]
+    localparam SEL_WIDTH  = Is_One_Hot ? 4 : 2
 ) (
-    input data_t data_i0,
-    input data_t data_i1,
-    input data_t data_i2,
-    input data_t data_i3,
-    input sel_t  sel,
-    output data_t data_o
+    input  logic [DATA_WIDTH-1:0] data_i0,
+    input  logic [DATA_WIDTH-1:0] data_i1,
+    input  logic [DATA_WIDTH-1:0] data_i2,
+    input  logic [DATA_WIDTH-1:0] data_i3,
+    input  logic [SEL_WIDTH-1:0]  sel,
+    output logic [DATA_WIDTH-1:0] data_o
 );
 
 

@@ -37,7 +37,6 @@ module ysyx_24100029_Control (
     output                              br_valid                   ,
     output                              br_is_taken                ,
     output             [  31: 0]        br_pc                      ,
-    output             [   1: 0]        br_pc_type                 ,
     output             [  31: 0]        br_npc                     ,
 
     output                              stall                      ,
@@ -76,7 +75,6 @@ module ysyx_24100029_Control (
     assign                              br_is_taken                 = EXU_branch_flag ?  Ex_result[0]:EXU_jalr_flag? 1'b1:IDU_jal_flag ;
     assign                              br_npc                      = EXU_jalr_flag? Ex_result:
                                                                       EXU_branch_flag? EXU_branch_pc :  IDU_jal_pc  ;
-    assign                              br_pc_type                  = 2'b00;
     assign                              br_pc                       = EXU_jalr_flag | EXU_branch_flag ? EXU_pc : IDU_pc;
 
 
