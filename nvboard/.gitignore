@@ -11,6 +11,8 @@
 !/include/*
 !/resources/*
 !/scrips/*
+!/usr/*
 !*.v
 !*.cpp
+!*.h
 build/
