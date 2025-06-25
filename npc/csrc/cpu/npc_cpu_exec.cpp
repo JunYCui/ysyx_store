@@ -36,9 +36,7 @@ void fi(int val) {
 #ifdef __YSYXSOC__
     nvboard_quit();
 #endif
-    npc_state.state = NPC_END;
-    npc_state.halt_ret = val;
-    return;
+    exit(val); 
 }
 
 #ifdef ITARCE
@@ -143,7 +141,7 @@ void cpu_exec(uint32_t n)
     }
 
 }
-
+    
 void npc_cpu_init()
 {
     cpu.gpr[0] = 0;

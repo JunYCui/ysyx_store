@@ -8,6 +8,11 @@
 !README.md
 !README.en.md
 !board/*
+!/include/*
+!/resources/*
+!/scrips/*
+!/usr/*
 !*.v
 !*.cpp
+!*.h
 build/

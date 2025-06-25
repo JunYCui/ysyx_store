@@ -38,12 +38,6 @@ extern "C" int npc_pmem_read(int addr)
 {
   int paddr = addr & ~0x03u;
   int data;
-
-  if(paddr < 0x80000000){
-    printf("Read addr 0x%x \n",paddr);
-    return 0;
-  }
-
 #ifdef MTRACE
   printf("Read addr 0x%x \n",paddr);
 #endif 
@@ -55,7 +49,6 @@ extern "C" int npc_pmem_read(int addr)
   {
     return (uint32_t)(get_time()>>32);
   }
-
   data = *(int*)guest_to_host(paddr);   
   return data;
 }
@@ -65,12 +58,6 @@ extern "C" void npc_pmem_write(int addr, int wdata, char wmask)
   uint32_t pc;
   int paddr = addr ;
   int data = wdata;
-
-#ifdef MTRACE
-  printf(" Write addr 0x%x  data = %d  wmask = %d \n",paddr,wdata,wmask);
-#endif 
-
-
   if(addr == UART_ADDR)
   {
     putc(wdata, stderr);
