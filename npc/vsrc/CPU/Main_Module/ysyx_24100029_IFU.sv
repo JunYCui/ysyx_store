@@ -49,7 +49,6 @@ module ysyx_24100029_IFU #(
     input        br_valid,
     input        br_is_taken,
     input [31:0] br_pc,
-    input [ 1:0] br_pc_type,
     input [31:0] br_npc,
 
 
@@ -141,10 +140,8 @@ module ysyx_24100029_IFU #(
       .br_valid   (br_valid),
       .br_is_taken(br_is_taken),
       .br_pc      (br_pc),
-      .br_pc_type (br_pc_type),
       .br_npc     (br_npc),
       .pc         (pc),
-      .pc_update  (pc_update),
       .npc        (npc),
       .pred_res   (pred_res_i)
   );

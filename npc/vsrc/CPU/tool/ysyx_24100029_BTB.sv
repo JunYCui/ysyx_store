@@ -7,12 +7,9 @@ module ysyx_24100029_BTB #(
         input reset,
         input [31:0] btb_pc,
         output [32-1:0] btb_npc,
-
-        output [2-1:0]btb_br_type,
         output btb_is_hit,
 
         input [31:0]btb_commit_pc,
-        input [1:0]btb_commit_pc_type,
         input [31:0]btb_commit_npc,
         input btb_commit
     );
@@ -22,11 +19,8 @@ module ysyx_24100029_BTB #(
     localparam ADDR_WIDTH = 32;
     localparam OFFSET_WIDTH = 2          ;
     localparam TAG_WIDTH = 32 - INDEX_WIDTH - OFFSET_WIDTH;
-    localparam BR_TYPE_WIDTH = 2;
+    localparam BR_TYPE_WIDTH = 0;
     localparam VALID_WIDTH = 1;
-
-    localparam IDLE = 1'b0;
-    localparam MISS = 1'b1;
 
     localparam CACHELINE_WIDTH = ADDR_WIDTH + TAG_WIDTH + VALID_WIDTH + BR_TYPE_WIDTH;
 
@@ -46,18 +40,15 @@ module ysyx_24100029_BTB #(
         if(btb_commit) begin
             if(Cache[commit_pc_index][0][0] == 1'b0) begin
                 Cache[commit_pc_index][0][TAG_WIDTH + VALID_WIDTH-1:0] <= {commit_pc_tag,1'b1};
-                Cache[commit_pc_index][0][VALID_WIDTH+TAG_WIDTH+BR_TYPE_WIDTH-1:VALID_WIDTH + TAG_WIDTH] <= btb_commit_pc_type;
-                Cache[commit_pc_index][0][VALID_WIDTH + BR_TYPE_WIDTH + TAG_WIDTH+32-1:VALID_WIDTH + BR_TYPE_WIDTH + TAG_WIDTH] <= btb_commit_npc;
+                Cache[commit_pc_index][0][VALID_WIDTH + TAG_WIDTH+32-1:VALID_WIDTH + BR_TYPE_WIDTH + TAG_WIDTH] <= btb_commit_npc;
             end
             else if(Cache[commit_pc_index][1][0] == 1'b0) begin
                 Cache[commit_pc_index][1][TAG_WIDTH + VALID_WIDTH-1:0] <= {commit_pc_tag,1'b1};
-                Cache[commit_pc_index][1][VALID_WIDTH+TAG_WIDTH+BR_TYPE_WIDTH-1:VALID_WIDTH + TAG_WIDTH] <= btb_commit_pc_type;
-                Cache[commit_pc_index][1][VALID_WIDTH + BR_TYPE_WIDTH + TAG_WIDTH+32-1:VALID_WIDTH + BR_TYPE_WIDTH + TAG_WIDTH] <= btb_commit_npc;
+                Cache[commit_pc_index][1][VALID_WIDTH + TAG_WIDTH+32-1:VALID_WIDTH + BR_TYPE_WIDTH + TAG_WIDTH] <= btb_commit_npc;
             end
             else begin
                 Cache[commit_pc_index][count][TAG_WIDTH + VALID_WIDTH-1:0] <= {commit_pc_tag,1'b1};
-                Cache[commit_pc_index][count][VALID_WIDTH+TAG_WIDTH+BR_TYPE_WIDTH-1:VALID_WIDTH + TAG_WIDTH] <= btb_commit_pc_type;
-                Cache[commit_pc_index][count][VALID_WIDTH + BR_TYPE_WIDTH + TAG_WIDTH+32-1:VALID_WIDTH + BR_TYPE_WIDTH + TAG_WIDTH] <= btb_commit_npc;               
+                Cache[commit_pc_index][count][VALID_WIDTH + TAG_WIDTH+32-1:VALID_WIDTH + BR_TYPE_WIDTH + TAG_WIDTH] <= btb_commit_npc;               
             end
         end
     end
@@ -77,14 +68,12 @@ module ysyx_24100029_BTB #(
     assign cache_tag[0] = Cache[pc_index][0][VALID_WIDTH+TAG_WIDTH-1:VALID_WIDTH];
     assign cache_tag[1] = Cache[pc_index][1][VALID_WIDTH+TAG_WIDTH-1:VALID_WIDTH];
 
-    assign btb_br_type = Cache[pc_index][way_choice][VALID_WIDTH+TAG_WIDTH+BR_TYPE_WIDTH-1:VALID_WIDTH+TAG_WIDTH] ;
-
     assign btb_is_hit = ((pc_tag == cache_tag[0])& Cache[pc_index][0][0]) ||
            ((pc_tag == cache_tag[1])& Cache[pc_index][1][0]);
 
     assign way_choice = pc_tag == cache_tag[1];
 
-    assign btb_npc=Cache[pc_index][way_choice][VALID_WIDTH + BR_TYPE_WIDTH + TAG_WIDTH+32-1:VALID_WIDTH + BR_TYPE_WIDTH + TAG_WIDTH] ;
+    assign btb_npc=Cache[pc_index][way_choice][VALID_WIDTH + TAG_WIDTH+32-1:VALID_WIDTH + TAG_WIDTH] ;
 
 
 

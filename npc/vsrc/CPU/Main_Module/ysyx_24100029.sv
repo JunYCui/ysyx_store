@@ -478,7 +478,6 @@ export "DPI-C" task Getinst;
     .br_is_taken                        (br_is_taken               ),
     .br_npc                             (br_npc                    ),
     .br_pc                              (br_pc                     ),
-    .br_pc_type                         (br_pc_type                ),
     .br_valid                           (br_valid                  ),
 
     .stall                              (stall                     ),
@@ -519,7 +518,6 @@ IFU_Inst0
     .br_valid                           (br_valid                  ),
     .br_npc                             (br_npc                    ),
     .br_pc                              (br_pc                     ),
-    .br_pc_type                         (br_pc_type                ),
 `ifdef Performance_Count
     .pred_error                         (pred_error),
     .fetch_inst                         (fetch_inst                ),
