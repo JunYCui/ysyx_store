@@ -440,6 +440,47 @@ export "DPI-C" task Getinst;
 `endif
 
 
+`ifndef NPC
+// 写地址通道 AW
+assign io_master_awid     = axi_bus0.master.awid;     // Master驱动ID
+assign io_master_awaddr   = axi_bus0.master.awaddr;   // Master驱动地址
+assign io_master_awlen    = axi_bus0.master.awlen;    // Master驱动突发长度
+assign io_master_awsize   = axi_bus0.master.awsize;   // Master驱动传输大小
+assign io_master_awburst  = axi_bus0.master.awburst;  // Master驱动突发类型
+assign io_master_awvalid  = axi_bus0.master.awvalid;  // Master驱动地址有效
+assign axi_bus0.master.awready   = io_master_awready; // Slave返回准备信号
+
+// 写数据通道 W
+assign io_master_wdata    = axi_bus0.master.wdata;    // Master驱动写数据
+assign io_master_wstrb    = axi_bus0.master.wstrb;    // Master驱动字节选通
+assign io_master_wlast    = axi_bus0.master.wlast;    // Master驱动最后一次传输
+assign io_master_wvalid   = axi_bus0.master.wvalid;   // Master驱动数据有效
+assign axi_bus0.master.wready    = io_master_wready;  // Slave返回准备信号
+
+// 写响应通道 B
+assign axi_bus0.master.bid       = io_master_bid;     // Slave返回响应ID
+assign axi_bus0.master.bresp     = io_master_bresp;   // Slave返回响应类型
+assign axi_bus0.master.bvalid    = io_master_bvalid;  // Slave返回响应有效
+assign io_master_bready   = axi_bus0.master.bready;   // Master驱动响应准备
+
+// 读地址通道 AR
+assign io_master_arid     = axi_bus0.master.arid;     // Master驱动读ID
+assign io_master_araddr   = axi_bus0.master.araddr;   // Master驱动读地址
+assign io_master_arlen    = axi_bus0.master.arlen;    // Master驱动读突发长度
+assign io_master_arsize   = axi_bus0.master.arsize;   // Master驱动读传输大小
+assign io_master_arburst  = axi_bus0.master.arburst;  // Master驱动读突发类型
+assign io_master_arvalid  = axi_bus0.master.arvalid;  // Master驱动读地址有效
+assign axi_bus0.master.arready   = io_master_arready; // Slave返回准备信号
+
+// 读数据通道 R
+assign axi_bus0.master.rid       = io_master_rid;     // Slave返回读ID
+assign axi_bus0.master.rdata     = io_master_rdata;   // Slave返回读数据
+assign axi_bus0.master.rresp     = io_master_rresp;   // Slave返回读响应
+assign axi_bus0.master.rlast     = io_master_rlast;   // Slave返回最后一次传输
+assign axi_bus0.master.rvalid    = io_master_rvalid;  // Slave返回数据有效
+assign io_master_rready   = axi_bus0.master.rready;   // Master驱动接收准备
+`endif
+
 
   ysyx_24100029_Control Control_inst0 (
 

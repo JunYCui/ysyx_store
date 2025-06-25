@@ -73,9 +73,6 @@ module ysyx_24100029_CLINT
                                                                     clk_count_low:0;
 
 
-    always @(*) begin
-        assert (opcode < 2'd2) else $error("can not write clint");
-    end
 
 
 endmodule
