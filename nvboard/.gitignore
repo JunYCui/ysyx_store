@@ -12,6 +12,7 @@
 !/resources/*
 !/scrips/*
 !/usr/*
+!*.ttf
 !*.v
 !*.cpp
 !*.h
