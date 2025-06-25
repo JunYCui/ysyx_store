@@ -54,6 +54,7 @@ module ysyx_24100029_IFU #(
 
 
 `ifdef Performance_Count
+    output [31:0] pred_error,
     output [31:0] fetch_inst,
     output [31:0] flash_hit,
     flash_miss,
@@ -73,6 +74,10 @@ module ysyx_24100029_IFU #(
   always @(posedge clock) begin
     if (reset) fetch_inst <= 0;
     else if (pc_update) fetch_inst <= fetch_inst + 1;
+  end
+  always @(posedge clock) begin
+      if(reset) pred_error <= 0;
+      else if(dnpc_flag) pred_error <= pred_error + 1;
   end
 
   always @(posedge clock ) begin

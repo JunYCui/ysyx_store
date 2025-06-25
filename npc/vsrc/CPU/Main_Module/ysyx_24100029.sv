@@ -334,6 +334,8 @@ module ysyx_24100029 #(
     wire               [  31: 0]        lsu_cycle                   ;
     wire               [  31: 0]        flash_hit,flash_miss,sdram_hit,sdram_miss  ;
 
+    wire [31:0]pred_error;
+
     assign                              total_count                 = InstR_count + InstI_count + InstS_count + InstB_count + InstU_count + InstJ_count + InstM_count;
 
     always @(posedge clock) begin
@@ -351,8 +353,8 @@ module ysyx_24100029 #(
         $display("\033[0m\033[1;34m | hit_rate    \t| %-d     \t| %-d     \t| \033[0m",flash_hit*100/(flash_hit+flash_miss),sdram_hit*100/(sdram_hit+sdram_miss));
         $display("\033[0m\033[1;34m | total_count \t| InstR_count \t| InstI_count \t| InstS_count \t| InstU_count \t| InstB_count \t| InstJ_count \t| InstM_count \t| \033[0m");
         $display("\033[0m\033[1;34m | %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| %d \t| \033[0m",total_count,InstR_count,InstI_count,InstS_count, InstU_count,InstB_count,InstJ_count,InstM_count);
-        $display("\033[0m\033[1;34m | fetch_inst \t| flush_decoder_i \t| \033[0m");
-        $display("\033[0m\033[1;34m | %d \t| %d \t\t|\033[0m",fetch_inst,instd_clr_num);
+        $display("\033[0m\033[1;34m | fetch_inst \t| flush_decoder_i \t| rate of pred_success    \t|\033[0m");
+        $display("\033[0m\033[1;34m | %d \t| %d \t\t|  %d \t|\033[0m",fetch_inst,instd_clr_num,100-100*pred_error/fetch_inst);
         $display("\033[0m\033[1;34m | exu_cycle \t| lsu_cycle \t| \033[0m");
         $display("\033[0m\033[1;34m | %d \t| %d \t| \033[0m",Exu_count,lsu_cycle);
             if(IDU_a0_value == 0)begin
@@ -519,6 +521,7 @@ IFU_Inst0
     .br_pc                              (br_pc                     ),
     .br_pc_type                         (br_pc_type                ),
 `ifdef Performance_Count
+    .pred_error                         (pred_error),
     .fetch_inst                         (fetch_inst                ),
     .flash_hit                          (flash_hit                 ),
     .flash_miss                         (flash_miss                ),
