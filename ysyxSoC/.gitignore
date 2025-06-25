@@ -1,2 +1,6 @@
-build/
+!perip/*
+!patch/*
+!build/*
+!src/*
+!spec/*
 out/
