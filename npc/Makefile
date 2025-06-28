@@ -35,7 +35,7 @@ Warning = ASSIGNDLY DECLFILENAME PINCONNECTEMPTY  UNDRIVEN SYNCASYNCNET  UNUSEDS
 VERILATOR_FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
 
 ifeq ($(PLATFORM),npc)
-VERILATOR_FLAGS += -GResetValue=00000000 -DNPC
+VERILATOR_FLAGS += -GResetValue=32'd00000000 -DNPC
 VSOURCES +=$(shell find $(abspath ./vsrc/SRAM) -name "*.v" -or -name "*.sv" )
 endif
 
