@@ -4,6 +4,7 @@
 !*.c
 !*.cc
 !*.S
+!*.tar
 !Makefile
 !README
 !README.md

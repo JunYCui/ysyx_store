@@ -12,6 +12,10 @@
 !/resources/*
 !/scrips/*
 !/usr/*
+<<<<<<< HEAD
+=======
+!*.ttf
+>>>>>>> 9ab05a51
 !*.v
 !*.cpp
 !*.h
