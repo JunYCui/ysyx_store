@@ -98,10 +98,11 @@ if(start){
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   IFDEF(CONFIG_WATCHPOINT, Cpu_Wp());
   IFDEF(CONFIG_FTRACE,ftrace_exe(_this));
+#ifdef CONFIG_ITRACE
 #ifdef CONFIG_IRINGBUF
   strcpy(trace_fifo[fifo_count++].logbuf,_this->logbuf);if(fifo_count == MAX_FIFO_BUF){fifo_count = 0;}
 #endif
-
+#endif
 
 }
 
