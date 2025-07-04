@@ -12,3 +12,7 @@ riscv-target/
 
 build/
 Makefile.*
+
+#no ignore 
+!*.h
+!*.S
