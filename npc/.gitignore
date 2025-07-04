@@ -9,8 +9,10 @@
 !*.sv
 !*.cc
 !*.cpp
-!.gitignore
 !*.nxdc
 !*.sdc
+!.gitignore
+!*.h
 !README.md
 build/
+obj_dir/
