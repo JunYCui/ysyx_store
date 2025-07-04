@@ -153,7 +153,7 @@ end
         INVALID: LSU_state <= valid_last & ready_last ? mem_wen || mem_ren ? WORK : VALID : INVALID;
         VALID: LSU_state <= valid_last & ready_last ? mem_wen || mem_ren ? WORK : VALID : INVALID;
         WORK:
-        LSU_state <= (mem_resp&valid_last&(mem_wen || mem_ren) || ~mem_resp) ? WORK : valid_last? VALID: INVALID ;
+        LSU_state <= (~mem_resp) ? WORK : INVALID ;
         default: LSU_state <= INVALID;
       endcase
     end
@@ -161,7 +161,7 @@ end
 
 
 
-  assign ready_last = LSU_state != WORK || mem_resp;
+  assign ready_last = LSU_state != WORK ;
   assign valid_next = (LSU_state == WORK) & mem_resp || LSU_state == VALID;
 
 

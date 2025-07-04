@@ -402,7 +402,7 @@ end
 sram u_sram(
     .clock                              (clock                     ),
     .reset                              (reset                     ),
-    .sram_axi                           (axi_bus0.slave            ) 
+    .sram_axi                           (axi_bus0                  ) 
 );
 
 
@@ -444,46 +444,50 @@ export "DPI-C" task GetPC;
 export "DPI-C" task Getinst;
 
 `endif
+`ifndef NPC
 
 
-assign io_master_awid     = axi_bus0.master.awid;     // Master驱动ID
-assign io_master_awaddr   = axi_bus0.master.awaddr;   // Master驱动地址
-assign io_master_awlen    = axi_bus0.master.awlen;    // Master驱动突发长度
-assign io_master_awsize   = axi_bus0.master.awsize;   // Master驱动传输大小
-assign io_master_awburst  = axi_bus0.master.awburst;  // Master驱动突发类型
-assign io_master_awvalid  = axi_bus0.master.awvalid;  // Master驱动地址有效
-assign axi_bus0.master.awready   = io_master_awready; // Slave返回准备信号
+// 写地址通道 (AW)
+assign io_master_awid     = axi_bus0.awid;      // Master输出 → 外部Slave输入
+assign io_master_awaddr   = axi_bus0.awaddr;
+assign io_master_awlen    = axi_bus0.awlen;
+assign io_master_awsize   = axi_bus0.awsize;
+assign io_master_awburst  = axi_bus0.awburst;
+assign io_master_awvalid  = axi_bus0.awvalid;
+assign axi_bus0.awready = io_master_awready;    // Slave输入 → 外部Slave输出
 
-// 写数据通道 W
-assign io_master_wdata    = axi_bus0.master.wdata;    // Master驱动写数据
-assign io_master_wstrb    = axi_bus0.master.wstrb;    // Master驱动字节选通
-assign io_master_wlast    = axi_bus0.master.wlast;    // Master驱动最后一次传输
-assign io_master_wvalid   = axi_bus0.master.wvalid;   // Master驱动数据有效
-assign axi_bus0.master.wready    = io_master_wready;  // Slave返回准备信号
+// 写数据通道 (W)
+assign io_master_wdata    = axi_bus0.wdata;     // Master输出
+assign io_master_wstrb    = axi_bus0.wstrb;
+assign io_master_wlast    = axi_bus0.wlast;
+assign io_master_wvalid   = axi_bus0.wvalid;
+assign axi_bus0.wready  = io_master_wready;     // Slave输入
 
-// 写响应通道 B
-assign axi_bus0.master.bid       = io_master_bid;     // Slave返回响应ID
-assign axi_bus0.master.bresp     = io_master_bresp;   // Slave返回响应类型
-assign axi_bus0.master.bvalid    = io_master_bvalid;  // Slave返回响应有效
-assign io_master_bready   = axi_bus0.master.bready;   // Master驱动响应准备
+// 写响应通道 (B)
+assign axi_bus0.bid     = io_master_bid;        // Slave输入
+assign axi_bus0.bresp   = io_master_bresp;
+assign axi_bus0.bvalid  = io_master_bvalid;
+assign io_master_bready   = axi_bus0.bready;    // Master输出
 
-// 读地址通道 AR
-assign io_master_arid     = axi_bus0.master.arid;     // Master驱动读ID
-assign io_master_araddr   = axi_bus0.master.araddr;   // Master驱动读地址
-assign io_master_arlen    = axi_bus0.master.arlen;    // Master驱动读突发长度
-assign io_master_arsize   = axi_bus0.master.arsize;   // Master驱动读传输大小
-assign io_master_arburst  = axi_bus0.master.arburst;  // Master驱动读突发类型
-assign io_master_arvalid  = axi_bus0.master.arvalid;  // Master驱动读地址有效
-assign axi_bus0.master.arready   = io_master_arready; // Slave返回准备信号
+// 读地址通道 (AR)
+assign io_master_arid     = axi_bus0.arid;      // Master输出
+assign io_master_araddr   = axi_bus0.araddr;
+assign io_master_arlen    = axi_bus0.arlen;
+assign io_master_arsize   = axi_bus0.arsize;
+assign io_master_arburst  = axi_bus0.arburst;
+assign io_master_arvalid  = axi_bus0.arvalid;
+assign axi_bus0.arready = io_master_arready;    // Slave输入
 
-// 读数据通道 R
-assign axi_bus0.master.rid       = io_master_rid;     // Slave返回读ID
-assign axi_bus0.master.rdata     = io_master_rdata;   // Slave返回读数据
-assign axi_bus0.master.rresp     = io_master_rresp;   // Slave返回读响应
-assign axi_bus0.master.rlast     = io_master_rlast;   // Slave返回最后一次传输
-assign axi_bus0.master.rvalid    = io_master_rvalid;  // Slave返回数据有效
-assign io_master_rready   = axi_bus0.master.rready;   // Master驱动接收准备
+// 读数据通道 (R)
+assign axi_bus0.rid     = io_master_rid;        // Slave输入
+assign axi_bus0.rdata   = io_master_rdata;
+assign axi_bus0.rresp   = io_master_rresp;
+assign axi_bus0.rlast   = io_master_rlast;
+assign axi_bus0.rvalid  = io_master_rvalid;
+assign io_master_rready   = axi_bus0.rready;    // Master输出
 
+
+`endif
 
 
 
@@ -556,7 +560,7 @@ IFU_Inst0
     .icache_clr                         (icache_clr                ),
     .ifu_pred_pc                        (IFU_pred_pc               ),
     .ifu_pred_res                       (IFU_pred_res              ),
-    .icache_axi                         (axi_bus2.master           ),
+    .icache_axi                         (axi_bus2          ),
     .stall                              (stall                     ),
 
     .req                                (IFU_req                   ),
@@ -728,7 +732,7 @@ ysyx_24100029_LSU LSU_Inst0
     .mem_ren_next                       (LSU_mem_ren               ),
     .jump_flag_next                     (LSU_jump_flag             ),
 
-    .lsu_axi                            (axi_bus1.master           ),
+    .lsu_axi                            (axi_bus1         ),
     
     .req                                (LSU_req                   ),
 
@@ -790,10 +794,10 @@ ysyx_24100029_Aribiter Aribiter_inst(
     .IFU_req                            (IFU_req                   ),
     .LSU_req                            (LSU_req                   ),
 
-    .ifu_axi                            (axi_bus2.slave            ),
-    .lsu_axi                            (axi_bus1.slave            ),
+    .ifu_axi                            (axi_bus2            ),
+    .lsu_axi                            (axi_bus1            ),
 
-    .aribiter_axi                       (axi_bus0.master           )
+    .aribiter_axi                       (axi_bus0           )
     
 );
 
