@@ -205,7 +205,7 @@ module ysyx_24100029_IFU #(
 
 
 
-fifo #(
+ysyx_24100029_fifo #(
   .DATA_WIDTH 	(32+32+32+1  ),
   .FIFO_DEPTH 	(2  ))
 u_fifo(

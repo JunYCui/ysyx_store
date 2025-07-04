@@ -252,6 +252,12 @@ module ysyx_24100029 #(
     wire               [  31: 0]        dnpc                        ;
     wire                                icache_clr                  ;
     wire                                stall                       ;
+
+    axi4_if axi_bus0();
+    axi4_if axi_bus1();
+    axi4_if axi_bus2();
+
+
 /********************Aribiter**************/
 
     wire                                Aribiter_awready            ;
@@ -317,6 +323,10 @@ module ysyx_24100029 #(
     wire               [  31: 0]        CLNT_rdata                  ;
     wire                                CLNT_rlast                  ;
     wire               [   3: 0]        CLNT_rid                    ;
+
+
+
+
 
 /***************Performance Count*********************/
 `ifdef Performance_Count
@@ -389,10 +399,6 @@ always @(*) begin
         skip = 0;
 end
 
-    axi4_if axi_bus0();
-    axi4_if axi_bus1();
-    axi4_if axi_bus2();
-
 sram u_sram(
     .clock                              (clock                     ),
     .reset                              (reset                     ),
@@ -440,8 +446,6 @@ export "DPI-C" task Getinst;
 `endif
 
 
-`ifndef NPC
-// 写地址通道 AW
 assign io_master_awid     = axi_bus0.master.awid;     // Master驱动ID
 assign io_master_awaddr   = axi_bus0.master.awaddr;   // Master驱动地址
 assign io_master_awlen    = axi_bus0.master.awlen;    // Master驱动突发长度
@@ -479,7 +483,8 @@ assign axi_bus0.master.rresp     = io_master_rresp;   // Slave返回读响应
 assign axi_bus0.master.rlast     = io_master_rlast;   // Slave返回最后一次传输
 assign axi_bus0.master.rvalid    = io_master_rvalid;  // Slave返回数据有效
 assign io_master_rready   = axi_bus0.master.rready;   // Master驱动接收准备
-`endif
+
+
 
 
   ysyx_24100029_Control Control_inst0 (

@@ -1,4 +1,4 @@
-module fifo #(
+module ysyx_24100029_fifo #(
     parameter DATA_WIDTH = 8,  // FIFO数据位宽
     parameter FIFO_DEPTH = 16  // FIFO深度（条目数，必须是2的幂）
 )(
